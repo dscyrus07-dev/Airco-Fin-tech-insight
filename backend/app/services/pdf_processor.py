@@ -7,6 +7,7 @@ from typing import Dict, Any
 
 from ..models.job import Job, JobType
 from ..services.frontend_result_builder import build_frontend_processing_result
+from ..services.job_progress import hygiene_result_to_progress, publish_job_progress
 from ..services.pipeline_orchestrator import process_statement
 from ..utils.file_handler import cleanup_file
 from ..utils.logging import get_logger
@@ -18,7 +19,10 @@ logger = get_logger(__name__)
 async def process_pdf_job(job: Job) -> Dict[str, Any]:
     """Process a PDF job asynchronously."""
     logger.info("Starting PDF processing", job_id=job.id)
-    
+    file_path = None
+    audit_service = None
+    audit_job_id = job.id
+
     try:
         # Extract job parameters
         file_path = job.input_data.get("file_path")
@@ -36,11 +40,16 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
         # Create output directory if not provided
         if not output_dir:
             output_dir = os.path.dirname(file_path)
+
+        await publish_job_progress(
+            job.id,
+            stage="queued",
+            message="Job accepted. Preparing PDF hygiene check…",
+        )
         
         # Bootstrap audit service for this job
-        audit_service = None
-        audit_job_id = job.id
         try:
+
             db = next(get_db())
             audit_service = AuditService(db)
             # Auto-provision user/tenant and create a processing job row
@@ -63,6 +72,66 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
             logger.warning("Audit job creation failed (non-fatal)", job_id=job.id, error=str(ae))
             audit_service = None
 
+        # Early hygiene check so UI can show details + green tick before full parse
+        await publish_job_progress(
+            job.id,
+            stage="hygiene",
+            message="Running PDF hygiene check…",
+        )
+        hygiene_payload = None
+        try:
+            from pathlib import Path as _Path
+            from .banks._shared.hygiene_check import HygieneCheck
+
+            checker = HygieneCheck(
+                pdf_directory=_Path(file_path).parent,
+                audit_service=audit_service,
+                job_id=audit_job_id,
+            )
+            hygiene_result = checker.validate_single_pdf(
+                _Path(file_path),
+                user_id=str(job.user_id or "SYSTEM"),
+                goal_id="GENERAL",
+            )
+            checker.log_hygiene_check_result(hygiene_result)
+            hygiene_payload = hygiene_result_to_progress(hygiene_result)
+            await publish_job_progress(
+                job.id,
+                stage="hygiene_complete",
+                message=(
+                    "Hygiene check passed"
+                    if hygiene_result.is_healthy
+                    else "Hygiene check completed with warnings"
+                ),
+                hygiene=hygiene_payload,
+            )
+        except Exception as he:
+            logger.warning("Early hygiene check failed (non-fatal)", job_id=job.id, error=str(he))
+            await publish_job_progress(
+                job.id,
+                stage="hygiene_complete",
+                message="Hygiene check skipped — continuing with parsing",
+                hygiene={
+                    "is_healthy": True,
+                    "file_name": os.path.basename(file_path),
+                    "page_count": 0,
+                    "bank_name": user_info.get("bank_name") or "unknown",
+                    "format_id": "",
+                    "transaction_count": 0,
+                    "start_date": "N/A",
+                    "end_date": "N/A",
+                    "issues": [],
+                    "warnings": [f"Hygiene pre-check unavailable: {he}"],
+                },
+            )
+
+        await publish_job_progress(
+            job.id,
+            stage="parsing",
+            message="Extracting transactions and generating report…",
+            hygiene=hygiene_payload,
+        )
+
         # Process the statement using existing pipeline
         logger.info("Processing statement", job_id=job.id, file_path=file_path)
         result = process_statement(
@@ -82,6 +151,13 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
             else:
                 error_message = str(error_payload) or "PDF processing failed"
             raise RuntimeError(error_message)
+
+        await publish_job_progress(
+            job.id,
+            stage="report",
+            message="Finalizing Excel report…",
+            hygiene=hygiene_payload,
+        )
         
         # Update processing job with success
         if audit_service:
@@ -100,11 +176,21 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
             except Exception as ue:
                 logger.warning("Audit job update failed (non-fatal)", job_id=job.id, error=str(ue))
 
-        return build_frontend_processing_result(
+        frontend_result = build_frontend_processing_result(
             result,
             mode=mode,
             excel_url=f"/api/jobs/{job.id}/download",
         )
+        if hygiene_payload:
+            frontend_result["hygiene"] = hygiene_payload
+            frontend_result["progress"] = {
+                "stage": "completed",
+                "message": "Processing complete",
+                "hygiene": hygiene_payload,
+                "hygiene_complete": True,
+            }
+        return frontend_result
+
         
     except Exception as e:
         logger.error("PDF processing failed", job_id=job.id, error=str(e))
@@ -119,7 +205,12 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
                 pass
         raise
     finally:
-        cleanup_file(file_path)
+        try:
+            if file_path:
+                cleanup_file(file_path)
+        except Exception:
+            pass
+
 
 def register_pdf_processor():
     """Register the PDF processor with the task processor."""

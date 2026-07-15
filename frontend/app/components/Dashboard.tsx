@@ -742,7 +742,7 @@ export default function Dashboard() {
                 />
               )}
               {step === 3 && <ModeSelection onSelect={handleModeSelect} isProcessing={isProcessing} />}
-              {step === 4 && jobId && (
+              {step === 4 && (
                 <div className="space-y-4">
                   {batchQueue.length > 1 && activeBatchFile && (
                     <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3">
@@ -757,11 +757,14 @@ export default function Dashboard() {
                   <ProcessingStep
                     jobId={jobId}
                     mode={mode}
+                    fileName={activeBatchFile?.file?.name || null}
+                    bankName={activeBatchFile?.bankName || null}
                     onComplete={handleProcessingComplete}
                     onError={handleProcessingError}
                   />
                 </div>
               )}
+
               {step === 5 && result && <ResultStep result={result} batchResults={batchResults} />}
 
               {step !== 4 && (

@@ -196,77 +196,89 @@ class HygieneCheck:
         
         return "unknown"
     
-    def extract_transactions_and_dates(self, pdf_path):
-        """Extract transactions and date range from PDF"""
+    def extract_transactions_and_dates(self, pdf_path, max_pages: int = 8):
+        """Extract approximate txn count + date range from PDF (fast sample).
+
+        Scans only the first/last pages so hygiene stays quick on large statements.
+        Full transaction extraction still happens in the bank parser.
+        """
         transactions = []
         dates = []
-        
+
         try:
             with pdfplumber.open(pdf_path) as pdf:
-                for page in pdf.pages:
-                    text = page.extract_text()
-                    if text:
-                        # Try to extract dates (common Indian bank statement date formats)
-                        # DD-MM-YYYY, DD/MM/YYYY, DD/MM/YY, etc.
-                        date_patterns = [
-                            r'\b(\d{2})[-/](\d{2})[-/](\d{4})\b',
-                            r'\b(\d{2})[-/](\d{2})[-/](\d{2})\b',
-                            r'\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{4})\b',
-                            r'\b(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})\b'
-                        ]
-                        
-                        for pattern in date_patterns:
-                            matches = re.findall(pattern, text, re.IGNORECASE)
-                            for match in matches:
-                                try:
-                                    if len(match) == 3:
-                                        if match[1].isalpha():
-                                            # Format: DD Mon YYYY
-                                            date_str = f"{match[0]} {match[1]} {match[2]}"
-                                            date_obj = datetime.strptime(date_str, '%d %b %Y')
-                                        else:
-                                            # Format: DD-MM-YYYY or DD/MM/YYYY
-                                            day, month, year = match
-                                            if len(year) == 2:
-                                                year = '20' + year
-                                            date_obj = datetime.strptime(f"{day}-{month}-{year}", '%d-%m-%Y')
-                                        dates.append(date_obj)
-                                except:
+                total_pages = len(pdf.pages)
+                if total_pages <= max_pages:
+                    page_indexes = list(range(total_pages))
+                else:
+                    # First few + last few pages cover header range + recent activity
+                    head = list(range(min(5, total_pages)))
+                    tail = list(range(max(total_pages - 3, 0), total_pages))
+                    page_indexes = sorted(set(head + tail))
+
+                for idx in page_indexes:
+                    page = pdf.pages[idx]
+                    text = page.extract_text() or ""
+                    if not text:
+                        continue
+
+                    # Dates only — skip expensive table extraction on every page
+                    date_patterns = [
+                        r'\b(\d{2})[-/](\d{2})[-/](\d{4})\b',
+                        r'\b(\d{2})[-/](\d{2})[-/](\d{2})\b',
+                        r'\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{4})\b',
+                    ]
+
+                    for pattern in date_patterns:
+                        matches = re.findall(pattern, text, re.IGNORECASE)
+                        for match in matches:
+                            try:
+                                if len(match) == 3:
+                                    if match[1].isalpha():
+                                        date_str = f"{match[0]} {match[1]} {match[2]}"
+                                        date_obj = datetime.strptime(date_str, '%d %b %Y')
+                                    else:
+                                        day, month, year = match
+                                        if len(year) == 2:
+                                            year = '20' + year
+                                        date_obj = datetime.strptime(f"{day}-{month}-{year}", '%d-%m-%Y')
+                                    dates.append(date_obj)
+                            except Exception:
+                                continue
+
+                    # Prefer text-line scan (much faster than extract_tables)
+                    for line in text.split('\n'):
+                        if self._is_transaction_line(line):
+                            transactions.append(line.strip())
+
+                    # Table extract only on first 2 sampled pages if still sparse
+                    if len(transactions) < 5 and idx in page_indexes[:2]:
+                        try:
+                            tables = page.extract_tables() or []
+                        except Exception:
+                            tables = []
+                        for table in tables:
+                            for row in table or []:
+                                if not row:
                                     continue
-                        
-                        # Try to extract tables first (more reliable for bank statements)
-                        tables = page.extract_tables()
-                        if tables:
-                            for table in tables:
-                                for row in table:
-                                    if row:
-                                        row_text = ' '.join([str(cell) if cell else '' for cell in row])
-                                        # Count rows that look like transactions
-                                        if self._is_transaction_row(row_text):
-                                            transactions.append(row_text)
-                        
-                        # Fallback: Count transaction lines from text
-                        lines = text.split('\n')
-                        for line in lines:
-                            # More flexible transaction patterns
-                            if self._is_transaction_line(line):
-                                transactions.append(line.strip())
-        
+                                row_text = ' '.join([str(cell) if cell else '' for cell in row])
+                                if self._is_transaction_row(row_text):
+                                    transactions.append(row_text)
+
         except Exception as e:
             logger.error(f"Error extracting transactions from {pdf_path}: {e}")
-        
-        # Remove duplicate transactions
+
         transactions = list(set(transactions))
-        
-        # Get date range
+
         start_date = None
         end_date = None
         if dates:
             dates = sorted(dates)
             start_date = dates[0].strftime('%Y-%m-%d')
             end_date = dates[-1].strftime('%Y-%m-%d')
-        
+
         return len(transactions), start_date, end_date
+
     
     def _is_transaction_line(self, line):
         """Check if a line looks like a transaction"""

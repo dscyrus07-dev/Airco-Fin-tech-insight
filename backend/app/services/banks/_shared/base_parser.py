@@ -277,8 +277,26 @@ class BaseBankParser(ABC):
         
         # Log the hygiene check result
         temp_checker.log_hygiene_check_result(result)
+
+        # Publish live progress for UI (non-fatal)
+        try:
+            from ...job_progress import hygiene_result_to_progress, publish_job_progress_sync
+            if self.job_id:
+                publish_job_progress_sync(
+                    self.job_id,
+                    stage="hygiene_complete",
+                    message=(
+                        "Hygiene check passed"
+                        if result.is_healthy
+                        else "Hygiene check completed with warnings"
+                    ),
+                    hygiene=hygiene_result_to_progress(result),
+                )
+        except Exception:
+            pass
         
         return result
+
     
     def _record_metrics(self, method: str, success: bool, transaction_count: int):
         """Record parsing metrics."""
