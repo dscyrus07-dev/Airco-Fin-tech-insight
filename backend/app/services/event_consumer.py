@@ -12,7 +12,9 @@ from .pipeline_orchestrator import process_statement
 from .redis_job_store import redis_job_store
 from .file_history_service import file_history_service
 from .frontend_result_builder import build_frontend_processing_result
-from ..utils.file_handler import cleanup_file, upload_to_minio, download_from_minio
+from ..utils.file_handler import cleanup_file, upload_to_storage, download_from_storage
+from ..core.config import settings as app_settings
+
 from ..models.job import JobStatus, JobUpdate
 from ..utils.correlation import set_correlation_id
 from ..utils.logging import get_logger
@@ -93,14 +95,15 @@ class EventConsumer:
         if not upload_object_key:
             raise ValueError("upload_object_key is required in queue payload")
 
-        # Download file from MinIO to local temp
-        file_path = download_from_minio(
-            bucket="airco-files",
+        # Download file from object storage to local temp
+        file_path = download_from_storage(
+            bucket=app_settings.S3_BUCKET_UPLOADS,
             object_key=upload_object_key,
         )
 
         if not file_path or not os.path.isfile(file_path):
-            raise ValueError(f"Failed to download file from MinIO: {upload_object_key}")
+            raise ValueError(f"Failed to download file from storage: {upload_object_key}")
+
 
         processing_file_path = file_path
 
@@ -167,11 +170,12 @@ class EventConsumer:
             if excel_path and os.path.isfile(excel_path):
                 safe_original = _safe_object_name(original_filename)
                 excel_object_key = f"users/{user_id}/reports/{Path(excel_path).name}"
-                upload_to_minio(
+                upload_to_storage(
                     excel_path,
-                    bucket="airco-reports",
+                    bucket=app_settings.S3_BUCKET_REPORTS,
                     object_key=excel_object_key,
                 )
+
                 result["excel_object_key"] = excel_object_key
                 result["source_pdf_object_key"] = upload_object_key
             frontend_result = build_frontend_processing_result(

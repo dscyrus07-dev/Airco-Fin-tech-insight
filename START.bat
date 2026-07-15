@@ -25,7 +25,8 @@ echo   2. Start stack
 echo   3. Restart stack
 echo   4. Rebuild + Start       (full image rebuild)
 echo   5. Stop stack
-echo   6. Stop + purge volumes  (wipe MinIO/RabbitMQ/Redis data)
+echo   6. Stop + purge volumes  (wipe RabbitMQ/Redis data)
+
 echo.
 echo  LOGS ^& STATUS
 echo  -------------

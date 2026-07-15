@@ -16,7 +16,9 @@ from ...services.task_processor import task_processor
 from ...services.event_publisher import event_publisher
 from ...services.file_history_service import file_history_service
 from ...dependencies.auth import get_current_user_optional
-from ...utils.file_handler import get_temp_dir, upload_to_minio
+from ...utils.file_handler import get_temp_dir, upload_to_storage
+from ...core.config import settings as app_settings
+
 from ...utils.correlation import get_correlation_id, generate_job_id
 from ...utils.logging import get_logger
 
@@ -191,9 +193,9 @@ async def upload_bank_statement_async(
     output_dir = get_temp_dir()
     original_filename = _safe_object_name(file.filename or "statement.pdf")
     upload_object_key = f"users/{user_id}/uploads/{Path(original_filename).stem}_{Path(file_path).name}"
-    if not upload_to_minio(
+    if not upload_to_storage(
         file_path,
-        bucket="airco-files",
+        bucket=app_settings.S3_BUCKET_UPLOADS,
         object_key=upload_object_key,
     ):
         for candidate in (file_path, processing_file_path):
@@ -202,7 +204,7 @@ async def upload_bank_statement_async(
                     os.unlink(candidate)
                 except Exception as cleanup_error:
                     logger.warning(
-                        "Failed to clean up temp file after MinIO upload failure",
+                        "Failed to clean up temp file after storage upload failure",
                         job_id=batch_id,
                         error=str(cleanup_error),
                     )
@@ -211,9 +213,10 @@ async def upload_bank_statement_async(
             detail={
                 "error": "Failed to upload source PDF to object storage.",
                 "stage": "upload",
-                "code": "MINIO_UPLOAD_FAILED",
+                "code": "STORAGE_UPLOAD_FAILED",
             },
         )
+
 
     if processing_file_path != file_path:
         try:
@@ -305,7 +308,7 @@ async def upload_bank_statement_async(
 async def download_result(job_id: str):
     """Download the processed Excel file when job is complete.
 
-    Results live in MinIO (object storage) so this works across workers and
+    Results live in Supabase S3 object storage so this works across workers and
     restarts. A local file is only used as an opportunistic fast path.
     """
     job = await redis_job_store.get_job(job_id)
@@ -332,12 +335,15 @@ async def download_result(job_id: str):
             headers={"Content-Disposition": f'attachment; filename="{output_filename}"'},
         )
 
-    # Canonical path: stream the report from MinIO.
+    # Canonical path: stream the report from object storage.
     excel_object_key = job.result_data.get("excel_object_key")
     if excel_object_key:
-        from ...utils.file_handler import download_from_minio
+        from ...utils.file_handler import download_from_storage
 
-        local_copy = download_from_minio(bucket="airco-reports", object_key=excel_object_key)
+        local_copy = download_from_storage(
+            bucket=app_settings.S3_BUCKET_REPORTS,
+            object_key=excel_object_key,
+        )
         if local_copy and os.path.isfile(local_copy):
             return FileResponse(
                 local_copy,
@@ -347,3 +353,4 @@ async def download_result(job_id: str):
             )
 
     raise HTTPException(status_code=404, detail="Result file not found")
+

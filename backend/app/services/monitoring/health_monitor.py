@@ -54,22 +54,33 @@ async def _ping_rabbitmq() -> tuple[bool, Optional[int], int, int]:
         return False, None, 0, 0
 
 
-async def _ping_minio() -> tuple[bool, Optional[int]]:
+async def _ping_object_storage() -> tuple[bool, Optional[int]]:
+    """Ping Supabase S3-compatible object storage via boto3 head_bucket."""
     try:
-        from minio import Minio
+        import boto3
+        from botocore.client import Config as BotoConfig
+
+        if not settings.S3_ENDPOINT or not settings.S3_ACCESS_KEY:
+            return False, None
+
         start = time.monotonic()
-        endpoint = settings.MINIO_ENDPOINT.replace("http://", "").replace("https://", "")
-        mc = Minio(
-            endpoint,
-            access_key=settings.MINIO_ACCESS_KEY,
-            secret_key=settings.MINIO_SECRET_KEY,
-            secure=settings.MINIO_ENDPOINT.startswith("https://"),
+        client = boto3.client(
+            "s3",
+            endpoint_url=settings.S3_ENDPOINT,
+            aws_access_key_id=settings.S3_ACCESS_KEY,
+            aws_secret_access_key=settings.S3_SECRET_KEY,
+            config=BotoConfig(
+                signature_version="s3v4",
+                s3={"addressing_style": settings.S3_ADDRESSING_STYLE or "path"},
+            ),
+            region_name=settings.S3_REGION or "us-east-1",
         )
-        mc.list_buckets()
+        client.head_bucket(Bucket=settings.S3_BUCKET_UPLOADS)
         latency_ms = int((time.monotonic() - start) * 1000)
         return True, latency_ms
     except Exception:
         return False, None
+
 
 
 async def _ping_supabase(db) -> tuple[bool, Optional[int]]:
@@ -119,13 +130,14 @@ async def collect_and_store_health():
         sys_metrics = _collect_system_metrics()
 
         (redis_ok, redis_ms), (rmq_ok, rmq_ms, rmq_ready, rmq_unacked), \
-        (minio_ok, minio_ms), (supa_ok, supa_ms), (kc_ok, kc_ms) = await asyncio.gather(
+        (storage_ok, storage_ms), (supa_ok, supa_ms), (kc_ok, kc_ms) = await asyncio.gather(
             _ping_redis(),
             _ping_rabbitmq(),
-            _ping_minio(),
+            _ping_object_storage(),
             _ping_supabase(db),
             _ping_keycloak(),
         )
+
 
         # Determine active sessions and jobs
         active_sessions = db.query(Session).filter(Session.is_active == True).count()
@@ -145,8 +157,8 @@ async def collect_and_store_health():
             alerts.append({"type": "REDIS_DOWN"})
         if not rmq_ok:
             alerts.append({"type": "RABBITMQ_DOWN"})
-        if not minio_ok:
-            alerts.append({"type": "MINIO_DOWN"})
+        if not storage_ok:
+            alerts.append({"type": "STORAGE_DOWN"})
         if not supa_ok:
             alerts.append({"type": "SUPABASE_DOWN"})
 
@@ -163,14 +175,15 @@ async def collect_and_store_health():
             **sys_metrics,
             redis_healthy=redis_ok,
             rabbitmq_healthy=rmq_ok,
-            minio_healthy=minio_ok,
+            minio_healthy=storage_ok,  # column name kept for DB compatibility
             supabase_healthy=supa_ok,
             keycloak_healthy=kc_ok,
             redis_latency_ms=redis_ms,
             rabbitmq_latency_ms=rmq_ms,
-            minio_latency_ms=minio_ms,
+            minio_latency_ms=storage_ms,  # column name kept for DB compatibility
             supabase_latency_ms=supa_ms,
             keycloak_latency_ms=kc_ms,
+
             rabbitmq_ready_messages=rmq_ready,
             rabbitmq_unacked_messages=rmq_unacked,
             active_sessions=active_sessions,

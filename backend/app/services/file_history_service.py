@@ -10,7 +10,8 @@ from sqlalchemy.exc import OperationalError
 from ..core.config import settings
 from ..database.models import UserFileRecord
 from ..database.session import SessionLocal
-from ..utils.file_handler import cleanup_file, delete_from_minio
+from ..utils.file_handler import cleanup_file, delete_from_storage
+
 
 
 class FileHistoryService:
@@ -133,9 +134,10 @@ class FileHistoryService:
         report_filename = self._record_value(record, "report_filename")
 
         if upload_object_key:
-            delete_from_minio("airco-files", upload_object_key)
+            delete_from_storage(settings.S3_BUCKET_UPLOADS, upload_object_key)
         if report_object_key:
-            delete_from_minio("airco-reports", report_object_key)
+            delete_from_storage(settings.S3_BUCKET_REPORTS, report_object_key)
+
         if report_filename:
             cleanup_file(os.path.join(settings.TEMP_DIR, report_filename))
 

@@ -73,31 +73,17 @@ def _ensure_job_access(job: Job, current_user: Optional[dict]) -> None:
         )
 
 
-def _download_from_minio(bucket: str, object_key: str) -> bytes:
-    try:
-        import boto3
-        from botocore.client import Config as BotoConfig
-    except ImportError as e:
+def _download_from_storage(bucket: str, object_key: str) -> bytes:
+    from ...utils.file_handler import download_bytes_from_storage
+
+    content = download_bytes_from_storage(bucket, object_key)
+    if content is None:
         raise HTTPException(
             status_code=503,
-            detail="MinIO download is unavailable because the boto3 dependency is not installed.",
-        ) from e
+            detail="Object storage download is unavailable or the object was not found.",
+        )
+    return content
 
-    from ...core.config import settings as _settings
-    endpoint = _settings.MINIO_ENDPOINT
-    access_key = _settings.MINIO_ACCESS_KEY
-    secret_key = _settings.MINIO_SECRET_KEY
-
-    client = boto3.client(
-        "s3",
-        endpoint_url=endpoint,
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
-        config=BotoConfig(signature_version="s3v4"),
-        region_name="us-east-1",
-    )
-    response = client.get_object(Bucket=bucket, Key=object_key)
-    return response["Body"].read()
 
 @router.get("/{job_id}", response_model=Job)
 async def get_job(
@@ -140,14 +126,16 @@ async def download_job_result(
     excel_object_key = job.result_data.get("excel_object_key")
     if excel_object_key:
         try:
-            content = _download_from_minio("airco-reports", excel_object_key)
+            from ...core.config import settings as _settings
+            content = _download_from_storage(_settings.S3_BUCKET_REPORTS, excel_object_key)
             return Response(
                 content=content,
                 media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 headers={"Content-Disposition": f'attachment; filename="{download_name}"'},
             )
         except Exception as e:
-            logger.error("MinIO download failed", job_id=job_id, object_key=excel_object_key, error=str(e))
+            logger.error("Storage download failed", job_id=job_id, object_key=excel_object_key, error=str(e))
+
 
     raise HTTPException(status_code=404, detail="Result file not found")
 

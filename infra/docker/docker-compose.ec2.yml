@@ -17,7 +17,10 @@ services:
     expose:
       - "8002"
     environment:
-      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-change-me-rabbitmq-user}:${RABBITMQ_DEFAULT_PASS:-change-me-rabbitmq-pass}@rabbitmq:5672/
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
 
@@ -26,10 +29,14 @@ services:
     expose:
       - "8003"
     environment:
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
       AI_SERVICE_URL: ${AI_SERVICE_URL:-http://ai-service:8004}
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-change-me-rabbitmq-user}:${RABBITMQ_DEFAULT_PASS:-change-me-rabbitmq-pass}@rabbitmq:5672/
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+
 
   ai-service:
     ports: []
@@ -46,11 +53,15 @@ services:
     expose:
       - "8005"
     environment:
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
       AI_SERVICE_URL: ${AI_SERVICE_URL:-http://ai-service:8004}
       PDF_SERVICE_URL: ${PDF_SERVICE_URL:-http://pdf-service:8003}
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-change-me-rabbitmq-user}:${RABBITMQ_DEFAULT_PASS:-change-me-rabbitmq-pass}@rabbitmq:5672/
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+
 
   app-postgres:
     ports: []
@@ -71,9 +82,15 @@ services:
       REPORT_SERVICE_URL: ${REPORT_SERVICE_URL:-http://report-service:8005}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-change-me-rabbitmq-user}:${RABBITMQ_DEFAULT_PASS:-change-me-rabbitmq-pass}@rabbitmq:5672/
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
-      MINIO_ACCESS_KEY: ${S3_ACCESS_KEY:-change-me-s3-access}
-      MINIO_SECRET_KEY: ${S3_SECRET_KEY:-change-me-s3-secret}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
+      S3_ADDRESSING_STYLE: ${S3_ADDRESSING_STYLE:-path}
+      S3_SKIP_CREATE_BUCKET: ${S3_SKIP_CREATE_BUCKET:-true}
+      S3_BUCKET: ${S3_BUCKET:-airco-files}
+      S3_BUCKET_REPORTS: ${S3_BUCKET_REPORTS:-airco-reports}
+      STORAGE_TYPE: ${STORAGE_TYPE:-supabase-s3}
       DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
       RETENTION_ENABLED: ${RETENTION_ENABLED:-true}
       RETENTION_SWEEP_INTERVAL_MINUTES: ${RETENTION_SWEEP_INTERVAL_MINUTES:-60}
@@ -94,8 +111,7 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-      minio:
-        condition: service_healthy
+
 
   frontend:
     ports: []
@@ -164,21 +180,6 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
-  minio:
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    expose:
-      - "9000"
-      - "9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-change-me-s3-access}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-change-me-s3-secret}
-      MINIO_SERVER_URL: https://${MINIO_PUBLIC_DOMAIN:-minio.theairco.ai}
-      MINIO_BROWSER_REDIRECT_URL: https://${MINIO_PUBLIC_DOMAIN:-minio.theairco.ai}/minio/ui/
-    volumes:
-      - minio_data:/data
-
   nginx:
     build:
       context: ../nginx
@@ -198,7 +199,6 @@ services:
       - "443:443"
     environment:
       AIRCO_PUBLIC_DOMAIN: ${PUBLIC_DOMAIN:-test.theairco.ai}
-      AIRCO_MINIO_PUBLIC_DOMAIN: ${MINIO_PUBLIC_DOMAIN:-minio.theairco.ai}
       AIRCO_SSL_CERT_PATH: /etc/airco/ssl/fullchain.pem
       AIRCO_SSL_KEY_PATH: /etc/airco/ssl/privkey.pem
     volumes: !override
@@ -217,9 +217,8 @@ volumes:
     driver: local
   rabbitmq_data:
     driver: local
-  minio_data:
-    driver: local
   app_postgres_data:
     driver: local
   keycloak_postgres_data:
     driver: local
+

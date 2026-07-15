@@ -1,9 +1,7 @@
-import os
+﻿import os
 import uuid
 import logging
-import tempfile
 import time
-from pathlib import Path
 from typing import Optional
 
 from app.core.config import settings
@@ -11,7 +9,7 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 
-def _is_transient_minio_error(exc: Exception) -> bool:
+def _is_transient_storage_error(exc: Exception) -> bool:
     transient_names = {
         "ConnectionResetError",
         "ConnectionClosedError",
@@ -60,33 +58,33 @@ def cleanup_files(*file_paths: str) -> None:
 
 
 def _s3_client():
-    """Shared S3 client for MinIO or Supabase S3 protocol."""
+    """S3-compatible client (Supabase Storage S3 protocol)."""
     import boto3
     from botocore.client import Config as BotoConfig
 
     return boto3.client(
         "s3",
-        endpoint_url=settings.MINIO_ENDPOINT,
-        aws_access_key_id=settings.MINIO_ACCESS_KEY,
-        aws_secret_access_key=settings.MINIO_SECRET_KEY,
+        endpoint_url=settings.S3_ENDPOINT,
+        aws_access_key_id=settings.S3_ACCESS_KEY,
+        aws_secret_access_key=settings.S3_SECRET_KEY,
         config=BotoConfig(
             signature_version="s3v4",
-            s3={"addressing_style": getattr(settings, "S3_ADDRESSING_STYLE", "path") or "path"},
+            s3={"addressing_style": settings.S3_ADDRESSING_STYLE or "path"},
         ),
-        region_name=getattr(settings, "S3_REGION", None) or "us-east-1",
+        region_name=settings.S3_REGION or "us-east-1",
     )
 
 
-def upload_to_minio(local_path: str, bucket: str, object_key: str = None) -> bool:
+def upload_to_storage(local_path: str, bucket: str, object_key: str = None) -> bool:
     """
-    Upload a local file to object storage (MinIO / Supabase S3).
+    Upload a local file to S3-compatible object storage.
     Returns True on success, False on any failure (non-blocking).
     """
     try:
         client = _s3_client()
 
-        # Local MinIO may auto-create buckets; Supabase buckets are pre-created.
-        if not getattr(settings, "S3_SKIP_CREATE_BUCKET", False):
+        # Supabase buckets are pre-created; skip create_bucket by default.
+        if not settings.S3_SKIP_CREATE_BUCKET:
             try:
                 client.head_bucket(Bucket=bucket)
             except Exception:
@@ -109,10 +107,10 @@ def upload_to_minio(local_path: str, bucket: str, object_key: str = None) -> boo
                     local_path, bucket, object_key,
                     ExtraArgs={"ContentType": content_type},
                 )
-                logger.info("Storage upload OK: %s → %s/%s", local_path, bucket, object_key)
+                logger.info("Storage upload OK: %s -> %s/%s", local_path, bucket, object_key)
                 return True
             except Exception as exc:
-                if attempt < 2 and _is_transient_minio_error(exc):
+                if attempt < 2 and _is_transient_storage_error(exc):
                     logger.warning(
                         "Storage upload transient failure; retrying",
                         extra={
@@ -131,7 +129,7 @@ def upload_to_minio(local_path: str, bucket: str, object_key: str = None) -> boo
         return False
 
 
-def delete_from_minio(bucket: str, object_key: str) -> bool:
+def delete_from_storage(bucket: str, object_key: str) -> bool:
     """
     Delete an object from storage.
     Returns True on success, False on any failure (non-blocking).
@@ -150,7 +148,7 @@ def delete_from_minio(bucket: str, object_key: str) -> bool:
         return False
 
 
-def download_from_minio(bucket: str, object_key: str, local_path: str = None) -> Optional[str]:
+def download_from_storage(bucket: str, object_key: str, local_path: str = None) -> Optional[str]:
     """
     Download an object from storage to a local file.
     Returns the local file path on success, None on failure.
@@ -168,10 +166,10 @@ def download_from_minio(bucket: str, object_key: str, local_path: str = None) ->
         for attempt in range(3):
             try:
                 client.download_file(bucket, object_key, local_path)
-                logger.info("Storage download OK: %s/%s → %s", bucket, object_key, local_path)
+                logger.info("Storage download OK: %s/%s -> %s", bucket, object_key, local_path)
                 return local_path
             except Exception as exc:
-                if attempt < 2 and _is_transient_minio_error(exc):
+                if attempt < 2 and _is_transient_storage_error(exc):
                     logger.warning(
                         "Storage download transient failure; retrying",
                         extra={
@@ -189,3 +187,15 @@ def download_from_minio(bucket: str, object_key: str, local_path: str = None) ->
         logger.warning("Storage download failed: %s", str(e))
         return None
 
+
+def download_bytes_from_storage(bucket: str, object_key: str) -> Optional[bytes]:
+    """Download object bytes from storage. Returns None on failure."""
+    if not bucket or not object_key:
+        return None
+    try:
+        client = _s3_client()
+        response = client.get_object(Bucket=bucket, Key=object_key)
+        return response["Body"].read()
+    except Exception as e:
+        logger.warning("Storage get_object failed: %s", str(e))
+        return None

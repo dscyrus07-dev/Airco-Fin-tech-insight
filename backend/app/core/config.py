@@ -54,40 +54,27 @@ class Settings:
     # RabbitMQ (for message queuing in Phase 1)
     RABBITMQ_URL: str = os.getenv("RABBITMQ_URL", "amqp://change-me-rabbitmq-user:change-me-rabbitmq-pass@localhost:5672/")
 
-    # Object Storage (MinIO local OR Supabase S3-compatible)
-    # Prefer MINIO_* vars; fall back to S3_* for Railway/Vercel style env.
-    MINIO_ENDPOINT: str = (
-        os.getenv("MINIO_ENDPOINT")
-        or os.getenv("S3_ENDPOINT")
-        or "http://minio:9000"
-    )
-    MINIO_ACCESS_KEY: str = (
-        os.getenv("MINIO_ACCESS_KEY")
-        or os.getenv("S3_ACCESS_KEY")
-        or "minioadmin"
-    )
-    MINIO_SECRET_KEY: str = (
-        os.getenv("MINIO_SECRET_KEY")
-        or os.getenv("S3_SECRET_KEY")
-        or "minioadmin"
-    )
-    MINIO_BUCKET_UPLOADS: str = (
-        os.getenv("MINIO_BUCKET_UPLOADS")
-        or os.getenv("S3_BUCKET")
+    # Object Storage — Supabase S3-compatible only
+    S3_ENDPOINT: str = os.getenv("S3_ENDPOINT", "")
+    S3_ACCESS_KEY: str = os.getenv("S3_ACCESS_KEY", "")
+    S3_SECRET_KEY: str = os.getenv("S3_SECRET_KEY", "")
+    S3_BUCKET_UPLOADS: str = (
+        os.getenv("S3_BUCKET")
+        or os.getenv("S3_BUCKET_UPLOADS")
         or "airco-files"
     )
-    MINIO_BUCKET_REPORTS: str = os.getenv("MINIO_BUCKET_REPORTS", "airco-reports")
-    S3_REGION: str = os.getenv("S3_REGION", "us-east-1")
+    S3_BUCKET_REPORTS: str = os.getenv("S3_BUCKET_REPORTS", "airco-reports")
+
+    S3_REGION: str = os.getenv("S3_REGION", "ap-southeast-2")
     # path-style is required for Supabase S3 protocol
     S3_ADDRESSING_STYLE: str = os.getenv("S3_ADDRESSING_STYLE", "path")
-    # When true, never call create_bucket (Supabase buckets are pre-created)
+    # Supabase buckets are pre-created — never auto-create by default
     S3_SKIP_CREATE_BUCKET: bool = os.getenv(
         "S3_SKIP_CREATE_BUCKET",
-        "true" if "supabase.co" in (
-            os.getenv("MINIO_ENDPOINT") or os.getenv("S3_ENDPOINT") or ""
-        ) else "false",
+        "true",
     ).lower() in {"1", "true", "yes", "on"}
-    STORAGE_TYPE: str = os.getenv("STORAGE_TYPE", "minio")
+    STORAGE_TYPE: str = os.getenv("STORAGE_TYPE", "supabase-s3")
+
 
 
     # Keycloak / JWT verification
