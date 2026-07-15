@@ -1,0 +1,823 @@
+{
+  "aggregation": {
+    "closing_balance": null,
+    "opening_balance": null,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "axis",
+  "categories": [
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Loan Payments",
+    "Others Credit",
+    "Others Debit",
+    "Others Debit",
+    "Transfer",
+    "Others Credit",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bill Payment",
+    "Bank Transfer In",
+    "Others Debit",
+    "Bank Transfer In",
+    "Transfer",
+    "Bill Payment",
+    "Transfer",
+    "Transfer",
+    "Bill Payment",
+    "Transfer",
+    "Food",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bill Payment",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Bank Transfer In",
+    "Others Debit",
+    "Food",
+    "Others Debit",
+    "Others Debit",
+    "Food",
+    "Transfer",
+    "Others Credit",
+    "Transfer",
+    "Others Credit",
+    "Others Debit",
+    "Interest"
+  ],
+  "category_totals": {
+    "Bank Transfer In": {
+      "count": 9,
+      "credit": 563552.0,
+      "debit": 0.0
+    },
+    "Bill Payment": {
+      "count": 4,
+      "credit": 0.0,
+      "debit": 10871.9
+    },
+    "Food": {
+      "count": 3,
+      "credit": 0.0,
+      "debit": 1250.0
+    },
+    "Interest": {
+      "count": 1,
+      "credit": 81.0,
+      "debit": 0.0
+    },
+    "Loan Payments": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 19005.9
+    },
+    "Others Credit": {
+      "count": 4,
+      "credit": 673000.0,
+      "debit": 0.0
+    },
+    "Others Debit": {
+      "count": 9,
+      "credit": 0.0,
+      "debit": 356450.75
+    },
+    "Transfer": {
+      "count": 19,
+      "credit": 0.0,
+      "debit": 848145.3
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "Axis Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Mar-2024": 0
+    },
+    "cashDeposit": {
+      "Mar-2024": 0
+    },
+    "cashWithdrawals": {
+      "Mar-2024": 0
+    },
+    "chequeDeposit": {
+      "Mar-2024": 81.0
+    },
+    "chequeIssued": {
+      "Mar-2024": 0
+    },
+    "creditCardPayment": {
+      "Mar-2024": 0
+    },
+    "creditCount": {
+      "Mar-2024": 14.0
+    },
+    "creditValue": {
+      "Mar-2024": 1236633.0
+    },
+    "debitCount": {
+      "Mar-2024": 36.0
+    },
+    "debitValue": {
+      "Mar-2024": 1235723.85
+    },
+    "ecsNach": {
+      "Mar-2024": 0
+    },
+    "inwBounce": {
+      "Mar-2024": 0.0
+    },
+    "loanRepayment": {
+      "Mar-2024": 19005.9
+    },
+    "maxBalance": {
+      "Mar-2024": 201394.33
+    },
+    "minBalance": {
+      "Mar-2024": 600.23
+    },
+    "monthlyAvgBal": {
+      "Mar-2024": 48482.35
+    },
+    "nonCashCredit": {
+      "Mar-2024": 1236633.0
+    },
+    "nonSalaryCredits": {
+      "Mar-2024": 1236633.0
+    },
+    "owtBounce": {
+      "Mar-2024": 0.0
+    },
+    "penaltyCharges": {
+      "Mar-2024": 0
+    },
+    "salaryCredits": {
+      "Mar-2024": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 37,
+    "coverage_percent": 74.0,
+    "others": 13,
+    "recurring": 0,
+    "total_transactions": 50
+  },
+  "reconciliation": {
+    "calculated_closing": 1042.58,
+    "closing_balance": 1042.58,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 133.43,
+    "source": "running_balance",
+    "total_credits": 1236633.0,
+    "total_debits": 1235723.85,
+    "transaction_count": 50
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "9150100489_1712733393035",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Mar-2024": 48482.35
+    },
+    "Avg Balance": 55614.04,
+    "Balance on 10th": {
+      "Mar-2024": 17130.13
+    },
+    "Balance on 15th": {
+      "Mar-2024": 90594.33
+    },
+    "Balance on 1st": {
+      "Mar-2024": 20121.63
+    },
+    "Balance on 20th": {
+      "Mar-2024": 6582.53
+    },
+    "Balance on 25th": {
+      "Mar-2024": 2543.58
+    },
+    "Balance on 5th": {
+      "Mar-2024": 201115.73
+    },
+    "Balance on Last Day": {
+      "Mar-2024": 1042.58
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Mar-2024": 1042.58
+    },
+    "Max Balance": 201394.33,
+    "Max EOD Balance": {
+      "Mar-2024": 201394.33
+    },
+    "Min Balance": 121.63,
+    "Min EOD Balance": {
+      "Mar-2024": 600.23
+    },
+    "Start of Month Balance": {
+      "Mar-2024": 20121.63
+    },
+    "Top 5 Credit %": 64.68,
+    "Top 5 Credit Amt": 799800.0,
+    "Top 5 Debit %": 53.72,
+    "Top 5 Debit Amt": 663845.7,
+    "Total Cheque": 1,
+    "Total Credit Amount": 1236633.0,
+    "Total Credit Count": 14,
+    "Total Debit Amount": 1235723.85,
+    "Total Debit Count": 36,
+    "_per_month": {
+      "Mar-2024": {
+        "avg_eod": 48482.35,
+        "d1": 20121.63,
+        "d10": 17130.13,
+        "d15": 90594.33,
+        "d20": 6582.53,
+        "d25": 2543.58,
+        "d5": 201115.73,
+        "dlast": 1042.58,
+        "end": 1042.58,
+        "max_eod": 201394.33,
+        "min_eod": 600.23,
+        "start": 20121.63
+      }
+    }
+  },
+  "transaction_count": 50,
+  "transactions": [
+    {
+      "balance": 90133.43,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 90000.0,
+      "date": "2024-03-01",
+      "debit": null,
+      "description": "324/AXISBANKLTD/w2b IMPS/P2A/406114129650/921020012776704/010",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 140133.43,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 50000.0,
+      "date": "2024-03-01",
+      "debit": null,
+      "description": "324/AXISBANKLTD/w2b IMPS/P2A/406114141344/921020012776704/010",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 190133.43,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 50000.0,
+      "date": "2024-03-01",
+      "debit": null,
+      "description": "324/AXISBANKLTD/w2b IMPS/P2A/406115918312/myidfc/X225559/IDFC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 121.63,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-01",
+      "debit": 190011.8,
+      "description": "Bank/ IMPS/P2A/406121965334/MrPaleti/IDFCBank/I",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 20121.63,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 20000.0,
+      "date": "2024-03-01",
+      "debit": null,
+      "description": "MPSTXN/9197010510049751001 IMPS/P2A/406121361770/sandeepkotak/X654978",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1115.73,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-01",
+      "debit": 19005.9,
+      "description": "/KOTAKMAHINDRABANKLTD IMPS/P2A/406420192081/MUNGALAK/Remitte",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 201115.73,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 200000.0,
+      "date": "2024-03-04",
+      "debit": null,
+      "description": "r/debit/9189775089777139000",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 101115.73,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 100000.0,
+      "description": "NBSM/51227658/Cheq(BILLDESK)/ MOB/TPFT/AKUNOORI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 51115.73,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 50000.0,
+      "description": "SRIKA/918010100299031",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1115.73,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 50000.0,
+      "description": "NBSM/51233550/Cheq(BILLDESK)/ IMPS/P2A/406421283274/MrPaleti/IDFCBank/I",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 201115.73,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 200000.0,
+      "date": "2024-03-04",
+      "debit": null,
+      "description": "MPSTXN/9197010510049751001",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 151115.73,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 50000.0,
+      "description": "NBSM/51236538/Cheq(BILLDESK)/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 101115.73,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 50000.0,
+      "description": "NBSM/51236759/Cheq(BILLDESK)/ IMPS/P2A/406421192914/sandeepkotak/X654978",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 41109.83,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 60005.9,
+      "description": "/KOTAKMAHINDRABANKLTD IMPS/P2A/406422382237/myidfc/X225559/IDFC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11103.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-04",
+      "debit": 30005.9,
+      "description": "Bank/ IMPS/P2A/406719386534/myidfc/X225559/IDFC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1098.03,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-07",
+      "debit": 10005.9,
+      "description": "Bank/ NEFT/CMS0672407007980/YUPP VIDEO SERVICES INDIA PR/KOTAK MAHINDRA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 72850.03,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 71752.0,
+      "date": "2024-03-07",
+      "debit": null,
+      "description": "BANK /NEFT-YUPPVS-CMS067240700798 IMPS/P2A/406813573412/MyAU/X408121/AUS",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 62844.13,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-08",
+      "debit": 10005.9,
+      "description": "MALLFINANCEBANK/ MOB/TPFT/TERATIPALLY",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 112844.13,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 50000.0,
+      "date": "2024-03-08",
+      "debit": null,
+      "description": "LAK/921010005351966 UPI/P2A/406972088452/AKKALA MOUNIKA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68844.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-09",
+      "debit": 44000.0,
+      "description": "/Paymen/Karur Vysya Bank UPI/P2M/443510720710/MSMEDISYS",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68250.13,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-09",
+      "debit": 594.0,
+      "description": "PHARMACY /UPI/Yes Bank Ltd MOB/TPFT/PHANI CHANDU",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18250.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-09",
+      "debit": 50000.0,
+      "description": "PA/912010066956199 UPI/P2A/443609165969/SHAIK SIKANDAR",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17250.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-10",
+      "debit": 1000.0,
+      "description": "/UPI/HDFC BANK LTD UPI/P2M/443669962093/ANISETTI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17130.13,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-10",
+      "debit": 120.0,
+      "description": "NARAYANARAO /UPI/Yes Bank Ltd UPI/P2M/407024164115/Mr DEVIDAS",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17075.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-10",
+      "debit": 55.0,
+      "description": "/Pay to/Federal Bank UPI/P2A/443639969064/MOHD IMAMUDDIN",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16425.13,
+      "category": "Food",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-10",
+      "debit": 650.0,
+      "description": "/UPI/DCB Bank Ltd UPI/P2M/443629784247/SWIGGY",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 15998.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-10",
+      "debit": 427.0,
+      "description": "/UPI/YesBank_Yespay UPI/P2M/407169510199/M S NINETIES",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 15758.13,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-11",
+      "debit": 240.0,
+      "description": "KITCHEN /UPI/ICICI Bank IMPS/P2A/407119946648/MyAU/X408121/AUS",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 752.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-11",
+      "debit": 15005.9,
+      "description": "MALLFINANCEBANK/ UPI/P2M/407277462407/PALAPARTI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 600.23,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-12",
+      "debit": 152.0,
+      "description": "BHAVANI /UPI/Yes Bank Ltd NEFT/SBIN324074001184/EMPLOYEE PROVIDENT FUND ORGA/STATE BANK OF",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 100600.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 100000.0,
+      "date": "2024-03-14",
+      "debit": null,
+      "description": "INDIA//URGENT/RS0000010000000//BUL IMPS/P2A/407522880713/Sahil/X007187/PUNJA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 90594.33,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-15",
+      "debit": 10005.9,
+      "description": "BNATIONALBANK/ UPI/P2M/407675656300/OneCard",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 84594.33,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-16",
+      "debit": 6000.0,
+      "description": "/UPI/Yes Bank Ltd UPI/P2M/444265559083/CredClub",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74594.33,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-16",
+      "debit": 10000.0,
+      "description": "/UPI/ICICI Bank IMPS/P2A/407914307693/MrPaleti/IDFCBank/I",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 201394.33,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 126800.0,
+      "date": "2024-03-19",
+      "debit": null,
+      "description": "MPSTXN/9197010510049751001 UPI/P2A/444553563314/BHAGATH CHAND",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 104594.33,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-19",
+      "debit": 96800.0,
+      "description": "KASARAN/Paymen/ICICI Bank IMPS/P2A/407916961858/myidfc/X225559/IDFC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4588.43,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-19",
+      "debit": 100005.9,
+      "description": "Bank/ IMPS/P2A/408016285777/myidfc/X225559/IDFC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1582.53,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-20",
+      "debit": 3005.9,
+      "description": "Bank/ MOB/TPFT/TERATIPALLY",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6582.53,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 5000.0,
+      "date": "2024-03-20",
+      "debit": null,
+      "description": "LAK/921010005351966 IMPS/P2A/408114816017/sandeepindus/X051004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5579.58,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-21",
+      "debit": 1002.95,
+      "description": "/INDUSINDBANKLTD/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5322.58,
+      "category": "Food",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-22",
+      "debit": 257.0,
+      "description": "NBSM/53470006/SWIGGY(RAZORPAY)/ NBSM/53553597/PAYTM MOBILE",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4984.58,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-23",
+      "debit": 338.0,
+      "description": "SOLUTIONS PVT LTD/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2886.58,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-23",
+      "debit": 2098.0,
+      "description": "NBSM/53554419/onBeli(RAZORPAY)/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2543.58,
+      "category": "Food",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-25",
+      "debit": 343.0,
+      "description": "NBSM/53654077/SWIGGY(RAZORPAY)/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1789.58,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-29",
+      "debit": 754.0,
+      "description": "Ref#3EGFAQ7CBHLZXD IMPS/P2A/408915181167/MrPaleti/IDFCBank/I",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 135789.58,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 134000.0,
+      "date": "2024-03-29",
+      "debit": null,
+      "description": "MPSTXN/9197010510049751001",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1961.58,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2024-03-29",
+      "debit": 133828.0,
+      "description": "Ref#H9L5TIFK4J3RGH IMPS/P2A/409012903641/MrPaleti/IDFCBank/I",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 140961.58,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 139000.0,
+      "date": "2024-03-30",
+      "debit": null,
+      "description": "MPSTXN/9197010510049751001 MOB/TPFT/AKUNOORI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 961.58,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2024-03-30",
+      "debit": 140000.0,
+      "description": "SRIKA/918010100299031 SB:915010048903125:Int.Pd:01-01-2024 to 31-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1042.58,
+      "category": "Interest",
+      "confidence": 0.99,
+      "credit": 81.0,
+      "date": "2024-03-31",
+      "debit": null,
+      "description": "03-2024 TRANSACTION TOTAL 1235723.85 1236633.00 he/she has found the account correct. suspicious/spam emails, if received by you, to customer.service@axisbank.com know more about the applicable charges,please visit www.axisbank.com fixed, recurring etc* up to maximum amount of Rs 5 Lakh including principal & interest both* (* or exceptions and details please refer www.dicgc.org.in ) In compliance with regulatory guidelines, the non-CTS cheque books attached to the accounts would be destroyed in banks core banking System. Thus, Non CTS cheques will not be valid for CASH, Clearing and Transfer transactions 380006.This is a system generated output and requires no signature. TELANGANA, INDIA, TEL:040-23400732/731 FAX:3407184 Legends : ICONN(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Transaction trough Internet Banking VMT-ICON(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Visa Money Transfer through Internet Banking AUTOSWEEP(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Transfer to linked fixed deposit REV SWEEP(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Interest on Linked fixed Deposit SWEEP TRF(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Transfer from Linked Fixed Deposit / Account VMT(cid:9)(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Visa Money Transfer through ATM CWDR(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Cash Withdrawal through ATM PUR(cid:9)(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)POS purchase RATE.DIFF(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Difference in rates on usage of card internationally CLG(cid:9)(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Cheque Clearing Transaction Int.pd(cid:9)(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Interest paid to customer Int.Coll(cid:9)(cid:9)(cid:9)-(cid:9)(cid:9)Interest collected from the customer ++++ End of Statement ++++ Request From: 192.168.130.190",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

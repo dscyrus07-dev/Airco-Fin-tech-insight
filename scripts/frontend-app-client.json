@@ -1,0 +1,33 @@
+{
+  "clientId": "frontend-app",
+  "name": "Frontend Application",
+  "description": "Airco Insights Frontend Application",
+  "enabled": true,
+  "publicClient": false,
+  "clientAuthenticatorType": "client-secret",
+  "secret": "airco-frontend-secret-2024-secure-key-abc123xyz",
+  "redirectUris": [
+    "http://localhost:3000/*",
+    "http://localhost/*",
+    "https://test.theairco.ai/*"
+  ],
+  "webOrigins": [
+    "http://localhost:3000",
+    "http://localhost",
+    "https://test.theairco.ai"
+  ],
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": false,
+  "protocol": "openid-connect",
+  "attributes": {
+    "backchannel.logout.session.required": "true"
+  },
+  "defaultClientScopes": [
+    "web-origins",
+    "roles",
+    "profile",
+    "email"
+  ]
+}

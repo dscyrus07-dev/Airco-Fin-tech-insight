@@ -1,0 +1,678 @@
+{
+  "aggregation": {
+    "closing_balance": 1360.0,
+    "opening_balance": 0.0,
+    "total_credits": 19870.1,
+    "total_debits": 18510.1
+  },
+  "bank_key": "canara",
+  "categories": [
+    "Interest Income",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Transfer",
+    "Transfer",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Loan Payments",
+    "Bank Charges",
+    "Refund",
+    "Transfer",
+    "Bank Charges",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Interest Income",
+    "Bank Charges",
+    "Transfer",
+    "Interest Income",
+    "Transfer",
+    "Investment"
+  ],
+  "category_totals": {
+    "Bank Charges": {
+      "count": 3,
+      "credit": 0.0,
+      "debit": 66.99
+    },
+    "Interest Income": {
+      "count": 3,
+      "credit": 1322.0,
+      "debit": 0.0
+    },
+    "Investment": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 300.0
+    },
+    "Loan Payments": {
+      "count": 11,
+      "credit": 0.0,
+      "debit": 4993.11
+    },
+    "Refund": {
+      "count": 1,
+      "credit": 548.1,
+      "debit": 0.0
+    },
+    "Transfer": {
+      "count": 8,
+      "credit": 18000.0,
+      "debit": 13150.0
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "Canara Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Apr-2023": 11.99,
+      "Feb-2023": 0,
+      "Mar-2023": 53.0,
+      "May-2023": 2.0
+    },
+    "cashDeposit": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    },
+    "cashWithdrawals": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    },
+    "chequeDeposit": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 548.1,
+      "May-2023": 0
+    },
+    "chequeIssued": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    },
+    "creditCardPayment": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    },
+    "creditCount": {
+      "Apr-2023": 1.0,
+      "Feb-2023": 1.0,
+      "Mar-2023": 2.0,
+      "May-2023": 3.0
+    },
+    "creditValue": {
+      "Apr-2023": 6000.0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6548.1,
+      "May-2023": 6662.0
+    },
+    "debitCount": {
+      "Apr-2023": 3.0,
+      "Feb-2023": 3.0,
+      "Mar-2023": 11.0,
+      "May-2023": 3.0
+    },
+    "debitValue": {
+      "Apr-2023": 6011.99,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6536.11,
+      "May-2023": 5302.0
+    },
+    "ecsNach": {
+      "Apr-2023": 0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 4333.11,
+      "May-2023": 0
+    },
+    "inwBounce": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "loanRepayment": {
+      "Apr-2023": 0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 4333.11,
+      "May-2023": 0
+    },
+    "maxBalance": {
+      "Apr-2023": 6000.0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6000.0,
+      "May-2023": 6000.0
+    },
+    "minBalance": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "monthlyAvgBal": {
+      "Apr-2023": 767.07,
+      "Feb-2023": 25.38,
+      "Mar-2023": 206.42,
+      "May-2023": 2000.0
+    },
+    "nonCashCredit": {
+      "Apr-2023": 6000.0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6548.1,
+      "May-2023": 6662.0
+    },
+    "nonSalaryCredits": {
+      "Apr-2023": 6000.0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6548.1,
+      "May-2023": 6662.0
+    },
+    "owtBounce": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "penaltyCharges": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    },
+    "salaryCredits": {
+      "Apr-2023": 0,
+      "Feb-2023": 0,
+      "Mar-2023": 0,
+      "May-2023": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 27,
+    "coverage_percent": 100.0,
+    "others": 0,
+    "recurring": 2,
+    "total_transactions": 27
+  },
+  "reconciliation": {
+    "calculated_closing": 1360.0,
+    "closing_balance": 1360.0,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 0.0,
+    "source": "running_balance",
+    "total_credits": 19870.1,
+    "total_debits": 18510.1,
+    "transaction_count": 27
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "BankStatementNRL_1683432143561",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Apr-2023": 767.07,
+      "Feb-2023": 25.38,
+      "Mar-2023": 206.42,
+      "May-2023": 2000.0
+    },
+    "Avg Balance": 1821.81,
+    "Balance on 10th": {
+      "Apr-2023": 500.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 13.89,
+      "May-2023": 6000.0
+    },
+    "Balance on 15th": {
+      "Apr-2023": 500.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 13.89,
+      "May-2023": 6000.0
+    },
+    "Balance on 1st": {
+      "Apr-2023": 11.99,
+      "Feb-2023": 660.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "Balance on 20th": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 13.89,
+      "May-2023": 6000.0
+    },
+    "Balance on 25th": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 13.89,
+      "May-2023": 6000.0
+    },
+    "Balance on 5th": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 13.89,
+      "May-2023": 6000.0
+    },
+    "Balance on Last Day": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 11.99,
+      "May-2023": 6000.0
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 11.99,
+      "May-2023": 6000.0
+    },
+    "Max Balance": 6660.0,
+    "Max EOD Balance": {
+      "Apr-2023": 6000.0,
+      "Feb-2023": 660.0,
+      "Mar-2023": 6000.0,
+      "May-2023": 6000.0
+    },
+    "Min Balance": 0.0,
+    "Min EOD Balance": {
+      "Apr-2023": 0.0,
+      "Feb-2023": 0.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "Start of Month Balance": {
+      "Apr-2023": 11.99,
+      "Feb-2023": 660.0,
+      "Mar-2023": 0.0,
+      "May-2023": 0.0
+    },
+    "Top 5 Credit %": 97.23,
+    "Top 5 Credit Amt": 19320.0,
+    "Top 5 Debit %": 71.74,
+    "Top 5 Debit Amt": 13280.0,
+    "Total Cheque": 1,
+    "Total Credit Amount": 19870.1,
+    "Total Credit Count": 7,
+    "Total Debit Amount": 18510.1,
+    "Total Debit Count": 20,
+    "_per_month": {
+      "Apr-2023": {
+        "avg_eod": 767.07,
+        "d1": 11.99,
+        "d10": 500.0,
+        "d15": 500.0,
+        "d20": 0.0,
+        "d25": 0.0,
+        "d5": 0.0,
+        "dlast": 0.0,
+        "end": 0.0,
+        "max_eod": 6000.0,
+        "min_eod": 0.0,
+        "start": 11.99
+      },
+      "Feb-2023": {
+        "avg_eod": 25.38,
+        "d1": 660.0,
+        "d10": 0.0,
+        "d15": 0.0,
+        "d20": 0.0,
+        "d25": 0.0,
+        "d5": 0.0,
+        "dlast": 0.0,
+        "end": 0.0,
+        "max_eod": 660.0,
+        "min_eod": 0.0,
+        "start": 660.0
+      },
+      "Mar-2023": {
+        "avg_eod": 206.42,
+        "d1": 0.0,
+        "d10": 13.89,
+        "d15": 13.89,
+        "d20": 13.89,
+        "d25": 13.89,
+        "d5": 13.89,
+        "dlast": 11.99,
+        "end": 11.99,
+        "max_eod": 6000.0,
+        "min_eod": 0.0,
+        "start": 0.0
+      },
+      "May-2023": {
+        "avg_eod": 2000.0,
+        "d1": 0.0,
+        "d10": 6000.0,
+        "d15": 6000.0,
+        "d20": 6000.0,
+        "d25": 6000.0,
+        "d5": 6000.0,
+        "dlast": 6000.0,
+        "end": 6000.0,
+        "max_eod": 6000.0,
+        "min_eod": 0.0,
+        "start": 0.0
+      }
+    }
+  },
+  "transaction_count": 27,
+  "transactions": [
+    {
+      "balance": 660.0,
+      "category": "Interest Income",
+      "confidence": 0.99,
+      "credit": 660.0,
+      "date": "2023-02-03",
+      "debit": null,
+      "description": "GROSS INT CR : 130000311348 /1",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 606.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-02-04",
+      "debit": 53.11,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-02-04",
+      "debit": 590.0,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-02-04",
+      "debit": 16.89,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6000.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 6000.0,
+      "date": "2023-03-02",
+      "debit": null,
+      "description": "NEFT Cr-YESB30614156460-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4400.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-02",
+      "debit": 1600.0,
+      "description": "IB OAT 553438300 6027101003479",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3826.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 573.11,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3236.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 590.0,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2646.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 590.0,
+      "description": "ECS DR RTN SC SB Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2056.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 590.0,
+      "description": "ECS DR RTN SC SB NEW Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1466.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 590.0,
+      "description": "ECS DR RTN SC SB NEW Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 966.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 500.0,
+      "description": "ECS DR RTN SC SB NEW Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 466.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 500.0,
+      "description": "ECS DR RTN SC SB NEW Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 66.89,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 400.0,
+      "description": "ECS DR RTN SC SB NEW Due Dt:",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13.89,
+      "category": "Bank Charges",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-03",
+      "debit": 53.0,
+      "description": "SLABWISE NMMB CHARGESDue Dt:01-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 561.99,
+      "category": "Refund",
+      "confidence": 0.99,
+      "credit": 548.1,
+      "date": "2023-03-30",
+      "debit": null,
+      "description": "000000000000 GST REV ECS CHQ RET CHG",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11.99,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-30",
+      "debit": 550.0,
+      "description": "IB OAT 572257100 6027101003479",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Charges",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-02",
+      "debit": 11.99,
+      "description": "SLABWISE NMMB CHARGES",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6000.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 6000.0,
+      "date": "2023-04-07",
+      "debit": null,
+      "description": "309711832492 INET-IMPS-CR/Cashfree/ICICI Bank//",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 500.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-10",
+      "debit": 5500.0,
+      "description": "IB OAT 196408900 6027101003479",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-20",
+      "debit": 500.0,
+      "description": "IB OAT 228618500 6027101003479",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2.0,
+      "category": "Interest Income",
+      "confidence": 0.99,
+      "credit": 2.0,
+      "date": "2023-05-01",
+      "debit": null,
+      "description": "SBINT FOR THE PERIOD FROM01-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Charges",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-05-01",
+      "debit": 2.0,
+      "description": "SLABWISE NMMB CHARGES",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6000.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 6000.0,
+      "date": "2023-05-03",
+      "debit": null,
+      "description": "NEFT Cr-000310153581-RATN0000999-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6660.0,
+      "category": "Interest Income",
+      "confidence": 0.99,
+      "credit": 660.0,
+      "date": "2023-05-03",
+      "debit": null,
+      "description": "GROSS INT CR : 130000311348 /1",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1660.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-05-03",
+      "debit": 5000.0,
+      "description": "IB OAT 239521300 6027101003479",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1360.0,
+      "category": "Investment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-05-03",
+      "debit": 300.0,
+      "description": "IB Instl Pay to RD 117011522027 by",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

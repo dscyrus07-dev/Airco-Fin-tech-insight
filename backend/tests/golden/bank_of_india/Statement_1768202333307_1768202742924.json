@@ -1,0 +1,1016 @@
+{
+  "aggregation": {
+    "closing_balance": 1775.37,
+    "opening_balance": 1203.92,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "bank_of_india",
+  "categories": [
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Subscription",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Credit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Groceries",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Travel",
+    "Travel",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Travel",
+    "Transfer",
+    "Transfer",
+    "Transfer"
+  ],
+  "category_totals": {
+    "Groceries": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 1647.0
+    },
+    "Others Credit": {
+      "count": 1,
+      "credit": 500.0,
+      "debit": 0.0
+    },
+    "Others Debit": {
+      "count": 2,
+      "credit": 0.0,
+      "debit": 3300.0
+    },
+    "Subscription": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 130.0
+    },
+    "Transfer": {
+      "count": 55,
+      "credit": 11172.0,
+      "debit": 5540.0
+    },
+    "Travel": {
+      "count": 3,
+      "credit": 0.0,
+      "debit": 483.55
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "Bank of India",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "cashDeposit": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "cashWithdrawals": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "chequeDeposit": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "chequeIssued": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "creditCardPayment": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "creditCount": {
+      "Dec-2025": 4.0,
+      "Jan-2026": 7.0
+    },
+    "creditValue": {
+      "Dec-2025": 3200.0,
+      "Jan-2026": 8472.0
+    },
+    "debitCount": {
+      "Dec-2025": 23.0,
+      "Jan-2026": 29.0
+    },
+    "debitValue": {
+      "Dec-2025": 2005.0,
+      "Jan-2026": 9095.55
+    },
+    "ecsNach": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "inwBounce": {
+      "Dec-2025": 0.0,
+      "Jan-2026": 0.0
+    },
+    "loanRepayment": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "maxBalance": {
+      "Dec-2025": 2229.92,
+      "Jan-2026": 2495.92
+    },
+    "minBalance": {
+      "Dec-2025": 1023.92,
+      "Jan-2026": 1190.07
+    },
+    "monthlyAvgBal": {
+      "Dec-2025": 1509.51,
+      "Jan-2026": 1785.71
+    },
+    "nonCashCredit": {
+      "Dec-2025": 3200.0,
+      "Jan-2026": 8472.0
+    },
+    "nonSalaryCredits": {
+      "Dec-2025": 3200.0,
+      "Jan-2026": 8472.0
+    },
+    "owtBounce": {
+      "Dec-2025": 0.0,
+      "Jan-2026": 0.0
+    },
+    "penaltyCharges": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    },
+    "salaryCredits": {
+      "Dec-2025": 0,
+      "Jan-2026": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 60,
+    "coverage_percent": 95.2,
+    "others": 3,
+    "recurring": 31,
+    "total_transactions": 63
+  },
+  "reconciliation": {
+    "calculated_closing": 1775.37,
+    "closing_balance": 1775.37,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 1203.92,
+    "source": "running_balance",
+    "total_credits": 11672.0,
+    "total_debits": 11100.55,
+    "transaction_count": 63
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "Statement_1768202333307_1768202742924",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Dec-2025": 1509.51,
+      "Jan-2026": 1785.71
+    },
+    "Avg Balance": 1927.33,
+    "Balance on 10th": {
+      "Dec-2025": 1123.92,
+      "Jan-2026": 1190.07
+    },
+    "Balance on 15th": {
+      "Dec-2025": 1123.92,
+      "Jan-2026": 1775.37
+    },
+    "Balance on 1st": {
+      "Dec-2025": 1123.92,
+      "Jan-2026": 2335.92
+    },
+    "Balance on 20th": {
+      "Dec-2025": 1523.92,
+      "Jan-2026": 1775.37
+    },
+    "Balance on 25th": {
+      "Dec-2025": 2229.92,
+      "Jan-2026": 1775.37
+    },
+    "Balance on 5th": {
+      "Dec-2025": 1123.92,
+      "Jan-2026": 1404.92
+    },
+    "Balance on Last Day": {
+      "Dec-2025": 1968.92,
+      "Jan-2026": 1775.37
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Dec-2025": 1968.92,
+      "Jan-2026": 1775.37
+    },
+    "Max Balance": 5617.07,
+    "Max EOD Balance": {
+      "Dec-2025": 2229.92,
+      "Jan-2026": 2495.92
+    },
+    "Min Balance": 1023.92,
+    "Min EOD Balance": {
+      "Dec-2025": 1023.92,
+      "Jan-2026": 1190.07
+    },
+    "Start of Month Balance": {
+      "Dec-2025": 1123.92,
+      "Jan-2026": 2335.92
+    },
+    "Top 5 Credit %": 73.53,
+    "Top 5 Credit Amt": 8582.0,
+    "Top 5 Debit %": 64.7,
+    "Top 5 Debit Amt": 7182.0,
+    "Total Cheque": 0,
+    "Total Credit Amount": 11672.0,
+    "Total Credit Count": 11,
+    "Total Debit Amount": 11100.55,
+    "Total Debit Count": 52,
+    "_per_month": {
+      "Dec-2025": {
+        "avg_eod": 1509.51,
+        "d1": 1123.92,
+        "d10": 1123.92,
+        "d15": 1123.92,
+        "d20": 1523.92,
+        "d25": 2229.92,
+        "d5": 1123.92,
+        "dlast": 1968.92,
+        "end": 1968.92,
+        "max_eod": 2229.92,
+        "min_eod": 1023.92,
+        "start": 1123.92
+      },
+      "Jan-2026": {
+        "avg_eod": 1785.71,
+        "d1": 2335.92,
+        "d10": 1190.07,
+        "d15": 1775.37,
+        "d20": 1775.37,
+        "d25": 1775.37,
+        "d5": 1404.92,
+        "dlast": 1775.37,
+        "end": 1775.37,
+        "max_eod": 2495.92,
+        "min_eod": 1190.07,
+        "start": 2335.92
+      }
+    }
+  },
+  "transaction_count": 63,
+  "transactions": [
+    {
+      "balance": 1123.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-15",
+      "debit": 80.0,
+      "description": "UPI/891189115752/DR/BODIGA/UTIB/munimuni n/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1023.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-16",
+      "debit": 100.0,
+      "description": "UPI/354664236916/DR/RAJEND/YESB/paytm.s 1r/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1523.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 500.0,
+      "date": "2025-12-19",
+      "debit": 0.0,
+      "description": "UPI/804696208263/CR/PUSHPA/CNRB/pushpa raj/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1393.92,
+      "category": "Subscription",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-22",
+      "debit": 130.0,
+      "description": "UPI/591681223565/DR/Google/UTIB/playstore/ Mandat",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1365.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-22",
+      "debit": 28.0,
+      "description": "UPI/645687298985/DR//CNRB/ka51aj760/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1359.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-22",
+      "debit": 6.0,
+      "description": "UPI/043014435685/DR//CNRB/ka53f0173/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1329.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-25",
+      "debit": 30.0,
+      "description": "UPI/003034302509/DR/LOKESH/YESB/paytmqr 6v/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2529.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 1200.0,
+      "date": "2025-12-25",
+      "debit": 0.0,
+      "description": "UPI/108835737516/CR/PUSHPA/ICIC/pushparaj /UPI Pa",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2229.92,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": 0.0,
+      "date": "2025-12-25",
+      "debit": 300.0,
+      "description": "UPI/784954185912/DR/Mrs An/IDIB/866005788/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2199.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-26",
+      "debit": 30.0,
+      "description": "UPI/509420739057/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2198.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-26",
+      "debit": 1.0,
+      "description": "UPI/895398702078/DR/PUSHPA/CNRB/pushpa raj/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2168.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 30.0,
+      "description": "UPI/119284006527/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2118.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 50.0,
+      "description": "UPI/034409382555/DR/SHIVA /CNRB/0176siva- /Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2028.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 90.0,
+      "description": "UPI/244946038405/DR/SABANN/IPOS/9036350 48/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2016.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 12.0,
+      "description": "UPI/387220113065/DR//CNRB/ka57f6224/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1846.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 170.0,
+      "description": "UPI/031233311127/DR/Mukesh/JIOP/70229936 3/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1791.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 55.0,
+      "description": "UPI/935198972622/DR//ICIC/055101544/Payme n",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1790.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-27",
+      "debit": 1.0,
+      "description": "UPI/451458871714/DR//UTIB/919010081/Paym en",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1590.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-28",
+      "debit": 200.0,
+      "description": "UPI/065177856478/DR/PRATHA/YESB/Q13689 843/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1578.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-28",
+      "debit": 12.0,
+      "description": "UPI/733050865598/DR//CNRB/ka51ak420/Pay men",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1558.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-28",
+      "debit": 20.0,
+      "description": "UPI/131507301164/DR/DEVARA/YESB/paytmqr 6c/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1528.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-29",
+      "debit": 30.0,
+      "description": "UPI/192495401641/DR/LOKESH/YESB/paytmqr 6v/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1498.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-30",
+      "debit": 30.0,
+      "description": "UPI/702604030384/DR/LOKESH/YESB/paytmqr 6v/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1468.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2025-12-31",
+      "debit": 30.0,
+      "description": "UPI/209306034175/DR/LOKESH/YESB/paytmqr 6v/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1968.92,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 500.0,
+      "date": "2025-12-31",
+      "debit": 0.0,
+      "description": "UPI/928895027436/CR/BHARAT/IDFB/bharathk 6/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1398.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2025-12-31",
+      "debit": 570.0,
+      "description": "UPI/624738719920/DR/AAMIR /YESB/Q10189008/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2398.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 1000.0,
+      "date": "2025-12-31",
+      "debit": 0.0,
+      "description": "UPI/573143103820/CR/PUSHPA/ICIC/pushparaj /UPI",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2368.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-01",
+      "debit": 30.0,
+      "description": "UPI/309930279239/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2335.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-01",
+      "debit": 33.0,
+      "description": "UPI/157554242441/DR/SAEED /YESB/paytmqr6w/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 3982.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 1647.0,
+      "date": "2026-01-01",
+      "debit": 0.0,
+      "description": "UPI/636735635401/CR/PUSHPA/ICIC/pushparaj /UPI",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2335.92,
+      "category": "Groceries",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-01",
+      "debit": 1647.0,
+      "description": "UPI/636791912930/DR/ZEPTO /KKBK/zeptonow./UPI",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2305.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-02",
+      "debit": 30.0,
+      "description": "UPI/178279937829/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2225.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-02",
+      "debit": 80.0,
+      "description": "UPI/153598511607/DR/SAEED /YESB/paytmqr6w/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2525.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 300.0,
+      "date": "2026-01-02",
+      "debit": 0.0,
+      "description": "UPI/162821462145/CR/ALLUPI/ICIC/789385286 /Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2495.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-03",
+      "debit": 30.0,
+      "description": "UPI/697770402736/DR/Umadev/YESB/paytm.s1 u/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2462.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-03",
+      "debit": 33.0,
+      "description": "UPI/429306297839/DR/SAEED /YESB/paytmqr6w/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2263.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-03",
+      "debit": 199.0,
+      "description": "UPI/696706521625/DR/VODAFO/HDFC/vil.payu @/UPIInt",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2242.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-03",
+      "debit": 21.0,
+      "description": "UPI/358162575476/DR/VIJAY /YESB/paytmqr6g/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1442.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-03",
+      "debit": 800.0,
+      "description": "UPI/414106257678/DR/RAJESW/SBIN/chinnura j/Paymen",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1404.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-05",
+      "debit": 38.0,
+      "description": "UPI/878634838177/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1382.92,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 22.0,
+      "description": "UPI/900922050480/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 2382.92,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 1000.0,
+      "date": "2026-01-06",
+      "debit": 0.0,
+      "description": "UPI/108921735186/CR/PUSHPA/ICIC/pushparaj /UPI Pa",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1382.92,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 1000.0,
+      "description": "UPI/817611915352/DR/JALADI/KKBK/7702366 33/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1234.77,
+      "category": "Travel",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 148.15,
+      "description": "UPI/297989711323/DR/IRCTC/YESB/paytra159/ Sent u",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1092.07,
+      "category": "Travel",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 142.7,
+      "description": "UPI/297990121813/DR/IRCTC/YESB/paytra159/ Sent u",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1382.07,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 290.0,
+      "date": "2026-01-06",
+      "debit": 0.0,
+      "description": "UPI/600664390881/CR/RAJESW/SBIN/chinnura j/trani",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1882.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 500.0,
+      "date": "2026-01-06",
+      "debit": 0.0,
+      "description": "IMPS/600622865384/PUSHPARAJ B",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5617.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 3735.0,
+      "date": "2026-01-06",
+      "debit": 0.0,
+      "description": "IMPS/600622866592/PUSHPARAJ B",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4882.07,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 735.0,
+      "description": "UPI/577216056247/DR/ICICI /HDFC/iciciprud/UPI In",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1882.07,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": 0.0,
+      "date": "2026-01-06",
+      "debit": 3000.0,
+      "description": "PPF Dep: 84350PPF000000000110",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1852.07,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-07",
+      "debit": 30.0,
+      "description": "UPI/131130600866/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1462.07,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-07",
+      "debit": 390.0,
+      "description": "UPI/909721069578/DR/AAMIR /YESB/paytmqr6u/Verifi",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1412.07,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-08",
+      "debit": 50.0,
+      "description": "UPI/445923416021/DR/LOKESH/YESB/paytmqr 60/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1362.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-09",
+      "debit": 50.0,
+      "description": "UPI/629021417707/DR/M S MA/ICIC/701944355/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1356.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-09",
+      "debit": 6.0,
+      "description": "UPI/222759907450/DR//CNRB/ka51aj860/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1350.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-09",
+      "debit": 6.0,
+      "description": "UPI/720855847247/DR//CNRB/ka51aj758/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1300.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-10",
+      "debit": 50.0,
+      "description": "UPI/224356549561/DR/GURUNA/YESB/Q0338 2230/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1190.07,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-10",
+      "debit": 110.0,
+      "description": "UPI/378764169709/DR/MR GUR/YESB/Q21536542/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2190.07,
+      "category": "Transfer",
+      "confidence": 88.0,
+      "credit": 1000.0,
+      "date": "2026-01-11",
+      "debit": 0.0,
+      "description": "UPI/637707103418/CR/PUSHPA/UTIB/pushpar aj/UPI",
+      "is_recurring": false,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1997.37,
+      "category": "Travel",
+      "confidence": 88.0,
+      "credit": 0.0,
+      "date": "2026-01-11",
+      "debit": 192.7,
+      "description": "UPI/298214452071/DR/IRCTC/YESB/paytra159/ Sent u",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    },
+    {
+      "balance": 1817.37,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-11",
+      "debit": 180.0,
+      "description": "UPI/665154261349/DR/SOMASH/CNRB/somam 2995/Paymen",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1805.37,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-01-11",
+      "debit": 12.0,
+      "description": "UPI/286375134739/DR//CNRB/ka57f4591/Paym en",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1775.37,
+      "category": "Transfer",
+      "confidence": 98.0,
+      "credit": 0.0,
+      "date": "2026-01-12",
+      "debit": 30.0,
+      "description": "UPI/587503428523/DR/LOKESH/YESB/paytmqr 6v/Paymen",
+      "is_recurring": true,
+      "source": "bank_of_india_override"
+    }
+  ]
+}

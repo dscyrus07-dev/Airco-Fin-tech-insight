@@ -1,0 +1,451 @@
+{
+  "schema_version": 1,
+  "bank_key": "axis",
+  "source_class": "app.services.banks.axis.rule_engine.AxisRuleEngine",
+  "match_semantics": {
+    "layers": [
+      "exact_keyword",
+      "pattern_match",
+      "merchant_mapping",
+      "upi_merchant",
+      "amount_heuristic",
+      "default"
+    ],
+    "is_debit": "debit_positive",
+    "upi_gate": "upi_only",
+    "upi_debit_only": true,
+    "return_mode": "split"
+  },
+  "confidence": {
+    "exact": 0.99,
+    "pattern": 0.95,
+    "merchant": 0.9,
+    "upi": 0.85,
+    "amount": 0.7,
+    "default": 0.5
+  },
+  "debit_rules": {
+    "ATM Withdrawal": {
+      "exact": [
+        "ATM-CASH",
+        "ATM CASH",
+        "ATM WDL",
+        "CASH WITHDRAWAL",
+        "ATM-CASH-AXIS",
+        "ATM-CASH/HYDERABAD",
+        "ATM-CASH/MUMBAI",
+        "ATM-CASH/DELHI",
+        "ATM-CASH/BANGALORE",
+        "ATM-CASH/CHENNAI",
+        "ATM-CASH/KOLKATA",
+        "ATM-CASH/PUNE",
+        "ATM-CASH/NCBI",
+        "ATM-CASH/KANDI",
+        "ATM-CASH/BANDLAGU",
+        "ATM OFFSITE"
+      ],
+      "patterns": [
+        "ATM-CASH.*",
+        "ATM.*CASH.*",
+        "CASH.*WITHDRA.*",
+        "ATM-CASH-AXIS.*"
+      ]
+    },
+    "Food": {
+      "exact": [
+        "SWIGGY",
+        "ZOMATO",
+        "DOMINOS",
+        "MCDONALDS",
+        "KFC",
+        "BURGER",
+        "PIZZA",
+        "PIZZAHUT",
+        "SUBWAY",
+        "STARBUCKS",
+        "CCD",
+        "CAFE",
+        "RESTAURANT",
+        "FOOD",
+        "DINING",
+        "EATERY",
+        "BIRYANI",
+        "HALDIRAM",
+        "BARBEQUE",
+        "CHAAYOS",
+        "FAASOS",
+        "REBEL FOODS"
+      ],
+      "patterns": [
+        "UPI/P2M.*SWIGGY.*",
+        "UPI/P2M.*ZOMATO.*",
+        "IMPS/P2M.*FOOD.*"
+      ]
+    },
+    "Shopping": {
+      "exact": [
+        "AMAZON",
+        "FLIPKART",
+        "MYNTRA",
+        "AJIO",
+        "NYKAA",
+        "MEESHO",
+        "SNAPDEAL",
+        "TATACLIQ",
+        "DMART",
+        "BIGBASKET",
+        "BLINKIT",
+        "ZEPTO",
+        "INSTAMART",
+        "JIOMART",
+        "DECATHLON",
+        "IKEA",
+        "SHOPPERS STOP",
+        "LIFESTYLE",
+        "WESTSIDE",
+        "PANTALOONS",
+        "MAX",
+        "ZARA",
+        "H&M",
+        "MINISO",
+        "CROMA",
+        "VIJAY SALES",
+        "RELIANCE DIGITAL"
+      ],
+      "patterns": [
+        "UPI/P2M.*AMAZON.*",
+        "UPI/P2M.*FLIPKART.*",
+        "IMPS/P2M.*SHOP.*"
+      ]
+    },
+    "Transport": {
+      "exact": [
+        "UBER",
+        "OLA",
+        "RAPIDO",
+        "PETROL",
+        "DIESEL",
+        "FUEL",
+        "IOCL",
+        "BPCL",
+        "HPCL",
+        "INDIAN OIL",
+        "BHARAT PETROLEUM",
+        "IRCTC",
+        "RAILWAY",
+        "METRO",
+        "TOLL",
+        "FASTAG",
+        "PARKING",
+        "REDBUS",
+        "MAKEMYTRIP",
+        "GOIBIBO",
+        "YATRA",
+        "CLEARTRIP",
+        "INDIGO",
+        "SPICEJET",
+        "AIRINDIA",
+        "VISTARA",
+        "AKASA"
+      ],
+      "patterns": [
+        "UPI/P2M.*UBER.*",
+        "UPI/P2M.*OLA.*",
+        "UPI/P2M.*IRCTC.*",
+        "FASTAG.*"
+      ]
+    },
+    "Bill Payment": {
+      "exact": [
+        "ELECTRICITY",
+        "WATER",
+        "GAS",
+        "BROADBAND",
+        "MOBILE",
+        "RECHARGE",
+        "AIRTEL",
+        "JIO",
+        "VI",
+        "BSNL",
+        "ACT",
+        "TATA SKY",
+        "DISH",
+        "HATHWAY",
+        "PHARMACY",
+        "APOLLO",
+        "MEDPLUS",
+        "NETMEDS",
+        "PHARMEASY",
+        "1MG",
+        "TATA 1MG",
+        "HOSPITAL",
+        "CLINIC",
+        "DIAGNOSTIC",
+        "THYROCARE",
+        "METROPOLIS",
+        "DR LAL",
+        "PRACTO",
+        "GST",
+        "CBDT",
+        "TDS",
+        "INCOME TAX"
+      ],
+      "patterns": [
+        "BILL.*PAYMENT.*",
+        ".*RECHARGE.*",
+        "MOBILE.*BILL.*",
+        ".*ELECTRICITY.*BILL.*",
+        ".*PHARMACY.*",
+        ".*HOSPITAL.*"
+      ]
+    },
+    "Entertainment": {
+      "exact": [
+        "NETFLIX",
+        "AMAZON PRIME",
+        "HOTSTAR",
+        "DISNEY",
+        "SONYLIV",
+        "ZEE5",
+        "VOOT",
+        "ALTBALAJI",
+        "SPOTIFY",
+        "GAANA",
+        "WYNK",
+        "APPLE MUSIC",
+        "YOUTUBE",
+        "PLAYSTATION",
+        "XBOX",
+        "STEAM",
+        "GOOGLE PLAY",
+        "APP STORE"
+      ],
+      "patterns": [
+        "UPI/P2M.*NETFLIX.*",
+        "PRIME.*MEMBER.*",
+        "HOTSTAR.*PREMIUM.*"
+      ]
+    },
+    "Loan Payments": {
+      "exact": [
+        "EMI",
+        "LOAN",
+        "BAJAJ FINANCE",
+        "HOME LOAN",
+        "CAR LOAN",
+        "PERSONAL LOAN",
+        "LIC HOUSING",
+        "HDFC HOME LOAN",
+        "ICICI HOME LOAN"
+      ],
+      "patterns": [
+        "ACH-DR-.*",
+        "ACH-DR-LIC.*",
+        "EMI.*DEBIT.*",
+        "LOAN.*REPAYMENT.*",
+        ".*EMI.*\\d+/\\d+.*",
+        "NACH.*DEBIT.*",
+        "ECS.*DEBIT.*"
+      ]
+    },
+    "Credit Card Payment": {
+      "exact": [
+        "CREDITCARD PAYMENT",
+        "CREDIT CARD PAYMENT",
+        "CC PAYMENT",
+        "CCPAYMENT"
+      ],
+      "patterns": [
+        "CreditCard\\s*Payment.*",
+        "Credit\\s*Card\\s*Payment.*",
+        "CC\\s*PAYMENT.*",
+        ".*Ref#[A-Z0-9]{10,}.*"
+      ]
+    },
+    "Transfer": {
+      "exact": [
+        "NEFT",
+        "RTGS",
+        "IMPS",
+        "UPI",
+        "TRANSFER",
+        "TRF"
+      ],
+      "patterns": [
+        "NEFT.*DR.*",
+        "RTGS.*DR.*",
+        "IMPS/P2A.*",
+        "IMPS/P2M.*",
+        "UPI/P2A.*",
+        "UPI/P2M.*"
+      ]
+    }
+  },
+  "credit_rules": {
+    "Salary Credits": {
+      "exact": [
+        "SALARY",
+        "SAL",
+        "PAYROLL",
+        "WAGES",
+        "STIPEND"
+      ],
+      "patterns": [
+        "SALARY.*CR.*",
+        "SAL.*CREDIT.*",
+        "PAYROLL.*",
+        ".*SALARY.*"
+      ]
+    },
+    "Loan": {
+      "exact": [
+        "LIC HOUSING",
+        "HOME LOAN CREDIT",
+        "LOAN DISBURSAL"
+      ],
+      "patterns": [
+        "LOAN.*CREDIT.*",
+        "DISBURS.*"
+      ]
+    },
+    "Interest": {
+      "exact": [
+        "INTEREST",
+        "INT",
+        "INT.PD",
+        "INTPD",
+        "INT PAID",
+        "CREDIT INTEREST"
+      ],
+      "patterns": [
+        "INTEREST.*CREDIT.*",
+        ".*INTEREST.*"
+      ]
+    },
+    "Refund": {
+      "exact": [
+        "REFUND",
+        "REVERSAL",
+        "CASHBACK",
+        "CASH BACK",
+        "NEFT RETURN",
+        "ACH RETURN"
+      ],
+      "patterns": [
+        "REFUND.*",
+        ".*REVERSAL.*",
+        ".*CASHBACK.*",
+        "NEFT.*RETURN.*",
+        "ACH.*RETURN.*"
+      ]
+    },
+    "Bank Transfer In": {
+      "exact": [
+        "NEFT CR",
+        "RTGS CR",
+        "IMPS CR",
+        "NEFTCR",
+        "RTGSCR"
+      ],
+      "patterns": [
+        "IMPS/P2A.*",
+        "NEFT.*CR.*",
+        "RTGS.*CR.*",
+        "UPI/P2A.*"
+      ]
+    }
+  },
+  "upi_merchants": {
+    "swiggy": "Food",
+    "zomato": "Food",
+    "amazon": "Shopping",
+    "flipkart": "Shopping",
+    "uber": "Transport",
+    "ola": "Transport",
+    "netflix": "Entertainment",
+    "hotstar": "Entertainment",
+    "paytm": "Others Debit",
+    "phonepe": "Others Debit",
+    "gpay": "Others Debit"
+  },
+  "merchant_map": {
+    "amazon": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "flipkart": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "myntra": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "ajio": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "nykaa": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "swiggy": "Food",
+    "zomato": "Food",
+    "dominos": "Food",
+    "mcdonalds": "Food",
+    "kfc": "Food",
+    "uber": "Transport",
+    "ola": "Transport",
+    "rapido": "Transport",
+    "netflix": "Entertainment",
+    "hotstar": "Entertainment",
+    "spotify": "Entertainment",
+    "paytm": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    },
+    "phonepe": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    },
+    "gpay": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    }
+  },
+  "amount_heuristics": {
+    "emi": {
+      "enabled": true,
+      "debit_only": true,
+      "min_amount": 500,
+      "max_amount": 100000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "emi",
+        "loan",
+        "installment"
+      ],
+      "category": "Loan Payments",
+      "matched_rule": "amount_emi",
+      "token_case": "lower"
+    },
+    "salary": {
+      "enabled": true,
+      "credit_only": true,
+      "min_amount": 10000,
+      "multiple_of": 1000,
+      "description_tokens": [
+        "salary",
+        "payroll",
+        "wages"
+      ],
+      "category": "Salary Credits",
+      "matched_rule": "amount_salary",
+      "token_case": "lower"
+    }
+  },
+  "defaults": {
+    "debit_category": "Others Debit",
+    "credit_category": "Others Credit"
+  }
+}

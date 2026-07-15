@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "bank_key": "canara",
+  "source_class": "app.services.banks.canara.rule_engine.CanaraRuleEngine",
+  "match_semantics": {
+    "layers": [
+      "exact_keyword",
+      "pattern_match",
+      "upi_merchant",
+      "amount_heuristic",
+      "default"
+    ],
+    "is_debit": "debit_truthy",
+    "upi_gate": "upi_or_at",
+    "upi_debit_only": true,
+    "return_mode": "split",
+    "legacy_return_note": "Canara used to return classified+unclassified as first tuple; base_processor deduped. Shared engine uses split."
+  },
+  "confidence": {
+    "exact": 0.99,
+    "pattern": 0.95,
+    "merchant": 0.9,
+    "upi": 0.85,
+    "amount": 0.7,
+    "default": 0.5
+  },
+  "debit_rules": {
+    "ATM Withdrawal": {
+      "exact": [
+        "ATM CASH",
+        "ATM WDL",
+        "ATW",
+        "CASH WITHDRAWAL",
+        "CASH W/D"
+      ],
+      "patterns": [
+        "ATM.*CASH",
+        "ATW-\\d+",
+        "CASH\\s*W/D"
+      ]
+    },
+    "Bank Charges": {
+      "exact": [
+        "SMS CHARGES",
+        "SLABWISE NMMB CHARGES",
+        "ATM INSUFFICIENT FUND CHARGES",
+        "ATM / IMPS TRANSACTION CHARGE",
+        "ATM / IMPS TRANSACTION CHARGES",
+        "MAINTENANCE CHARGE",
+        "ANNUAL CHARGES",
+        "LEDGER FOLIO CHARGES",
+        "MINIMUM BALANCE CHARGE",
+        "MIN BAL CHARGE",
+        "DEBIT CARD ANNUAL FEE",
+        "GST ON CHARGES"
+      ],
+      "patterns": [
+        ".*CHARGES.*",
+        ".*CHARGE.*FEE.*",
+        ".*ANNUAL.*FEE.*"
+      ]
+    },
+    "Loan Payments": {
+      "exact": [
+        "EMI",
+        "ECS ",
+        "NACH DR",
+        "LOAN EMI",
+        "LOAN REPAY",
+        "SI DEBIT",
+        "STANDING INST"
+      ],
+      "patterns": [
+        "ECS.*DR",
+        "NACH.*DR",
+        ".*EMI.*\\d+",
+        "LOAN.*REPAY"
+      ]
+    },
+    "Food": {
+      "exact": [
+        "SWIGGY",
+        "ZOMATO",
+        "DOMINOS",
+        "MCDONALDS",
+        "KFC",
+        "PIZZA",
+        "RESTAURANT",
+        "FOOD"
+      ],
+      "patterns": [
+        "SWIGGY.*",
+        "ZOMATO.*ORDER"
+      ]
+    },
+    "Shopping": {
+      "exact": [
+        "AMAZON",
+        "FLIPKART",
+        "MYNTRA",
+        "MEESHO",
+        "NYKAA",
+        "AJIO",
+        "BIGBASKET",
+        "BLINKIT",
+        "ZEPTO"
+      ],
+      "patterns": [
+        "AMZN.*MKTP",
+        "FLIPKART.*INTERNET"
+      ]
+    },
+    "Transport": {
+      "exact": [
+        "UBER",
+        "OLA",
+        "RAPIDO",
+        "PETROL",
+        "DIESEL",
+        "FUEL",
+        "FASTAG",
+        "IRCTC",
+        "REDBUS",
+        "MAKEMYTRIP"
+      ],
+      "patterns": [
+        "UBER.*TRIP",
+        "OLA.*CAB",
+        "FASTAG.*",
+        "IRCTC.*"
+      ]
+    },
+    "Bill Payment": {
+      "exact": [
+        "ELECTRICITY",
+        "WATER BILL",
+        "GAS BILL",
+        "BROADBAND",
+        "MOBILE RECHARGE",
+        "AIRTEL",
+        "JIO",
+        "BSNL",
+        "VI ",
+        "TATA SKY",
+        "DISH TV"
+      ],
+      "patterns": [
+        ".*RECHARGE.*",
+        "BILL.*PAYMENT",
+        "MOBILE.*BILL"
+      ]
+    },
+    "Entertainment": {
+      "exact": [
+        "NETFLIX",
+        "HOTSTAR",
+        "AMAZON PRIME",
+        "SPOTIFY",
+        "ZEE5",
+        "SONYLIV",
+        "YOUTUBE PREMIUM"
+      ],
+      "patterns": [
+        "NETFLIX.*",
+        "PRIME.*MEMBER"
+      ]
+    },
+    "Insurance": {
+      "exact": [
+        "LIC PREMIUM",
+        "INSURANCE PREMIUM",
+        "LIC ",
+        "HDFC LIFE",
+        "SBI LIFE",
+        "ICICI PRU"
+      ],
+      "patterns": [
+        ".*INSURANCE.*PREMIUM.*",
+        "LIC.*PREMIUM"
+      ]
+    },
+    "Investment": {
+      "exact": [
+        "RD DRAWDOWN",
+        "INSTL PAY TO RD",
+        "MUTUAL FUND",
+        "SIP",
+        "NSC",
+        "PPF"
+      ],
+      "patterns": [
+        "RD.*DRAWDOWN",
+        ".*SIP.*",
+        "MUTUAL.*FUND"
+      ]
+    },
+    "Education": {
+      "exact": [
+        "SCHOOL FEES",
+        "COLLEGE FEES",
+        "TUITION",
+        "BYJU",
+        "UNACADEMY"
+      ],
+      "patterns": [
+        "SCHOOL.*FEE",
+        "COLLEGE.*FEE"
+      ]
+    },
+    "Health": {
+      "exact": [
+        "PHARMACY",
+        "HOSPITAL",
+        "CLINIC",
+        "DOCTOR",
+        "MEDICAL",
+        "APOLLO",
+        "MEDPLUS"
+      ],
+      "patterns": [
+        ".*PHARMACY.*",
+        ".*HOSPITAL.*"
+      ]
+    },
+    "Transfer": {
+      "exact": [
+        "NEFT DR",
+        "RTGS DR",
+        "IMPS DR",
+        "IB OAT",
+        "IB ITG",
+        "BY XFER",
+        "EFS. BY XFER",
+        "SELF TRANSFER"
+      ],
+      "patterns": [
+        "NEFT.*DR",
+        "RTGS.*DR",
+        "IMPS.*DR",
+        "UPI.*DR"
+      ]
+    }
+  },
+  "credit_rules": {
+    "Salary": {
+      "exact": [
+        "SALARY",
+        "SAL CR",
+        "PAYROLL",
+        "WAGES",
+        "SALARY CREDIT"
+      ],
+      "patterns": [
+        "SAL.*CR",
+        "PAYROLL.*CR",
+        "SALARY.*CREDIT"
+      ]
+    },
+    "Interest Income": {
+      "exact": [
+        "GROSS INT CR",
+        "SBINT FOR THE PERIOD",
+        "INT CR",
+        "INTEREST CREDIT",
+        "FD REDEEM INTEREST",
+        "SB INTEREST"
+      ],
+      "patterns": [
+        "INT.*CR",
+        "INTEREST.*CR",
+        "FD.*INTEREST"
+      ]
+    },
+    "Investment Returns": {
+      "exact": [
+        "FD REDEEM PRINCIPAL",
+        "RD MATURITY",
+        "MF REDEMPTION"
+      ],
+      "patterns": [
+        "FD.*REDEEM",
+        "RD.*MATURITY"
+      ]
+    },
+    "Refund": {
+      "exact": [
+        "REFUND",
+        "REVERSAL",
+        "CASHBACK",
+        "CASH BACK",
+        "GST REV"
+      ],
+      "patterns": [
+        ".*REFUND.*",
+        ".*REVERSAL.*",
+        "GST.*REV"
+      ]
+    },
+    "Loan Credit": {
+      "exact": [
+        "LOAN DISBURSAL",
+        "LOAN CREDIT",
+        "DISBURSEMENT"
+      ],
+      "patterns": [
+        "LOAN.*DISBURSAL",
+        "LOAN.*CR"
+      ]
+    },
+    "Business Income": {
+      "exact": [
+        "CASHFREE PAYMENTS INDIA PRIVATE",
+        "RAZORPAY",
+        "PAYTM PAYMENTS"
+      ],
+      "patterns": [
+        "CASHFREE.*",
+        "RAZORPAY.*CR"
+      ]
+    },
+    "Transfer": {
+      "exact": [
+        "NEFT CR",
+        "RTGS CR",
+        "IMPS CR",
+        "IB OAT",
+        "IB ITG",
+        "INET-IMPS-CR",
+        "EFS. BY XFER. FROM CASA",
+        "BY XFER. FROM CASA"
+      ],
+      "patterns": [
+        "NEFT.*CR",
+        "RTGS.*CR",
+        "IMPS.*CR",
+        "UPI.*CR"
+      ]
+    }
+  },
+  "upi_merchants": {
+    "swiggy": "Food",
+    "zomato": "Food",
+    "amazon": "Shopping",
+    "flipkart": "Shopping",
+    "uber": "Transport",
+    "ola": "Transport",
+    "netflix": "Entertainment",
+    "hotstar": "Entertainment"
+  },
+  "merchant_map": {},
+  "amount_heuristics": {
+    "atm": {
+      "enabled": true,
+      "min_amount": 500,
+      "max_amount": 50000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "ATM",
+        "ATW",
+        "CASH"
+      ],
+      "category": "ATM Withdrawal",
+      "matched_rule": "amount_atm",
+      "debit_only": true,
+      "token_case": "upper"
+    },
+    "subscription": {
+      "enabled": true,
+      "min_amount": 99,
+      "max_amount": 999,
+      "description_tokens": [
+        "SUB",
+        "MEMBERSHIP",
+        "PREMIUM"
+      ],
+      "category": "Entertainment",
+      "matched_rule": "amount_subscription",
+      "debit_only": true,
+      "token_case": "upper"
+    }
+  },
+  "defaults": {
+    "debit_category": "Others Debit",
+    "credit_category": "Others Credit"
+  }
+}

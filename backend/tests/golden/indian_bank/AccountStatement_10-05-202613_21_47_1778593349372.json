@@ -1,0 +1,1479 @@
+{
+  "aggregation": {
+    "closing_balance": 79.25,
+    "opening_balance": 197.52,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "indian_bank",
+  "categories": [
+    "Business Income",
+    "ATM Withdrawal",
+    "Salary",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "ATM Withdrawal",
+    "Transfer",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Business Income",
+    "ATM Withdrawal",
+    "Interest Income"
+  ],
+  "category_totals": {
+    "ATM Withdrawal": {
+      "count": 71,
+      "credit": 0.0,
+      "debit": 210424.27
+    },
+    "Business Income": {
+      "count": 2,
+      "credit": 57000.0,
+      "debit": 0.0
+    },
+    "Interest Income": {
+      "count": 1,
+      "credit": 55.0,
+      "debit": 0.0
+    },
+    "Salary": {
+      "count": 1,
+      "credit": 25000.0,
+      "debit": 0.0
+    },
+    "Transfer": {
+      "count": 27,
+      "credit": 128251.0,
+      "debit": 0.0
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "Indian Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "cashDeposit": {
+      "Feb-2026": 40000.0,
+      "Mar-2026": 17000.0
+    },
+    "cashWithdrawals": {
+      "Feb-2026": 103277.21,
+      "Mar-2026": 107147.06
+    },
+    "chequeDeposit": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "chequeIssued": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "creditCardPayment": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "creditCount": {
+      "Feb-2026": 22.0,
+      "Mar-2026": 9.0
+    },
+    "creditValue": {
+      "Feb-2026": 104504.0,
+      "Mar-2026": 105802.0
+    },
+    "debitCount": {
+      "Feb-2026": 43.0,
+      "Mar-2026": 28.0
+    },
+    "debitValue": {
+      "Feb-2026": 103277.21,
+      "Mar-2026": 107147.06
+    },
+    "ecsNach": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "inwBounce": {
+      "Feb-2026": 0.0,
+      "Mar-2026": 0.0
+    },
+    "loanRepayment": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "maxBalance": {
+      "Feb-2026": 25000.52,
+      "Mar-2026": 35450.25
+    },
+    "minBalance": {
+      "Feb-2026": 0.52,
+      "Mar-2026": 4.31
+    },
+    "monthlyAvgBal": {
+      "Feb-2026": 6306.34,
+      "Mar-2026": 6072.76
+    },
+    "nonCashCredit": {
+      "Feb-2026": 64504.0,
+      "Mar-2026": 88802.0
+    },
+    "nonSalaryCredits": {
+      "Feb-2026": 79504.0,
+      "Mar-2026": 105802.0
+    },
+    "owtBounce": {
+      "Feb-2026": 0.0,
+      "Mar-2026": 0.0
+    },
+    "penaltyCharges": {
+      "Feb-2026": 0,
+      "Mar-2026": 0
+    },
+    "salaryCredits": {
+      "Feb-2026": 25000.0,
+      "Mar-2026": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 102,
+    "coverage_percent": 100.0,
+    "others": 0,
+    "recurring": 30,
+    "total_transactions": 102
+  },
+  "reconciliation": {
+    "calculated_closing": 79.25,
+    "closing_balance": 79.25,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 197.52,
+    "source": "running_balance",
+    "total_credits": 210306.0,
+    "total_debits": 210424.27,
+    "transaction_count": 102
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "AccountStatement_10-05-202613_21_47_1778593349372",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Feb-2026": 6306.34,
+      "Mar-2026": 6072.76
+    },
+    "Avg Balance": 7422.83,
+    "Balance on 10th": {
+      "Feb-2026": 18500.52,
+      "Mar-2026": 4.31
+    },
+    "Balance on 15th": {
+      "Feb-2026": 179.52,
+      "Mar-2026": 6004.31
+    },
+    "Balance on 1st": {
+      "Feb-2026": 0.52,
+      "Mar-2026": 1404.31
+    },
+    "Balance on 20th": {
+      "Feb-2026": 1506.31,
+      "Mar-2026": 22008.25
+    },
+    "Balance on 25th": {
+      "Feb-2026": 24.31,
+      "Mar-2026": 10170.25
+    },
+    "Balance on 5th": {
+      "Feb-2026": 0.52,
+      "Mar-2026": 1404.31
+    },
+    "Balance on Last Day": {
+      "Feb-2026": 724.31,
+      "Mar-2026": 79.25
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Feb-2026": 724.31,
+      "Mar-2026": 79.25
+    },
+    "Max Balance": 44350.25,
+    "Max EOD Balance": {
+      "Feb-2026": 25000.52,
+      "Mar-2026": 35450.25
+    },
+    "Min Balance": 0.52,
+    "Min EOD Balance": {
+      "Feb-2026": 0.52,
+      "Mar-2026": 4.31
+    },
+    "Start of Month Balance": {
+      "Feb-2026": 0.52,
+      "Mar-2026": 1404.31
+    },
+    "Top 5 Credit %": 70.07,
+    "Top 5 Credit Amt": 147371.0,
+    "Top 5 Debit %": 63.51,
+    "Top 5 Debit Amt": 133647.0,
+    "Total Cheque": 0,
+    "Total Credit Amount": 210306.0,
+    "Total Credit Count": 31,
+    "Total Debit Amount": 210424.27,
+    "Total Debit Count": 71,
+    "_per_month": {
+      "Feb-2026": {
+        "avg_eod": 6306.34,
+        "d1": 0.52,
+        "d10": 18500.52,
+        "d15": 179.52,
+        "d20": 1506.31,
+        "d25": 24.31,
+        "d5": 0.52,
+        "dlast": 724.31,
+        "end": 724.31,
+        "max_eod": 25000.52,
+        "min_eod": 0.52,
+        "start": 0.52
+      },
+      "Mar-2026": {
+        "avg_eod": 6072.76,
+        "d1": 1404.31,
+        "d10": 4.31,
+        "d15": 6004.31,
+        "d20": 22008.25,
+        "d25": 10170.25,
+        "d5": 1404.31,
+        "dlast": 79.25,
+        "end": 79.25,
+        "max_eod": 35450.25,
+        "min_eod": 4.31,
+        "start": 1404.31
+      }
+    }
+  },
+  "transaction_count": 102,
+  "transactions": [
+    {
+      "balance": 40197.52,
+      "category": "Business Income",
+      "confidence": 0.82,
+      "credit": 40000.0,
+      "date": "2026-02-02",
+      "debit": 0.0,
+      "description": "CASH DEP/VANASTHALIPURAM /Deposit by SUDARSHAN SINGH/BRANCH : VANASTHALIPURAM",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 0.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-02",
+      "debit": 40197.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/275154513906/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 25000.52,
+      "category": "Salary",
+      "confidence": 0.99,
+      "credit": 25000.0,
+      "date": "2026-02-07",
+      "debit": 0.0,
+      "description": "SREE ADITYA CONCEPT SCHOOL/TRANSFER FROM 6785499885Mobile/855535 4906/Salary /BRANCH : CORE BANKING DATA CENTRE",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 24520.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-08",
+      "debit": 480.0,
+      "description": "SBIN0021227/Puppala Shivani /XXXXX56355/9014556355 @axl /UPI/830125932121/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 23520.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-09",
+      "debit": 1000.0,
+      "description": "HDFC0001043/SUDARSHA N SINGH /XXXXX31211/sudarshansin gh0126@ibl /UPI/771983873576/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18520.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-09",
+      "debit": 5000.0,
+      "description": "SBIN0006644/ALUGU SANJEEV/XXXXX20742/99 89120742@axl /UPI/815265257718/Amma home loan amoun /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18500.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-10",
+      "debit": 20.0,
+      "description": "IDIB000V157/Mrs Simarjeet Kaur /XXXXX17170/jandusimarje et@okicici /UPI/895985731673/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 19600.52,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 1100.0,
+      "date": "2026-02-11",
+      "debit": 0.0,
+      "description": "PUNB0219020/UMARANI REBBA /XXXXX72641/2190200100 006564@ybl /UPI/425468983284/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13600.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-12",
+      "debit": 6000.0,
+      "description": "TSAB0000142/BOYAPALL Y MANASA/XXXXX03119/810 6303119-2@ybl /UPI/442064807064/anna chit amount mon /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13026.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 574.0,
+      "description": "SBIN0021640/MUSTPALY SIMHADRI /XXXXX47204/9392347204 @yapl/UPI/043824441 114/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11926.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 1100.0,
+      "description": "IDIB000V157/Mrs Prasanna Sabunkar /XXXXX53452/prasanna.sa bunkar-1@okaxis /UPI/050461243940/Dkalya n basara amoun /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11226.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 700.0,
+      "description": "YESB0PTMUPI/TOPS AND BOTTOMS /XXXXX /paytm-61713817@ptys /UPI/210163911952/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11006.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 220.0,
+      "description": "YESB0PTMUPI/BIREN DHAMI/XXXXX /paytmqr70xba9@ptys/UPI/ 932520327209/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10946.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 60.0,
+      "description": "YESB0MCHUPI/SRI BALAJI KIRANAM /XXXXX /paytm.s1iyaz7@pty /UPI/447448030970/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10820.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 126.0,
+      "description": "INDB0MERCHA/Sri Raghavendra Book World/XXXXX15515/bajajpa y.6879729.gg3eo8oc@indu s /UPI/779265709360/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10770.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 50.0,
+      "description": "YESB0YBLUPI/MR MOHAMMAD RAFI SHAIK/XXXXX /Q530596550@ybl /UPI/305998648171/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9771.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-13",
+      "debit": 999.0,
+      "description": "YESB0YBLUPI/MSD RETAIL /XXXXX /Q859666557@ybl /UPI/599575804657/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9747.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-14",
+      "debit": 24.0,
+      "description": "YESB0PTMUPI/Surapaneni Surya Chandra Praka /XXXXX /paytmqr6gt34t@ptys/UPI/4 38796222765/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9672.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-14",
+      "debit": 75.0,
+      "description": "SBIN0RRDCGB/PERLA SUNITHA W O KONDALREDDY/XXXXX36 164/8125736164@axl /UPI/361424274716/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 672.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-14",
+      "debit": 9000.0,
+      "description": "IBKL0001325/RACHAMALL A YADAGIRI /XXXXX99106/9959899106 @ybl /UPI/634372465567/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 432.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-14",
+      "debit": 240.0,
+      "description": "YESB0PTMUPI/JADAV BALAJI /XXXXX /paytmqr6vazu6@ptys/UPI/ 352380519218/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 214.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-15",
+      "debit": 218.0,
+      "description": "YESB0PTMUPI/Srinivasa Kirana Stores B n re /XXXXX /paytmqr6b07cl@ptys/UPI/1 17199988634/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 179.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-15",
+      "debit": 35.0,
+      "description": "YESB0YESUPI/Vuduguntla Vani /XXXXX /BHARATPE90727894524 @yesbankltd/UPI/17012230 8030/Pay to BharatPe Merc /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 69.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-15",
+      "debit": 110.0,
+      "description": "UTIB0000553/Sri Sai Manjunatha kirana and/XXXXX /gpay- 12193144280@okbizaxis /UPI/785826636170/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 15423.52,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 15354.0,
+      "date": "2026-02-15",
+      "debit": 0.0,
+      "description": "TRANSFER FROM 97163000129 NEFT/IDFB/IDFBN6202602 1565394454/LDCARS IND//BRANCH : MUMBAI FORT",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11923.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-16",
+      "debit": 3500.0,
+      "description": "IDIB000M006/Mr KATTAMEEDI SHIVA KUMAR /XXXXX96202/9160196202 @ybl /UPI/059734027081/intrest amount of 50 /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1923.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-18",
+      "debit": 10000.0,
+      "description": "BARB0VJSAHE/BOYAPAL LY MANASA /XXXXX03119/manasa.boy apally-4@okicici /UPI/230444984135/total chit amount cl /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1913.52,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-19",
+      "debit": 10.0,
+      "description": "SBIN0020333/SUDARSHA N SINGH /XXXXX31211/sudarshansin gh012@ibl/UPI/9971222325 89/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1526.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-20",
+      "debit": 387.21,
+      "description": "HDFC0MERUPI/BBNOW/X XXXX77777/bbnow.ebz@h dfcbank/UPI/892369389683 /Pay/BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1506.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-20",
+      "debit": 20.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/527391682925/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1446.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-20",
+      "debit": 60.0,
+      "description": "YESB0PTMUPI/BIREN DHAMI/XXXXX /paytmqr70xba9@ptys/UPI/ 417183666902/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1076.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-20",
+      "debit": 370.0,
+      "description": "YESB0PTMUPI/BHARADW AJ DEV NAGESWARA RAO /XXXXX /paytmqr6fsy7n@ptys/UPI/1 90385452519/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1026.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 50.0,
+      "description": "SBIN0020333/SUDARSHA N SINGH /XXXXX31211/sudarshansin gh012@ibl/UPI/6013724184 36/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 976.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 50.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/191465057470/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 956.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 20.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/727559594361/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 756.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 200.0,
+      "description": "HDFC0000472/SYED JAVEED/XXXXX93738/sjav eed9030@okaxis/UPI/2037 28102551/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 736.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 20.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/969895403494/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 636.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 100.0,
+      "description": "YESB0PTMUPI/BHARADW AJ DEV NAGESWARA RAO /XXXXX /paytmqr6fsy7n@ptys/UPI/7 73206952203/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 616.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-21",
+      "debit": 20.0,
+      "description": "YESB0YBLUPI/POTHULA AMARAVATHI /XXXXX /Q305767510@ybl /UPI/562411431497/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 536.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-22",
+      "debit": 80.0,
+      "description": "YESB0MCHUPI/TAAZA DAIRY PRODUCTS/XXXXX /paytm.s1qo956@pty /UPI/751950505617/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 476.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-22",
+      "debit": 60.0,
+      "description": "YESB0MCHUPI/SRI BALAJI KIRANAM /XXXXX /paytm.s1iyaz7@pty /UPI/033073108909/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 201.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-22",
+      "debit": 275.0,
+      "description": "YESB0YBLUPI/BURRA KRISHNAVENI/XXXXX /Q740122179@ybl /UPI/665607195327/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 31.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-22",
+      "debit": 170.0,
+      "description": "ICIC0000008/JALDA KALYANI /XXXXX86700/8885286700 @ybl /UPI/397729329864/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 24.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-22",
+      "debit": 7.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/984975274015/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-27",
+      "debit": 0.0,
+      "description": "ICIC0003886/VADLAKOND A NARENDERREDDY /XXXXX94704/rajuvadlakon da03@ibl /UPI/156152826441/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 124.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-27",
+      "debit": 0.0,
+      "description": "IDIB000V157/Mrs M Premavathi Goud /XXXXX93218/6309593218- 2@ybl /UPI/224020208477/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 174.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-27",
+      "debit": 0.0,
+      "description": "UTIB0002738/VELIJALA MADAN MOHAN/XXXXX82432/8885 382432@axl /UPI/958858694188/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 224.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-27",
+      "debit": 0.0,
+      "description": "UBIN0817724/BOBBA SUJATHA /XXXXX97075/bethamsujat ha@ybl /UPI/857628020673/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 274.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-27",
+      "debit": 0.0,
+      "description": "HDFC0009182/KODAPAKA KIRAN KUMAR/XXXXX85121/9492 885121-3@ybl /UPI/794339304052/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 324.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "IDIB000V157/Mrs Bandhanadham Velangini/XXXXX71229/767 3971229-2@axl /UPI/526417756793/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 374.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "KKBK0007466/KHANDAVIL LI ANANTHA SRIKAR/XXXXX77144/9032 777144@ptyes /UPI/200987284864/Sent using Paytm UPI /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 404.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 30.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "HDFC0001043/K V SUBRAMANYAM /XXXXX69334/8790769334 @axl /UPI/518748907165/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 524.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 120.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "IDIB000V157/Mr Karyampudi Siva Venkata Sud /XXXXX07041/9100107041- 2@axl /UPI/234396445387/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 624.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 100.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "IDIB000V157/Mrs Simarjeet Kaur /XXXXX17170/jandusimarje et@okicici /UPI/642556518825/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 674.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "IDIB000L015/Mr RUDHRA PALLY MAHENDER /XXXXX71196/mahender98 666@okaxis /UPI/605910787622/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 724.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "UTIB0005151/NAKKA NAVEEN /XXXXX68774/9032368774- 2@axl /UPI/401781953104/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22724.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 22000.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/813511459725/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22674.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-28",
+      "debit": 50.0,
+      "description": "SBIN0020333/SUDARSHA N SINGH /XXXXX31211/sudarshansin gh012@axl/UPI/183657048 179/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22724.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "IDIB000L015/Mrs Sribhashyam Vani Priyanka/XXXXX21425/priy anka.sv1@okicici /UPI/642584412721/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2724.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-28",
+      "debit": 20000.0,
+      "description": "UBIN0803111/KOTHAPALL I HAREESH KUMAR /XXXXX07307/harishnaidu.k othapalli@ybl /UPI/832394476517/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1124.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-02-28",
+      "debit": 1600.0,
+      "description": "UBIN0803111/KOTHAPALL I HAREESH KUMAR /XXXXX07307/harishnaidu.k othapalli@axl /UPI/067679113345/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1174.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "UBIN0814181/NAJMUNISA BEGUM /XXXXX77912/9030477912 @axl /UPI/182936739953/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1224.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "CNRB0000033/SRINIVASA RAO MEDIKO/XXXXX62358/med ikondasrinivasrao9@okaxis /UPI/642517414988/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1274.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "CNRB0000033/SRINIVASA RAO MEDIKO/XXXXX62358/med ikondasrinivasrao9@okaxis /UPI/605992895145/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1424.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 150.0,
+      "date": "2026-02-28",
+      "debit": 0.0,
+      "description": "SBIN0004347/BHUSHAN SHASHI /XXXXX99679/sbhushan17 9@okhdfcbank /UPI/119286735966/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1404.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-01",
+      "debit": 20.0,
+      "description": "SBIN0021458/Rasoju Rathnakar Chary /XXXXX32497/rrcharyrrchar y428@oksbi /UPI/544135538582/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-07",
+      "debit": 1400.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/138039767786/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6004.31,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 6000.0,
+      "date": "2026-03-15",
+      "debit": 0.0,
+      "description": "CNRB0000033/KASAM SANDHYA /XXXXX25436/9959425436 @ybl /UPI/700662382262/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5914.31,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-17",
+      "debit": 90.0,
+      "description": "KKBK0007460/MUDIGE SHAILESH KUMAR /XXXXX25993/6305925993 @ptaxis /UPI/636041079841/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3883.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-17",
+      "debit": 2031.06,
+      "description": "utib0000100/MPOKKET FINANCIAL SERVICES PRI /XXXXX94133/mpokket.pay u@axisbank/UPI/63838121 3705/UPIIntent/BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16458.25,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 12575.0,
+      "date": "2026-03-17",
+      "debit": 0.0,
+      "description": "TRANSFER FROM 97163000129 NEFT/IDFB/IDFBN6202603 1772144122/LDCARS IND//BRANCH : MUMBAI FORT",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-18",
+      "debit": 16450.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/656479794794/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 25008.25,
+      "category": "Transfer",
+      "confidence": 0.8,
+      "credit": 25000.0,
+      "date": "2026-03-19",
+      "debit": 0.0,
+      "description": "SREE ADITYA CONCEPT SCHOOL/TRANSFER FROM 6785499885Mobile/507488 8272/Fund Transfer /BRANCH : CORE BANKING DATA CENTRE",
+      "is_recurring": false,
+      "source": "pattern_set"
+    },
+    {
+      "balance": 22008.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-20",
+      "debit": 3000.0,
+      "description": "KKBK0007460/KAPARTHI SANDEEP/XXXXX07767/98 49107767@ibl /UPI/724987809133/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 19008.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-22",
+      "debit": 3000.0,
+      "description": "SBIN0003674/SUJIT SURESHRAO SHINDE /XXXXX58771/9881558771 @axl /UPI/853845672829/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11108.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-23",
+      "debit": 7900.0,
+      "description": "UTIB0002058/S ARUNA /XXXXX41250/saliaruna6- 2@okaxis /UPI/424047911973/1 lakh intrest /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12008.25,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 900.0,
+      "date": "2026-03-23",
+      "debit": 0.0,
+      "description": "UTIB0002058/S ARUNA /XXXXX41250/saliaruna6- 2@okaxis /UPI/644811230036/UPI/BR ANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11888.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-23",
+      "debit": 120.0,
+      "description": "YESB0PTMUPI/KARANTO THU ROJA /XXXXX /paytmqr616m6o@ptys/UPI/ 404882484856/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11798.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-23",
+      "debit": 90.0,
+      "description": "BARB0SURYAP/Dharavath Pavani /XXXXX86968/8919886968- 2@ibl /UPI/471822168659/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11723.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 75.0,
+      "description": "IDIB000V157/8886836477pt yes /XXXXX36477/8886836477 @ptyes /UPI/241704779007/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11683.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 40.0,
+      "description": "IDIB000V157/Mrs SUDARSHANA BAI DABBIKAR /XXXXX07578/8897007578 @axl /UPI/314066645809/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11592.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 91.0,
+      "description": "IPOS0000001/ISLAVATH MAN SINGH /XXXXX96098/9676996098 @axl /UPI/232765882813/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10492.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 1100.0,
+      "description": "SBIN0063781/SRINIVASA RAO KUDUPUDI/XXXXX87352/7 989787352@axl /UPI/194367766761/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10452.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 40.0,
+      "description": "YESB0MCHUPI/TAAZA DAIRY PRODUCTS/XXXXX /paytm.s1qo956@pty /UPI/719959319504/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10370.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-24",
+      "debit": 82.0,
+      "description": "YESB0PTMUPI/Srinivasa Kirana Stores B n re /XXXXX /paytmqr6b07cl@ptys/UPI/8 02958817948/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10170.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-25",
+      "debit": 200.0,
+      "description": "SBIN0021598/SHAIK BASHEER/XXXXX03102/92 47403102@axl /UPI/691368061897/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 170.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-25",
+      "debit": 10000.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@ybl /UPI/614810133410/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 79.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-26",
+      "debit": 91.0,
+      "description": "UTIB0000553/Vadthya Mahesh/XXXXX /9398301821@okbizaxis /UPI/778509353859/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 80.25,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 1.0,
+      "date": "2026-03-26",
+      "debit": 0.0,
+      "description": "TRANSFER FROM 97157031280 /IMPS/P2A/608524778340/ /Authenticati/INES /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 79.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-27",
+      "debit": 1.0,
+      "description": "ICIC0DC0099/Fibe /XXXXX /earlysalary2.rzp@icici /UPI/109466620270/Pay via Razorpay /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 35450.25,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 35371.0,
+      "date": "2026-03-27",
+      "debit": 0.0,
+      "description": "TRANSFER FROM 97157031280 /IMPS/P2A/608617590525/ /ESLOANLAI101/EARLYSA LA/BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 44350.25,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 8900.0,
+      "date": "2026-03-28",
+      "debit": 0.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/997009344183/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4350.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-28",
+      "debit": 40000.0,
+      "description": "SBIN0002716/BAIPALLI RENUKA DEVI /XXXXX07372/8309207372 @axl /UPI/957423434954/chit amount /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2850.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-28",
+      "debit": 1500.0,
+      "description": "ICIC0006650/JANUMPALL Y KRISHNA PRASAD REDD /XXXXX98371/9666698371 @ybl /UPI/912640764539/mainte nance month of /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2805.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-28",
+      "debit": 45.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/345640105869/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2595.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-29",
+      "debit": 210.0,
+      "description": "YESB0PTMUPI/REDDY CHICKEN MARKET/XXXXX /paytmqr6g5al3@ptys/UPI/3 26770352225/Payment from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2504.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-29",
+      "debit": 91.0,
+      "description": "UTIB0000553/Rajesh Shoe Store/XXXXX /9550088719@okbizaxis /UPI/747049529493/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2424.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-30",
+      "debit": 80.0,
+      "description": "YESB0YBLUPI/MEDISHET TI PRAKASH /XXXXX /Q663735105@ybl /UPI/648537247493/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 24.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-30",
+      "debit": 2400.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/127242080525/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17024.25,
+      "category": "Business Income",
+      "confidence": 0.82,
+      "credit": 17000.0,
+      "date": "2026-03-30",
+      "debit": 0.0,
+      "description": "CASH DEP/VANASTHALIPURAM /Deposit by SELF /BRANCH : VANASTHALIPURAM",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 24.25,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": 0.0,
+      "date": "2026-03-30",
+      "debit": 17000.0,
+      "description": "HDFC0004298/THAKUR VIDYA KUMARI /XXXXX29881/4278790087 911411@axl /UPI/211920033886/Payme nt from PhonePe /BRANCH : ATM SERVICE BRANCH",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 79.25,
+      "category": "Interest Income",
+      "confidence": 0.99,
+      "credit": 55.0,
+      "date": "2026-03-31",
+      "debit": 0.0,
+      "description": "CREDIT INTEREST Total INR 210,424.27 INR 210,306.00 Indian Bank | | 17/17",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

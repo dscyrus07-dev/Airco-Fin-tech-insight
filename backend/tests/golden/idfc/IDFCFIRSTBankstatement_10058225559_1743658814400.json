@@ -1,0 +1,1423 @@
+{
+  "aggregation": {
+    "closing_balance": null,
+    "opening_balance": null,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "idfc",
+  "categories": [
+    "Travel",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Loan Payment",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Business Income",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Loan Payment",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Charges",
+    "Transfer",
+    "Bank Charges",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "ATM Withdrawal",
+    "ATM Withdrawal",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Charges",
+    "Others Debit",
+    "Transfer",
+    "Bank Charges",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Bank Charges",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Others Debit",
+    "Transfer",
+    "ATM Withdrawal",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Others Debit",
+    "Others Debit",
+    "Others Debit",
+    "Shopping",
+    "Others Debit",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "ATM Withdrawal",
+    "Transfer"
+  ],
+  "category_totals": {
+    "ATM Withdrawal": {
+      "count": 4,
+      "credit": 0.0,
+      "debit": 24000.0
+    },
+    "Bank Charges": {
+      "count": 5,
+      "credit": 0.0,
+      "debit": 253258.3
+    },
+    "Business Income": {
+      "count": 1,
+      "credit": 680.0,
+      "debit": 0.0
+    },
+    "Loan Payment": {
+      "count": 2,
+      "credit": 0.0,
+      "debit": 42174.0
+    },
+    "Others Debit": {
+      "count": 24,
+      "credit": 0.0,
+      "debit": 1337851.1
+    },
+    "Shopping": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 20.0
+    },
+    "Transfer": {
+      "count": 62,
+      "credit": 1972204.27,
+      "debit": 315164.08
+    },
+    "Travel": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 979.59
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "IDFC Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Mar-2025": 253258.3
+    },
+    "cashDeposit": {
+      "Mar-2025": 0
+    },
+    "cashWithdrawals": {
+      "Mar-2025": 24000.0
+    },
+    "chequeDeposit": {
+      "Mar-2025": 0
+    },
+    "chequeIssued": {
+      "Mar-2025": 0
+    },
+    "creditCardPayment": {
+      "Mar-2025": 0
+    },
+    "creditCount": {
+      "Mar-2025": 39.0
+    },
+    "creditValue": {
+      "Mar-2025": 1972884.27
+    },
+    "debitCount": {
+      "Mar-2025": 61.0
+    },
+    "debitValue": {
+      "Mar-2025": 1973447.07
+    },
+    "ecsNach": {
+      "Mar-2025": 83780.0
+    },
+    "inwBounce": {
+      "Mar-2025": 0.0
+    },
+    "loanRepayment": {
+      "Mar-2025": 42174.0
+    },
+    "maxBalance": {
+      "Mar-2025": 300542.46
+    },
+    "minBalance": {
+      "Mar-2025": 4.84
+    },
+    "monthlyAvgBal": {
+      "Mar-2025": 29277.11
+    },
+    "nonCashCredit": {
+      "Mar-2025": 1972884.27
+    },
+    "nonSalaryCredits": {
+      "Mar-2025": 1972884.27
+    },
+    "owtBounce": {
+      "Mar-2025": 0.0
+    },
+    "penaltyCharges": {
+      "Mar-2025": 0
+    },
+    "salaryCredits": {
+      "Mar-2025": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 100,
+    "coverage_percent": 100.0,
+    "others": 24,
+    "recurring": 0,
+    "total_transactions": 100
+  },
+  "reconciliation": {
+    "calculated_closing": 554.84,
+    "closing_balance": 554.84,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 1117.64,
+    "source": "running_balance",
+    "total_credits": 1972884.27,
+    "total_debits": 1973447.07,
+    "transaction_count": 100
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "IDFCFIRSTBankstatement_10058225559_1743658814400",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Mar-2025": 29277.11
+    },
+    "Avg Balance": 51216.27,
+    "Balance on 10th": {
+      "Mar-2025": 79614.93
+    },
+    "Balance on 15th": {
+      "Mar-2025": 59.84
+    },
+    "Balance on 1st": {
+      "Mar-2025": 138.05
+    },
+    "Balance on 20th": {
+      "Mar-2025": 94.84
+    },
+    "Balance on 25th": {
+      "Mar-2025": 554.84
+    },
+    "Balance on 5th": {
+      "Mar-2025": 78269.15
+    },
+    "Balance on Last Day": {
+      "Mar-2025": 554.84
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Mar-2025": 554.84
+    },
+    "Max Balance": 300542.46,
+    "Max EOD Balance": {
+      "Mar-2025": 300542.46
+    },
+    "Min Balance": 4.84,
+    "Min EOD Balance": {
+      "Mar-2025": 4.84
+    },
+    "Start of Month Balance": {
+      "Mar-2025": 138.05
+    },
+    "Top 5 Credit %": 49.07,
+    "Top 5 Credit Amt": 968000.0,
+    "Top 5 Debit %": 53.19,
+    "Top 5 Debit Amt": 1049768.78,
+    "Total Cheque": 0,
+    "Total Credit Amount": 1972884.27,
+    "Total Credit Count": 39,
+    "Total Debit Amount": 1973447.07,
+    "Total Debit Count": 61,
+    "_per_month": {
+      "Mar-2025": {
+        "avg_eod": 29277.11,
+        "d1": 138.05,
+        "d10": 79614.93,
+        "d15": 59.84,
+        "d20": 94.84,
+        "d25": 554.84,
+        "d5": 78269.15,
+        "dlast": 554.84,
+        "end": 554.84,
+        "max_eod": 300542.46,
+        "min_eod": 4.84,
+        "start": 138.05
+      }
+    }
+  },
+  "transaction_count": 100,
+  "transactions": [
+    {
+      "balance": 138.05,
+      "category": "Travel",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-01",
+      "debit": 979.59,
+      "description": "POS-VISA/MAKEMYTRIP INDIA PVT LNEW DELH/5060040055/NEW DELHI/04:45:52",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 200138.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 200000.0,
+      "date": "2025-03-01",
+      "debit": null,
+      "description": "IMPS/506010506009/NANDYALASAIS AMP/SBIN0001173/2922/Transfert ofamilyorfriends",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 138.05,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-01",
+      "debit": 200000.0,
+      "description": "Ecom/59059675/IndiaIdeas/AMEXC ARD",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 23638.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 23500.0,
+      "date": "2025-03-02",
+      "debit": null,
+      "description": "IMPS/506119002199/PALETISANDEE P/KKBK0000123/4978/KKBKTransfe r",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 24438.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 800.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "UPI/MOB/542895768654/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 21438.05,
+      "category": "Transfer",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 3000.0,
+      "description": "IFT/10106281704/Mr. Paleti Sandeep/900050232/AddMoney Self Transfer",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 24438.05,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 3000.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "UPI/MOB/209651446302/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1201.05,
+      "category": "Loan Payment",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 23237.0,
+      "description": "NACH/L&TFINANCELIMIT/C02405291 935909292 C425671008",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 3201.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 2000.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "UPI/MOB/542868274475/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2701.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 500.0,
+      "description": "UPI/MOB/506239488095/Sent using Paytm UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2611.05,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 90.0,
+      "description": "UPI/MOB/855160411801/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3291.05,
+      "category": "Business Income",
+      "confidence": 0.82,
+      "credit": 680.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "REF/POS-VISA/MAKEMYTRIP INDI/245418/020325",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 13291.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 10000.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "UPI/MOB/330421110625/UPIW2B",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 259291.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 246000.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "IMPS/506218468343/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 50494.05,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 208797.0,
+      "description": "Ecom/59087468/IndiaIdeas/FPLTE CHPL",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 39037.05,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 11457.0,
+      "description": "UPI/MOB/849595247128/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 37189.05,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 1848.0,
+      "description": "UPI/MOB/542800244984/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 137189.05,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 100000.0,
+      "date": "2025-03-03",
+      "debit": null,
+      "description": "UPI/MOB/506273617005/9e58621b4 4e4-W2B",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 56687.05,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 80502.0,
+      "description": "Ecom/59089708/IndiaIdeas/AMEXC ARD",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 56627.05,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-03",
+      "debit": 60.0,
+      "description": "UPI/MOB/268252282278/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 56628.15,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 1.1,
+      "date": "2025-03-04",
+      "debit": null,
+      "description": "IMPS/506314648852/MOBIKWIK/UTI B0003567/6704/w2b",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 136628.15,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 80000.0,
+      "date": "2025-03-04",
+      "debit": null,
+      "description": "UPI/MOB/042957151149/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6596.15,
+      "category": "Transfer",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-04",
+      "debit": 130032.0,
+      "description": "POS-VISA/Paytm/506317055685/No ida/12:05:08",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 75596.15,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 69000.0,
+      "date": "2025-03-04",
+      "debit": null,
+      "description": "UPI/MOB/442050420635/UPIW2B",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5596.15,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-04",
+      "debit": 70000.0,
+      "description": "POS-VISA/Dreamplug Paytech SoluBENGALUR/5063170601/BENGAL URU/12:15:50",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 55596.15,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 50000.0,
+      "date": "2025-03-04",
+      "debit": null,
+      "description": "IMPS/506321758398/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 47596.15,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-04",
+      "debit": 8000.0,
+      "description": "UPI/MOB/916399888110/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 97596.15,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 50000.0,
+      "date": "2025-03-05",
+      "debit": null,
+      "description": "UPI/MOB/043272796951/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 78659.15,
+      "category": "Loan Payment",
+      "confidence": 0.88,
+      "credit": null,
+      "date": "2025-03-05",
+      "debit": 18937.0,
+      "description": "NACH/EMIPLA7599958901/QKXSQSDT TYAG",
+      "is_recurring": false,
+      "source": "pattern_set"
+    },
+    {
+      "balance": 78269.15,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-05",
+      "debit": 390.0,
+      "description": "UPI/MOB/543021264428/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 98269.15,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 20000.0,
+      "date": "2025-03-05",
+      "debit": null,
+      "description": "UPI/MOB/128882897383/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 118269.15,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 20000.0,
+      "date": "2025-03-06",
+      "debit": null,
+      "description": "UPI/MOB/233860346027/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 103258.15,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-06",
+      "debit": 15011.0,
+      "description": "UPI/MOB/543123527426/payment on CRED",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 87842.46,
+      "category": "Bank Charges",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-06",
+      "debit": 15415.69,
+      "description": "Ecom/59139555/RazorpaySo/62685 89132",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 89542.46,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 1700.0,
+      "date": "2025-03-06",
+      "debit": null,
+      "description": "UPI/MOB/855233512590/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 69542.46,
+      "category": "Bank Charges",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-07",
+      "debit": 20000.0,
+      "description": "Ecom/59148293/Cashfreeno/MYPAI SAACA",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 542.46,
+      "category": "Others Debit",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2025-03-07",
+      "debit": 69000.0,
+      "description": "Ecom/59151963/IndiaIdeas/FPLTE CHPL/Billpayment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 200542.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 200000.0,
+      "date": "2025-03-07",
+      "debit": null,
+      "description": "IMPS/506620528608/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 300542.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 100000.0,
+      "date": "2025-03-07",
+      "debit": null,
+      "description": "IMPS/506620534827/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 44600.29,
+      "category": "Others Debit",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2025-03-07",
+      "debit": 255942.17,
+      "description": "Ecom/59158025/IndiaIdeas/FPLTE CHPL/BillPayment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 44815.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 215.17,
+      "date": "2025-03-08",
+      "debit": null,
+      "description": "UPI/MOB/795610250675/Supermone y Rewards",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 44615.46,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-08",
+      "debit": 200.0,
+      "description": "UPI/MOB/637345503257/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 64615.46,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 20000.0,
+      "date": "2025-03-08",
+      "debit": null,
+      "description": "UPI/MOB/012519090524/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 48278.46,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-08",
+      "debit": 16337.0,
+      "description": "UPI/MOB/396042118186/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68178.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 19900.0,
+      "date": "2025-03-08",
+      "debit": null,
+      "description": "UPI/MOB/543315500631/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 82178.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 14000.0,
+      "date": "2025-03-08",
+      "debit": null,
+      "description": "UPI/MOB/543309607177/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3684.01,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-08",
+      "debit": 78494.45,
+      "description": "Ecom/59168387/IndiaIdeas/FPLTE CHPL",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 103684.01,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 100000.0,
+      "date": "2025-03-08",
+      "debit": null,
+      "description": "IMPS/506718933443/NANDYALASAIS AMP/SBIN0001173/2922/Loanrepay ment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8102.01,
+      "category": "Transfer",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-08",
+      "debit": 95582.0,
+      "description": "POS-VISA/Paytm/506718084462/No ida/13:27:20",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 6415.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-08",
+      "debit": 1686.08,
+      "description": "UPI/MOB/891223843417/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 26415.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 20000.0,
+      "date": "2025-03-09",
+      "debit": null,
+      "description": "UPI/MOB/543498635612/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16415.93,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-09",
+      "debit": 10000.0,
+      "description": "ATM-NFS/CASH WITHDRAWAL/+ RAJ BHAVAN ROAD HYDENIZA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6415.93,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-09",
+      "debit": 10000.0,
+      "description": "ATM-NFS/CASH WITHDRAWAL/+ RAJ BHAVAN ROAD HYDENIZA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5346.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-09",
+      "debit": 1069.0,
+      "description": "UPI/MOB/363300470514/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7946.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 2600.0,
+      "date": "2025-03-09",
+      "debit": null,
+      "description": "UPI/MOB/543430582917/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8546.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 600.0,
+      "date": "2025-03-09",
+      "debit": null,
+      "description": "IMPS/506820525696/SANDEEPPALET I/UTIB0003567/3125/IMPS",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 195.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-09",
+      "debit": 8351.0,
+      "description": "UPI/MOB/899370903944/360019823 4",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10195.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 10000.0,
+      "date": "2025-03-09",
+      "debit": null,
+      "description": "IMPS/506828325708/SLENPAYPRIVA TEL/RATN0000341/9001/PayoutTra nsfer",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 23195.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 13000.0,
+      "date": "2025-03-10",
+      "debit": null,
+      "description": "UPI/MOB/417757788832/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10195.93,
+      "category": "Bank Charges",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-10",
+      "debit": 13000.0,
+      "description": "Ecom/59182872/Cashfreeno/MYPAI SAACA",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 589.93,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-10",
+      "debit": 9606.0,
+      "description": "NACH/IBGe chits Private L/3597687989",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 93427.93,
+      "category": "Transfer",
+      "confidence": 0.94,
+      "credit": 92838.0,
+      "date": "2025-03-10",
+      "debit": null,
+      "description": "NEFT/ICIN206925319193/TRANSACT REE TECHNOLOGIES PVT LTD LENDER FUNDING ES/ICIC0000007",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 83614.93,
+      "category": "Bank Charges",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-10",
+      "debit": 9813.0,
+      "description": "Ecom/59193847/Cashfreeno/CREDC ASHFR",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 79614.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-10",
+      "debit": 4000.0,
+      "description": "UPI/MOB/421899436740/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68114.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 11500.0,
+      "description": "UPI/MOB/540766651888/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68074.93,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 40.0,
+      "description": "UPI/MOB/543686047610/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 198074.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 130000.0,
+      "date": "2025-03-11",
+      "debit": null,
+      "description": "IMPS/507014402652/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 197074.93,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 1000.0,
+      "description": "UPI/MOB/143620312139/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2045.32,
+      "category": "Bank Charges",
+      "confidence": 0.82,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 195029.61,
+      "description": "Ecom/59204094/PayUPaymen/FPLTe chnol",
+      "is_recurring": false,
+      "source": "entity_lookup"
+    },
+    {
+      "balance": 194045.32,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 192000.0,
+      "date": "2025-03-11",
+      "debit": null,
+      "description": "IMPS/507016444568/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4045.32,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 190000.0,
+      "description": "Ecom/59207948/IndiaIdeas/FPLTE CHPL",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1045.32,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 3000.0,
+      "description": "UPI/MOB/069387320831/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 61045.32,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 60000.0,
+      "date": "2025-03-11",
+      "debit": null,
+      "description": "IMPS/507019486495/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1045.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 59999.48,
+      "description": "Ecom/59209467/IndiaIdeas/FPLTE CHPL",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 845.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-11",
+      "debit": 200.0,
+      "description": "UPI/MOB/543692721808/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2345.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 1500.0,
+      "date": "2025-03-12",
+      "debit": null,
+      "description": "UPI/MOB/507100799480/UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 345.84,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-12",
+      "debit": 2000.0,
+      "description": "ATM-NFS/CASH WITHDRAWAL/+ RAJ BHAVAN ROAD HYDENIZA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 305.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-12",
+      "debit": 40.0,
+      "description": "UPI/MOB/543798017357/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 28305.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 28000.0,
+      "date": "2025-03-13",
+      "debit": null,
+      "description": "IMPS/507216867141/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 26055.84,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-13",
+      "debit": 2250.0,
+      "description": "UPI/MOB/441709184986/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22455.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-13",
+      "debit": 3600.0,
+      "description": "UPI/MOB/507212839777/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 21109.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-13",
+      "debit": 1346.0,
+      "description": "POS-VISA/S S WINES/507216744992/HYDERABAD/1 6:53:03",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 108109.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 87000.0,
+      "date": "2025-03-14",
+      "debit": null,
+      "description": "IMPS/507305950609/PALETISANDEE P/INDB0000006/1004/P2AMOB",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 108059.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 50.0,
+      "description": "UPI/MOB/507318337414/Payment for order aXvr5m02374614",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 76059.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 32000.0,
+      "description": "NACH/TS09ES1109/DOD5P8DJKR5L",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74277.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 1782.0,
+      "description": "UPI/MOB/507322453101/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74167.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 110.0,
+      "description": "UPI/MOB/507322455577/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74077.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 90.0,
+      "description": "UPI/MOB/507322660027/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 74057.84,
+      "category": "Shopping",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 20.0,
+      "description": "UPI/MOB/507323181129/Pay To BharatPe Merchant",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 73757.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 300.0,
+      "description": "UPI/MOB/507323313293/Paid via SuperMoney UPI",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 758.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-14",
+      "debit": 72999.0,
+      "description": "POS-VISA/Dreamplug Paytech SoluBENGALUR/5073166243/BENGAL URU/10:56:34",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 259.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-15",
+      "debit": 499.0,
+      "description": "UPI/MOB/544037061302/payment on CRED",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59.84,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-15",
+      "debit": 200.0,
+      "description": "UPI/MOB/830564358792/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2059.84,
+      "category": "Transfer",
+      "confidence": 0.8,
+      "credit": 2000.0,
+      "date": "2025-03-16",
+      "debit": null,
+      "description": "IFT/10106281704/Mr. Paleti Sandeep/18932040/AddMoney Self Transfer",
+      "is_recurring": false,
+      "source": "pattern_set"
+    },
+    {
+      "balance": 1294.84,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2025-03-16",
+      "debit": 765.0,
+      "description": "POS-VISA/S S WINES/507517045551/HYDERABAD/1 7:24:15",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 94.84,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2025-03-20",
+      "debit": 1200.0,
+      "description": "UPI/MOB/237253704885/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4.84,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-22",
+      "debit": 90.0,
+      "description": "IMPS-OPM/508115638241/SANDEEP PALETI/UTIB0000008/3125",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2004.84,
+      "category": "Transfer",
+      "confidence": 0.8,
+      "credit": 2000.0,
+      "date": "2025-03-22",
+      "debit": null,
+      "description": "IFT/10106281704/Mr. Paleti Sandeep/19321142/AddMoney Self Transfer",
+      "is_recurring": false,
+      "source": "pattern_set"
+    },
+    {
+      "balance": 4.84,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2025-03-22",
+      "debit": 2000.0,
+      "description": "ATM-NFS/CASH WITHDRAWAL/+ RAJ BHAVAN ROAD HYDENIZA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 554.84,
+      "category": "Transfer",
+      "confidence": 0.9,
+      "credit": 550.0,
+      "date": "2025-03-25",
+      "debit": null,
+      "description": "UPI/MOB/104326298171/Payment from PhonePe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

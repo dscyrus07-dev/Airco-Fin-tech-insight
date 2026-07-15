@@ -1,0 +1,6212 @@
+{
+  "metadata": {
+    "version": "4.0",
+    "description": "Banking-grade transaction intelligence configuration with entity normalization, fuzzy matching, and confidence scoring",
+    "last_updated": "2026-02-17",
+    "total_keywords": 4262,
+    "total_categories": 145,
+    "total_entities": 512,
+    "broad_keywords_removed": 61,
+    "groups": [
+      "FINANCIAL_INSTRUMENT",
+      "INCOME_TYPE",
+      "CHANNEL",
+      "EVENT_TYPE",
+      "PRODUCT_TYPE",
+      "GOVERNMENT",
+      "FEES_AND_TAXES",
+      "UTILITY",
+      "LIFESTYLE",
+      "METADATA",
+      "TYPO"
+    ],
+    "extended_categories": [
+      "Food",
+      "Transport",
+      "Shopping",
+      "Groceries",
+      "Medical",
+      "Entertainment",
+      "Loan Payment",
+      "Bill Payment",
+      "Credit Card Payment",
+      "ATM Withdrawal",
+      "Bank Charges",
+      "Investment",
+      "Insurance",
+      "Insurance Claim",
+      "Fuel",
+      "Travel",
+      "Fitness",
+      "Education",
+      "Subscription",
+      "Business Expense",
+      "Tax Payment",
+      "Transfer",
+      "Others Debit",
+      "Salary",
+      "Business Income",
+      "Freelance Income",
+      "Interest Income",
+      "Refund",
+      "Cashback",
+      "Dividend",
+      "Loan Disbursed",
+      "Investment Returns",
+      "Rental Income",
+      "Others Credit"
+    ],
+    "features": [
+      "direction_awareness",
+      "entity_interpretation",
+      "entity_normalization",
+      "alias_driven_matching",
+      "fuzzy_matching",
+      "confidence_scoring",
+      "behavior_awareness",
+      "contextual_classification",
+      "priority_scoring",
+      "pattern_detection",
+      "text_normalization",
+      "modular_architecture",
+      "production_ready"
+    ],
+    "architecture_layers": [
+      "text_normalization",
+      "entity_detection",
+      "direction_interpretation",
+      "keyword_matching",
+      "pattern_matching",
+      "behavior_context",
+      "confidence_scoring",
+      "collision_resolution"
+    ]
+  },
+  "category_normalization": {
+    "description": "Maps all internal words.json category codes to canonical display names",
+    "canonical_map": {
+      "SALARY": "Salary",
+      "BUSINESS_EXPENSE": "Business Expense",
+      "BUSINESS_INCOME": "Business Income",
+      "BANK_TRANSFER": "Transfer",
+      "INSURANCE_PREMIUM": "Insurance",
+      "INSURANCE_CREDIT": "Insurance Claim",
+      "LOAN_REPAYMENT": "Loan Payment",
+      "EMI_PAYMENT": "Loan Payment",
+      "LOAN_DISBURSED": "Loan Disbursed",
+      "FOOD_EXPENSE": "Food",
+      "TRANSPORT_EXPENSE": "Transport",
+      "SHOPPING_EXPENSE": "Shopping",
+      "GROCERY_EXPENSE": "Groceries",
+      "MEDICAL_EXPENSE": "Medical",
+      "FITNESS_EXPENSE": "Fitness",
+      "TRAVEL_EXPENSE": "Travel",
+      "DELIVERY_EXPENSE": "Food",
+      "MUTUAL_FUND": "Investment",
+      "STOCKS": "Investment",
+      "INTEREST_CREDIT": "Interest Income",
+      "INTEREST": "Interest Income",
+      "DIVIDEND": "Dividend",
+      "REFUND": "Refund",
+      "CASHBACK": "Cashback",
+      "REWARD": "Cashback",
+      "PAYOUT": "Business Income",
+      "MERCHANT_PAYOUT": "Business Income",
+      "UPI_TRANSFER": "Transfer",
+      "WALLET_TRANSFER": "Transfer",
+      "OTA_INCOME": "Business Income",
+      "TRANSFER": "Transfer",
+      "PG_CHARGES": "Bank Charges",
+      "REIMBURSEMENT": "Refund",
+      "BONUS": "Salary",
+      "COMMISSION": "Business Income",
+      "GRATUITY": "Salary",
+      "PENSION": "Salary",
+      "ATM_WITHDRAWAL": "ATM Withdrawal",
+      "CASH_WITHDRAWAL": "ATM Withdrawal",
+      "LOAN_PAYMENTS": "Loan Payment",
+      "Loan Payments": "Loan Payment",
+      "Withdrawal": "ATM Withdrawal",
+      "Others": "Others Debit",
+      "Other Debit": "Others Debit",
+      "Other Credit": "Others Credit",
+      "Uncategorized": "Others Debit",
+      "Food & Dining": "Food",
+      "Dining": "Food",
+      "Restaurant": "Food"
+    }
+  },
+  "text_normalization": {
+    "enabled": true,
+    "lowercase": true,
+    "remove_special_characters": true,
+    "remove_extra_spaces": true,
+    "replace_rules": {
+      "ltd": "limited",
+      "pvt": "private",
+      "co": "company",
+      "finserv": "finance services",
+      "fincorp": "finance corporation",
+      "&": "and",
+      "@": "at",
+      "txn": "transaction",
+      "trf": "transfer",
+      "tpt": "transfer",
+      "cr": "credit",
+      "dr": "debit",
+      "a/c": "account",
+      "ac": "account",
+      "chq": "cheque",
+      "wdl": "withdrawal",
+      "dep": "deposit",
+      "settl": "settlement",
+      "settl.": "settlement",
+      "stlmnt": "settlement"
+    },
+    "strip_patterns": [
+      "txn id.*",
+      "ref no.*",
+      "upi.*id.*",
+      "reference.*\\d+",
+      "rrn.*\\d+",
+      "utr.*\\d+",
+      "batch.*\\d+",
+      "terminal.*\\d+"
+    ],
+    "preserve_patterns": [
+      "@[a-z]+",
+      "upi/",
+      "neft/",
+      "rtgs/",
+      "imps/"
+    ]
+  },
+  "entity_registry": {
+    "bajaj_finance": {
+      "aliases": [
+        "bajaj finance",
+        "bajaj finserv",
+        "bajaj housing",
+        "bajaj",
+        "bfl"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "tata_capital": {
+      "aliases": [
+        "tata capital",
+        "tata capital finance",
+        "tcfsl"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "aditya_birla_finance": {
+      "aliases": [
+        "aditya birla finance",
+        "aditya birla capital",
+        "abfl",
+        "abc finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "edelweiss": {
+      "aliases": [
+        "edelweiss",
+        "edelweiss finance",
+        "edelweiss housing"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "iifl_finance": {
+      "aliases": [
+        "iifl",
+        "iifl finance",
+        "india infoline"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "lt_finance": {
+      "aliases": [
+        "l&t finance",
+        "lt finance",
+        "larsen toubro finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "mahindra_finance": {
+      "aliases": [
+        "mahindra finance",
+        "mahindra and mahindra finance",
+        "mmfsl"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "shriram_finance": {
+      "aliases": [
+        "shriram finance",
+        "shriram city union",
+        "shriram transport"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "muthoot_finance": {
+      "aliases": [
+        "muthoot",
+        "muthoot finance",
+        "muthoot fincorp"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "manappuram_finance": {
+      "aliases": [
+        "manappuram",
+        "manappuram finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "kissht": {
+      "aliases": [
+        "kissht",
+        "kissht finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "moneytap": {
+      "aliases": [
+        "moneytap",
+        "money tap"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "zestmoney": {
+      "aliases": [
+        "zestmoney",
+        "zest money"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "lendingkart": {
+      "aliases": [
+        "lendingkart",
+        "lending kart"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "capital_float": {
+      "aliases": [
+        "capital float",
+        "capitalfloat"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "poonawalla_fincorp": {
+      "aliases": [
+        "poonawalla",
+        "poonawalla fincorp"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "ugro_capital": {
+      "aliases": [
+        "ugro",
+        "ugro capital"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "hdb_financial": {
+      "aliases": [
+        "hdb financial",
+        "hdb",
+        "hdfc bank financial"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "lic_housing": {
+      "aliases": [
+        "lic housing",
+        "lic housing finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "pnb_housing": {
+      "aliases": [
+        "pnb housing",
+        "pnb housing finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "cholamandalam": {
+      "aliases": [
+        "cholamandalam",
+        "chola",
+        "chola finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "fullerton": {
+      "aliases": [
+        "fullerton",
+        "fullerton india"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "home_credit": {
+      "aliases": [
+        "home credit",
+        "homecredit"
+      ],
+      "entity_type": "nbfc",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "hero_fincorp": {
+      "aliases": [
+        "hero fincorp",
+        "hero finc orp"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "tvs_credit": {
+      "aliases": [
+        "tvs credit",
+        "tvs finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "piramal": {
+      "aliases": [
+        "piramal",
+        "piramal finance",
+        "piramal capital"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "indiabulls": {
+      "aliases": [
+        "indiabulls",
+        "indiabulls housing"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "reliance_capital": {
+      "aliases": [
+        "reliance capital",
+        "reliance finance"
+      ],
+      "entity_type": "nbfc",
+      "priority": 95,
+      "confidence_base": 0.95
+    },
+    "sbi": {
+      "aliases": [
+        "sbi",
+        "state bank",
+        "state bank of india"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "hdfc_bank": {
+      "aliases": [
+        "hdfc",
+        "hdfc bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "icici_bank": {
+      "aliases": [
+        "icici",
+        "icici bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "axis_bank": {
+      "aliases": [
+        "axis",
+        "axis bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "kotak_bank": {
+      "aliases": [
+        "kotak",
+        "kotak bank",
+        "kotak mahindra"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "idfc_bank": {
+      "aliases": [
+        "idfc",
+        "idfc bank",
+        "idfc first",
+        "idfc first bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "yes_bank": {
+      "aliases": [
+        "yes",
+        "yes bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "indusind_bank": {
+      "aliases": [
+        "indusind",
+        "indusind bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "federal_bank": {
+      "aliases": [
+        "federal",
+        "federal bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "rbl_bank": {
+      "aliases": [
+        "rbl",
+        "rbl bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "pnb": {
+      "aliases": [
+        "pnb",
+        "punjab national bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "bob": {
+      "aliases": [
+        "bob",
+        "bank of baroda",
+        "baroda"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "canara_bank": {
+      "aliases": [
+        "canara",
+        "canara bank"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "union_bank": {
+      "aliases": [
+        "union",
+        "union bank",
+        "union bank of india"
+      ],
+      "entity_type": "bank",
+      "priority": 90,
+      "confidence_base": 0.95
+    },
+    "pvt_ltd": {
+      "aliases": [
+        "pvt ltd",
+        "private limited",
+        "pvt limited"
+      ],
+      "entity_type": "business",
+      "priority": 85,
+      "confidence_base": 0.85
+    },
+    "llp": {
+      "aliases": [
+        "llp",
+        "limited liability partnership"
+      ],
+      "entity_type": "business",
+      "priority": 85,
+      "confidence_base": 0.85
+    },
+    "enterprises": {
+      "aliases": [
+        "enterprises",
+        "enterprise"
+      ],
+      "entity_type": "business",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "trading": {
+      "aliases": [
+        "trading",
+        "traders"
+      ],
+      "entity_type": "business",
+      "priority": 75,
+      "confidence_base": 0.7
+    },
+    "solutions": {
+      "aliases": [
+        "solutions",
+        "solution"
+      ],
+      "entity_type": "business",
+      "priority": 75,
+      "confidence_base": 0.7
+    },
+    "services": {
+      "aliases": [
+        "services",
+        "service"
+      ],
+      "entity_type": "business",
+      "priority": 70,
+      "confidence_base": 0.65
+    },
+    "industries": {
+      "aliases": [
+        "industries",
+        "industry"
+      ],
+      "entity_type": "business",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "corporation": {
+      "aliases": [
+        "corporation",
+        "corp"
+      ],
+      "entity_type": "business",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "oyo": {
+      "aliases": [
+        "oyo",
+        "oyo rooms",
+        "oyo hotels"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "goibibo": {
+      "aliases": [
+        "goibibo",
+        "go ibibo"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "makemytrip": {
+      "aliases": [
+        "makemytrip",
+        "make my trip",
+        "mmt"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "booking": {
+      "aliases": [
+        "booking",
+        "booking.com",
+        "bookingcom"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "airbnb": {
+      "aliases": [
+        "airbnb",
+        "air bnb"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "expedia": {
+      "aliases": [
+        "expedia"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "cleartrip": {
+      "aliases": [
+        "cleartrip",
+        "clear trip"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "yatra": {
+      "aliases": [
+        "yatra"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "ixigo": {
+      "aliases": [
+        "ixigo"
+      ],
+      "entity_type": "merchant",
+      "priority": 90,
+      "confidence_base": 0.9
+    },
+    "paytm": {
+      "aliases": [
+        "paytm",
+        "pay tm"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 85,
+      "confidence_base": 0.9
+    },
+    "phonepe": {
+      "aliases": [
+        "phonepe",
+        "phone pe"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 85,
+      "confidence_base": 0.9
+    },
+    "google_pay": {
+      "aliases": [
+        "google pay",
+        "googlepay",
+        "gpay",
+        "g pay"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 85,
+      "confidence_base": 0.9
+    },
+    "amazon_pay": {
+      "aliases": [
+        "amazon pay",
+        "amazonpay"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 85,
+      "confidence_base": 0.9
+    },
+    "bhim": {
+      "aliases": [
+        "bhim",
+        "bhim upi"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 85,
+      "confidence_base": 0.9
+    },
+    "mobikwik": {
+      "aliases": [
+        "mobikwik",
+        "mobi kwik"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 80,
+      "confidence_base": 0.85
+    },
+    "freecharge": {
+      "aliases": [
+        "freecharge",
+        "free charge"
+      ],
+      "entity_type": "payment_platform",
+      "priority": 80,
+      "confidence_base": 0.85
+    },
+    "finance": {
+      "aliases": [
+        "finance",
+        "financial"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 75,
+      "confidence_base": 0.7
+    },
+    "fincorp": {
+      "aliases": [
+        "fincorp",
+        "finance corporation"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "capital": {
+      "aliases": [
+        "capital"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 70,
+      "confidence_base": 0.65
+    },
+    "lending": {
+      "aliases": [
+        "lending",
+        "lender"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "credit_services": {
+      "aliases": [
+        "credit services",
+        "credit ltd"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 80,
+      "confidence_base": 0.75
+    },
+    "nbfc": {
+      "aliases": [
+        "nbfc",
+        "non banking financial company"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 85,
+      "confidence_base": 0.8
+    },
+    "housing_finance": {
+      "aliases": [
+        "housing finance",
+        "housing"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 90,
+      "confidence_base": 0.85
+    },
+    "microfinance": {
+      "aliases": [
+        "microfinance",
+        "micro finance",
+        "mfi"
+      ],
+      "entity_type": "generic_financial",
+      "priority": 85,
+      "confidence_base": 0.8
+    }
+  },
+  "fuzzy_matching": {
+    "enabled": true,
+    "min_similarity_score": 0.85,
+    "ignore_word_order": true,
+    "allow_partial_match": true,
+    "algorithms": [
+      "levenshtein",
+      "jaro_winkler",
+      "token_sort"
+    ],
+    "max_edit_distance": 2
+  },
+  "pattern_detection": {
+    "upi_handle": [
+      "@okaxis",
+      "@okhdfc",
+      "@okicici",
+      "@oksbi",
+      "@ybl",
+      "@paytm",
+      "@paytmbank",
+      "@airtel",
+      "@airtelbank",
+      "@axis",
+      "@axisb",
+      "@hdfc",
+      "@icici",
+      "@sbi",
+      "@kotak",
+      "@federal",
+      "@rbl",
+      "@pingpay",
+      "@fbl",
+      "@ibl",
+      "@apl"
+    ],
+    "loan_patterns": [
+      "loan",
+      "emi",
+      "repayment",
+      "disbursement",
+      "disbursal",
+      "sanction",
+      "foreclosure",
+      "preclosure",
+      "principal",
+      "interest"
+    ],
+    "transfer_patterns": [
+      "neft",
+      "rtgs",
+      "imps",
+      "upi",
+      "transfer",
+      "trf",
+      "tpt",
+      "fund transfer"
+    ],
+    "settlement_patterns": [
+      "settlement",
+      "merchant settlement",
+      "acquirer settlement",
+      "pg settlement",
+      "ota settlement",
+      "vendor settlement",
+      "batch settlement"
+    ],
+    "bill_payment_patterns": [
+      "bill payment",
+      "bbps",
+      "utility payment",
+      "electricity bill",
+      "water bill",
+      "gas bill",
+      "mobile bill",
+      "internet bill"
+    ],
+    "card_patterns": [
+      "pos",
+      "card swipe",
+      "atm",
+      "credit card",
+      "debit card",
+      "contactless"
+    ],
+    "refund_patterns": [
+      "refund",
+      "reversal",
+      "chargeback",
+      "credit reversal"
+    ],
+    "business_vendor_patterns": [
+      "pvt",
+      "pvt ltd",
+      "pvt.",
+      "private limited",
+      "private ltd",
+      "traders",
+      "enterprises",
+      "enterprise",
+      "solutions",
+      "technologies",
+      "techno",
+      "systems",
+      "services",
+      "corporation",
+      "corp",
+      "company",
+      "co.",
+      "limited",
+      "ltd",
+      "llp",
+      "partnership",
+      "proprietor",
+      "proprietorship"
+    ],
+    "fuel_travel_patterns": [
+      "diesel",
+      "petrol",
+      "fuel",
+      "gas",
+      "cng",
+      "lpg",
+      "petroleum",
+      "pump",
+      "filling station",
+      "fuel station"
+    ],
+    "insurance_patterns": [
+      "insurance",
+      "insure",
+      "policy",
+      "premium",
+      "claim",
+      "life insurance",
+      "health insurance",
+      "motor insurance",
+      "vehicle insurance",
+      "car insurance",
+      "bike insurance",
+      "term insurance",
+      "endowment",
+      "lic",
+      "hdfc life",
+      "icici prudential",
+      "max life",
+      "sbi life",
+      "bajaj allianz",
+      "star health",
+      "care health",
+      "niva bupa",
+      "religare",
+      "tata aia",
+      "kotak life",
+      "birla sun life",
+      "general insurance",
+      "mediclaim",
+      "health cover",
+      "accident insurance",
+      "travel insurance"
+    ],
+    "outward_bounce_patterns": [
+      "o/w return",
+      "outward return",
+      "outw return",
+      "chq return",
+      "cheque return",
+      "cheque dishonour",
+      "dishonoured cheque",
+      "ach return",
+      "ecs return",
+      "nach return",
+      "nach ret",
+      "ach ret",
+      "ecs ret",
+      "mandate return",
+      "si return",
+      "standing instruction return",
+      "auto debit return",
+      "auto pay return",
+      "insufficient funds",
+      "insuff funds",
+      "payment returned",
+      "debit return",
+      "return charge",
+      "bounce charge",
+      "chq return chgs",
+      "cheque return chgs",
+      "o/w chq ret",
+      "outward chq ret",
+      "outward bounce"
+    ],
+    "inward_bounce_patterns": [
+      "i/w return",
+      "inward return",
+      "inw return",
+      "inw ret",
+      "inward chq ret",
+      "i/w chq ret",
+      "chq dep return",
+      "cheque dep return",
+      "cheque deposit return",
+      "cheque returned",
+      "returned cheque",
+      "credit return",
+      "deposit return",
+      "inward bounce",
+      "inw bounce",
+      "clg return",
+      "clearing return",
+      "inward clg ret",
+      "credit reversal"
+    ],
+    "bounce_penalty_patterns": [
+      "return chgs",
+      "return charge",
+      "bounce charge",
+      "dishonour charge",
+      "chq return chgs",
+      "cheque return chgs",
+      "ecs return chgs",
+      "nach return chgs",
+      "penal charge",
+      "penalty charge"
+    ]
+  },
+  "confidence_scoring": {
+    "enabled": true,
+    "weights": {
+      "entity_match": 0.5,
+      "keyword_match": 0.2,
+      "pattern_match": 0.1,
+      "direction_rule": 0.2
+    },
+    "thresholds": {
+      "high_confidence": 0.8,
+      "medium_confidence": 0.5,
+      "low_confidence": 0.3
+    },
+    "boosters": {
+      "exact_entity_match": 1.2,
+      "multiple_keyword_match": 1.15,
+      "pattern_and_keyword_match": 1.1
+    },
+    "penalties": {
+      "fuzzy_match": 0.9,
+      "partial_match": 0.85,
+      "generic_keyword": 0.8
+    }
+  },
+  "collision_resolution": {
+    "resolution_order": [
+      "entity_interpretation",
+      "direction_rule",
+      "entity_alias_match",
+      "keyword_classification",
+      "pattern_match",
+      "fallback_category"
+    ],
+    "group_priority": [
+      "FINANCIAL_INSTRUMENT",
+      "INCOME_TYPE",
+      "EVENT_TYPE",
+      "GOVERNMENT",
+      "CHANNEL",
+      "PRODUCT_TYPE",
+      "FEES_AND_TAXES",
+      "UTILITY",
+      "LIFESTYLE",
+      "METADATA",
+      "TYPO"
+    ],
+    "rules": [
+      "Entity interpretation overrides all other classifications",
+      "Direction rule overrides generic keyword when entity is detected",
+      "Entity alias match has priority over standalone keywords",
+      "Exact keyword match preferred over fuzzy match",
+      "Longer keyword match preferred over shorter",
+      "Higher confidence score wins within same group",
+      "Group priority order breaks ties across groups",
+      "High confidence keywords override low confidence",
+      "Pattern match used as supporting evidence, not primary classifier"
+    ],
+    "entity_override_rules": {
+      "nbfc_lender_credit": "LOAN_DISBURSED",
+      "nbfc_lender_debit": "EMI_PAYMENT",
+      "business_entity_credit": "BUSINESS_INCOME",
+      "business_entity_debit": "BUSINESS_EXPENSE",
+      "bank_entity_credit": "TRANSFER_IN",
+      "bank_entity_debit": "TRANSFER_OUT",
+      "payment_platform_credit": "TRANSFER_IN",
+      "payment_platform_debit": "TRANSFER_OUT"
+    },
+    "fallback_category": {
+      "credit": "TRANSFER_IN",
+      "debit": "TRANSFER_OUT",
+      "unknown": "UNCATEGORIZED"
+    }
+  },
+  "behavior_context": {
+    "enabled": false,
+    "track_recurring_transactions": true,
+    "detect_subscription_pattern": true,
+    "detect_salary_pattern": true,
+    "detect_loan_pattern": true,
+    "detect_merchant_pattern": true,
+    "detect_bill_payment_pattern": true,
+    "pattern_detection_window_days": 90,
+    "min_occurrences_for_pattern": 3,
+    "description": "Behavioral pattern detection for ML integration - configuration only, no implementation"
+  },
+  "feedback_learning": {
+    "enabled": false,
+    "allow_manual_reclassification": true,
+    "store_user_overrides": true,
+    "override_priority": "highest",
+    "learning_modes": [
+      "supervised",
+      "semi_supervised"
+    ],
+    "confidence_adjustment_on_feedback": true,
+    "description": "User feedback and learning system - configuration only, no implementation"
+  },
+  "direction_rules": {
+    "credit_means": "money received",
+    "debit_means": "money spent",
+    "direction_overrides_keywords": true,
+    "entity_priority_over_keywords": true,
+    "interpretation_order": [
+      "text_normalization",
+      "entity_detection",
+      "entity_interpretation",
+      "direction_rules",
+      "keyword_classification",
+      "pattern_matching",
+      "confidence_scoring",
+      "collision_resolution"
+    ],
+    "special_cases": {
+      "interest_credit": "Always INTEREST_CREDIT regardless of entity",
+      "interest_debit": "Always INTEREST_DEBIT regardless of entity",
+      "charges": "Always CHARGES regardless of direction",
+      "refund": "Always REFUND when keyword present"
+    }
+  },
+  "entity_interpretation": {
+    "_description": "Entity-based classification that runs BEFORE keyword matching",
+    "_usage": "Match entity name in transaction narration, then apply credit/debit interpretation",
+    "NBFC_LENDERS": {
+      "bajaj finserv": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "bajaj finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "tata capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "lic housing": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "pnb housing": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "mahindra finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "shriram finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "cholamandalam": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "fullerton": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "home credit": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "muthoot": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "manappuram": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "hero fincorp": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "tvs credit": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "l&t finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "piramal": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "indiabulls": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "aditya birla finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "reliance capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "edelweiss": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "iifl finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "lendingkart": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "capital float": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "kissht": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "moneytap": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "krazybee": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "zestmoney": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "bajaj housing": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "aavas financiers": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "sundaram finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "srei finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "clix capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "hdb financial": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "poonawalla fincorp": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "ugro capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "magma finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "five star business finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "vivriti capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "northern arc capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      }
+    },
+    "GENERIC_LENDER_TOKENS": {
+      "_description": "Generic tokens indicating lender entities",
+      "finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "fincorp": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "capital": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 70,
+          "confidence": "low"
+        }
+      },
+      "credit ltd": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "lending": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "loan services": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "finserv": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "nbfc": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "housing finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "microfinance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "BUSINESS_ENTITIES": {
+      "_description": "Business entity tokens for enterprise detection",
+      "enterprise": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "enterprises": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "trading": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "traders": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "solutions": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "services": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "low"
+        }
+      },
+      "agency": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "associates": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "industries": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "corporation": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "corp": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "company": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "low"
+        }
+      },
+      "co ltd": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "pvt ltd": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "private limited": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "llp": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "limited": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "low"
+        }
+      },
+      "proprietorship": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "partnership": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "OTA_MERCHANTS": {
+      "_description": "Online Travel Agencies - credit means OTA income (host/partner payout)",
+      "oyo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "goibibo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "makemytrip": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "mmt": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "booking.com": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "airbnb": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "expedia": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "agoda": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "yatra": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "cleartrip": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "ixigo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "trivago": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "redbus": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "abhibus": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "easemytrip": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "via.com": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "travelguru": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "happyeasygo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "travalour": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "thrillophilia": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "holidayiq": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "thomas cook": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "sotc": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "musafir": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "travelyaari": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "railyatri": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "confirmtkt": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "paytm travel": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "irctc": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "spicejet": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "indigo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "airindia": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "air india": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "vistara": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "akasa air": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "goair": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "go first": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "alliance air": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "trujet": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "treebo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "fabhotels": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "zostel": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "goomo": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "pickyourtrail": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "tripoto": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "headout": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "klook": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "viator": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "trip.com": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "hostelworld": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "zoomcar": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "revv": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "drivezy": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "savaari": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "getmecab": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "myles": {
+        "credit": {
+          "category": "OTA_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRAVEL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      }
+    },
+    "BANKS": {
+      "_description": "Bank entities - just TRANSFER, direction doesn't matter for classification",
+      "sbi": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "state bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "hdfc bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "hdfc": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "icici bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "icici": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "axis bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "axis": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "kotak bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "kotak mahindra": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "idfc bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "idfc first": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "yes bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "indusind": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "indusind bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "federal bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "rbl bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bandhan bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "canara bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "punjab national bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "pnb": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bank of baroda": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bob": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "union bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "indian bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bank of india": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "boi": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "central bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "uco bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "indian overseas bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "iob": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bank of maharashtra": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "punjab sind bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "psb": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "idbi bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "idbi": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "south indian bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "karur vysya bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "kvb": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "city union bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "cub": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "tamilnad mercantile bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "tmb": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "karnataka bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "kbl": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "dcb bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "csb bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "dhanlaxmi bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "lakshmi vilas bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "nainital bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "jammu kashmir bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "jk bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "ujjivan": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "ujjivan bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "equitas": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "equitas bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "au bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "au small finance": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "suryoday bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "utkarsh bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "esaf bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "jana bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "fincare bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "capital bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "northeast bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "fino bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "fino payments": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "airtel payments bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "paytm payments bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "india post payments bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "ippb": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "jio payments bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "nsdl payments bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "standard chartered": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "hsbc": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "citibank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "dbs bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "deutsche bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "barclays": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "bnp paribas": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "rbi": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "nabard": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "exim bank": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      },
+      "sidbi": {
+        "category": "TRANSFER",
+        "group": "CHANNEL",
+        "priority": 70,
+        "confidence": "medium"
+      }
+    },
+    "PAYMENT_PLATFORMS": {
+      "_description": "Payment platforms and UPI apps - simple UPI_TRANSFER, direction doesn't apply",
+      "paytm": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "phonepe": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "phone pe": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "gpay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "google pay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "googlepay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "amazon pay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "amazonpay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "bhim upi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "bhim": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "mobikwik": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "freecharge": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "cred": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "slice": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "slice upi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "jupiter": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "jupiter money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "fi money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "fi.money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "groww": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "navi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "navi money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "niyo": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "niyo global": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "tata neu": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "tataneu": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "whatsapp pay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "whatsapppay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "bharatpe": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "payzapp": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "hdfc payzapp": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "icici imobile": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "icici pockets": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "sbi yono": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "yono": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "yono sbi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "axis pay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "axispay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "fampay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "famapp": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "dhani": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "freo": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "kreditbee": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "kredit bee": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "moneyview": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "money view": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "onecard": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "one card": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "samsung pay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "truebalance": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "true balance": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "indmoney": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "ind money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "super.money": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "supermoney": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "upi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "upi transfer": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "upi p2p": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      },
+      "upi p2m": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high"
+      }
+    },
+    "UPI_HANDLES": {
+      "_description": "UPI handle patterns - simple UPI_TRANSFER, direction doesn't apply",
+      "@okaxis": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@okhdfc": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@okhdfcbank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@ybl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@ibl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@paytm": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@paytmbank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@axl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@sbi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@oksbi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@icici": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@okicici": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@apl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@axisbank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@axis": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@axisb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@upi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@hdfc": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@kotak": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@indus": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@federal": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@fbl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@rbl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@bandhan": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@canara": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@pnb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@bob": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@boi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@union": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@central": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@uco": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@iob": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@indian": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@idbi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@yes": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@kvb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@kbl": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@cub": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@tmb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@sib": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@dcb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@csb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@dlb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@psb": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@ujjivan": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@equitas": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@aubank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@fino": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@airtel": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@airtelbank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@jio": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@jiobank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@indiapost": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@postbank": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@sc": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@hsbc": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@citi": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@dbs": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      },
+      "@pingpay": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 75,
+        "confidence": "high"
+      }
+    },
+    "DELIVERY_PLATFORMS": {
+      "_description": "Food and delivery platform entities",
+      "swiggy": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "zomato": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "dunzo": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "DELIVERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "uber": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRANSPORT_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ola": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRANSPORT_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "rapido": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "TRANSPORT_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "dominos": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "kfc": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "mcdonalds": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "burger king": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "pizza hut": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "subway": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "baskin robbins": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FOOD_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "ECOMMERCE_PLATFORMS": {
+      "_description": "E-commerce platform entities",
+      "amazon": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "amazon seller": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "flipkart": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "flipkart seller": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "meesho": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "meesho payout": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "myntra": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ajio": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "nykaa": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "tata cliq": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "tatacliq": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "snapdeal": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "shopclues": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "paytm mall": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "jiomart": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "bigbasket": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "grofers": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "blinkit": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "zepto": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "instamart": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "dmart": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "reliance fresh": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "GROCERY_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "reliance digital": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "croma": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "vijay sales": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "lenskart": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "pepperfry": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "urban ladder": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "firstcry": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "bewakoof": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "souled store": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "decathlon": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "purplle": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "mamaearth": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "boat": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "noise": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "apple store": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "oneplus": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "mi store": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "samsung store": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "lifestyle": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "shoppers stop": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "westside": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "pantaloons": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "max fashion": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "zara": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "h&m": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ikea": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "SHOPPING_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "1mg": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "MEDICAL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "pharmeasy": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "MEDICAL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "netmeds": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "MEDICAL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "apollo pharmacy": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "MEDICAL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "medlife": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "MEDICAL_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "cult.fit": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FITNESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "cultfit": {
+        "credit": {
+          "category": "REFUND",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "FITNESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "hpcl": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "bpcl": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ioc": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "indian oil": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "hp petrol": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "essar fuel": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "reliance fuel": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "shell fuel": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "FUEL_EXPENSE",
+          "group": "TRANSPORT",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "PAYMENT_GATEWAYS": {
+      "_description": "Payment gateway entities for merchant settlements",
+      "razorpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "cashfree": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "payu": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "billdesk": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ccavenue": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "instamojo": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "paypal": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "stripe": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "payubiz": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "juspay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "atom": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "zaakpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ebs": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "direcpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "airpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "techprocess": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "worldpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "2checkout": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "payoneer": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "mswipe": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "ezetap": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "pine labs": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "TERMINAL_SETTLEMENTS": {
+      "_description": "Generic terminal card settlement events. Direction-aware: credit = business income (merchant payout/settlement), debit = business expense (card settlement from customer).",
+      "terminal 1 cards settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "terminal cards settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 88,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 88,
+          "confidence": "high"
+        }
+      },
+      "terminal card settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "cards settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "medium"
+        }
+      },
+      "card settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 85,
+          "confidence": "medium"
+        }
+      },
+      "terminal settlement": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 87,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 87,
+          "confidence": "high"
+        }
+      }
+    },
+    "classification": {
+      "_description": "Keyword-based classification from original words.json - use for non-entity matching",
+      "FINANCIAL_INSTRUMENT": {
+        "BNPL": [
+          "amazon pay later",
+          "bnpl",
+          "bnpl payment",
+          "bnpl settlement",
+          "buy now pay later",
+          "capital float",
+          "earlysalary",
+          "flexmoney",
+          "flipkart pay later",
+          "installment payment",
+          "lazypay",
+          "ola postpaid",
+          "pay later",
+          "paylater",
+          "paytm postpaid",
+          "postpe",
+          "zestmoney",
+          "simpl",
+          "slice",
+          "uni card"
+        ],
+        "EMI": [
+          "aditya birla emi",
+          "axis emi",
+          "axis loan emi",
+          "bajaj emi",
+          "bajaj finserv emi",
+          "business loan emi",
+          "car loan emi",
+          "card emi",
+          "cholamandalam emi",
+          "consumer durable emi",
+          "credit card emi",
+          "debit card emi",
+          "early foreclosure",
+          "education loan emi",
+          "emi",
+          "emi auto debit",
+          "emi charge",
+          "emi debit",
+          "emi due",
+          "emi part payment",
+          "emi payment",
+          "emi penalty",
+          "emi reversal",
+          "emi settlement",
+          "equated monthly installment",
+          "foreclosure charges",
+          "fullerton emi",
+          "fullerton loan",
+          "gold loan emi",
+          "hdfc emi",
+          "hdfc loan emi",
+          "hero fincorp emi",
+          "home credit emi",
+          "home credit repayment",
+          "home loan emi",
+          "icici emi",
+          "icici loan emi",
+          "idfc first emi",
+          "idfc first loan",
+          "indiabulls emi",
+          "interest on loan",
+          "kotak emi",
+          "kotak loan emi",
+          "l&t finance emi",
+          "lender disbursement",
+          "lender payout",
+          "lic housing emi",
+          "loan disbursal charge",
+          "loan emi",
+          "loan eml",
+          "loan foreclosure refund",
+          "loan installment",
+          "loan processing fee",
+          "loan repayment",
+          "loan repayment interest",
+          "loan repayment principal",
+          "loan reversal",
+          "loan settlement amount",
+          "loan settlement cr",
+          "loan top up",
+          "mahindra finance emi",
+          "manappuram emi",
+          "muthoot emi",
+          "no cost emi",
+          "part prepayment",
+          "personal loan emi",
+          "piramal emi",
+          "pnb housing emi",
+          "preclosure charges",
+          "principal repayment",
+          "sbi emi",
+          "sbi home loan",
+          "shriram finance emi",
+          "tata capital emi",
+          "tata capital loan",
+          "tvs credit emi",
+          "two wheeler emi",
+          "vehicle loan emi",
+          "zero cost emi"
+        ],
+        "DEMAND_DRAFT": [
+          "dd",
+          "dd deposit",
+          "dd issue",
+          "demand draft",
+          "draft deposit",
+          "pay order"
+        ],
+        "CHEQUE": [
+          "a/c payee chq",
+          "account payee cheque",
+          "bearer cheque",
+          "bearer chq",
+          "check",
+          "check deposit",
+          "cheque",
+          "cheque clearing",
+          "cheque clg",
+          "cheque collection",
+          "cheque deposit",
+          "cheque deposited",
+          "cheque issued",
+          "cheque micr",
+          "cheque received",
+          "cheque truncation",
+          "chq",
+          "chq clg",
+          "chq deposit",
+          "chq deposited",
+          "chq inward",
+          "chq issued",
+          "chq micr",
+          "chq outward",
+          "chq paid",
+          "chq paid micr",
+          "chq received",
+          "clearing",
+          "clearing cheque",
+          "clg",
+          "clg cheque",
+          "clg chq",
+          "crossed cheque",
+          "cts",
+          "cts cheque",
+          "cts clearing",
+          "express clearing",
+          "high value clearing",
+          "inward cheque",
+          "local cheque",
+          "micr",
+          "micr cheque",
+          "micr chq",
+          "multi city cheque",
+          "order cheque",
+          "order chq",
+          "outstation cheque",
+          "outward cheque",
+          "pdc",
+          "post dated cheque",
+          "self cheque",
+          "self chq",
+          "speed clearing",
+          "stale cheque"
+        ],
+        "BANKERS_CHEQUE": [
+          "bank cheque",
+          "banker's cheque",
+          "banker's draft",
+          "bankers cheque",
+          "bankers draft"
+        ],
+        "PF": [
+          "epf",
+          "epfo",
+          "pf",
+          "pf withdrawal",
+          "provident fund"
+        ],
+        "PPF": [
+          "ppf",
+          "public provident fund"
+        ],
+        "FD": [
+          "fd",
+          "fd closure",
+          "fd maturity",
+          "fd opening",
+          "fd renewal",
+          "fixed deposit",
+          "td",
+          "term deposit"
+        ],
+        "RD": [
+          "rd",
+          "rd installment",
+          "rd maturity",
+          "rd opening",
+          "recurring deposit"
+        ],
+        "LOAN": [
+          "business loan",
+          "capital finance",
+          "car loan",
+          "cc limit",
+          "consumer loan",
+          "credit facility",
+          "credit line",
+          "disbursal",
+          "disbursement",
+          "education loan",
+          "finance ltd",
+          "finance private",
+          "finance pvt",
+          "fincorp",
+          "finserv",
+          "flexi loan",
+          "flexipay",
+          "gold loan",
+          "hfc",
+          "home loan",
+          "housing finance",
+          "lender",
+          "lending",
+          "line of credit",
+          "ln a/c",
+          "loan",
+          "loan a/c",
+          "loan account",
+          "loan credit",
+          "loan disbursal",
+          "loan disbursed",
+          "loan disbursement",
+          "loan sanctioned",
+          "mfi",
+          "micro finance",
+          "microfinance",
+          "msme loan",
+          "nbfc",
+          "od",
+          "od facility",
+          "overdraft",
+          "personal loan",
+          "sanction",
+          "two wheeler loan",
+          "vehicle loan",
+          "working capital"
+        ],
+        "INSURANCE": [
+          "car insurance",
+          "health insurance",
+          "home insurance",
+          "insurance",
+          "insurance premium",
+          "lic",
+          "lic premium",
+          "life insurance",
+          "motor insurance",
+          "term insurance",
+          "ulip",
+          "vehicle insurance",
+          "acko",
+          "digit insurance",
+          "hdfc ergo",
+          "icici lombard",
+          "iffco tokio",
+          "max life",
+          "bajaj allianz",
+          "star health",
+          "care health",
+          "niva bupa",
+          "reliance general",
+          "sbi life",
+          "kotak life",
+          "birla sun life",
+          "tata aia"
+        ],
+        "MUTUAL_FUND": [
+          "debt fund",
+          "elss",
+          "equity fund",
+          "hybrid fund",
+          "index fund",
+          "liquid fund",
+          "mf",
+          "mf purchase",
+          "mf redemption",
+          "mutual fund",
+          "nav",
+          "nfo",
+          "sip",
+          "sip debit",
+          "systematic investment",
+          "groww",
+          "zerodha coin",
+          "kuvera",
+          "paytm money",
+          "et money",
+          "coin by zerodha"
+        ],
+        "STOCKS": [
+          "angel broking",
+          "brokerage",
+          "bse",
+          "cdsl",
+          "delivery",
+          "demat",
+          "depository",
+          "dp charges",
+          "equity",
+          "f&o",
+          "futures",
+          "hdfc securities",
+          "icici direct",
+          "iifl",
+          "intraday",
+          "ipo",
+          "ipo allotment",
+          "ipo refund",
+          "kotak securities",
+          "motilal oswal",
+          "nsdl",
+          "nse",
+          "options",
+          "securities transaction",
+          "share",
+          "sharekhan",
+          "shares",
+          "stock",
+          "stocks",
+          "stt",
+          "trading",
+          "upstox",
+          "zerodha",
+          "angel one",
+          "groww",
+          "5paisa",
+          "dhan",
+          "fyers",
+          "alice blue",
+          "samco",
+          "paytm money",
+          "mstock",
+          "axis direct",
+          "sbi securities",
+          "geojit"
+        ],
+        "LOAN_REPAYMENT": [
+          "loan repayment",
+          "loan payment",
+          "principal repayment",
+          "loan closure",
+          "loan foreclosure",
+          "loan preclosure",
+          "loan settlement amount"
+        ]
+      },
+      "INCOME_TYPE": {
+        "INTEREST": [
+          "interest"
+        ],
+        "INTEREST_CREDIT": [
+          "deposit interest",
+          "fd interest",
+          "int cr",
+          "int credit",
+          "interest credit",
+          "interest on deposit",
+          "interest paid",
+          "rd interest",
+          "savings interest"
+        ],
+        "SALARY": [
+          "compensation",
+          "honorarium",
+          "monthly salary",
+          "payroll",
+          "sal credit",
+          "salary",
+          "salary credit",
+          "stipend",
+          "wages"
+        ],
+        "REIMBURSEMENT": [
+          "expense reimbursement",
+          "reimbursement",
+          "travel reimbursement"
+        ],
+        "BONUS": [
+          "annual bonus",
+          "bonus",
+          "incentive",
+          "performance bonus"
+        ],
+        "COMMISSION": [
+          "commission",
+          "sales commission"
+        ],
+        "GRATUITY": [
+          "gratuity"
+        ],
+        "PENSION": [
+          "pension",
+          "pension credit"
+        ],
+        "DIVIDEND": [
+          "dividend",
+          "dividend credit",
+          "mf dividend",
+          "mutual fund dividend",
+          "stock dividend"
+        ],
+        "REFUND": [
+          "refund"
+        ],
+        "CASHBACK": [
+          "cash back",
+          "cashback"
+        ],
+        "REWARD": [
+          "loyalty points",
+          "reward",
+          "reward points"
+        ],
+        "PAYOUT": [
+          "pay out",
+          "pay outs",
+          "payouts"
+        ]
+      }
+    },
+    "BUSINESS_VENDORS": {
+      "_description": "Generic business vendor detection based on company suffixes. Direction-aware: credit=business income, debit=business expense."
+    },
+    "SALARY_PAYMENTS": {
+      "_description": "Salary payments. Direction-aware: credit=salary income, debit=salary expense (business paying salary).",
+      "salary": {
+        "credit": {
+          "category": "SALARY",
+          "group": "SALARY",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "SALARY",
+          "priority": 90,
+          "confidence": "high"
+        }
+      }
+    },
+    "ATW_TRANSACTIONS": {
+      "_description": "ATW (At The Window) - Cash transactions at bank branch counter. Both credit and debit are bank transfers with cash group.",
+      "atw": {
+        "credit": {
+          "category": "BANK_TRANSFER",
+          "group": "CASH",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_TRANSFER",
+          "group": "CASH",
+          "priority": 90,
+          "confidence": "high"
+        }
+      }
+    },
+    "NEFT_TRANSACTIONS": {
+      "_description": "NEFT - Digital bank transfers. Both credit and debit use digital transfer group.",
+      "neft": {
+        "credit": {
+          "category": "BANK_TRANSFER",
+          "group": "DIGITAL_TRANSFER",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_TRANSFER",
+          "group": "DIGITAL_TRANSFER",
+          "priority": 90,
+          "confidence": "high"
+        }
+      }
+    },
+    "INSURANCE_TRANSACTIONS": {
+      "_description": "Insurance transactions. Direction-aware: credit=insurance claim/payout, debit=insurance premium payment.",
+      "insurance": {
+        "credit": {
+          "category": "INSURANCE_CREDIT",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "INSURANCE_PREMIUM",
+          "group": "INSURANCE",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "policy": {
+        "credit": {
+          "category": "INSURANCE_CREDIT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "INSURANCE_PREMIUM",
+          "group": "INSURANCE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      },
+      "premium": {
+        "debit": {
+          "category": "INSURANCE_PREMIUM",
+          "group": "INSURANCE",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "claim": {
+        "credit": {
+          "category": "INSURANCE_CREDIT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "lic": {
+        "credit": {
+          "category": "INSURANCE_CREDIT",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "INSURANCE_PREMIUM",
+          "group": "INSURANCE",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    }
+  }
+}

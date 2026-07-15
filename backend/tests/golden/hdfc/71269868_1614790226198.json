@@ -1,0 +1,595 @@
+{
+  "aggregation": {
+    "closing_balance": null,
+    "opening_balance": null,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "hdfc",
+  "categories": [
+    "Transfer",
+    "Salary Credits",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Others Credit",
+    "Salary Credits",
+    "Transfer",
+    "Transfer",
+    "Others Debit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Others Credit",
+    "Others Debit",
+    "Salary Credits",
+    "Transfer",
+    "Investments",
+    "Transfer"
+  ],
+  "category_totals": {
+    "Bank Transfer": {
+      "count": 1,
+      "credit": 42625.0,
+      "debit": 0.0
+    },
+    "Investments": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 4705.0
+    },
+    "Others Credit": {
+      "count": 2,
+      "credit": 6934.0,
+      "debit": 0.0
+    },
+    "Others Debit": {
+      "count": 3,
+      "credit": 0.0,
+      "debit": 18972.0
+    },
+    "Salary Credits": {
+      "count": 3,
+      "credit": 155000.0,
+      "debit": 0.0
+    },
+    "Transfer": {
+      "count": 14,
+      "credit": 0.0,
+      "debit": 175547.2
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "HDFC Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "cashDeposit": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "cashWithdrawals": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "chequeDeposit": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "chequeIssued": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "creditCardPayment": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "creditCount": {
+      "Dec-2020": 2.0,
+      "Feb-2021": 2.0,
+      "Jan-2021": 2.0
+    },
+    "creditValue": {
+      "Dec-2020": 92625.0,
+      "Feb-2021": 61800.0,
+      "Jan-2021": 50134.0
+    },
+    "debitCount": {
+      "Dec-2020": 7.0,
+      "Feb-2021": 4.0,
+      "Jan-2021": 7.0
+    },
+    "debitValue": {
+      "Dec-2020": 75023.6,
+      "Feb-2021": 56682.9,
+      "Jan-2021": 67517.7
+    },
+    "ecsNach": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "inwBounce": {
+      "Dec-2020": 0.0,
+      "Feb-2021": 0.0,
+      "Jan-2021": 0.0
+    },
+    "loanRepayment": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "maxBalance": {
+      "Dec-2020": 50055.46,
+      "Feb-2021": 55107.06,
+      "Jan-2021": 67796.76
+    },
+    "minBalance": {
+      "Dec-2020": 55.46,
+      "Feb-2021": 107.06,
+      "Jan-2021": 279.06
+    },
+    "monthlyAvgBal": {
+      "Dec-2020": 27303.17,
+      "Feb-2021": 7940.75,
+      "Jan-2021": 11272.64
+    },
+    "nonCashCredit": {
+      "Dec-2020": 92625.0,
+      "Feb-2021": 61800.0,
+      "Jan-2021": 50134.0
+    },
+    "nonSalaryCredits": {
+      "Dec-2020": 42625.0,
+      "Feb-2021": 6800.0,
+      "Jan-2021": 134.0
+    },
+    "owtBounce": {
+      "Dec-2020": 0.0,
+      "Feb-2021": 0.0,
+      "Jan-2021": 0.0
+    },
+    "penaltyCharges": {
+      "Dec-2020": 0,
+      "Feb-2021": 0,
+      "Jan-2021": 0
+    },
+    "salaryCredits": {
+      "Dec-2020": 50000.0,
+      "Feb-2021": 55000.0,
+      "Jan-2021": 50000.0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 19,
+    "coverage_percent": 79.2,
+    "others": 5,
+    "recurring": 3,
+    "total_transactions": 24
+  },
+  "reconciliation": {
+    "calculated_closing": 5396.16,
+    "closing_balance": 61.36,
+    "final_difference": 5334.8,
+    "is_reconciled": false,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 61.36,
+    "source": "running_balance",
+    "total_credits": 204559.0,
+    "total_debits": 199224.2,
+    "transaction_count": 24
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "71269868_1614790226198",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Dec-2020": 27303.17,
+      "Feb-2021": 7940.75,
+      "Jan-2021": 11272.64
+    },
+    "Avg Balance": 23057.31,
+    "Balance on 10th": {
+      "Dec-2020": 47674.56,
+      "Feb-2021": 10107.06,
+      "Jan-2021": 14296.76
+    },
+    "Balance on 15th": {
+      "Dec-2020": 47668.66,
+      "Feb-2021": 5402.06,
+      "Jan-2021": 290.86
+    },
+    "Balance on 1st": {
+      "Dec-2020": 55.46,
+      "Feb-2021": 279.06,
+      "Jan-2021": 17796.76
+    },
+    "Balance on 20th": {
+      "Dec-2020": 27662.76,
+      "Feb-2021": 5396.16,
+      "Jan-2021": 290.86
+    },
+    "Balance on 25th": {
+      "Dec-2020": 27662.76,
+      "Feb-2021": 5396.16,
+      "Jan-2021": 279.06
+    },
+    "Balance on 5th": {
+      "Dec-2020": 55.46,
+      "Feb-2021": 7079.06,
+      "Jan-2021": 67796.76
+    },
+    "Balance on Last Day": {
+      "Dec-2020": 17662.76,
+      "Feb-2021": 5396.16,
+      "Jan-2021": 279.06
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Dec-2020": 17662.76,
+      "Feb-2021": 5396.16,
+      "Jan-2021": 279.06
+    },
+    "Max Balance": 67796.76,
+    "Max EOD Balance": {
+      "Dec-2020": 50055.46,
+      "Feb-2021": 55107.06,
+      "Jan-2021": 67796.76
+    },
+    "Min Balance": 55.46,
+    "Min EOD Balance": {
+      "Dec-2020": 55.46,
+      "Feb-2021": 107.06,
+      "Jan-2021": 279.06
+    },
+    "Start of Month Balance": {
+      "Dec-2020": 55.46,
+      "Feb-2021": 279.06,
+      "Jan-2021": 17796.76
+    },
+    "Top 5 Credit %": 99.93,
+    "Top 5 Credit Amt": 204425.0,
+    "Top 5 Debit %": 86.84,
+    "Top 5 Debit Amt": 173000.0,
+    "Total Cheque": 0,
+    "Total Credit Amount": 204559.0,
+    "Total Credit Count": 6,
+    "Total Debit Amount": 199224.2,
+    "Total Debit Count": 18,
+    "_per_month": {
+      "Dec-2020": {
+        "avg_eod": 27303.17,
+        "d1": 55.46,
+        "d10": 47674.56,
+        "d15": 47668.66,
+        "d20": 27662.76,
+        "d25": 27662.76,
+        "d5": 55.46,
+        "dlast": 17662.76,
+        "end": 17662.76,
+        "max_eod": 50055.46,
+        "min_eod": 55.46,
+        "start": 55.46
+      },
+      "Feb-2021": {
+        "avg_eod": 7940.75,
+        "d1": 279.06,
+        "d10": 10107.06,
+        "d15": 5402.06,
+        "d20": 5396.16,
+        "d25": 5396.16,
+        "d5": 7079.06,
+        "dlast": 5396.16,
+        "end": 5396.16,
+        "max_eod": 55107.06,
+        "min_eod": 107.06,
+        "start": 279.06
+      },
+      "Jan-2021": {
+        "avg_eod": 11272.64,
+        "d1": 17796.76,
+        "d10": 14296.76,
+        "d15": 290.86,
+        "d20": 290.86,
+        "d25": 279.06,
+        "d5": 67796.76,
+        "dlast": 279.06,
+        "end": 279.06,
+        "max_eod": 67796.76,
+        "min_eod": 279.06,
+        "start": 17796.76
+      }
+    }
+  },
+  "transaction_count": 24,
+  "transactions": [
+    {
+      "balance": 55.46,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-02",
+      "debit": 5.9,
+      "description": ".IMPSP2P033019329398#25/11/2020261120 -MIR2033608937291",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 50055.46,
+      "category": "Salary Credits",
+      "confidence": 0.99,
+      "credit": 50000.0,
+      "date": "2020-12-08",
+      "debit": null,
+      "description": "IMPS-034311904522-COFYNDINFOTECHPRIV-H DFC-XXXXXXXX1101-OPSALARY",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 50049.56,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-09",
+      "debit": 5.9,
+      "description": ".IMPSP2P033518394591#30/11/2020011220 -MIR2034321603971",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5049.56,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-10",
+      "debit": 45000.0,
+      "description": "IMPS-034508330630-OMPRAKASH-UTIB-XXXXXX XXXXX4549-PAIDTOOM",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 47674.56,
+      "category": "Bank Transfer",
+      "confidence": 0.99,
+      "credit": 42625.0,
+      "date": "2020-12-10",
+      "debit": null,
+      "description": "NEFTCR-YESB0000001-INCUSPAZESOLUTIONS- OM PRAKASH-N345200476801206INCUSPAZESA LARYFORAUG",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 47668.66,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-15",
+      "debit": 5.9,
+      "description": ".IMPSP2P034508330630#10/12/2020101220 -MIR2034834938219",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 27668.66,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-16",
+      "debit": 20000.0,
+      "description": "IMPS-035110370389-OMPRAKASH-UTIB-XXXXXX XXXXX4549-PAIDTOOM",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 27662.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2020-12-18",
+      "debit": 5.9,
+      "description": ".IMPSP2P035110370389#16/12/2020161220 -MIR2035348468851",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17662.76,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2020-12-31",
+      "debit": 10000.0,
+      "description": "IBBILLPAYDR-HDFC43-401403XXXXXX3036",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17796.76,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 134.0,
+      "date": "2021-01-01",
+      "debit": null,
+      "description": "CREDITINTERESTCAPITALISED",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 67796.76,
+      "category": "Salary Credits",
+      "confidence": 0.99,
+      "credit": 50000.0,
+      "date": "2021-01-04",
+      "debit": null,
+      "description": "IMPS-100418610336-COFYNDINFOTECHPRIV-H DFC-XXXXXXXX1101-OPSALARY",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 65296.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-06",
+      "debit": 2500.0,
+      "description": "IMPS-100618310896-OMPRAKASH-UTIB-XXXXXX XXXXX4549-PAID",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16296.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-07",
+      "debit": 49000.0,
+      "description": "IMPS-100719332287-OMPRAKASH-UTIB-XXXXXX XXXXX4549-PAIDTOOM",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14296.76,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2021-01-09",
+      "debit": 2000.0,
+      "description": "50100196232802-TPT-PAIDTOSANAL-SANALDA SKV",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14290.86,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-12",
+      "debit": 5.9,
+      "description": ".IMPSP2P100618310896#06/01/2021070121 -MIR2101192175545",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 290.86,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-13",
+      "debit": 14000.0,
+      "description": "IMPS-101312390834-OMPRAKASH-UTIB-XXXXXX LIMITED XXXXX4549-PAIDTOOM",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 284.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-13",
+      "debit": 5.9,
+      "description": ".IMPSP2P100719332287#07/01/2021080121 -MIR2101295115459",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 279.06,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-01-21",
+      "debit": 5.9,
+      "description": ".IMPSP2P101312390834#13/01/2021130121 -MIR2101927567144",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7079.06,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": 6800.0,
+      "date": "2021-02-04",
+      "debit": null,
+      "description": "IMPS-103520474959-OMPRAKASH-HDFC-XXXXXXX XXXX4549-",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 107.06,
+      "category": "Others Debit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2021-02-06",
+      "debit": 6972.0,
+      "description": "IBBILLPAYDR-HDFC43-401403XXXXXX3036",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 55107.06,
+      "category": "Salary Credits",
+      "confidence": 0.99,
+      "credit": 55000.0,
+      "date": "2021-02-09",
+      "debit": null,
+      "description": "IMPS-104014439345-COFYNDINFOTECHPRIV-H DFC-XXXXXXXX1101-JANUARYSALARY",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10107.06,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-02-10",
+      "debit": 45000.0,
+      "description": "IMPS-104113375952-OMPRAKASH-UTIB-XXXXXX XXXXX4549-PAIDTOOM",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5402.06,
+      "category": "Investments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-02-14",
+      "debit": 4705.0,
+      "description": "50100034597241-TPT-PAIDTOWARDSRENTFOR JAN2021-MECHALAPATHY",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5396.16,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2021-02-16",
+      "debit": 5.9,
+      "description": ".IMPSP2P104113375952#10/02/2021100221 -MIR2104673374334 STATEMENT SUMMARY :- OpeningBalance 61.36 GeneratedOn: 03-Mar-202122:20 LIMITED",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

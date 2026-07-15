@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Silent SSO Check</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <script>
+        try {
+            // Handle cross-origin communication properly
+            const targetOrigin = window.location.origin;
+            const message = {
+                type: 'keycloak-silent-check-sso',
+                url: window.location.href,
+                status: 'success'
+            };
+            
+            // Send message to parent window with proper target origin
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, targetOrigin);
+            }
+        } catch (error) {
+            console.error('Silent SSO check error:', error);
+            // Send error message to parent
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'keycloak-silent-check-sso',
+                    url: window.location.href,
+                    status: 'error',
+                    error: error.message
+                }, window.location.origin);
+            }
+        }
+    </script>
+</body>
+</html>

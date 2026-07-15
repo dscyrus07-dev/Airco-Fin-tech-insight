@@ -1,0 +1,889 @@
+{
+  "aggregation": {
+    "closing_balance": null,
+    "opening_balance": null,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "icici",
+  "categories": [
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Others Credit",
+    "Others Credit",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Others Credit",
+    "Transfer In",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Others Credit",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Interest",
+    "Salary Credits",
+    "Transfer",
+    "Bank Transfer In",
+    "Bill Payment",
+    "Bill Payment",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer"
+  ],
+  "category_totals": {
+    "Bank Transfer In": {
+      "count": 23,
+      "credit": 95146.18,
+      "debit": 0.0
+    },
+    "Bill Payment": {
+      "count": 2,
+      "credit": 0.0,
+      "debit": 1338.25
+    },
+    "Interest": {
+      "count": 1,
+      "credit": 129.0,
+      "debit": 0.0
+    },
+    "Others Credit": {
+      "count": 9,
+      "credit": 0.0,
+      "debit": 0.0
+    },
+    "Salary Credits": {
+      "count": 1,
+      "credit": 55802.0,
+      "debit": 0.0
+    },
+    "Transfer": {
+      "count": 15,
+      "credit": 0.0,
+      "debit": 97145.0
+    },
+    "Transfer In": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 0.0
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "Golden Snapshot",
+    "account_number": "",
+    "bank_name": "ICICI Bank",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "cashDeposit": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "cashWithdrawals": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "chequeDeposit": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "chequeIssued": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "creditCardPayment": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "creditCount": {
+      "Apr-2023": 2.0,
+      "Mar-2023": 6.0
+    },
+    "creditValue": {
+      "Apr-2023": 69046.18,
+      "Mar-2023": 82031.0
+    },
+    "debitCount": {
+      "Apr-2023": 4.0,
+      "Mar-2023": 13.0
+    },
+    "debitValue": {
+      "Apr-2023": 40500.0,
+      "Mar-2023": 57983.25
+    },
+    "ecsNach": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "inwBounce": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 0.0
+    },
+    "loanRepayment": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "maxBalance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 59527.18
+    },
+    "minBalance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 3796.18
+    },
+    "monthlyAvgBal": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 53817.3
+    },
+    "nonCashCredit": {
+      "Apr-2023": 69046.18,
+      "Mar-2023": 82031.0
+    },
+    "nonSalaryCredits": {
+      "Apr-2023": 69046.18,
+      "Mar-2023": 26229.0
+    },
+    "owtBounce": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 0.0
+    },
+    "penaltyCharges": {
+      "Apr-2023": 0,
+      "Mar-2023": 0
+    },
+    "salaryCredits": {
+      "Apr-2023": 0,
+      "Mar-2023": 55802.0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 43,
+    "coverage_percent": 82.7,
+    "others": 9,
+    "recurring": 3,
+    "total_transactions": 52
+  },
+  "reconciliation": {
+    "calculated_closing": 58593.93,
+    "closing_balance": 58593.93,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 6000.0,
+    "source": "running_balance",
+    "total_credits": 151077.18,
+    "total_debits": 98483.25,
+    "transaction_count": 52
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "Document_1681559053646",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 53817.3
+    },
+    "Avg Balance": 17814.98,
+    "Balance on 10th": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58593.93
+    },
+    "Balance on 15th": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58593.93
+    },
+    "Balance on 1st": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58593.93
+    },
+    "Balance on 20th": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58288.93
+    },
+    "Balance on 25th": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 59527.18
+    },
+    "Balance on 5th": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58593.93
+    },
+    "Balance on Last Day": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 33986.18
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 33986.18
+    },
+    "Max Balance": 68046.18,
+    "Max EOD Balance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 59527.18
+    },
+    "Min Balance": 0.0,
+    "Min EOD Balance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 3796.18
+    },
+    "Start of Month Balance": {
+      "Apr-2023": 0.0,
+      "Mar-2023": 58593.93
+    },
+    "Top 5 Credit %": 99.19,
+    "Top 5 Credit Amt": 149848.18,
+    "Top 5 Debit %": 92.4,
+    "Top 5 Debit Amt": 91000.0,
+    "Total Cheque": 0,
+    "Total Credit Amount": 151077.18,
+    "Total Credit Count": 8,
+    "Total Debit Amount": 98483.25,
+    "Total Debit Count": 17,
+    "_per_month": {
+      "Apr-2023": {
+        "avg_eod": 0.0,
+        "d1": 0.0,
+        "d10": 0.0,
+        "d15": 0.0,
+        "d20": 0.0,
+        "d25": 0.0,
+        "d5": 0.0,
+        "dlast": 0.0,
+        "end": 0.0,
+        "max_eod": 0.0,
+        "min_eod": 0.0,
+        "start": 0.0
+      },
+      "Mar-2023": {
+        "avg_eod": 53817.3,
+        "d1": 58593.93,
+        "d10": 58593.93,
+        "d15": 58593.93,
+        "d20": 58288.93,
+        "d25": 59527.18,
+        "d5": 58593.93,
+        "dlast": 33986.18,
+        "end": 33986.18,
+        "max_eod": 59527.18,
+        "min_eod": 3796.18,
+        "start": 58593.93
+      }
+    }
+  },
+  "transaction_count": 52,
+  "transactions": [
+    {
+      "balance": 0.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-11",
+      "debit": 6000.0,
+      "description": "UPI/346748629223/Payment from Ph/9298755310@ybl/State Bank Of I/YBL1e0ef997ac5a46f7854241927 b34b2a0/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1000.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1000.0,
+      "date": "2023-04-11",
+      "debit": null,
+      "description": "UPI/310189955476/UPI/satish.dava la@o/HDFC BANK LTD/HDFa0cbac6deea1420e9fae6 636a5bd57a9",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 200.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-10",
+      "debit": 800.0,
+      "description": "UPI/346504298531/Payment from Ph/9959688778@ybl/ICICI Bank/YBL92a4bcf4a98d48ef9fade2 82d33b923d/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-10",
+      "debit": 200.0,
+      "description": "UPI/346543645424/Payment from Ph/Q348898335@ybl/Yes Bank Ltd/YBLc92f64b049fa4b36bf45ca3 167a7fad2/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-10",
+      "debit": null,
+      "description": "UPI/346515296032/Payment from Ph/Q846465157@ybl/Yes Bank Ltd/YBL3737654431b5404788c098 1a847412e7/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-07",
+      "debit": null,
+      "description": "UPI/346316874183/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBL4b41cc7d560540fe8c1f0a 3da9f40186/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-07",
+      "debit": null,
+      "description": "UPI/346304385542/Payment from Ph/7032512429@ybl/Indian Bank/YBLb12610a3df064d6a94575 3ad956f94ed/ Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-07",
+      "debit": null,
+      "description": "UPI/346322280236/payment on CRED/credpay.swiggy@/Axis Bank Ltd./ACD5eBydVYQD5bdQ3d6V4g E/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-06",
+      "debit": null,
+      "description": "UPI/346213234801/Payment from Ph/veereesh143@ybl/Indian Bank/YBLf2b738da75394926aa0bb 808dc98a5c0/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-06",
+      "debit": null,
+      "description": "UPI/346275594381/Payment from Ph/veereesh143@ybl/Indian Bank/YBLf809992c51064563bbd7c e2bcdbe03c8/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-06",
+      "debit": null,
+      "description": "UPI/346260734055/JIO20PT00003 UHQ/jiopostpaid@yes/Yes Bank Ltd/ACD81j4ZPpBx7nz4gjYVBWq/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-06",
+      "debit": null,
+      "description": "UPI/309691137904/Group Name MPB0/cf.finsavetechn/ICICI Bank/ICIef615c9c0ed7456688934a e1f3deadcf/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-05",
+      "debit": null,
+      "description": "UPI/309532445497/Payment from Ph/9963786876@ybl/Bank of India/YBLa989c38b1659411fa1cbf2 240e857c52/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-05",
+      "debit": null,
+      "description": "UPI/309589322030/Group Name HYB0/cf.finsavetechn/ICICI Bank/ICI6ee6b7d082cc4eac8dd798 5c5745562b/ Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-05",
+      "debit": null,
+      "description": "UPI/346114417091/Oid207628462 52@/paytm-72651040@/Paytm Payments /PTM304052319600174899320230 4051140/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-04",
+      "debit": null,
+      "description": "UPI/346025044536/Payment from Ph/veereesh143@ybl/Indian Bank/YBLd2339e235c094b31a2e3 3455b4f59b20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/309382299902/Group Name MPB0/cf.finsavetechn/ICICI Bank/ICIa97b80eec5304aa9bbc72 304f4260665/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/309355496464/Group Name MPB0/cf.finsavetechn/ICICI Bank/IBL58933599af154adb91f23c 7968389d14/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/345861462151/Payment from Ph/7032512429@ybl/Indian Bank/YBL9f0a19a6ee9a4bb99b2ee 94def5eb75d/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/345802871505/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBLa587a949f8e8460d96401 4571bbbec19/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "VPS/R SATYANARA/202304021905/3092 13645530/WEST GODA Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/345828140450/Payment from Ph/6301327144@ybl/HDFC BANK LTD/YBL10b5ee695d3d49258a37c b9666e724ec/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "NFS/HIT03145/CASH WDL/02-04- 23",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Transfer In",
+      "confidence": 0.9,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/309241267640/Payment from Ph/paytmqr28100505/Paytm Payments /YBL105654d58b544eac9299ec8e 5f805493",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-03",
+      "debit": null,
+      "description": "UPI/309284083701/UPI/trinadhdn @oksbi/State Bank Of I/AXIc269a24e7c944c0ab73c2ee40 efe23ef/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/309174472130/UPI/kulapakasa tish7/State Bank Of I/AXI34b0d27b6975415cb5ad1221 7da62ff2/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/345772321559/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBLd05fc3b1c6f845c0b08fc95 b618d5ab0/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/309132033944/Enter the recha/3043059991.adth/Airtel Payments/YBLf9943fdae45a4727a 6bf7babc30370e9 Account Number: 007601571575",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/309180272410/Payment from Ph/9949814455@ybl/Central Bank Of/YBLd44a2cbb83e541d3971475 b458327546/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/RVSL309154098952/UPI/trina dhdn@oksbi/State Bank Of I/AXIc3ef2c7e30c246f9bc1e3eb2ca 366d1c",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 0.0,
+      "category": "Others Credit",
+      "confidence": 0.5,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/309153348002/UPI/billdesk.ele ctr/ICICI Bank/AXIe2122868b1ef47178442e e18affec608/ CREDIT CA/437551204633 53706.20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 68046.18,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 68046.18,
+      "date": "2023-04-01",
+      "debit": null,
+      "description": "UPI/309142008203/UPI/satish.dava la@o/HDFC BANK LTD/HDFee6e01f856714be18cb08f 1365ad54ec",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 34546.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-04-01",
+      "debit": 33500.0,
+      "description": "UPI/309154098952/UPI/trinadhdn @oksbi/State Bank Of I/AXIc3ef2c7e30c246f9bc1e3eb2ca 366d1c/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 33986.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-31",
+      "debit": 560.0,
+      "description": "UPI/345656849533/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBL24b9a290834f45c3905d7 b67e7f44e41/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 32296.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-31",
+      "debit": 1690.0,
+      "description": "UPI/309039692051/UPI/kulapakasa tish7/State Bank Of I/AXI351fd4a1c8364a1eaf9baa0b2 bb7fd3e/ Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13754.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-31",
+      "debit": 18542.0,
+      "description": "UPI/309072348088/Payment from Ph/credclub@icici/ICICI Bank/YBLd710a5e41e134fa197d62 af17aae5b87/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3796.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-31",
+      "debit": 9958.0,
+      "description": "UPI/345613320469/Oid206989286 28@/paytm-72651040@/Paytm Payments /PTM303312312573967668520230 3311123/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 26796.18,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 23000.0,
+      "date": "2023-03-30",
+      "debit": null,
+      "description": "UPI/345500445634/Payment from Ph/9494177759@ybl/Axis Bank Ltd./YBL3a3dec9cd1eb4e6f971ce7 1b3c3e1bbe",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3796.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-30",
+      "debit": 23000.0,
+      "description": "UPI/345512504248/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBL59c6265a5a0645b9a4ceb 53cba13ff6c/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3925.18,
+      "category": "Interest",
+      "confidence": 0.99,
+      "credit": 129.0,
+      "date": "2023-03-30",
+      "debit": null,
+      "description": "007601571575:Int.Pd:31-12-2022 to 29-03-2023",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59727.18,
+      "category": "Salary Credits",
+      "confidence": 0.99,
+      "credit": 55802.0,
+      "date": "2023-03-30",
+      "debit": null,
+      "description": "NEFT-CITIN23341938673- DELOITTE SUPPORT SERVICES I PVT LTD-DELOITTE SALARY FOR MAR23-0037251119-CITI",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59527.18,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-22",
+      "debit": 200.0,
+      "description": "UPI/344746399973/Payment from Ph/Q348898335@ybl/Yes Bank Ltd/YBLc6b578ae36fe49518b0abc 2fb253a8ae/ Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59627.18,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 100.0,
+      "date": "2023-03-22",
+      "debit": null,
+      "description": "UPI/308121559235/NA/satishdaval a@pa/Paytm Payments /PTM21CCE6335D8849F2A90361 ACC0FD1642",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58387.18,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-20",
+      "debit": 1240.0,
+      "description": "UPI/307842646898/UPI/nagasridn @oksbi/State Bank Of I/AXI73210708ebae4209bd97213b e2cd9f93/",
+      "is_recurring": true,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58288.93,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-20",
+      "debit": 98.25,
+      "description": "UPI/344475715525/Payment from Ph/APOLLOPHARMACYO/Yes Bank Ltd/YBL6a0fb35f3fc6452b8c07e5e 07454f7f1/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58064.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-18",
+      "debit": 224.0,
+      "description": "UPI/344374478899/Payment from Ph/Q400157926@ybl/Yes Bank Ltd/YBLb9b5ba1ee4d843109098e8 1891c7b3e4/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 57043.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-18",
+      "debit": 1021.0,
+      "description": "UPI/307768486841/Payment from Ph/Q27221356@ybl/Bank of India/YBLf91061ca7bac476ea435c 2b3a96a8da7/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59043.93,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 2000.0,
+      "date": "2023-03-18",
+      "debit": null,
+      "description": "UPI/344383608700/Payment from Ph/veereesh143@ybl/Indian Bank/YBLd53e6c6a42954921a2cd 9f48db131e12",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58093.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-18",
+      "debit": 950.0,
+      "description": "UPI/344364856811/Payment from Ph/Q089577942@ybl/ICICI Bank/YBLcd02cef6b9064774b34a3 10e9b9b51f3/ Account Number: 007601571575",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 59093.93,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1000.0,
+      "date": "2023-03-18",
+      "debit": null,
+      "description": "UPI/344336165906/Payment from Ph/9494177759@ybl/HDFC BANK LTD/YBL4b8b0e5248304980b2873 7d85f8b8358",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58743.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-18",
+      "debit": 350.0,
+      "description": "UPI/307767676510/Payment from Ph/Q27221356@ybl/Bank of India/YBL7c6374838a8840d4bcba2 01a2cf01110/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 58593.93,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-03-17",
+      "debit": 150.0,
+      "description": "UPI/344288192626/Payment from Ph/8897999883@ybl/Canara Bank/YBL7ce24eac9c2b4457ad1f1 4504d51cccd/",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "bank_key": "icici",
+  "source_class": "app.services.banks.icici.rule_engine.ICICIRuleEngine",
+  "match_semantics": {
+    "layers": [
+      "exact_keyword",
+      "pattern_match",
+      "merchant_mapping",
+      "upi_merchant",
+      "amount_heuristic",
+      "default"
+    ],
+    "is_debit": "debit_positive",
+    "upi_gate": "upi_only",
+    "upi_debit_only": true,
+    "return_mode": "split"
+  },
+  "confidence": {
+    "exact": 0.99,
+    "pattern": 0.95,
+    "merchant": 0.9,
+    "upi": 0.85,
+    "amount": 0.7,
+    "default": 0.5
+  },
+  "debit_rules": {
+    "ATM Withdrawal": {
+      "exact": [
+        "ATM",
+        "CASH WITHDRAWAL",
+        "ATM CASH",
+        "ATM WDL",
+        "ATM-WDL",
+        "CASHWDL",
+        "ATM WITHDL"
+      ],
+      "patterns": [
+        "ATM.*",
+        "CASH.*WITHDRA.*"
+      ]
+    },
+    "Food": {
+      "exact": [
+        "SWIGGY",
+        "ZOMATO",
+        "DOMINOS",
+        "MCDONALDS",
+        "KFC",
+        "PIZZA",
+        "SUBWAY",
+        "STARBUCKS",
+        "CAFE",
+        "RESTAURANT",
+        "HALDIRAM",
+        "FAASOS",
+        "REBEL FOODS",
+        "BIRYANI"
+      ],
+      "patterns": [
+        "UPI.*SWIGGY.*",
+        "UPI.*ZOMATO.*"
+      ]
+    },
+    "Shopping": {
+      "exact": [
+        "AMAZON",
+        "FLIPKART",
+        "MYNTRA",
+        "AJIO",
+        "NYKAA",
+        "DMART",
+        "BIGBASKET",
+        "BLINKIT",
+        "ZEPTO",
+        "JIOMART",
+        "DECATHLON",
+        "CROMA",
+        "VIJAY SALES"
+      ],
+      "patterns": [
+        "UPI.*AMAZON.*",
+        "UPI.*FLIPKART.*"
+      ]
+    },
+    "Transport": {
+      "exact": [
+        "UBER",
+        "OLA",
+        "RAPIDO",
+        "PETROL",
+        "DIESEL",
+        "IRCTC",
+        "METRO",
+        "FASTAG",
+        "TOLL",
+        "REDBUS",
+        "MAKEMYTRIP",
+        "INDIGO",
+        "SPICEJET"
+      ],
+      "patterns": [
+        "UPI.*UBER.*",
+        "UPI.*OLA.*",
+        "FASTAG.*",
+        "IRCTC.*"
+      ]
+    },
+    "Bill Payment": {
+      "exact": [
+        "ELECTRICITY",
+        "WATER",
+        "GAS",
+        "BROADBAND",
+        "RECHARGE",
+        "AIRTEL",
+        "JIO",
+        "VI",
+        "BSNL",
+        "PHARMACY",
+        "APOLLO",
+        "MEDPLUS",
+        "HOSPITAL",
+        "GST",
+        "CBDT",
+        "TDS",
+        "INCOME TAX"
+      ],
+      "patterns": [
+        "BILL.*PAYMENT.*",
+        ".*RECHARGE.*",
+        ".*ELECTRICITY.*",
+        ".*PHARMACY.*"
+      ]
+    },
+    "Entertainment": {
+      "exact": [
+        "NETFLIX",
+        "HOTSTAR",
+        "AMAZON PRIME",
+        "DISNEY",
+        "SONYLIV",
+        "ZEE5",
+        "SPOTIFY",
+        "GAANA"
+      ],
+      "patterns": [
+        "UPI.*NETFLIX.*",
+        "PRIME.*MEMBER.*"
+      ]
+    },
+    "Loan Payments": {
+      "exact": [
+        "EMI",
+        "LOAN",
+        "LIC HOUSING",
+        "HOME LOAN",
+        "BAJAJ FINANCE"
+      ],
+      "patterns": [
+        "ECS.*DEBIT.*",
+        "NACH.*DEBIT.*",
+        ".*EMI.*",
+        "ACH.*DR.*"
+      ]
+    },
+    "Transfer": {
+      "exact": [
+        "NEFT",
+        "RTGS",
+        "IMPS",
+        "UPI",
+        "TRANSFER"
+      ],
+      "patterns": [
+        "UPI/.*@.*",
+        "NEFT.*",
+        "RTGS.*",
+        "IMPS.*"
+      ]
+    }
+  },
+  "credit_rules": {
+    "Salary Credits": {
+      "exact": [
+        "SALARY",
+        "SAL",
+        "PAYROLL",
+        "WAGES"
+      ],
+      "patterns": [
+        "SALARY.*",
+        "SAL.*CREDIT.*",
+        "PAYROLL.*"
+      ]
+    },
+    "Interest": {
+      "exact": [
+        "INTEREST",
+        "INT",
+        "INT.PD",
+        "CREDIT INTEREST"
+      ],
+      "patterns": [
+        "INTEREST.*CREDIT.*",
+        ".*INTEREST.*"
+      ]
+    },
+    "Refund": {
+      "exact": [
+        "REFUND",
+        "REVERSAL",
+        "CASHBACK",
+        "NEFT RETURN"
+      ],
+      "patterns": [
+        "REFUND.*",
+        ".*REVERSAL.*",
+        "NEFT.*RETURN.*"
+      ]
+    },
+    "Bank Transfer In": {
+      "exact": [
+        "NEFT CR",
+        "RTGS CR",
+        "IMPS CR"
+      ],
+      "patterns": [
+        "UPI/.*@.*/.*",
+        "NEFT.*CR.*",
+        "RTGS.*CR.*",
+        "IMPS.*CR.*"
+      ]
+    }
+  },
+  "upi_merchants": {
+    "swiggy": "Food",
+    "zomato": "Food",
+    "amazon": "Shopping",
+    "flipkart": "Shopping",
+    "uber": "Transport",
+    "ola": "Transport",
+    "netflix": "Entertainment",
+    "hotstar": "Entertainment"
+  },
+  "merchant_map": {
+    "amazon": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "flipkart": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "myntra": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "ajio": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "nykaa": {
+      "debit": "Shopping",
+      "credit": "Refund"
+    },
+    "swiggy": "Food",
+    "zomato": "Food",
+    "dominos": "Food",
+    "mcdonalds": "Food",
+    "kfc": "Food",
+    "uber": "Transport",
+    "ola": "Transport",
+    "rapido": "Transport",
+    "netflix": "Entertainment",
+    "hotstar": "Entertainment",
+    "spotify": "Entertainment",
+    "paytm": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    },
+    "phonepe": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    },
+    "gpay": {
+      "debit": "Others Debit",
+      "credit": "Transfer In"
+    }
+  },
+  "amount_heuristics": {
+    "emi": {
+      "enabled": true,
+      "debit_only": true,
+      "min_amount": 500,
+      "max_amount": 100000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "emi",
+        "loan",
+        "installment"
+      ],
+      "category": "Loan Payments",
+      "matched_rule": "amount_emi",
+      "token_case": "lower"
+    },
+    "salary": {
+      "enabled": true,
+      "credit_only": true,
+      "min_amount": 10000,
+      "multiple_of": 1000,
+      "description_tokens": [
+        "salary",
+        "payroll",
+        "wages"
+      ],
+      "category": "Salary Credits",
+      "matched_rule": "amount_salary",
+      "token_case": "lower"
+    }
+  },
+  "defaults": {
+    "debit_category": "Others Debit",
+    "credit_category": "Others Credit"
+  }
+}
