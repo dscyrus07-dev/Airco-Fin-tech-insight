@@ -35,10 +35,12 @@ class Settings:
 
     # Processing
     CORS_ORIGINS: list = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://test.theairco.ai",
-        "https://theairco.ai",
+        origin.strip()
+        for origin in os.getenv(
+            "CORS_ORIGINS",
+            "http://localhost:3000,http://127.0.0.1:3000,https://insights.theairco.ai,https://test.theairco.ai,https://theairco.ai",
+        ).split(",")
+        if origin.strip()
     ]
     
     # Auth Service (for microservices migration)
