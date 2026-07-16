@@ -92,18 +92,24 @@ class EventConsumer:
             logger.warning("file_upload event missing job_id; skipping job update")
             return True
 
-        if not upload_object_key:
-            raise ValueError("upload_object_key is required in queue payload")
-
-        # Download file from object storage to local temp
-        file_path = download_from_storage(
-            bucket=app_settings.S3_BUCKET_UPLOADS,
-            object_key=upload_object_key,
-        )
+        # Prefer local temp path from upload (same host) — skip S3 round-trip when possible
+        local_path = payload.get("file_path")
+        file_path = None
+        if local_path and os.path.isfile(local_path):
+            file_path = local_path
+            logger.info("Using local upload path (skip storage download)", job_id=job_id)
+        elif upload_object_key:
+            file_path = download_from_storage(
+                bucket=app_settings.S3_BUCKET_UPLOADS,
+                object_key=upload_object_key,
+            )
+        else:
+            raise ValueError("upload_object_key or local file_path is required in queue payload")
 
         if not file_path or not os.path.isfile(file_path):
-            raise ValueError(f"Failed to download file from storage: {upload_object_key}")
-
+            raise ValueError(
+                f"Failed to resolve source PDF (local={local_path}, key={upload_object_key})"
+            )
 
         processing_file_path = file_path
 
@@ -148,6 +154,78 @@ class EventConsumer:
                 file_history_service.mark_running(job_id)
             except Exception as e:
                 logger.warning("Failed to update file history service for running status", job_id=job_id, error=str(e))
+
+            # Early hygiene so UI advances before full parse (result is cached for parsers)
+            hygiene_payload = None
+            try:
+                from .banks._shared.hygiene_check import HygieneCheck
+                from .job_progress import hygiene_result_to_progress, publish_job_progress
+
+                await publish_job_progress(
+                    job_id,
+                    stage="hygiene",
+                    message="Running PDF hygiene check…",
+                )
+                checker = HygieneCheck(
+                    pdf_directory=Path(processing_file_path).parent,
+                    audit_service=audit_service,
+                    job_id=job_id,
+                )
+                hygiene_result = checker.validate_single_pdf(
+                    Path(processing_file_path),
+                    user_id=str(user_id),
+                    goal_id="GENERAL",
+                    original_filename=original_filename,
+                    bank_hint=(user_info or {}).get("bank_name") or payload.get("bank_name"),
+                )
+                checker.log_hygiene_check_result(hygiene_result)
+
+                hygiene_payload = hygiene_result_to_progress(hygiene_result)
+                await publish_job_progress(
+                    job_id,
+                    stage="hygiene_complete",
+                    message=(
+                        "Hygiene check passed"
+                        if hygiene_result.is_healthy
+                        else "Hygiene check completed with warnings"
+                    ),
+                    hygiene=hygiene_payload,
+                )
+            except Exception as he:
+                logger.warning("Early hygiene failed (non-fatal)", job_id=job_id, error=str(he))
+                try:
+                    from .job_progress import publish_job_progress
+                    await publish_job_progress(
+                        job_id,
+                        stage="hygiene_complete",
+                        message="Hygiene skipped — continuing with parsing",
+                        hygiene={
+                            "is_healthy": True,
+                            "file_name": original_filename,
+                            "page_count": 0,
+                            "bank_name": (user_info or {}).get("bank_name") or "unknown",
+                            "format_id": "",
+                            "transaction_count": 0,
+                            "start_date": "N/A",
+                            "end_date": "N/A",
+                            "issues": [],
+                            "warnings": [f"Hygiene pre-check unavailable: {he}"],
+                        },
+                    )
+                except Exception:
+                    pass
+
+            try:
+                from .job_progress import publish_job_progress
+                await publish_job_progress(
+                    job_id,
+                    stage="parsing",
+                    message="Extracting transactions and generating report…",
+                    hygiene=hygiene_payload,
+                )
+            except Exception:
+                pass
+
             result = process_statement(
                 file_path=processing_file_path,
                 user_info=user_info,
@@ -157,6 +235,7 @@ class EventConsumer:
                 audit_service=audit_service,
                 job_id=job_id,
             )
+
 
             if result.get("status") != "success":
                 error_payload = result.get("error") or {}

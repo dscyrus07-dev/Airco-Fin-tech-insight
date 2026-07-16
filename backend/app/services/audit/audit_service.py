@@ -555,35 +555,70 @@ class AuditService:
         user_id: Optional[str] = None,
         goal_id: Optional[str] = None,
     ) -> HygieneReport:
-        """Create a hygiene report"""
+        """Create a hygiene report with accurate job-linked fields."""
+        from datetime import date as _date
+
         job = self.get_processing_job(job_id)
         if not job:
             raise ValueError(f"Processing job not found: {job_id}")
 
+        def _to_date(v):
+            if v is None or v == "" or v == "N/A":
+                return None
+            if isinstance(v, _date):
+                return v
+            try:
+                return datetime.fromisoformat(str(v)[:10]).date()
+            except Exception:
+                try:
+                    return datetime.strptime(str(v)[:10], "%Y-%m-%d").date()
+                except Exception:
+                    return None
+
+        start_d = _to_date(start_date)
+        end_d = _to_date(end_date)
+        pages = int(page_count or 0)
+        txns = int(transaction_count or 0)
+        resolved_file = (
+            file_name
+            or getattr(job, "original_filename", None)
+            or getattr(job, "file_name", None)
+            or "statement.pdf"
+        )
+        resolved_user = user_id or getattr(job, "user_id", None) or "SYSTEM"
+        resolved_bank = bank_name or job.bank_name or "unknown"
+        resolved_goal = goal_id or "GENERAL"
+        warn_list = list(warnings or [])
+        issue_list = list(issues or [])
+        has_structure = pages > 0
+        has_txns = txns > 0
+        has_dates = bool(start_d and end_d)
+
         report = HygieneReport(
             tenant_id=job.tenant_id,
             job_id=job.id,
-            file_name=file_name,
-            bank_name=bank_name or job.bank_name,
-            user_id=user_id,
-            goal_id=goal_id,
+            file_name=resolved_file,
+            bank_name=resolved_bank,
+            user_id=str(resolved_user),
+            goal_id=str(resolved_goal),
             format_id=format_id,
-            page_count=page_count,
-            transaction_count=transaction_count,
-            is_healthy=is_healthy,
-            warnings=warnings,
-            issues=issues,
-            start_date=start_date,
-            end_date=end_date,
+            page_count=pages,
+            transaction_count=txns,
+            is_healthy=bool(is_healthy),
+            warnings=warn_list,
+            issues=issue_list,
+            start_date=start_d,
+            end_date=end_d,
             check_duration_ms=check_duration_ms,
-            has_valid_structure=page_count > 0,
-            has_valid_transactions=transaction_count > 0,
-            has_valid_dates=bool(start_date and end_date),
+            has_valid_structure=has_structure,
+            has_valid_transactions=has_txns,
+            has_valid_dates=has_dates,
         )
         self.db.add(report)
         self.db.commit()
         self.db.refresh(report)
         return report
+
     
     # ============================================
     # PARSER METRIC OPERATIONS
@@ -1027,11 +1062,13 @@ class AuditService:
                 issues=getattr(hygiene_result, 'issues', []),
                 start_date=getattr(hygiene_result, 'start_date', None),
                 end_date=getattr(hygiene_result, 'end_date', None),
+                check_duration_ms=getattr(hygiene_result, 'check_duration_ms', None),
                 file_name=getattr(hygiene_result, 'file_name', None),
                 bank_name=getattr(hygiene_result, 'bank_name', None),
                 user_id=getattr(hygiene_result, 'user_id', None),
                 goal_id=getattr(hygiene_result, 'goal_id', None),
             ))
+
 
         # 2. Parser metrics — one session per metric
         for m in (parser_metrics_collected or []):

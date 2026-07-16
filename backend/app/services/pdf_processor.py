@@ -92,8 +92,11 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
                 _Path(file_path),
                 user_id=str(job.user_id or "SYSTEM"),
                 goal_id="GENERAL",
+                original_filename=original_filename,
+                bank_hint=user_info.get("bank_name"),
             )
             checker.log_hygiene_check_result(hygiene_result)
+
             hygiene_payload = hygiene_result_to_progress(hygiene_result)
             await publish_job_progress(
                 job.id,

@@ -276,10 +276,11 @@ async def upload_bank_statement_async(
         upload_object_key=upload_object_key,
     )
 
-    # Prefer RabbitMQ; fall back to the local processor if queue is unavailable
+    # Prefer RabbitMQ; fall back to the local processor if queue is unavailable.
+    # Pass decrypted local path so the worker can skip S3 re-download on same host.
     published = await event_publisher.publish_file_processing_request(
         job_id=job.id,
-        file_path=file_path,
+        file_path=processing_file_path,
         user_info=user_info,
         mode=mode,
         correlation_id=job.correlation_id,
@@ -289,8 +290,9 @@ async def upload_bank_statement_async(
         original_filename=file.filename,
         upload_object_key=upload_object_key,
         output_dir=output_dir,
-        pdf_password=pdf_password,
+        pdf_password=None if processing_file_path != file_path else pdf_password,
     )
+
 
     if not published:
         logger.warning("RabbitMQ publish failed; falling back to local task processor", job_id=job.id)

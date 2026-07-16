@@ -95,7 +95,7 @@ class UnknownParser(BaseBankParser):
             from pathlib import Path as _Path
             from .._shared.hygiene_check import HygieneCheck as _HC
             _hc = _HC(pdf_directory=_Path(file_path).parent)
-            _hr = _hc.validate_single_pdf(_Path(file_path))
+            _hr = _hc.validate_single_pdf(_Path(file_path), bank_hint=getattr(self, "BANK_NAME", None) or getattr(self, "bank_name", None))
             self._hygiene_result = _hr
             _hc.log_hygiene_check_result(_hr)
         except Exception as _he:

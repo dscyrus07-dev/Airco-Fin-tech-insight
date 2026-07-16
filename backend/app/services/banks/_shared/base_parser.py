@@ -266,17 +266,24 @@ class BaseBankParser(ABC):
             self.logger.error(f"Failed to store format metrics: {e}")
     
     def _validate_pdf_hygiene(self, file_path: str, user_id: str = "SYSTEM", goal_id: str = "GENERAL") -> HygieneCheckResult:
-        """Validate PDF hygiene before processing"""
+        """Validate PDF hygiene before processing (uses cache when already scanned)."""
         pdf_path = Path(file_path)
-        
-        # Create a temporary hygiene checker for this specific file
-        temp_checker = HygieneCheck(pdf_directory=pdf_path.parent, audit_service=self.audit_service, job_id=self.job_id)
-        
-        # Validate the PDF
-        result = temp_checker.validate_single_pdf(pdf_path, user_id, goal_id)
-        
-        # Log the hygiene check result
+
+        temp_checker = HygieneCheck(
+            pdf_directory=pdf_path.parent,
+            audit_service=self.audit_service,
+            job_id=self.job_id,
+        )
+
+        bank_hint = getattr(self, "BANK_NAME", None) or getattr(self, "bank_name", None)
+        result = temp_checker.validate_single_pdf(
+            pdf_path,
+            user_id=user_id,
+            goal_id=goal_id,
+            bank_hint=bank_hint,
+        )
         temp_checker.log_hygiene_check_result(result)
+
 
         # Publish live progress for UI (non-fatal)
         try:
