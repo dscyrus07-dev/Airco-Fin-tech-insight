@@ -28,33 +28,47 @@ class FileHistoryService:
             return None
         return batch_id if len(batch_id) <= 18 else f"{batch_id[:18]}…"
 
-    def _format_batch_display_name(self, batch_id: str | None, bank_names: list[str]) -> str | None:
-        batch_label = self._format_batch_label(batch_id)
+    def _format_batch_display_name(
+        self,
+        batch_id: str | None,
+        bank_names: list[str],
+        file_names: list[str] | None = None,
+    ) -> str | None:
         banks = ", ".join(sorted(name for name in bank_names if name))
-        if batch_label and banks:
-            return f"{batch_label} • {banks}"
-        if batch_label:
-            return batch_label
+        files = [name for name in (file_names or []) if name]
+        if len(files) == 1 and banks:
+            return f"{files[0]} • {banks}"
+        if len(files) == 1:
+            return files[0]
+        if files and banks:
+            return f"{len(files)} files • {banks}"
+        if files:
+            return f"{len(files)} files"
         if banks:
             return banks
-        return None
+        return self._format_batch_label(batch_id)
 
     def _format_entry_display_name(self, record: Any, entry_type: str) -> str:
         bank_name = self._record_value(record, "bank_name") or "Unknown bank"
-        batch_id = self._record_value(record, "batch_id")
         statement_label = self._record_value(record, "statement_label")
-        batch_label = self._format_batch_label(batch_id)
+        original_filename = self._record_value(record, "original_filename")
+        report_filename = self._record_value(record, "report_filename")
 
-        if batch_label:
-            suffix = bank_name
-            if entry_type == "report":
-                suffix = f"{suffix} report"
-            return f"{batch_label} • {suffix}"
+        if entry_type == "report":
+            if report_filename:
+                return report_filename
+            if original_filename:
+                base = original_filename.rsplit(".", 1)[0]
+                return f"{base}.xlsx"
+            if statement_label:
+                return f"{statement_label}.xlsx"
+            return f"{bank_name} report"
 
+        if original_filename:
+            return original_filename
         if statement_label:
             return statement_label
-
-        return f"{bank_name} report" if entry_type == "report" else f"{bank_name} statement"
+        return f"{bank_name} statement"
 
     def _retention_expires_at(self, created_at: datetime | None) -> datetime | None:
         if not created_at:
@@ -209,7 +223,13 @@ class FileHistoryService:
         return SimpleNamespace(**record) if record else None
 
     def _fallback_list_for_user(self, user_id: str) -> dict:
-        records = [record for record in self._fallback_records.values() if record.get("user_id") == user_id]
+        records = [
+            record
+            for record in self._fallback_records.values()
+            if record.get("user_id") == user_id
+            and str(record.get("deletion_status") or "active").lower() != "deleted"
+            and str(record.get("status") or "").lower() != "deleted"
+        ]
         records.sort(key=lambda item: item.get("created_at") or datetime.now(timezone.utc), reverse=True)
 
         uploads: list[dict[str, Any]] = []
@@ -230,7 +250,8 @@ class FileHistoryService:
                     "batch_id": record.get("batch_id") or record.get("job_id"),
                     "created_at": created_at_iso,
                     "updated_at": created_at_iso,
-                    "display_name": self._format_batch_display_name(record.get("batch_id") or record.get("job_id"), []),
+                    "display_name": None,
+                    "file_names": [],
                     "bank_names": [],
                     "statement_count": 0,
                     "processed_count": 0,
@@ -249,7 +270,16 @@ class FileHistoryService:
             bank_name = record.get("bank_name")
             if bank_name and bank_name not in batch_group["bank_names"]:
                 batch_group["bank_names"].append(bank_name)
-            batch_group["display_name"] = self._format_batch_display_name(batch_group["batch_id"], batch_group["bank_names"])
+
+            file_name = record.get("original_filename") or record.get("statement_label")
+            if file_name and file_name not in batch_group["file_names"]:
+                batch_group["file_names"].append(file_name)
+
+            batch_group["display_name"] = self._format_batch_display_name(
+                batch_group["batch_id"],
+                batch_group["bank_names"],
+                batch_group["file_names"],
+            )
 
             batch_group["statement_count"] += 1
             if record.get("status") == "completed":
@@ -299,7 +329,7 @@ class FileHistoryService:
             "reports": reports,
             "batches": [
                 {
-                    **batch,
+                    **{k: v for k, v in batch.items() if k != "file_names"},
                     "bank_names": sorted(batch["bank_names"]),
                     "bank_groups": sorted(batch["bank_groups"].values(), key=lambda group: group["bank_name"].lower()),
                 }
@@ -509,6 +539,14 @@ class FileHistoryService:
                     db.query(UserFileRecord, StatementMetadata)
                     .outerjoin(StatementMetadata, UserFileRecord.job_id == StatementMetadata.job_id)
                     .filter(UserFileRecord.user_id == user_id)
+                    .filter(
+                        (UserFileRecord.deletion_status.is_(None))
+                        | (UserFileRecord.deletion_status != "deleted")
+                    )
+                    .filter(
+                        (UserFileRecord.status.is_(None))
+                        | (UserFileRecord.status != "deleted")
+                    )
                     .order_by(UserFileRecord.created_at.desc())
                     .all()
                 )
@@ -518,6 +556,14 @@ class FileHistoryService:
                 records = (
                     db.query(UserFileRecord)
                     .filter(UserFileRecord.user_id == user_id)
+                    .filter(
+                        (UserFileRecord.deletion_status.is_(None))
+                        | (UserFileRecord.deletion_status != "deleted")
+                    )
+                    .filter(
+                        (UserFileRecord.status.is_(None))
+                        | (UserFileRecord.status != "deleted")
+                    )
                     .order_by(UserFileRecord.created_at.desc())
                     .all()
                 )
@@ -545,7 +591,8 @@ class FileHistoryService:
                         "batch_id": record.batch_id or record.job_id,
                         "created_at": created_at,
                         "updated_at": created_at,
-                        "display_name": self._format_batch_display_name(record.batch_id or record.job_id, []),
+                        "display_name": None,
+                        "file_names": [],
                         "bank_names": [],
                         "statement_count": 0,
                         "processed_count": 0,
@@ -563,7 +610,16 @@ class FileHistoryService:
 
                 if record.bank_name and record.bank_name not in batch_group["bank_names"]:
                     batch_group["bank_names"].append(record.bank_name)
-                batch_group["display_name"] = self._format_batch_display_name(batch_group["batch_id"], batch_group["bank_names"])
+
+                file_name = record.original_filename or record.statement_label
+                if file_name and file_name not in batch_group["file_names"]:
+                    batch_group["file_names"].append(file_name)
+
+                batch_group["display_name"] = self._format_batch_display_name(
+                    batch_group["batch_id"],
+                    batch_group["bank_names"],
+                    batch_group["file_names"],
+                )
 
                 batch_group["statement_count"] += 1
                 if record.status == "completed":
@@ -652,7 +708,7 @@ class FileHistoryService:
                 "reports": reports,
                 "batches": [
                     {
-                        **batch,
+                        **{k: v for k, v in batch.items() if k != "file_names"},
                         "bank_names": sorted(batch["bank_names"]),
                         "bank_groups": sorted(batch["bank_groups"].values(), key=lambda group: group["bank_name"].lower()),
                     }

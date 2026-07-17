@@ -29,7 +29,17 @@ type BatchResultItem = {
 
 const formatBatchLabel = (batchId: string) => {
   if (!batchId) return 'Unknown batch'
+  // Avoid showing raw batch-... IDs in the profile UI.
+  if (batchId.startsWith('batch-')) return 'Uploaded statements'
   return batchId.length > 18 ? `${batchId.slice(0, 18)}…` : batchId
+}
+
+const normalizeUploadStatus = (status?: string | null): 'Processed' | 'Pending' | 'Processing' | 'Failed' => {
+  const normalized = (status || '').toLowerCase()
+  if (normalized === 'completed' || normalized === 'processed' || normalized === 'success') return 'Processed'
+  if (normalized === 'running' || normalized === 'processing' || normalized === 'in_progress') return 'Processing'
+  if (normalized === 'failed' || normalized === 'error') return 'Failed'
+  return 'Pending'
 }
 
 const formatRetentionLabel = (
@@ -206,14 +216,7 @@ export default function Dashboard() {
           retentionDaysLeft: typeof item.retention_days_left === 'number' ? item.retention_days_left : null,
           retentionExpiresAt: item.retention_expires_at || null,
           deletedAt: item.deleted_at || null,
-          status:
-            item.status === 'completed'
-              ? 'Processed'
-              : item.status === 'running'
-                ? 'Processing'
-                : item.status === 'failed'
-                  ? 'Failed'
-                  : 'Pending',
+          status: normalizeUploadStatus(item.status),
         }))
       )
       setGeneratedReports(
@@ -556,6 +559,11 @@ export default function Dashboard() {
       : (item.deletion_status || '').toLowerCase() === 'queued for deletion' || (item.deletion_status || '').toLowerCase() === 'deleting' || (item.deletion_status || '').toLowerCase() === 'scheduled'
         ? 'border-amber-200 bg-amber-50 text-amber-700'
         : 'border-neutral-200 bg-neutral-50 text-neutral-600'
+    const uploadStatus = isUpload
+      ? normalizeUploadStatus((item as UserUploadHistoryItem).status)
+      : null
+    const title = item.display_name || item.name
+    const bankLabel = item.bank_name || 'Unknown'
 
     const statementMetadata = (item as any).statement_metadata
 
@@ -1003,9 +1011,13 @@ export default function Dashboard() {
                                 <div className="flex items-start justify-between gap-3">
                                   <div>
                                     <p className="text-sm font-semibold text-black">
-                                      {batch.display_name || formatBatchLabel(batch.batch_id)}
+                                      {batch.display_name
+                                        || (batch.uploads?.[0]?.display_name || batch.uploads?.[0]?.name)
+                                        || (batch.bank_names?.length ? batch.bank_names.join(', ') : formatBatchLabel(batch.batch_id))}
                                     </p>
                                     <p className="mt-1 text-xs text-neutral-500">
+                                      {(batch.bank_names || []).join(', ') || 'Unknown bank'}
+                                      {' • '}
                                       {batch.statement_count} statement(s) • {batch.processed_count} processed • {batch.failed_count} failed
                                     </p>
                                   </div>

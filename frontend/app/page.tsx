@@ -46,7 +46,7 @@ function LoginScreen() {
   const mailtoHref = useMemo(() => {
     const subject = encodeURIComponent('Airco Insights Login Credentials')
     const body = encodeURIComponent(REQUEST_MESSAGE)
-    return `mailto:Info@the-airco.com?subject=${subject}&body=${body}`
+    return `mailto:info@the-airco.com?subject=${subject}&body=${body}`
   }, [])
 
   const whatsappHref = useMemo(() => {
