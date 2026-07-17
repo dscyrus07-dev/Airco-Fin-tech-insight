@@ -151,13 +151,13 @@ function LoginScreen() {
                       Airco Insights
                     </p>
                     <p className="mt-1 text-center text-lg font-medium text-black">
-                      Sign In with Keycloak
+                      Sign In
                     </p>
                   </div>
 
                   <form onSubmit={handleLogin} className="space-y-4">
                     <p className="rounded-lg border border-black/10 bg-neutral-50 px-4 py-3 text-sm leading-6 text-neutral-600">
-                      You will be redirected to Keycloak to enter your password and TOTP code.
+                      You will be redirected to our secure login page to enter your credentials.
                     </p>
 
                     <button
@@ -165,7 +165,7 @@ function LoginScreen() {
                       disabled={isSubmitting || isLoading}
                       className="mt-2 flex w-full items-center justify-center rounded-lg bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Redirecting...' : 'Continue to Keycloak'}
+                      {isSubmitting ? 'Redirecting...' : 'Continue to Sign In'}
                     </button>
                   </form>
 
@@ -195,7 +195,7 @@ function LoginScreen() {
           </div>
 
           <footer className="pb-4 text-center text-[11px] text-neutral-400 sm:pb-6">
-            Airco Insights — Login request page
+            Airco Insights — Secure access
           </footer>
         </div>
       </div>

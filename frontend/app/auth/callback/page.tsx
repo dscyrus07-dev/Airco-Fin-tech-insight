@@ -52,7 +52,7 @@ export default function AuthCallbackPage() {
         }
 
         if (!data?.access_token) {
-          throw new Error('Keycloak did not return an access token.')
+          throw new Error('Authentication did not return an access token.')
         }
 
         storeSessionTokens(data.access_token, data.refresh_token)
@@ -77,7 +77,7 @@ export default function AuthCallbackPage() {
         <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-black border-t-transparent" />
         <h1 className="text-2xl font-semibold tracking-tight">{status}</h1>
         <p className="mt-3 text-sm leading-6 text-neutral-600">
-          Keycloak is handling your password and TOTP verification.
+          Completing your secure sign-in.
         </p>
         {error && (
           <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

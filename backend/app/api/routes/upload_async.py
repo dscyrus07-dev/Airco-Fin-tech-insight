@@ -16,7 +16,7 @@ from ...services.task_processor import task_processor
 from ...services.event_publisher import event_publisher
 from ...services.file_history_service import file_history_service
 from ...dependencies.auth import get_current_user_optional
-from ...utils.file_handler import get_temp_dir, upload_to_storage
+from ...utils.file_handler import get_temp_dir, upload_to_storage, storage_user_folder
 from ...core.config import settings as app_settings
 
 from ...utils.correlation import get_correlation_id, generate_job_id
@@ -192,7 +192,8 @@ async def upload_bank_statement_async(
     processing_file_path = _prepare_pdf_for_processing(file_path, pdf_password)
     output_dir = get_temp_dir()
     original_filename = _safe_object_name(file.filename or "statement.pdf")
-    upload_object_key = f"users/{user_id}/uploads/{Path(original_filename).stem}_{Path(file_path).name}"
+    storage_folder = storage_user_folder(user_email=user_email, user_name=user_name, user_id=user_id)
+    upload_object_key = f"users/{storage_folder}/uploads/{Path(original_filename).stem}_{Path(file_path).name}"
     if not upload_to_storage(
         file_path,
         bucket=app_settings.S3_BUCKET_UPLOADS,
@@ -287,6 +288,8 @@ async def upload_bank_statement_async(
         api_key=api_key,
         bank_name=bank_name,
         user_id=user_id,
+        user_email=user_email,
+        user_name=user_name,
         original_filename=file.filename,
         upload_object_key=upload_object_key,
         output_dir=output_dir,

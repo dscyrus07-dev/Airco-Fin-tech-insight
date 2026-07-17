@@ -1,4 +1,5 @@
 ﻿import os
+import re
 import uuid
 import logging
 import time
@@ -7,6 +8,17 @@ from typing import Optional
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
+
+
+def storage_user_folder(
+    user_email: Optional[str] = None,
+    user_name: Optional[str] = None,
+    user_id: Optional[str] = None,
+) -> str:
+    """Build an S3-safe folder name, preferring email for readable storage paths."""
+    raw = (user_email or user_name or user_id or "anonymous").strip().lower()
+    safe = re.sub(r"[^a-z0-9@._-]+", "_", raw)
+    return safe or "anonymous"
 
 
 def _is_transient_storage_error(exc: Exception) -> bool:

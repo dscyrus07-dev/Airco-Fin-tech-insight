@@ -12,7 +12,7 @@ from .pipeline_orchestrator import process_statement
 from .redis_job_store import redis_job_store
 from .file_history_service import file_history_service
 from .frontend_result_builder import build_frontend_processing_result
-from ..utils.file_handler import cleanup_file, upload_to_storage, download_from_storage
+from ..utils.file_handler import cleanup_file, upload_to_storage, download_from_storage, storage_user_folder
 from ..core.config import settings as app_settings
 
 from ..models.job import JobStatus, JobUpdate
@@ -84,9 +84,16 @@ class EventConsumer:
         mode = payload.get("mode", "free")
         api_key = payload.get("api_key")
         user_id = payload.get("user_id") or "anonymous"
+        user_email = payload.get("user_email") or (user_info or {}).get("email")
+        user_name = payload.get("user_name") or (user_info or {}).get("user_name")
         original_filename = payload.get("original_filename") or "statement.pdf"
         output_dir = payload.get("output_dir")
         pdf_password = payload.get("pdf_password")
+        storage_folder = storage_user_folder(
+            user_email=user_email,
+            user_name=user_name,
+            user_id=user_id,
+        )
 
         if not job_id:
             logger.warning("file_upload event missing job_id; skipping job update")
@@ -248,7 +255,7 @@ class EventConsumer:
             excel_path = result.get("excel_path")
             if excel_path and os.path.isfile(excel_path):
                 safe_original = _safe_object_name(original_filename)
-                excel_object_key = f"users/{user_id}/reports/{Path(excel_path).name}"
+                excel_object_key = f"users/{storage_folder}/reports/{Path(excel_path).name}"
                 upload_to_storage(
                     excel_path,
                     bucket=app_settings.S3_BUCKET_REPORTS,
