@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { UserCircle2 } from 'lucide-react'
+import Link from 'next/link'
+import { KeyRound, UserCircle2 } from 'lucide-react'
 
 interface HeaderProps {
   onProfileClick?: () => void
@@ -28,13 +29,22 @@ export default function Header({ onProfileClick }: HeaderProps) {
             Financial Categorization Engine
           </p>
         </div>
-        <button
-          onClick={onProfileClick}
-          className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50 sm:right-6 lg:right-8"
-        >
-          <UserCircle2 className="h-5 w-5" />
-          Profile
-        </button>
+        <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 lg:right-8">
+          <Link
+            href="/dashboard/api-keys"
+            className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+          >
+            <KeyRound className="h-5 w-5" />
+            API Keys
+          </Link>
+          <button
+            onClick={onProfileClick}
+            className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+          >
+            <UserCircle2 className="h-5 w-5" />
+            Profile
+          </button>
+        </div>
       </div>
     </header>
   )

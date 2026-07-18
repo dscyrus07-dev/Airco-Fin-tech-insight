@@ -16,11 +16,13 @@
       S3_BUCKET: ${S3_BUCKET:-airco-files}
       S3_BUCKET_REPORTS: ${S3_BUCKET_REPORTS:-airco-reports}
       STORAGE_TYPE: ${STORAGE_TYPE:-supabase-s3}
-      KEYCLOAK_URL: ${KEYCLOAK_URL:-http://localhost:8080}
-
+      # Local Keycloak issues iss=http://localhost:8080/... — do not use remote KEYCLOAK_URL from .env
+      KEYCLOAK_URL: http://localhost:8080
       KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://keycloak:8080}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
       KEYCLOAK_ALLOWED_AZP: ${KEYCLOAK_ALLOWED_AZP:-frontend-app}
+      API_KEY_ENVIRONMENT: ${API_KEY_ENVIRONMENT:-test}
+      API_KEY_RATE_LIMIT_DEFAULT: ${API_KEY_RATE_LIMIT_DEFAULT:-60}
       DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
       RETENTION_ENABLED: ${RETENTION_ENABLED:-true}
       RETENTION_SWEEP_INTERVAL_MINUTES: ${RETENTION_SWEEP_INTERVAL_MINUTES:-60}
@@ -44,7 +46,7 @@
     environment:
       DATABASE_URL: ${AUTH_DATABASE_URL}
       AUTH_DATABASE_URL: ${AUTH_DATABASE_URL}
-      KEYCLOAK_URL: ${KEYCLOAK_URL:-http://localhost:8080}
+      KEYCLOAK_URL: http://localhost:8080
       KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://keycloak:8080}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-frontend-app}

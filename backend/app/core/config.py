@@ -95,6 +95,11 @@ class Settings:
     # NEVER enable in production; defaults to off so unsigned tokens are rejected.
     AUTH_ALLOW_INSECURE_FALLBACK: bool = os.getenv("AUTH_ALLOW_INSECURE_FALLBACK", "false").lower() in {"1", "true", "yes", "on"}
 
+    # Platform API keys
+    API_KEY_RATE_LIMIT_DEFAULT: int = int(os.getenv("API_KEY_RATE_LIMIT_DEFAULT", "60"))
+    API_KEY_ENVIRONMENT: str = os.getenv("API_KEY_ENVIRONMENT", "live")  # live | test
+    API_KEY_DAILY_QUOTA_DEFAULT: int = int(os.getenv("API_KEY_DAILY_QUOTA_DEFAULT", "0"))  # 0 = unlimited
+
     @property
     def keycloak_issuer(self) -> str:
         return f"{self.KEYCLOAK_URL.rstrip('/')}/realms/{self.KEYCLOAK_REALM}"

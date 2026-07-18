@@ -3,7 +3,7 @@ Authentication dependencies for the monolith.
 Supports Keycloak tokens via Auth Service during migration.
 """
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional, Dict, Any
 import base64
@@ -97,6 +97,45 @@ async def get_current_user(
         detail="Invalid authentication credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+
+async def get_api_principal(
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+) -> Dict[str, Any]:
+    """Resolve principal from middleware-stashed API key or Bearer JWT.
+
+    Does not re-verify API keys (avoids double usage_count / rate-limit hits).
+    """
+    principal = getattr(request.state, "api_principal", None)
+    if principal:
+        return principal
+
+    if request.headers.get("X-API-Key"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or revoked API key",
+        )
+
+    return await get_current_user(credentials)
+
+
+def require_scope(scope: str):
+    """Require a scope for API-key principals; JWT users skip scope checks."""
+
+    async def scope_dependency(
+        principal: Dict[str, Any] = Depends(get_api_principal),
+    ) -> Dict[str, Any]:
+        if principal.get("auth_type") == "api_key":
+            if scope not in (principal.get("scopes") or []):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Missing required scope: {scope}",
+                )
+        return principal
+
+    return scope_dependency
+
 
 async def get_admin_user(
     current_user: Dict[str, Any] = Depends(get_current_user)

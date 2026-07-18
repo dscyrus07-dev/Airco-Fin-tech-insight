@@ -1,5 +1,48 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, Date, Numeric, DateTime, Index, func
+import uuid
+
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Float,
+    Boolean,
+    Date,
+    Numeric,
+    DateTime,
+    Index,
+    JSON,
+    func,
+    TypeDecorator,
+    CHAR,
+)
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from .session import Base
+
+
+class GUID(TypeDecorator):
+    """Platform-independent UUID type (Postgres UUID, else CHAR(36))."""
+
+    impl = CHAR
+    cache_ok = True
+
+    def load_dialect_impl(self, dialect):
+        if dialect.name == "postgresql":
+            return dialect.type_descriptor(PG_UUID(as_uuid=True))
+        return dialect.type_descriptor(CHAR(36))
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return value
+        if dialect.name == "postgresql":
+            return value if isinstance(value, uuid.UUID) else uuid.UUID(str(value))
+        return str(value) if not isinstance(value, uuid.UUID) else str(value)
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return value
+        if isinstance(value, uuid.UUID):
+            return value
+        return uuid.UUID(str(value))
 
 
 class Merchant(Base):
@@ -67,3 +110,24 @@ class UserFileRecord(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     completed_at = Column(DateTime, nullable=True)
+
+
+class ApiKey(Base):
+    __tablename__ = "api_keys"
+
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    user_id = Column(String(255), nullable=False, index=True)
+    tenant_id = Column(String(100), nullable=False, default="default")
+    name = Column(String(255), nullable=False)
+    key_prefix = Column(String(20), nullable=False, index=True)
+    key_hash = Column(String(64), nullable=False, unique=True)
+    scopes = Column(JSON, default=list)
+    environment = Column(String(10), nullable=False, default="live")
+    rate_limit_per_minute = Column(Integer, default=60)
+    daily_quota = Column(Integer, nullable=True)
+    usage_count = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True, index=True)
+    last_used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    revoked_at = Column(DateTime, nullable=True)
+

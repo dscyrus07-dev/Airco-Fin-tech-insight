@@ -173,6 +173,18 @@ def initialize_database() -> None:
                             "ON user_file_records (deletion_status)"
                         )
                     )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE api_request_logs "
+                            "ADD COLUMN IF NOT EXISTS api_key_id VARCHAR(255)"
+                        )
+                    )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE api_request_logs "
+                            "ADD COLUMN IF NOT EXISTS auth_type VARCHAR(20)"
+                        )
+                    )
                     connection.commit()
                 except Exception:
                     connection.rollback()

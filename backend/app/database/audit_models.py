@@ -810,6 +810,9 @@ class ApiRequestLog(Base):
     response_size_bytes = Column(Integer)
     query_params = Column(JSONB, default={})
 
+    api_key_id = Column(String(255), nullable=True, index=True)
+    auth_type = Column(String(20), nullable=True)
+
     error_message = Column(Text)
     error_code = Column(String(50))
 

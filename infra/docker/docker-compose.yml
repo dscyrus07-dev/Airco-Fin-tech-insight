@@ -67,6 +67,8 @@
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
       KEYCLOAK_ALLOWED_AZP: ${KEYCLOAK_ALLOWED_AZP:-frontend-app}
       AUTH_ALLOW_INSECURE_FALLBACK: ${AUTH_ALLOW_INSECURE_FALLBACK:-false}
+      API_KEY_ENVIRONMENT: ${API_KEY_ENVIRONMENT:-test}
+      API_KEY_RATE_LIMIT_DEFAULT: ${API_KEY_RATE_LIMIT_DEFAULT:-60}
     volumes:
       - backend_tmp:/app/tmp
     healthcheck:

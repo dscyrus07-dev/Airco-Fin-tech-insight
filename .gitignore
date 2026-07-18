@@ -157,3 +157,13 @@ local.env
 
 # Large local samples (optional; keep out of new repo by default)
 samples/
+
+# Debug / gate test artifacts (never commit)
+_*.py
+_*.txt
+gate_results.md
+gate_run_log.txt
+gate_status.txt
+tok.txt
+*_debug*.py
+*_debug*.txt

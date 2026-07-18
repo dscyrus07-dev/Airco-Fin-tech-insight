@@ -75,6 +75,9 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
                         if row:
                             user_uuid = row[0]
 
+                auth_type = getattr(request.state, "auth_type", None) or "jwt"
+                api_key_id = getattr(request.state, "api_key_id", None)
+
                 record = ApiRequestLog(
                     request_id=getattr(request.state, "correlation_id", None),
                     correlation_id=getattr(request.state, "correlation_id", None),
@@ -86,6 +89,8 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
                     user_id=user_uuid,
                     ip_address=audit_ctx.ip_address if audit_ctx else None,
                     user_agent=request.headers.get("user-agent"),
+                    api_key_id=api_key_id,
+                    auth_type=auth_type,
                     error_message=error_message,
                     error_code=error_code,
                 )
