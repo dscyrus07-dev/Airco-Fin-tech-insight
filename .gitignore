@@ -167,3 +167,5 @@ gate_status.txt
 tok.txt
 *_debug*.py
 *_debug*.txt
+report_test.xlsx
+~$*.xlsx
