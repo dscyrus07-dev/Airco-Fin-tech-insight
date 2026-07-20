@@ -193,6 +193,18 @@ def initialize_database() -> None:
                     )
                     connection.execute(
                         text(
+                            "ALTER TABLE api_keys "
+                            "ADD COLUMN IF NOT EXISTS owner_email VARCHAR(255)"
+                        )
+                    )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE api_keys "
+                            "ADD COLUMN IF NOT EXISTS owner_name VARCHAR(255)"
+                        )
+                    )
+                    connection.execute(
+                        text(
                             "ALTER TABLE user_file_records "
                             "ADD COLUMN IF NOT EXISTS api_key_id VARCHAR(255)"
                         )

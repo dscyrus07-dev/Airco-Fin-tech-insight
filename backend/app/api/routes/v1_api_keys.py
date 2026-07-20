@@ -69,6 +69,11 @@ async def create_api_key(
             raise HTTPException(status_code=400, detail=f"Invalid scope: {scope}")
 
     try:
+        owner_name = (
+            current_user.get("name")
+            or current_user.get("preferred_username")
+            or ""
+        )
         raw_key, record = create_key(
             user_id=current_user["id"],
             tenant_id="default",
@@ -76,6 +81,8 @@ async def create_api_key(
             scopes=scopes,
             environment=env,
             db=db,
+            owner_email=current_user.get("email"),
+            owner_name=owner_name or None,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -91,6 +98,21 @@ async def list_api_keys(
     # Clear impossible leftover counters from earlier bugs (PDFs > Usage)
     try:
         reset_stale_pdf_counts(db)
+    except Exception:
+        pass
+    # Ensure older keys get owner Gmail so API uploads store under same path as website
+    try:
+        owner_name = (
+            current_user.get("name")
+            or current_user.get("preferred_username")
+            or ""
+        )
+        backfill_owner_identity(
+            current_user["id"],
+            db,
+            owner_email=current_user.get("email"),
+            owner_name=owner_name or None,
+        )
     except Exception:
         pass
     keys = list_keys(current_user["id"], db)

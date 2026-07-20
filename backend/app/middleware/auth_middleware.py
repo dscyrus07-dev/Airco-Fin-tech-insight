@@ -91,8 +91,13 @@ class AuthMiddleware(BaseHTTPMiddleware):
                             content={"detail": "Rate limit exceeded"},
                         )
 
+                    owner_email = (getattr(record, "owner_email", None) or "").strip()
+                    owner_name = (getattr(record, "owner_name", None) or "").strip()
                     principal = {
                         "id": record.user_id,
+                        "email": owner_email,
+                        "name": owner_name,
+                        "preferred_username": owner_name,
                         "tenant_id": record.tenant_id or "default",
                         "auth_type": "api_key",
                         "scopes": record.scopes or [],
@@ -114,8 +119,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
                             ("X-Tenant-ID", record.tenant_id or "default"),
                             ("X-Tenant-Slug", "default"),
                             ("X-User-ID", record.user_id or ""),
-                            ("X-User-Email", ""),
-                            ("X-User-Name", ""),
+                            ("X-User-Email", owner_email),
+                            ("X-User-Name", owner_name),
                             ("X-User-Role", "USER"),
                             ("X-Session-ID", ""),
                             ("X-Auth-Type", "api_key"),

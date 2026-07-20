@@ -117,6 +117,9 @@ class FileHistoryService:
         backup_purge_due_at = self._record_value(record, "backup_purge_due_at")
         backup_purge_status = self._record_value(record, "backup_purge_status")
 
+        api_key_id = self._record_value(record, "api_key_id")
+        source = "api" if api_key_id else "website"
+
         return {
             "job_id": self._record_value(record, "job_id"),
             "name": self._format_entry_display_name(record, entry_type),
@@ -127,6 +130,8 @@ class FileHistoryService:
             "batch_id": self._record_value(record, "batch_id"),
             "statement_label": self._record_value(record, "statement_label"),
             "status": self._record_value(record, "status"),
+            "source": source,
+            "api_key_id": api_key_id,
             "created_at": created_at.isoformat() if created_at else None,
             "upload_object_key": self._record_value(record, "upload_object_key") if entry_type == "upload" else None,
             "report_object_key": self._record_value(record, "report_object_key") if entry_type == "report" else self._record_value(record, "report_object_key"),
@@ -425,6 +430,7 @@ class FileHistoryService:
                     "mode": mode,
                     "original_filename": original_filename,
                     "upload_object_key": upload_object_key,
+                    "api_key_id": api_key_id,
                     "retention_expires_at": record.get("retention_expires_at") or self._retention_expires_at(record.get("created_at")),
                     "deletion_status": record.get("deletion_status") or "active",
                     "backup_purge_due_at": record.get("backup_purge_due_at") or self._retention_expires_at(record.get("created_at")),

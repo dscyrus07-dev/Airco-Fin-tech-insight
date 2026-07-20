@@ -82,6 +82,8 @@ def create_key(
     db: Session,
     rate_limit_per_minute: Optional[int] = None,
     daily_quota: Optional[int] = None,
+    owner_email: Optional[str] = None,
+    owner_name: Optional[str] = None,
 ) -> Tuple[str, ApiKey]:
     env = (environment or "test").strip().lower()
     if env not in ("live", "test"):
@@ -95,6 +97,8 @@ def create_key(
     raw_key = generate_api_key(env)
     record = ApiKey(
         user_id=user_id,
+        owner_email=(owner_email or "").strip() or None,
+        owner_name=(owner_name or "").strip() or None,
         tenant_id=tenant_id or "default",
         name=name.strip(),
         key_prefix=extract_prefix(raw_key),
@@ -143,6 +147,45 @@ def revoke_key(key_id: str, user_id: str, db: Session) -> bool:
     db.commit()
     logger.info("API key revoked", user_id=user_id, key_prefix=record.key_prefix)
     return True
+
+
+def backfill_owner_identity(
+    user_id: str,
+    db: Session,
+    *,
+    owner_email: Optional[str] = None,
+    owner_name: Optional[str] = None,
+) -> int:
+    """Fill missing owner_email/name on existing keys from the logged-in JWT user."""
+    email = (owner_email or "").strip() or None
+    name = (owner_name or "").strip() or None
+    if not email and not name:
+        return 0
+
+    keys = (
+        db.query(ApiKey)
+        .filter(ApiKey.user_id == user_id)
+        .all()
+    )
+    updated = 0
+    for key in keys:
+        changed = False
+        if email and not (key.owner_email or "").strip():
+            key.owner_email = email
+            changed = True
+        if name and not (key.owner_name or "").strip():
+            key.owner_name = name
+            changed = True
+        if changed:
+            updated += 1
+    if updated:
+        db.commit()
+        logger.info(
+            "Backfilled API key owner identity",
+            user_id=user_id,
+            updated=updated,
+        )
+    return updated
 
 
 def list_keys(user_id: str, db: Session) -> List[ApiKey]:

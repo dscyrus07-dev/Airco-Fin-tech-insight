@@ -118,6 +118,8 @@ class ApiKey(Base):
 
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     user_id = Column(String(255), nullable=False, index=True)
+    owner_email = Column(String(255), nullable=True)
+    owner_name = Column(String(255), nullable=True)
     tenant_id = Column(String(100), nullable=False, default="default")
     name = Column(String(255), nullable=False)
     key_prefix = Column(String(20), nullable=False, index=True)

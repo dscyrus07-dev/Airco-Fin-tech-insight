@@ -617,7 +617,14 @@ export default function Dashboard() {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-black">{item.display_name || item.name}</p>
+              <div className="flex min-w-0 items-center gap-2">
+                <p className="truncate text-sm font-medium text-black">{item.display_name || item.name}</p>
+                {(item.source === 'api' || Boolean(item.api_key_id)) && (
+                  <span className="shrink-0 rounded-full border border-indigo-200 bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
+                    Api
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-neutral-500">{createdLabel}</p>
             </div>
             <div className="flex items-center gap-2 whitespace-nowrap">

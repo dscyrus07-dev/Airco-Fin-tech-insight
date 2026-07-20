@@ -144,6 +144,8 @@ export interface UserUploadHistoryItem {
   batch_id?: string | null
   statement_label?: string | null
   status: string
+  source?: 'api' | 'website' | string
+  api_key_id?: string | null
   created_at?: string
   upload_object_key?: string
   total_transactions?: number
@@ -165,6 +167,8 @@ export interface UserReportHistoryItem {
   bank_name?: string
   batch_id?: string | null
   statement_label?: string | null
+  source?: 'api' | 'website' | string
+  api_key_id?: string | null
   created_at?: string
   report_object_key?: string
   retention_expires_at?: string | null
