@@ -154,63 +154,86 @@ def list_keys(user_id: str, db: Session) -> List[ApiKey]:
     )
 
 
-def count_completed_pdfs_by_api_key(key_ids: List[str], db: Session) -> dict:
+def increment_processed_pdf_count(
+    key_id: Optional[str],
+    db: Session,
+    *,
+    job_id: Optional[str] = None,
+) -> bool:
     """
-    Count completed PDF jobs per API key from user_file_records.
-    One completed job attributed to the key = one PDF.
+    +1 PDF when one job finishes successfully.
+    job_id makes it idempotent (retries won't double-count).
     """
-    if not key_ids:
-        return {}
+    if not key_id:
+        return False
+    try:
+        uid = UUID(str(key_id))
+    except (ValueError, TypeError):
+        return False
+
+    if job_id:
+        try:
+            import redis as sync_redis
+
+            redis_key = f"airco:pdfcount:{job_id}"
+            client = sync_redis.from_url(settings.REDIS_URL, decode_responses=True)
+            try:
+                # SET NX = only first success for this job counts
+                if not client.set(redis_key, "1", nx=True, ex=7 * 24 * 3600):
+                    return False
+            finally:
+                try:
+                    client.close()
+                except Exception:
+                    pass
+        except Exception as exc:
+            logger.warning("PDF count idempotency check failed", job_id=job_id, error=str(exc))
 
     from sqlalchemy import text
 
-    ids = [str(k) for k in key_ids if k]
-    if not ids:
-        return {}
+    row = db.execute(
+        text(
+            "UPDATE api_keys "
+            "SET processed_pdf_count = COALESCE(processed_pdf_count, 0) + 1 "
+            "WHERE id = :id "
+            "RETURNING processed_pdf_count, key_prefix"
+        ),
+        {"id": str(uid)},
+    ).fetchone()
+    db.commit()
+    if not row:
+        return False
+    logger.info(
+        "PDF count +1",
+        key_prefix=row[1],
+        processed_pdf_count=row[0],
+        job_id=job_id,
+    )
+    return True
 
-    placeholders = ", ".join(f":id{i}" for i in range(len(ids)))
-    params = {f"id{i}": kid for i, kid in enumerate(ids)}
+
+def reset_stale_pdf_counts(db: Session) -> int:
+    """One-shot: zero garbage PDF counters left by earlier bugs."""
+    from sqlalchemy import text
+
     result = db.execute(
         text(
-            f"""
-            SELECT api_key_id, COUNT(*)::int AS pdf_count
-            FROM user_file_records
-            WHERE api_key_id IN ({placeholders})
-              AND LOWER(COALESCE(status, '')) IN ('completed', 'complete', 'success', 'succeeded')
-            GROUP BY api_key_id
-            """
-        ),
-        params,
+            "UPDATE api_keys "
+            "SET processed_pdf_count = 0 "
+            "WHERE COALESCE(processed_pdf_count, 0) > 0 "
+            "  AND COALESCE(usage_count, 0) = 0"
+        )
     )
-    return {str(row[0]): int(row[1] or 0) for row in result.fetchall()}
-
-
-def sync_processed_pdf_counts(keys: List[ApiKey], db: Session) -> dict:
-    """
-    Recompute processed_pdf_count from completed jobs and heal stale counters.
-    Returns map of key_id -> accurate count.
-    """
-    if not keys:
-        return {}
-
-    counts = count_completed_pdfs_by_api_key([str(k.id) for k in keys], db)
-    dirty = False
-    for key in keys:
-        kid = str(key.id)
-        accurate = int(counts.get(kid, 0))
-        if int(key.processed_pdf_count or 0) != accurate:
-            key.processed_pdf_count = accurate
-            dirty = True
-    if dirty:
-        try:
-            db.commit()
-            for key in keys:
-                db.refresh(key)
-        except Exception as exc:
-            db.rollback()
-            logger.warning("Failed to sync processed_pdf_count", error=str(exc))
-    return {str(k.id): int(k.processed_pdf_count or 0) for k in keys}
-
+    # Also fix active keys where PDFs >> usage (impossible if 1 upload = 1 usage min)
+    result2 = db.execute(
+        text(
+            "UPDATE api_keys "
+            "SET processed_pdf_count = 0 "
+            "WHERE COALESCE(processed_pdf_count, 0) > COALESCE(usage_count, 0)"
+        )
+    )
+    db.commit()
+    return int((result.rowcount or 0) + (result2.rowcount or 0))
 
 
 class _RateLimitRedis:

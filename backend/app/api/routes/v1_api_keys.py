@@ -17,8 +17,8 @@ from ...services.api_key_service import (
     DEFAULT_SCOPES,
     create_key,
     list_keys,
+    reset_stale_pdf_counts,
     revoke_key,
-    sync_processed_pdf_counts,
 )
 from ...utils.logging import get_logger
 
@@ -88,9 +88,12 @@ async def list_api_keys(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Clear impossible leftover counters from earlier bugs (PDFs > Usage)
+    try:
+        reset_stale_pdf_counts(db)
+    except Exception:
+        pass
     keys = list_keys(current_user["id"], db)
-    # Heal stale counters (e.g. earlier overcount) from request logs
-    sync_processed_pdf_counts(keys, db)
     return [_serialize_key(k) for k in keys]
 
 
