@@ -36,22 +36,39 @@ async def _ping_redis() -> tuple[bool, Optional[int]]:
         return False, None
 
 
-async def _ping_rabbitmq() -> tuple[bool, Optional[int], int, int]:
+def _ping_rabbitmq_sync() -> tuple[bool, Optional[int], int, int]:
+    """Probe RabbitMQ with pika (same client used by message_queue)."""
     try:
-        import aio_pika
+        import pika
+    except ImportError:
+        return False, None, 0, 0
+
+    connection = None
+    try:
         start = time.monotonic()
-        conn = await asyncio.wait_for(
-            aio_pika.connect_robust(settings.RABBITMQ_URL), timeout=3
-        )
+        parameters = pika.URLParameters(settings.RABBITMQ_URL)
+        parameters.socket_timeout = 3
+        parameters.blocked_connection_timeout = 3
+        parameters.heartbeat = 30
+        connection = pika.BlockingConnection(parameters)
+        channel = connection.channel()
+        # Passive declare: fails if queue missing, does not recreate it.
+        result = channel.queue_declare(queue="file_upload_queue", durable=True, passive=True)
         latency_ms = int((time.monotonic() - start) * 1000)
-        channel = await conn.channel()
-        q = await channel.get_queue("file_upload_queue", ensure=False)
-        message_count = q.declaration_result.message_count if q else 0
-        consumer_count = q.declaration_result.consumer_count if q else 0
-        await conn.close()
+        message_count = int(getattr(result.method, "message_count", 0) or 0)
         return True, latency_ms, message_count, 0
     except Exception:
         return False, None, 0, 0
+    finally:
+        if connection is not None:
+            try:
+                connection.close()
+            except Exception:
+                pass
+
+
+async def _ping_rabbitmq() -> tuple[bool, Optional[int], int, int]:
+    return await asyncio.to_thread(_ping_rabbitmq_sync)
 
 
 async def _ping_object_storage() -> tuple[bool, Optional[int]]:

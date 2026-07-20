@@ -1,4 +1,5 @@
 import logging
+import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,9 +27,12 @@ from app.database import models as _database_models
 
 logger = get_logger(__name__)
 
+# Log to stdout so container platforms don't treat every line as severity=error (stderr).
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
+    stream=sys.stdout,
+    force=True,
 )
 
 @asynccontextmanager
