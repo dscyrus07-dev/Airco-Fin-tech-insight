@@ -152,7 +152,6 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Created</th>
                 <th className="px-4 py-3 font-medium">Last used</th>
-                <th className="px-4 py-3 font-medium">Usage</th>
                 <th className="px-4 py-3 font-medium">PDFs</th>
                 <th className="px-4 py-3 font-medium" />
               </tr>
@@ -200,10 +199,9 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
                   <td className="px-4 py-3 text-xs text-neutral-500">
                     {formatDate(key.last_used_at)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-neutral-600">
+                  <td className="px-4 py-3 text-xs font-medium text-neutral-800">
                     {key.processed_pdf_count ?? 0}
                   </td>
-                  <td className="px-4 py-3 text-xs text-neutral-600">{key.usage_count ?? 0}</td>
                   <td className="px-4 py-3 text-right">
                     {key.is_active && (
                       <button
