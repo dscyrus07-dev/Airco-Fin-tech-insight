@@ -154,28 +154,6 @@ def list_keys(user_id: str, db: Session) -> List[ApiKey]:
     )
 
 
-def increment_processed_pdf_count(key_id: Optional[str], db: Session) -> None:
-    """Increment processed PDF counter for an API key after a successful upload."""
-    if not key_id:
-        return
-    try:
-        uid = UUID(str(key_id))
-    except (ValueError, TypeError):
-        return
-
-    record = db.query(ApiKey).filter(ApiKey.id == uid).first()
-    if not record:
-        return
-
-    record.processed_pdf_count = (record.processed_pdf_count or 0) + 1
-    db.commit()
-    logger.info(
-        "API key processed PDF count incremented",
-        key_prefix=record.key_prefix,
-        processed_pdf_count=record.processed_pdf_count,
-    )
-
-
 class _RateLimitRedis:
     """Per-event-loop Redis client (same pattern as RedisJobStore)."""
 
@@ -212,3 +190,72 @@ async def check_rate_limit(key_id: str, limit: int) -> bool:
     except redis.RedisError as exc:
         logger.warning("Rate limit Redis error; allowing request", error=str(exc))
         return True
+
+
+def increment_processed_pdf_count(
+    key_id: Optional[str],
+    db: Session,
+    *,
+    job_id: Optional[str] = None,
+) -> bool:
+    """
+    Increment processed PDF counter once per successful job.
+    Uses Redis SETNX when job_id is provided so retries never double-count.
+    """
+    if not key_id:
+        return False
+    try:
+        uid = UUID(str(key_id))
+    except (ValueError, TypeError):
+        return False
+
+    if job_id:
+        try:
+            import redis as sync_redis
+
+            redis_key = f"airco:pdfcount:{job_id}"
+            sync_client = sync_redis.from_url(settings.REDIS_URL, decode_responses=True)
+            try:
+                was_set = sync_client.set(redis_key, "1", nx=True, ex=7 * 24 * 3600)
+            finally:
+                try:
+                    sync_client.close()
+                except Exception:
+                    pass
+            if not was_set:
+                logger.info(
+                    "Skipping duplicate processed PDF increment",
+                    job_id=job_id,
+                    key_id=str(uid),
+                )
+                return False
+        except Exception as exc:
+            logger.warning(
+                "PDF count idempotency check failed; continuing",
+                job_id=job_id,
+                error=str(exc),
+            )
+
+    from sqlalchemy import text
+
+    result = db.execute(
+        text(
+            "UPDATE api_keys "
+            "SET processed_pdf_count = COALESCE(processed_pdf_count, 0) + 1 "
+            "WHERE id = :id "
+            "RETURNING processed_pdf_count, key_prefix"
+        ),
+        {"id": str(uid)},
+    )
+    row = result.fetchone()
+    db.commit()
+    if not row:
+        return False
+    logger.info(
+        "API key processed PDF count incremented",
+        key_prefix=row[1],
+        processed_pdf_count=row[0],
+        job_id=job_id,
+    )
+    return True
+

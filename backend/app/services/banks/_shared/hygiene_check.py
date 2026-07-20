@@ -494,28 +494,44 @@ class HygieneCheck:
 
     
     def _is_transaction_line(self, line):
-        """Check if a line looks like a transaction"""
-        # Various transaction patterns
+        """Check if a line looks like a transaction row (not header/footer)."""
+        if not line or not line.strip():
+            return False
+
+        line_lower = line.lower().strip()
+        # Exclude common non-transaction header/footer rows only
+        hard_exclude = (
+            "page no",
+            "page:",
+            "statement of account",
+            "account no",
+            "account number",
+            "opening balance",
+            "closing balance",
+            "brought forward",
+            "carried forward",
+            "transaction date",
+            "value date",
+            "particulars",
+            "narration",
+            "summary",
+        )
+        if any(token in line_lower for token in hard_exclude):
+            return False
+
         patterns = [
-            # Line with amount and date
-            r'\d+[.,]\d{2}.*\d{1,2}[-/]\d{1,2}[-/]\d{2,4}',
-            r'\d{1,2}[-/]\d{1,2}[-/]\d{2,4}.*\d+[.,]\d{2}',
-            # Line with amount only (but with transaction-like keywords)
-            r'\d+[.,]\d{2}.*(debit|credit|withdraw|deposit|transfer|upi|neft|rtgs|imps)',
-            # Line with date and description
-            r'\d{1,2}[-/]\d{1,2}[-/]\d{2,4}.*\w{3,}',
-            # Amount with currency symbol
-            r'[₹$Rs\.]\s*\d+[.,]\d{2}',
-            # Just amount (fallback)
-            r'\b\d+[.,]\d{2}\b'
+            # Date + amount (most bank rows)
+            r"\d{1,2}[-/]\d{1,2}[-/]\d{2,4}.*\d+[.,]\d{2}",
+            r"\d+[.,]\d{2}.*\d{1,2}[-/]\d{1,2}[-/]\d{2,4}",
+            r"\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4}.*\d+[.,]\d{2}",
+            # Amount with currency + payment keyword
+            r"(?:₹|rs\.?)\s*\d+[.,]\d{2}.*(upi|neft|rtgs|imps|transfer|withdraw|deposit|debit|credit)",
+            r"\d+[.,]\d{2}.*(upi|neft|rtgs|imps|transfer|withdraw|deposit)",
         ]
-        
-        line_lower = line.lower()
+
         for pattern in patterns:
             if re.search(pattern, line, re.IGNORECASE):
-                # Exclude header/footer lines
-                if not any(word in line_lower for word in ['page', 'total', 'balance', 'statement', 'account']):
-                    return True
+                return True
         return False
     
     def _is_transaction_row(self, row_text):
@@ -586,25 +602,20 @@ class HygieneCheck:
         try:
             with pdfplumber.open(pdf_path) as pdf:
                 page_count = len(pdf.pages)
-                sample_indexes = list(range(min(2, page_count)))
-                if page_count > 2:
-                    sample_indexes.append(page_count - 1)
-                sample_indexes = sorted(set(sample_indexes))
-
                 dates = []
-                txn_lines = []
+                transaction_count = 0
                 date_patterns = [
                     r'\b(\d{2})[-/](\d{2})[-/](\d{4})\b',
                     r'\b(\d{2})[-/](\d{2})[-/](\d{2})\b',
                     r'\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{4})\b',
                 ]
 
-                for i, idx in enumerate(sample_indexes):
-                    page = pdf.pages[idx]
+                # Full-document scan so hygiene transaction totals match the PDF
+                for idx, page in enumerate(pdf.pages):
                     text = page.extract_text() or ""
                     if not text:
                         continue
-                    if i == 0:
+                    if idx == 0:
                         header_text = text
 
                     for pattern in date_patterns:
@@ -627,13 +638,8 @@ class HygieneCheck:
 
                     for line in text.split("\n"):
                         if self._is_transaction_line(line):
-                            txn_lines.append(line.strip())
-                            if len(txn_lines) >= 30:
-                                break
-                    if len(txn_lines) >= 30:
-                        break
+                            transaction_count += 1
 
-                transaction_count = len(set(txn_lines))
                 if dates:
                     dates = sorted(dates)
                     start_date = dates[0].strftime("%Y-%m-%d")

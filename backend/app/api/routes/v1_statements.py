@@ -15,8 +15,6 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from ...core.config import settings as app_settings
 from ...dependencies.auth import require_scope
 from ...models.job import Job, JobStatus, JobType
-from ...database.session import SessionLocal
-from ...services.api_key_service import increment_processed_pdf_count
 from ...services.event_publisher import event_publisher
 from ...services.file_history_service import file_history_service
 from ...services.redis_job_store import redis_job_store
@@ -26,6 +24,7 @@ from ...utils.file_handler import get_temp_dir, storage_user_folder, upload_to_s
 from ...utils.logging import get_logger
 from .jobs import _download_from_storage, _get_job_or_history
 from .upload_async import _prepare_pdf_for_processing, _safe_object_name, _save_upload_file
+
 
 
 logger = get_logger(__name__)
@@ -170,25 +169,12 @@ async def create_statement(
         upload_object_key=upload_object_key,
         output_dir=output_dir,
         pdf_password=None if processing_file_path != file_path else pdf_password,
+        platform_api_key_id=principal.get("api_key_id"),
     )
 
     if not published:
         logger.warning("RabbitMQ publish failed; falling back to local task processor", job_id=job.id)
         job = await task_processor.submit_existing_job(job)
-
-    api_key_id = principal.get("api_key_id")
-    if principal.get("auth_type") == "api_key" and api_key_id:
-        db = SessionLocal()
-        try:
-            increment_processed_pdf_count(api_key_id, db)
-        except Exception as exc:
-            logger.warning(
-                "Failed to increment processed PDF count",
-                api_key_id=api_key_id,
-                error=str(exc),
-            )
-        finally:
-            db.close()
 
     return JSONResponse(
         {

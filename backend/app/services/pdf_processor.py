@@ -163,9 +163,10 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
         )
         
         # Update processing job with success
+        txn_count = 0
         if audit_service:
             try:
-                txn_count = result.get("stats", {}).get("total_transactions", 0)
+                txn_count = int(result.get("stats", {}).get("total_transactions", 0) or 0)
                 parser_used = result.get("performance", {}).get("parser_used", "unknown")
                 processing_ms = int(result.get("performance", {}).get("total_time_ms", 0))
                 audit_service.update_processing_job(
@@ -178,6 +179,34 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
                 )
             except Exception as ue:
                 logger.warning("Audit job update failed (non-fatal)", job_id=job.id, error=str(ue))
+
+        # Prefer final parsed transaction count over hygiene sample estimate
+        if hygiene_payload is not None and txn_count > 0:
+            hygiene_payload = dict(hygiene_payload)
+            hygiene_payload["transaction_count"] = txn_count
+
+        # Count one successful PDF per API key (idempotent by job_id)
+        platform_api_key_id = (job.input_data or {}).get("platform_api_key_id")
+        if platform_api_key_id:
+            try:
+                from ..database.session import SessionLocal
+                from .api_key_service import increment_processed_pdf_count
+
+                count_db = SessionLocal()
+                try:
+                    increment_processed_pdf_count(
+                        platform_api_key_id,
+                        count_db,
+                        job_id=job.id,
+                    )
+                finally:
+                    count_db.close()
+            except Exception as pe:
+                logger.warning(
+                    "Failed to increment processed PDF count",
+                    job_id=job.id,
+                    error=str(pe),
+                )
 
         frontend_result = build_frontend_processing_result(
             result,

@@ -30,6 +30,7 @@ class EventPublisher:
         upload_object_key: Optional[str] = None,
         output_dir: Optional[str] = None,
         pdf_password: Optional[str] = None,
+        platform_api_key_id: Optional[str] = None,
     ) -> bool:
         """Publish the initial file-processing request event."""
         event = {
@@ -47,6 +48,7 @@ class EventPublisher:
             "upload_object_key": upload_object_key,
             "output_dir": output_dir,
             "pdf_password": pdf_password,
+            "platform_api_key_id": platform_api_key_id,
         }
 
         success = await message_queue.publish_message(

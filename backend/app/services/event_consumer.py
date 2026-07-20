@@ -269,6 +269,21 @@ class EventConsumer:
                 mode=mode,
                 excel_url=f"/api/jobs/{job_id}/download",
             )
+            # Prefer final parsed transaction count over hygiene sample estimate
+            try:
+                txn_count = int(result.get("stats", {}).get("total_transactions", 0) or 0)
+                if hygiene_payload is not None and txn_count > 0:
+                    hygiene_payload = dict(hygiene_payload)
+                    hygiene_payload["transaction_count"] = txn_count
+                    frontend_result["hygiene"] = hygiene_payload
+                    progress = frontend_result.get("progress") or {}
+                    if isinstance(progress, dict):
+                        progress = dict(progress)
+                        progress["hygiene"] = hygiene_payload
+                        frontend_result["progress"] = progress
+            except Exception:
+                pass
+
             await self._mark_job(job_id, JobStatus.COMPLETED, result_data=frontend_result)
             # Always use a fresh session for audit status update to avoid poisoned transactions
             try:
@@ -286,6 +301,23 @@ class EventConsumer:
                     parser_used=parser_used,
                     processing_time_ms=processing_ms,
                 )
+                # Count one successful PDF per API key (idempotent by job_id)
+                platform_api_key_id = payload.get("platform_api_key_id")
+                if platform_api_key_id:
+                    try:
+                        from .api_key_service import increment_processed_pdf_count
+
+                        increment_processed_pdf_count(
+                            platform_api_key_id,
+                            fresh_db,
+                            job_id=job_id,
+                        )
+                    except Exception as pe:
+                        logger.warning(
+                            "Failed to increment processed PDF count",
+                            job_id=job_id,
+                            error=str(pe),
+                        )
                 fresh_db.close()
                 logger.info("Audit job updated to COMPLETED", job_id=job_id, bank_name=user_info.get("bank_name", ""))
             except Exception as ue:
