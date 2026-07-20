@@ -383,6 +383,7 @@ class FileHistoryService:
         mode: str | None,
         original_filename: str,
         upload_object_key: str | None,
+        api_key_id: str | None = None,
     ) -> None:
         db = SessionLocal()
         try:
@@ -402,6 +403,8 @@ class FileHistoryService:
             record.mode = mode
             record.original_filename = original_filename
             record.upload_object_key = upload_object_key
+            if api_key_id:
+                record.api_key_id = api_key_id
             record.status = "uploaded"
             record.retention_expires_at = record.retention_expires_at or self._retention_expires_at(record.created_at or datetime.now(timezone.utc))
             record.deletion_status = record.deletion_status or "active"

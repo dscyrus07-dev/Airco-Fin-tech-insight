@@ -191,6 +191,18 @@ def initialize_database() -> None:
                             "ADD COLUMN IF NOT EXISTS processed_pdf_count INTEGER DEFAULT 0"
                         )
                     )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE user_file_records "
+                            "ADD COLUMN IF NOT EXISTS api_key_id VARCHAR(255)"
+                        )
+                    )
+                    connection.execute(
+                        text(
+                            "CREATE INDEX IF NOT EXISTS ix_user_file_records_api_key_id "
+                            "ON user_file_records (api_key_id)"
+                        )
+                    )
                     connection.commit()
                 except Exception:
                     connection.rollback()

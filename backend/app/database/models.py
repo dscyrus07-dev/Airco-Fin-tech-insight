@@ -85,6 +85,7 @@ class UserFileRecord(Base):
     id = Column(Integer, primary_key=True, index=True)
     job_id = Column(String(64), unique=True, index=True, nullable=False)
     user_id = Column(String(255), index=True, nullable=False)
+    api_key_id = Column(String(255), nullable=True, index=True)
     user_email = Column(String(255), nullable=True)
     user_name = Column(String(255), nullable=True)
     full_name = Column(String(255), nullable=True)

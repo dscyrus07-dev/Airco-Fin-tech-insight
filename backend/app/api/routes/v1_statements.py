@@ -152,6 +152,7 @@ async def create_statement(
         mode=mode or None,
         original_filename=file.filename or "statement.pdf",
         upload_object_key=upload_object_key,
+        api_key_id=principal.get("api_key_id") if principal.get("auth_type") == "api_key" else None,
     )
 
     published = await event_publisher.publish_file_processing_request(
