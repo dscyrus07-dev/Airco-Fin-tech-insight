@@ -185,6 +185,12 @@ def initialize_database() -> None:
                             "ADD COLUMN IF NOT EXISTS auth_type VARCHAR(20)"
                         )
                     )
+                    connection.execute(
+                        text(
+                            "ALTER TABLE api_keys "
+                            "ADD COLUMN IF NOT EXISTS processed_pdf_count INTEGER DEFAULT 0"
+                        )
+                    )
                     connection.commit()
                 except Exception:
                     connection.rollback()

@@ -126,6 +126,7 @@ class ApiKey(Base):
     rate_limit_per_minute = Column(Integer, default=60)
     daily_quota = Column(Integer, nullable=True)
     usage_count = Column(Integer, default=0)
+    processed_pdf_count = Column(Integer, default=0)
     is_active = Column(Boolean, default=True, index=True)
     last_used_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, server_default=func.now())

@@ -13,6 +13,7 @@ export type ApiKeyRow = {
   is_active: boolean
   last_used_at: string | null
   usage_count: number
+  processed_pdf_count: number
   created_at: string | null
   revoked_at: string | null
 }
@@ -152,6 +153,7 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
                 <th className="px-4 py-3 font-medium">Created</th>
                 <th className="px-4 py-3 font-medium">Last used</th>
                 <th className="px-4 py-3 font-medium">Usage</th>
+                <th className="px-4 py-3 font-medium">PDFs</th>
                 <th className="px-4 py-3 font-medium" />
               </tr>
             </thead>
@@ -197,6 +199,9 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
                   <td className="px-4 py-3 text-xs text-neutral-500">{formatDate(key.created_at)}</td>
                   <td className="px-4 py-3 text-xs text-neutral-500">
                     {formatDate(key.last_used_at)}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-neutral-600">
+                    {key.processed_pdf_count ?? 0}
                   </td>
                   <td className="px-4 py-3 text-xs text-neutral-600">{key.usage_count ?? 0}</td>
                   <td className="px-4 py-3 text-right">

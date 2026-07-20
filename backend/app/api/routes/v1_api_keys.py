@@ -42,6 +42,7 @@ def _serialize_key(k, include_full: Optional[str] = None) -> dict:
         "is_active": k.is_active,
         "last_used_at": k.last_used_at.isoformat() if k.last_used_at else None,
         "usage_count": k.usage_count or 0,
+        "processed_pdf_count": k.processed_pdf_count or 0,
         "rate_limit_per_minute": k.rate_limit_per_minute,
         "created_at": k.created_at.isoformat() if k.created_at else None,
         "revoked_at": k.revoked_at.isoformat() if k.revoked_at else None,

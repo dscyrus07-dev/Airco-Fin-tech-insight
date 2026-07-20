@@ -108,6 +108,7 @@ def create_key(
         if daily_quota is not None
         else (settings.API_KEY_DAILY_QUOTA_DEFAULT or None) or None,
         usage_count=0,
+        processed_pdf_count=0,
         is_active=True,
     )
     if record.daily_quota == 0:
@@ -150,6 +151,28 @@ def list_keys(user_id: str, db: Session) -> List[ApiKey]:
         .filter(ApiKey.user_id == user_id)
         .order_by(ApiKey.created_at.desc())
         .all()
+    )
+
+
+def increment_processed_pdf_count(key_id: Optional[str], db: Session) -> None:
+    """Increment processed PDF counter for an API key after a successful upload."""
+    if not key_id:
+        return
+    try:
+        uid = UUID(str(key_id))
+    except (ValueError, TypeError):
+        return
+
+    record = db.query(ApiKey).filter(ApiKey.id == uid).first()
+    if not record:
+        return
+
+    record.processed_pdf_count = (record.processed_pdf_count or 0) + 1
+    db.commit()
+    logger.info(
+        "API key processed PDF count incremented",
+        key_prefix=record.key_prefix,
+        processed_pdf_count=record.processed_pdf_count,
     )
 
 
