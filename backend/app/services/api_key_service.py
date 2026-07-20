@@ -215,8 +215,8 @@ def increment_processed_pdf_count(
 def reset_stale_pdf_counts(db: Session) -> int:
     """
     Zero garbage PDF counters from earlier bugs.
-    Rule: PDFs can never exceed Usage (each completed PDF required at least one API call).
-    Also zero PDFs on keys that were never used.
+    - PDFs can never exceed Usage
+    - Unused keys (usage=0) cannot have PDFs
     """
     from sqlalchemy import text
 
@@ -224,7 +224,11 @@ def reset_stale_pdf_counts(db: Session) -> int:
         text(
             "UPDATE api_keys "
             "SET processed_pdf_count = 0 "
-            "WHERE COALESCE(processed_pdf_count, 0) > COALESCE(usage_count, 0)"
+            "WHERE COALESCE(processed_pdf_count, 0) > 0 "
+            "  AND ("
+            "        COALESCE(usage_count, 0) = 0 "
+            "     OR COALESCE(processed_pdf_count, 0) > COALESCE(usage_count, 0)"
+            "  )"
         )
     )
     db.commit()
