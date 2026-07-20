@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "bank_key": "paytm",
+  "source_class": "app.services.banks.paytm.rule_engine.PaytmRuleEngine",
+  "match_semantics": {
+    "layers": [
+      "exact_keyword",
+      "pattern_match",
+      "upi_merchant",
+      "generic_fallback",
+      "default"
+    ],
+    "is_debit": "debit_truthy",
+    "upi_gate": "upi_or_at",
+    "upi_debit_only": true,
+    "return_mode": "split",
+    "generic_fallback": true
+  },
+  "confidence": {
+    "exact": 0.99,
+    "pattern": 0.95,
+    "merchant": 0.90,
+    "upi": 0.85,
+    "amount": 0.70,
+    "default": 0.50
+  },
+  "defaults": {
+    "debit_category": "Others Debit",
+    "credit_category": "Others Credit"
+  },
+  "upi_merchants": {
+    "swiggy": "Food",
+    "zomato": "Food",
+    "dominos": "Food",
+    "mcdonalds": "Food",
+    "pizza": "Food",
+    "amazon": "Shopping",
+    "flipkart": "Shopping",
+    "myntra": "Shopping",
+    "meesho": "Shopping",
+    "irctc": "Travel",
+    "makemytrip": "Travel",
+    "goibibo": "Travel",
+    "redbus": "Travel",
+    "petrol": "Fuel",
+    "diesel": "Fuel",
+    "fuel": "Fuel",
+    "hpcl": "Fuel",
+    "bpcl": "Fuel",
+    "iocl": "Fuel",
+    "uber": "Transport",
+    "ola": "Transport",
+    "rapido": "Transport",
+    "fastag": "Transport"
+  },
+  "debit_rules": {
+    "Bank Charges": {
+      "exact": ["NACH RETURN CHARGES", "BANK CHARGES", "SERVICE CHARGE", "GST", "SMS CHARGES", "ANNUAL MAINTENANCE"],
+      "patterns": [".*CHARGES.*", ".*CHRG.*", ".*FEE.*"]
+    },
+    "Loan Payment": {
+      "exact": [
+        "DEDUCTED FOR AUTOMATIC PAYMENT",
+        "PAID TO CTRAZORPAY",
+        "PAYU FINANCE INDIA",
+        "EMI",
+        "LOAN",
+        "BAJAJ FINANCE",
+        "INSTALLMENT"
+      ],
+      "patterns": [
+        "NACH.*DEBIT.*",
+        ".*EMI.*",
+        ".*LOAN.*"
+      ]
+    },
+    "Credit Card Payment": {
+      "exact": [
+        "CREDIT CARD",
+        "CC PAYMENT",
+        "CCPAYMENT",
+        "CREDITCARD PAYMENT",
+        "CREDIT CARD PAYMENT",
+        "CARD PAYMENT",
+        "CARD BILL",
+        "ONECARD",
+        "CRED",
+        "SLICE"
+      ],
+      "patterns": [
+        "CreditCard\\s*Payment.*",
+        "CC\\s*PAYMENT.*",
+        ".*CARD\\s*BILL.*",
+        ".*CREDIT\\s*CARD.*"
+      ]
+    },
+    "Bounce": {
+      "exact": [
+        "CHEQUE RETURN",
+        "CHQ RETURN",
+        "RETURN CHARGES",
+        "RTNCHG",
+        "NACH BOUNCE",
+        "ECS BOUNCE",
+        "ACH RETURN",
+        "NACH RETURN",
+        "ECS RETURN",
+        "MANDATE RETURN",
+        "SI RETURN",
+        "CHEQUE DISHONOUR",
+        "DISHONOURED CHEQUE",
+        "INSUFFICIENT FUNDS",
+        "INSUFF FUNDS",
+        "PAYMENT RETURNED",
+        "DEBIT RETURN",
+        "OUTWARD BOUNCE",
+        "O/W RETURN",
+        "OUTW RETURN",
+        "CHQ BOUNCE",
+        "CHEQUE BOUNCE",
+        "Bounce CHGS",
+        "RETURN UNPAID"
+      ],
+      "patterns": [
+        "(O/W|OUTW|OUTWARD)\\s*(RETURN|RET|CHQ RET)",
+        "(CHQ|CHEQUE)\\s*(RETURN|RET|DISHONOUR|BOUNCE)",
+        "(NACH|ECS|ACH)\\s*(RETURN|RET|BOUNCE)",
+        "(MANDATE|SI)\\s*RETURN",
+        "RETURN\\s*(CHGS|CHARGES)",
+        "BOUNCE\\s*(CHGS|CHARGES|CHARGE)",
+        "PENAL\\s*(CHARGE|CHGS)",
+        "PENALTY\\s*(CHARGE|CHGS)"
+      ]
+    },
+    "Shopping": {
+      "exact": ["BHARATPE", "AMAZON", "FLIPKART", "MYNTRA", "MEESHO", "SNAPDEAL"],
+      "patterns": ["\\bPOS\\s+\\d{6}"]
+    },
+    "Bill Payment": {
+      "exact": ["AIRTEL", "ELECTRICITY", "WATER BILL", "GAS BILL", "JIO", "BROADBAND", "DTH"],
+      "patterns": ["\\bELECTRICITY\\b", "\\bBROADBAND\\b"]
+    },
+    "Food": {
+      "exact": ["SWIGGY", "ZOMATO", "DOMINOS", "MCDONALDS", "BURGER KING", "PIZZA HUT", "KFC"],
+      "patterns": ["\\bSWIGGY\\b", "\\bZOMATO\\b"]
+    },
+    "Transport": {
+      "exact": ["UBER", "OLA", "FASTAG", "RAPIDO"],
+      "patterns": ["\\bFASTAG\\b"]
+    },
+    "Fuel": {
+      "exact": ["PETROL", "DIESEL", "FUEL", "HPCL", "BPCL", "IOCL", "INDIAN OIL"],
+      "patterns": ["\\bPETROL\\b", "\\bDIESEL\\b"]
+    },
+    "Entertainment": {
+      "exact": ["NETFLIX", "HOTSTAR", "PRIME VIDEO", "SPOTIFY", "SONYLIV", "ZEE5"],
+      "patterns": ["\\bNETFLIX\\b", "\\bSPOTIFY\\b"]
+    },
+    "ATM Withdrawal": {
+      "exact": ["ATM CASH WITHDRAWAL", "ATM WDL", "ATM/CASH", "CASH WITHDRAWAL"],
+      "patterns": ["\\bATM\\s*WDL\\b"]
+    },
+    "Insurance": {
+      "exact": ["LIC PREMIUM", "LICPREMIUM", "INSURANCE", "HDFC LIFE", "ICICI PRU", "SBI LIFE"],
+      "patterns": [".*INSURANCE.*PREMIUM.*", "LIC.*PREMIUM"]
+    },
+    "Investment": {
+      "exact": ["MUTUAL FUND", "SIP", "DIVIDEND"],
+      "patterns": ["\\bSIP\\b", ".*MUTUAL.*FUND.*"]
+    },
+    "Education": {
+      "exact": ["FEES", "TUITION", "SCHOOL FEES", "COLLEGE"],
+      "patterns": ["\\bTUITION\\b", ".*FEES.*"]
+    },
+    "Transfer": {
+      "exact": [
+        "PHONEPE",
+        "PAYTM ADD MONEY",
+        "WALLETMONEYTOBANK@PAYTM",
+        "PAYTM"
+      ],
+      "patterns": []
+    }
+  },
+  "credit_rules": {
+    "Inward Bounce": {
+      "exact": [
+        "I/W RETURN",
+        "INWARD RETURN",
+        "INW RETURN",
+        "INW RET",
+        "CHQ DEP RETURN",
+        "CHEQUE DEP RETURN",
+        "CHEQUE DEPOSIT RETURN",
+        "CHEQUE RETURNED",
+        "RETURNED CHEQUE",
+        "CREDIT RETURN",
+        "DEPOSIT RETURN",
+        "INWARD BOUNCE",
+        "INW BOUNCE",
+        "CLG RETURN",
+        "CLEARING RETURN"
+      ],
+      "patterns": [
+        "(I/W|INW|INWARD)\\s*(RETURN|RET|CHQ RET|BOUNCE)",
+        "(CLG|CLEARING)\\s*(RETURN|RET)"
+      ]
+    },
+    "Salary": {
+      "exact": [
+        "SALARY",
+        "PAYROLL",
+        "WAGES"
+      ],
+      "patterns": [
+        "SALARY.*",
+        "PAYROLL.*"
+      ]
+    },
+    "Business Income": {
+      "exact": [
+        "MONEY RECEIVED | RECEIVED FROM ONE97 COMMUNICATIONS LIMITED",
+        "CASHFREE PAYMENTS INDIA PRIVATE LIM"
+      ],
+      "patterns": []
+    },
+    "Refund": {
+      "exact": [
+        "RESTORED AGAINST FAILED PAYMENT",
+        "ADDED BACK TO SAVINGS ACCOUNT"
+      ],
+      "patterns": []
+    },
+    "Shopping": {
+      "exact": ["BHARATPE"],
+      "patterns": []
+    },
+    "Bill Payment": {
+      "exact": ["AIRTEL"],
+      "patterns": []
+    },
+    "Transfer": {
+      "exact": [
+        "PHONEPE",
+        "PAYTM ADD MONEY",
+        "WALLETMONEYTOBANK@PAYTM",
+        "PAYTM"
+      ],
+      "patterns": []
+    }
+  },
+  "amount_heuristics": {
+    "emi": {
+      "enabled": true,
+      "debit_only": true,
+      "min_amount": 500,
+      "max_amount": 100000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "emi",
+        "loan",
+        "installment"
+      ],
+      "category": "Loan Payment",
+      "matched_rule": "amount_emi",
+      "token_case": "lower"
+    },
+    "salary": {
+      "enabled": true,
+      "credit_only": true,
+      "min_amount": 10000,
+      "multiple_of": 1000,
+      "description_tokens": [
+        "salary",
+        "payroll",
+        "wages"
+      ],
+      "category": "Salary",
+      "matched_rule": "amount_salary",
+      "token_case": "lower"
+    }
+  }
+}

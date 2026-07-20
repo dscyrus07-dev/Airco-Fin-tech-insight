@@ -29,10 +29,16 @@ class RuleClassificationResult:
 
 
 class UnionRuleEngine:
-    def __init__(self, keywords_file: Optional[str] = None):
+    def __init__(self, rules_path: Optional[str] = None, keywords_file: Optional[str] = None):
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        from app.services.pipeline.classification.rule_engine import (
+            JsonRuleEngine,
+            default_rules_path,
+        )
+        path = rules_path or str(default_rules_path("union"))
+        self._engine = JsonRuleEngine(rules_path=path, bank_key="union")
         self.keywords_file = keywords_file or self._resolve_keywords_file()
         self.generic_rule_engine = GenericRuleEngine(CONFIG, keywords_file=self.keywords_file)
-        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
 
     def classify(self, transactions: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         processed: List[Dict[str, Any]] = []
@@ -80,46 +86,23 @@ class UnionRuleEngine:
         description = str(txn.get("description") or "").upper()
         is_debit = bool(txn.get("debit"))
 
-        exact_rules = [
-            ("RTNCHG/", "Bank Charges", 0.99, "return_charge"),
-            ("SMS CHARGES", "Bank Charges", 0.99, "sms_charge"),
-            ("EMANCH/", "Loan Payment", 0.97, "e_mandate"),
-            ("NACH/", "Loan Payment", 0.96, "nach_debit"),
-            ("MAND DR-", "Loan Payment", 0.95, "mandate_debit"),
-            ("LOAN ACCOUNT:", "Loan Payment", 0.95, "loan_account"),
-            ("PAYOFF SOURCE A/C", "Transfer", 0.9, "payoff_source"),
-            ("GENERAL CHARGES RECOVERY", "Bank Charges", 0.98, "general_charge"),
-            ("BY CASH", "Business Income", 0.92, "cash_credit"),
-            ("PMSBY", "Insurance", 0.96, "pmsby_insurance"),
-            ("SBINS REN", "Insurance", 0.96, "sbins_renewal"),
-            ("SBINS PERSONAL ACCIDENTAL", "Insurance", 0.96, "personal_accidental"),
-            ("ANN.FEE", "Bank Charges", 0.96, "annual_fee"),
-            ("MOBFT TO:", "Transfer", 0.96, "mobft_to"),
-            ("MOBFT FROM:", "Transfer", 0.96, "mobft_from"),
-            ("BHARATPE", "Shopping", 0.9, "bharatpe"),
-            ("PAYTMQR", "Shopping", 0.88, "paytm_qr"),
-            ("JIO POST", "Bill Payment", 0.92, "jio_postpaid"),
-            ("ICICIHOME", "Loan Payment", 0.9, "icici_home"),
-            ("TRILLION", "Loan Payment", 0.88, "trillion"),
-            ("ABFL", "Loan Payment", 0.88, "abfl"),
-            ("RESILIENT INNOVATIONS PVT LTD", "Business Income", 0.9, "resilient_innovations"),
-            ("TREASURY EPAYMENTS", "Business Income", 0.86, "treasury_epayment"),
-            ("INT.", "Interest Income", 0.95, "interest_credit"),
-            ("BCF_", "Loan Payment", 0.82, "bcf_debit"),
-            ("BY INST", "Transfer", 0.84, "instrument_credit"),
-        ]
-        for token, category, confidence, matched_rule in exact_rules:
-            if token in description:
-                return RuleClassificationResult(category, confidence, "rule_engine", matched_rule, token)
+        # ── Try JsonRuleEngine first (rules.json exact/pattern + words.json fallback) ──
+        jrc, jru = self._engine.classify([txn])
+        if jrc and not jru:
+            fb = jrc[0]
+            cat = str(fb.get("category") or "")
+            if cat and not cat.startswith("Others"):
+                return RuleClassificationResult(
+                    cat, float(fb.get("confidence") or 0.85),
+                    str(fb.get("source") or "rule_engine"),
+                    fb.get("matched_rule"), fb.get("matched_keyword"),
+                )
 
         # ── Entity lookup on payload for protocol-prefixed narrations ──────────
-        # Handles: NEFT: BAJAJ FINANCE → Loan Payment
-        #          UPIAR/SWIGGY → Food,  POS: HPCL → Fuel, etc.
         if any(description.startswith(p) for p in ("UPIAR/", "UPIAB/", "IMPSAB/", "NEFT:", "NEFT/", "RTGS:", "POS:")):
             entity_result = self._entity_lookup_on_payload(description, txn)
             if entity_result:
                 return entity_result
-            # No entity match — apply sensible default per prefix
             if description.startswith("POS:"):
                 return RuleClassificationResult("Shopping", 0.84, "rule_engine", "pos_fallback", "POS:")
             return RuleClassificationResult("Transfer", 0.88, "rule_engine", "protocol_prefix", description[:8])
@@ -133,15 +116,14 @@ class UnionRuleEngine:
         if re.fullmatch(r"\d{12,20}/[0-9A-Z]{6,20}/\d{10,20}", description):
             return RuleClassificationResult("Transfer", 0.84, "rule_engine", "numeric_transfer", "NUMERIC_TRANSFER")
 
-        generic_classified, generic_unclassified = self.generic_rule_engine.classify([txn])
-        if generic_classified and not generic_unclassified:
-            fallback = generic_classified[0]
+        # ── Final fallback: use JsonRuleEngine result (may be Others) ──────────
+        if jrc:
+            fb = jrc[0]
             return RuleClassificationResult(
-                category=str(fallback.get("category") or ("Others Debit" if is_debit else "Others Credit")),
-                confidence=float(fallback.get("confidence") or 0.85),
-                source=str(fallback.get("source") or "generic_rule_engine"),
-                matched_rule=fallback.get("matched_rule"),
-                matched_keyword=fallback.get("matched_keyword"),
+                str(fb.get("category") or ("Others Debit" if is_debit else "Others Credit")),
+                float(fb.get("confidence") or 0.5),
+                str(fb.get("source") or "rule_engine"),
+                fb.get("matched_rule"), fb.get("matched_keyword"),
             )
 
         return RuleClassificationResult(

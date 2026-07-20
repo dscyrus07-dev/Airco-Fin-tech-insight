@@ -91,6 +91,13 @@ _INTERNAL_MARKER_RE = re.compile(r"\b(self|own account|internal)\b", re.IGNORECA
 _ECS_MARKER_RE = re.compile(r"\b(ach|nach|ecs|auto debit|auto pay|standing instruction|mandate|si)\b", re.IGNORECASE)
 _LOAN_MARKER_RE = re.compile(r"\b(emi|loan|disburse|disbursal|disbursement)\b", re.IGNORECASE)
 _SALARY_MARKER_RE = re.compile(r"\b(salary|payroll|sal credit|salary credit|monthly salary|wages)\b", re.IGNORECASE)
+_CREDIT_CARD_MARKER_RE = re.compile(
+    r"\b(credit\s*card|cc\s*payment|ccpayment|card\s*payment|onecard|"
+    r"cred\.in|cred\b|slice\b|jupiter\b|kiwi\b|uni\s*card|"
+    r"idfc\s*power\s*card|hdfc\s*card|icici\s*card|axis\s*card|sbi\s*card|"
+    r"card\s*bill|card\s*repayment|card\s*due)\b",
+    re.IGNORECASE,
+)
 
 # Direction-aware bounce patterns — loaded from words.json at runtime via
 # _get_bounce_patterns(). Hardcoded fallbacks ensure the module always works.
@@ -101,17 +108,30 @@ _OUTWARD_BOUNCE_FALLBACK = [
     "si return", "standing instruction return", "auto debit return",
     "auto pay return", "insufficient funds", "insuff funds",
     "payment returned", "debit return", "o/w chq ret", "outward bounce",
+    "rtnchg", "chq rtn", "clg rtn", "bnc chgs", "return unpaid",
+    "mandate return unpaid", "si return unpaid", "upi return",
+    "debit failed", "payment failed", "transaction failed", "bounce chgs",
+    "chq dishonour", "outward chq return", "o/w chq return",
+    "nach bounce", "ecs bounce", "ach bounce", "mandate bounce",
+    "cheque bounce", "chq bounce",
 ]
 _INWARD_BOUNCE_FALLBACK = [
     "i/w return", "inward return", "inw return", "inw ret", "inward chq ret",
     "i/w chq ret", "chq dep return", "cheque dep return", "cheque deposit return",
     "cheque returned", "returned cheque", "credit return", "deposit return",
     "inward bounce", "inw bounce", "clg return", "clearing return",
+    "inward clg ret", "credit reversal",
+    "i/w chq return", "inward chq return", "clg rtn", "inw chg ret",
+    "cheque dep rtn", "chq dep rtn", "inward chq bounce", "i/w bounce",
+    "deposit return chgs", "clearing rtn", "inward return chgs",
 ]
 _BOUNCE_PENALTY_FALLBACK = [
     "return chgs", "return charge", "bounce charge", "dishonour charge",
     "chq return chgs", "cheque return chgs", "ecs return chgs",
     "nach return chgs", "penal charge", "penalty charge",
+    "rtnchg", "bnc chgs", "penal chgs", "late chgs",
+    "cheque bounce chgs", "ecs bounce chgs", "nach bounce chgs",
+    "penalty fee", "dishonor charge", "return unpaid", "bounce chgs",
 ]
 
 _BOUNCE_INWARD_LABELS = {"Inward Bounce", "INWARD_BOUNCE"}
@@ -600,7 +620,12 @@ def _is_cheque_issue(txn: _TxnView) -> bool:
 
 
 def _is_credit_card_payment(txn: _TxnView) -> bool:
-    return txn.debit > 0 and _category_matches(txn, _CREDIT_CARD_LABELS)
+    if txn.debit > 0 and _category_matches(txn, _CREDIT_CARD_LABELS):
+        return True
+    return txn.debit > 0 and _contains_marker(
+        txn.channel, txn.entity, txn.matched_rule, txn.matched_token,
+        txn.description, pattern=_CREDIT_CARD_MARKER_RE,
+    )
 
 
 def _is_income_credit(txn: _TxnView) -> bool:
@@ -834,6 +859,7 @@ def _aggregate_month(month_df: pd.DataFrame, opening_balance: float) -> Tuple[Di
         "inwardBounceTransactions": inward_records,
         "outwardBounceTransactions": outward_records,
         "bouncePenaltyTransactions": [_record_for_group(txn) for txn in bounce_penalty_txns],
+        "creditCardTransactions": [_record_for_group(txn) for txn in credit_card_txns],
         "internalTransferTransactions": [_record_for_group(txn) for txn in internal_txns],
     }
 
@@ -890,6 +916,8 @@ def build_finbit_analytics(
                 "salaryCreditsTransactions": [],
                 "loanTransactions": [],
                 "bounceTransactions": [],
+                "creditCardTransactions": [],
+                "bouncePenaltyTransactions": [],
                 "internalTransferTransactions": [],
                 "by_month": OrderedDict(),
             },
@@ -942,6 +970,8 @@ def build_finbit_analytics(
         "salaryCreditsTransactions": [],
         "loanTransactions": [],
         "bounceTransactions": [],
+        "creditCardTransactions": [],
+        "bouncePenaltyTransactions": [],
         "internalTransferTransactions": [],
         "by_month": OrderedDict(),
     }
@@ -965,6 +995,8 @@ def build_finbit_analytics(
         transaction_groups["salaryCreditsTransactions"].extend(groups["salaryCreditsTransactions"])
         transaction_groups["loanTransactions"].extend(groups["loanTransactions"])
         transaction_groups["bounceTransactions"].extend(groups["bounceTransactions"])
+        transaction_groups["creditCardTransactions"].extend(groups.get("creditCardTransactions", []))
+        transaction_groups["bouncePenaltyTransactions"].extend(groups.get("bouncePenaltyTransactions", []))
         transaction_groups["internalTransferTransactions"].extend(groups["internalTransferTransactions"])
         running_opening = metrics.get("balanceClosing", running_opening)
 

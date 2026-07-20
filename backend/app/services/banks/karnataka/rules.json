@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "bank_key": "karnataka",
+  "source_class": "app.services.banks.karnataka.rule_engine.KarnatakaRuleEngine",
+  "match_semantics": {
+    "layers": [
+      "exact_keyword",
+      "pattern_match",
+      "upi_merchant",
+      "generic_fallback",
+      "default"
+    ],
+    "is_debit": "debit_truthy",
+    "upi_gate": "upi_or_at",
+    "upi_debit_only": true,
+    "return_mode": "split",
+    "generic_fallback": true
+  },
+  "confidence": {
+    "exact": 0.99,
+    "pattern": 0.95,
+    "merchant": 0.90,
+    "upi": 0.85,
+    "amount": 0.70,
+    "default": 0.50
+  },
+  "defaults": {
+    "debit_category": "Others Debit",
+    "credit_category": "Others Credit"
+  },
+  "upi_merchants": {
+    "swiggy": "Food",
+    "zomato": "Food",
+    "dominos": "Food",
+    "mcdonalds": "Food",
+    "pizza": "Food",
+    "amazon": "Shopping",
+    "flipkart": "Shopping",
+    "myntra": "Shopping",
+    "meesho": "Shopping",
+    "irctc": "Travel",
+    "makemytrip": "Travel",
+    "goibibo": "Travel",
+    "redbus": "Travel",
+    "petrol": "Fuel",
+    "diesel": "Fuel",
+    "fuel": "Fuel",
+    "hpcl": "Fuel",
+    "bpcl": "Fuel",
+    "iocl": "Fuel",
+    "uber": "Transport",
+    "ola": "Transport",
+    "rapido": "Transport",
+    "fastag": "Transport"
+  },
+  "debit_rules": {
+    "ATM Withdrawal": {
+      "exact": ["NFS-CWDR/", "ATM CASH WITHDRAWAL", "ATM WDL", "ATM/CASH", "CASH WITHDRAWAL"],
+      "patterns": ["\\bATM\\s*WDL\\b", "\\bNFS[-/]CWDR\\b"]
+    },
+    "Bank Charges": {
+      "exact": [
+        "CONS. QTRLY SMS CHRGS",
+        "AVG BAL CHRG",
+        "AVG/MIN BAL CHRG",
+        "SMS CHRGS",
+        "BANK CHARGES",
+        "SERVICE CHARGE",
+        "GST",
+        "ANNUAL MAINTENANCE",
+        "AMB CHARGES"
+      ],
+      "patterns": [".*CHARGES.*", ".*CHRG.*", ".*FEE.*"]
+    },
+    "Credit Card Payment": {
+      "exact": [
+        "ONECARD@IDFCBANK",
+        "CREDIT CARD",
+        "CC PAYMENT",
+        "CCPAYMENT",
+        "CREDITCARD PAYMENT",
+        "CREDIT CARD PAYMENT",
+        "CARD PAYMENT",
+        "CARD BILL",
+        "CRED",
+        "SLICE"
+      ],
+      "patterns": [
+        "CreditCard\\s*Payment.*",
+        "CC\\s*PAYMENT.*",
+        ".*CARD\\s*BILL.*",
+        ".*CREDIT\\s*CARD.*"
+      ]
+    },
+    "Loan Payment": {
+      "exact": [
+        "EMI",
+        "LOAN",
+        "NACH",
+        "ECS",
+        "BAJAJ FINANCE",
+        "INSTALLMENT",
+        "LOAN REPAYMENT",
+        "LIC HOUSING",
+        "HOME LOAN"
+      ],
+      "patterns": [
+        "NACH.*DEBIT.*",
+        "ECS.*DEBIT.*",
+        ".*EMI.*",
+        ".*LOAN.*REPAY.*"
+      ]
+    },
+    "Bounce": {
+      "exact": [
+        "CHEQUE RETURN",
+        "CHQ RETURN",
+        "RETURN CHARGES",
+        "RTNCHG",
+        "NACH BOUNCE",
+        "ECS BOUNCE",
+        "ACH RETURN",
+        "NACH RETURN",
+        "ECS RETURN",
+        "MANDATE RETURN",
+        "SI RETURN",
+        "CHEQUE DISHONOUR",
+        "DISHONOURED CHEQUE",
+        "INSUFFICIENT FUNDS",
+        "INSUFF FUNDS",
+        "PAYMENT RETURNED",
+        "DEBIT RETURN",
+        "OUTWARD BOUNCE",
+        "O/W RETURN",
+        "OUTW RETURN",
+        "CHQ BOUNCE",
+        "CHEQUE BOUNCE",
+        "Bounce CHGS",
+        "RETURN UNPAID"
+      ],
+      "patterns": [
+        "(O/W|OUTW|OUTWARD)\\s*(RETURN|RET|CHQ RET)",
+        "(CHQ|CHEQUE)\\s*(RETURN|RET|DISHONOUR|BOUNCE)",
+        "(NACH|ECS|ACH)\\s*(RETURN|RET|BOUNCE)",
+        "(MANDATE|SI)\\s*RETURN",
+        "RETURN\\s*(CHGS|CHARGES)",
+        "BOUNCE\\s*(CHGS|CHARGES|CHARGE)",
+        "PENAL\\s*(CHARGE|CHGS)",
+        "PENALTY\\s*(CHARGE|CHGS)"
+      ]
+    },
+    "Shopping": {
+      "exact": ["AMAZONPAY@APL", "AMAZON", "FLIPKART", "MYNTRA", "MEESHO", "SNAPDEAL"],
+      "patterns": ["\\bPOS\\s+\\d{6}"]
+    },
+    "Food": {
+      "exact": ["SWIGGY", "ZOMATO", "DOMINOS", "MCDONALDS", "BURGER KING", "PIZZA HUT", "KFC"],
+      "patterns": ["\\bSWIGGY\\b", "\\bZOMATO\\b"]
+    },
+    "Transport": {
+      "exact": ["UBER", "OLA", "FASTAG", "RAPIDO"],
+      "patterns": ["\\bFASTAG\\b"]
+    },
+    "Fuel": {
+      "exact": ["PETROL", "DIESEL", "FUEL", "HPCL", "BPCL", "IOCL", "INDIAN OIL"],
+      "patterns": ["\\bPETROL\\b", "\\bDIESEL\\b"]
+    },
+    "Entertainment": {
+      "exact": ["NETFLIX", "HOTSTAR", "PRIME VIDEO", "SPOTIFY", "SONYLIV", "ZEE5"],
+      "patterns": ["\\bNETFLIX\\b", "\\bSPOTIFY\\b"]
+    },
+    "Bill Payment": {
+      "exact": ["ELECTRICITY", "WATER BILL", "GAS BILL", "AIRTEL", "JIO", "BROADBAND", "DTH"],
+      "patterns": ["\\bELECTRICITY\\b", "\\bBROADBAND\\b"]
+    },
+    "Insurance": {
+      "exact": ["LIC PREMIUM", "LICPREMIUM", "INSURANCE", "HDFC LIFE", "ICICI PRU", "SBI LIFE"],
+      "patterns": [".*INSURANCE.*PREMIUM.*", "LIC.*PREMIUM"]
+    },
+    "Investment": {
+      "exact": ["MUTUAL FUND", "SIP", "DIVIDEND"],
+      "patterns": ["\\bSIP\\b", ".*MUTUAL.*FUND.*"]
+    },
+    "Education": {
+      "exact": ["FEES", "TUITION", "SCHOOL FEES", "COLLEGE"],
+      "patterns": ["\\bTUITION\\b", ".*FEES.*"]
+    },
+    "Transfer": {
+      "exact": [
+        "MBS/TO ",
+        "TRANSFER TO ",
+        "SENT FROM",
+        "PAYMENT FROM",
+        "REQUEST",
+        "WALLETMONEYTOBANK@PAYTM",
+        "KMBL A/C",
+        "PAYTM",
+        "WAHDFCBANK",
+        "NA-KB",
+        "IMPS/P2A-"
+      ],
+      "patterns": [
+        "(IMPS|NEFT|RTGS|UPI)[/:-]"
+      ]
+    }
+  },
+  "credit_rules": {
+    "Inward Bounce": {
+      "exact": [
+        "I/W RETURN",
+        "INWARD RETURN",
+        "INW RETURN",
+        "INW RET",
+        "CHQ DEP RETURN",
+        "CHEQUE DEP RETURN",
+        "CHEQUE DEPOSIT RETURN",
+        "CHEQUE RETURNED",
+        "RETURNED CHEQUE",
+        "CREDIT RETURN",
+        "DEPOSIT RETURN",
+        "INWARD BOUNCE",
+        "INW BOUNCE",
+        "CLG RETURN",
+        "CLEARING RETURN"
+      ],
+      "patterns": [
+        "(I/W|INW|INWARD)\\s*(RETURN|RET|CHQ RET|BOUNCE)",
+        "(CLG|CLEARING)\\s*(RETURN|RET)"
+      ]
+    },
+    "Salary": {
+      "exact": [
+        "SALARY",
+        "SAL CR",
+        "PAYROLL",
+        "WAGES"
+      ],
+      "patterns": [
+        "SALARY.*",
+        "SAL.*CREDIT.*",
+        "PAYROLL.*"
+      ]
+    },
+    "Refund": {
+      "exact": ["DEBITREVERSAL"],
+      "patterns": []
+    },
+    "Business Income": {
+      "exact": [
+        "BY CASH-",
+        "BY CASH-BNA",
+        "BY CASH SELF",
+        "PAYOUTS@PAYTM",
+        "CF.PAYOUT@ICICI",
+        "CASHFREEPAYOUT@IDFCBANK",
+        "NEFT-NEXTBILLION TECHNOLOGY",
+        "RESILIENT INNOVATIONS PVT LTD",
+        "TREASURY EPAYMENTS"
+      ],
+      "patterns": []
+    },
+    "Interest Income": {
+      "exact": ["SB INT "],
+      "patterns": []
+    },
+    "Cashback": {
+      "exact": ["TWIDPAY5.PAYU@INDUS"],
+      "patterns": []
+    },
+    "Transfer": {
+      "exact": [
+        "WALLETMONEYTOBANK@PAYTM",
+        "KMBL A/C",
+        "PAYTM",
+        "WAHDFCBANK",
+        "NA-KB",
+        "PAYMENT FROM",
+        "REQUEST",
+        "IMPS/P2A-"
+      ],
+      "patterns": [
+        "(IMPS|NEFT|RTGS|UPI)[/:-]",
+        "[A-Z][A-Z .]{8,}\\d{5,}"
+      ]
+    }
+  },
+  "amount_heuristics": {
+    "emi": {
+      "enabled": true,
+      "debit_only": true,
+      "min_amount": 500,
+      "max_amount": 100000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "emi",
+        "loan",
+        "installment"
+      ],
+      "category": "Loan Payment",
+      "matched_rule": "amount_emi",
+      "token_case": "lower"
+    },
+    "salary": {
+      "enabled": true,
+      "credit_only": true,
+      "min_amount": 10000,
+      "multiple_of": 1000,
+      "description_tokens": [
+        "salary",
+        "payroll",
+        "wages"
+      ],
+      "category": "Salary",
+      "matched_rule": "amount_salary",
+      "token_case": "lower"
+    }
+  }
+}

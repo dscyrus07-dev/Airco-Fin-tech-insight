@@ -66,14 +66,29 @@ class JsonRuleEngine:
         self._default_credit = defaults.get("credit_category", "Others Credit")
 
         sem = rules.get("match_semantics") or {}
+        # Highest accuracy: bank rules.json first, then words.json via generic_fallback.
+        # Default ON unless explicitly disabled with generic_fallback: false.
+        self._generic_fallback = bool(sem.get("generic_fallback", True))
         self._layers = list(
             sem.get("layers")
-            or ["exact_keyword", "pattern_match", "upi_merchant", "amount_heuristic", "default"]
+            or [
+                "exact_keyword",
+                "pattern_match",
+                "upi_merchant",
+                "amount_heuristic",
+                "generic_fallback",
+                "default",
+            ]
         )
+        if self._generic_fallback and "generic_fallback" not in self._layers:
+            if "default" in self._layers:
+                idx = self._layers.index("default")
+                self._layers.insert(idx, "generic_fallback")
+            else:
+                self._layers.append("generic_fallback")
         self._is_debit_mode = str(sem.get("is_debit") or "debit_not_none")
         self._upi_gate = str(sem.get("upi_gate") or "upi_or_at")
         self._upi_debit_only = bool(sem.get("upi_debit_only", True))
-        self._generic_fallback = bool(sem.get("generic_fallback", False))
 
         self._upi_merchants: Dict[str, str] = dict(rules.get("upi_merchants") or {})
         self._merchant_map: Dict[str, Any] = dict(rules.get("merchant_map") or {})
@@ -97,12 +112,13 @@ class JsonRuleEngine:
                 logger.exception("Failed to init generic fallback for %s", self.bank_key)
 
         logger.info(
-            "JsonRuleEngine[%s] debit=%d credit=%d upi=%d merchants=%d layers=%s",
+            "JsonRuleEngine[%s] debit=%d credit=%d upi=%d merchants=%d generic_fallback=%s layers=%s",
             self.bank_key,
             len(self._debit_compiled),
             len(self._credit_compiled),
             len(self._upi_merchants),
             len(self._merchant_map),
+            bool(self._generic_engine),
             self._layers,
         )
 
@@ -129,25 +145,30 @@ class JsonRuleEngine:
     def classify(
         self, transactions: Sequence[Dict[str, Any]]
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        from app.services.banks._shared.category_registry import normalize_category
+
         classified: List[Dict[str, Any]] = []
         unclassified: List[Dict[str, Any]] = []
         for txn in transactions:
             result = self._classify_single(txn)
             txn_copy = dict(txn)
-            txn_copy["category"] = result.category
+            is_debit = self._is_debit(txn)
+            category = normalize_category(result.category, is_debit=is_debit)
+            txn_copy["category"] = category
             txn_copy["confidence"] = result.confidence
             txn_copy["source"] = result.source
             txn_copy["matched_rule"] = result.matched_rule
             if result.matched_keyword is not None:
                 txn_copy["matched_keyword"] = result.matched_keyword
-            if result.category.startswith("Others"):
+            if category.startswith("Others"):
                 unclassified.append(txn_copy)
             else:
                 classified.append(txn_copy)
         logger.info(
-            "Classification complete: %d classified, %d unclassified",
+            "Classification complete: %d classified, %d unclassified (generic_fallback=%s)",
             len(classified),
             len(unclassified),
+            bool(self._generic_engine),
         )
         return classified, unclassified
 
@@ -403,6 +424,7 @@ class JsonRuleEngine:
             "merchant_map": len(self._merchant_map),
             "total_rules": debit_rules + credit_rules,
             "rules_path": self._rules_path,
+            "generic_fallback": bool(self._generic_engine),
             "layers": list(self._layers),
         }
 

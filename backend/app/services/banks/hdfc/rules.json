@@ -8,12 +8,14 @@
       "pattern_match",
       "upi_merchant",
       "amount_heuristic",
+      "generic_fallback",
       "default"
     ],
     "is_debit": "debit_not_none",
     "upi_gate": "upi_or_at",
     "upi_debit_only": true,
-    "return_mode": "split"
+    "return_mode": "split",
+    "generic_fallback": true
   },
   "confidence": {
     "exact": 0.99,
@@ -419,8 +421,6 @@
         "HOME LOAN",
         "CAR LOAN",
         "PERSONAL LOAN",
-        "CREDIT CARD",
-        "CC PAYMENT",
         "VIVIFI",
         "NAVI FINSERV",
         "GOLDEN LEGAND",
@@ -429,7 +429,6 @@
         "MYPAISAA",
         "HEROFINCORP",
         "FEDBANKFINANCIAL",
-        "CC000",
         "AUTOPAYSI"
       ],
       "patterns": [
@@ -438,9 +437,70 @@
         ".*EMI.*\\d+/\\d+",
         "VIVIFI.*FINANCE",
         "ACHD-.*",
-        "CC000.*AUTOPAYSI.*",
         "HEROFINCORP.*",
         "FEDBANKFINANCIAL.*"
+      ]
+    },
+    "Credit Card Payment": {
+      "exact": [
+        "CREDIT CARD",
+        "CC PAYMENT",
+        "CCPAYMENT",
+        "CREDITCARD PAYMENT",
+        "CREDIT CARD PAYMENT",
+        "CARD PAYMENT",
+        "CARD BILL",
+        "ONECARD",
+        "CRED",
+        "SLICE",
+        "HDFC CARD",
+        "CC000",
+        "CC BILL"
+      ],
+      "patterns": [
+        "CreditCard\\s*Payment.*",
+        "CC\\s*PAYMENT.*",
+        ".*CARD\\s*BILL.*",
+        ".*CREDIT\\s*CARD.*",
+        "CC000.*AUTOPAYSI.*"
+      ]
+    },
+    "Bounce": {
+      "exact": [
+        "CHEQUE RETURN",
+        "CHQ RETURN",
+        "RETURN CHARGES",
+        "RTNCHG",
+        "NACH BOUNCE",
+        "ECS BOUNCE",
+        "ACH RETURN",
+        "NACH RETURN",
+        "ECS RETURN",
+        "MANDATE RETURN",
+        "SI RETURN",
+        "CHEQUE DISHONOUR",
+        "DISHONOURED CHEQUE",
+        "INSUFFICIENT FUNDS",
+        "INSUFF FUNDS",
+        "PAYMENT RETURNED",
+        "DEBIT RETURN",
+        "OUTWARD BOUNCE",
+        "O/W RETURN",
+        "OUTW RETURN",
+        "CHQ BOUNCE",
+        "CHEQUE BOUNCE",
+        "Bounce CHGS",
+        "RETURN UNPAID"
+      ],
+      "patterns": [
+        "(O/W|OUTW|OUTWARD)\\s*(RETURN|RET|CHQ RET)",
+        "(CHQ|CHEQUE)\\s*(RETURN|RET|DISHONOUR|BOUNCE)",
+        "(NACH|ECS|ACH)\\s*(RETURN|RET|BOUNCE)",
+        "(MANDATE|SI)\\s*RETURN",
+        "RETURN\\s*(CHGS|CHARGES)",
+        "BOUNCE\\s*(CHGS|CHARGES|CHARGE)",
+        "PENAL\\s*(CHARGE|CHGS)",
+        "PENALTY\\s*(CHARGE|CHGS)"
       ]
     },
     "Investments": {
@@ -493,9 +553,40 @@
         "UPI.*DR",
         "FT.*DR"
       ]
+    },
+    "Fuel": {
+      "exact": ["PETROL", "DIESEL", "FUEL", "HPCL", "BPCL", "IOCL", "INDIAN OIL"],
+      "patterns": ["\\bPETROL\\b", "\\bDIESEL\\b"]
+    },
+    "Insurance": {
+      "exact": ["LIC PREMIUM", "LICPREMIUM", "INSURANCE", "HDFC LIFE", "ICICI PRU", "SBI LIFE"],
+      "patterns": [".*INSURANCE.*PREMIUM.*", "LIC.*PREMIUM"]
     }
   },
   "credit_rules": {
+    "Inward Bounce": {
+      "exact": [
+        "I/W RETURN",
+        "INWARD RETURN",
+        "INW RETURN",
+        "INW RET",
+        "CHQ DEP RETURN",
+        "CHEQUE DEP RETURN",
+        "CHEQUE DEPOSIT RETURN",
+        "CHEQUE RETURNED",
+        "RETURNED CHEQUE",
+        "CREDIT RETURN",
+        "DEPOSIT RETURN",
+        "INWARD BOUNCE",
+        "INW BOUNCE",
+        "CLG RETURN",
+        "CLEARING RETURN"
+      ],
+      "patterns": [
+        "(I/W|INW|INWARD)\\s*(RETURN|RET|CHQ RET|BOUNCE)",
+        "(CLG|CLEARING)\\s*(RETURN|RET)"
+      ]
+    },
     "Salary Credits": {
       "exact": [
         "SALARY",
@@ -653,6 +744,35 @@
       "matched_rule": "amount_subscription",
       "debit_only": true,
       "token_case": "upper"
+    },
+    "emi": {
+      "enabled": true,
+      "debit_only": true,
+      "min_amount": 500,
+      "max_amount": 100000,
+      "multiple_of": 100,
+      "description_tokens": [
+        "emi",
+        "loan",
+        "installment"
+      ],
+      "category": "Loan Payments",
+      "matched_rule": "amount_emi",
+      "token_case": "lower"
+    },
+    "salary": {
+      "enabled": true,
+      "credit_only": true,
+      "min_amount": 10000,
+      "multiple_of": 1000,
+      "description_tokens": [
+        "salary",
+        "payroll",
+        "wages"
+      ],
+      "category": "Salary Credits",
+      "matched_rule": "amount_salary",
+      "token_case": "lower"
     }
   },
   "defaults": {

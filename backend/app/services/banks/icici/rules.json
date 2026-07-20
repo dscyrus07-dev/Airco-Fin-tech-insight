@@ -9,12 +9,14 @@
       "merchant_mapping",
       "upi_merchant",
       "amount_heuristic",
+      "generic_fallback",
       "default"
     ],
     "is_debit": "debit_positive",
     "upi_gate": "upi_only",
     "upi_debit_only": true,
-    "return_mode": "split"
+    "return_mode": "split",
+    "generic_fallback": true
   },
   "confidence": {
     "exact": 0.99,
@@ -164,6 +166,65 @@
         "ACH.*DR.*"
       ]
     },
+    "Credit Card Payment": {
+      "exact": [
+        "CREDIT CARD",
+        "CC PAYMENT",
+        "CCPAYMENT",
+        "CREDITCARD PAYMENT",
+        "CREDIT CARD PAYMENT",
+        "CARD PAYMENT",
+        "CARD BILL",
+        "ONECARD",
+        "CRED",
+        "SLICE",
+        "ICICI CARD"
+      ],
+      "patterns": [
+        "CreditCard\\s*Payment.*",
+        "CC\\s*PAYMENT.*",
+        ".*CARD\\s*BILL.*",
+        ".*CREDIT\\s*CARD.*"
+      ]
+    },
+    "Bounce": {
+      "exact": [
+        "CHEQUE RETURN",
+        "CHQ RETURN",
+        "RETURN CHARGES",
+        "RTNCHG",
+        "NACH BOUNCE",
+        "ECS BOUNCE",
+        "ACH RETURN",
+        "NACH RETURN",
+        "ECS RETURN",
+        "MANDATE RETURN",
+        "SI RETURN",
+        "CHEQUE DISHONOUR",
+        "DISHONOURED CHEQUE",
+        "INSUFFICIENT FUNDS",
+        "INSUFF FUNDS",
+        "PAYMENT RETURNED",
+        "DEBIT RETURN",
+        "OUTWARD BOUNCE",
+        "O/W RETURN",
+        "OUTW RETURN",
+        "CHQ BOUNCE",
+        "CHEQUE BOUNCE",
+        "Bounce CHGS",
+        "RETURN UNPAID"
+      ],
+      "patterns": [
+        "(O/W|OUTW|OUTWARD)\\s*(RETURN|RET|CHQ RET)",
+        "(CHQ|CHEQUE)\\s*(RETURN|RET|DISHONOUR|BOUNCE)",
+        "(NACH|ECS|ACH)\\s*(RETURN|RET|BOUNCE)",
+        "(MANDATE|SI)\\s*RETURN",
+        "RETURN\\s*(CHGS|CHARGES)",
+        "BOUNCE\\s*(CHGS|CHARGES|CHARGE)",
+        "PENAL\\s*(CHARGE|CHGS)",
+        "PENALTY\\s*(CHARGE|CHGS)"
+      ]
+    },
     "Transfer": {
       "exact": [
         "NEFT",
@@ -178,9 +239,48 @@
         "RTGS.*",
         "IMPS.*"
       ]
+    },
+    "Fuel": {
+      "exact": ["PETROL", "DIESEL", "FUEL", "HPCL", "BPCL", "IOCL", "INDIAN OIL"],
+      "patterns": ["\\bPETROL\\b", "\\bDIESEL\\b"]
+    },
+    "Insurance": {
+      "exact": ["LIC PREMIUM", "LICPREMIUM", "INSURANCE", "HDFC LIFE", "ICICI PRU", "SBI LIFE"],
+      "patterns": [".*INSURANCE.*PREMIUM.*", "LIC.*PREMIUM"]
+    },
+    "Investment": {
+      "exact": ["MUTUAL FUND", "SIP", "DIVIDEND"],
+      "patterns": ["\\bSIP\\b", ".*MUTUAL.*FUND.*"]
+    },
+    "Education": {
+      "exact": ["FEES", "TUITION", "SCHOOL FEES", "COLLEGE"],
+      "patterns": ["\\bTUITION\\b", ".*FEES.*"]
     }
   },
   "credit_rules": {
+    "Inward Bounce": {
+      "exact": [
+        "I/W RETURN",
+        "INWARD RETURN",
+        "INW RETURN",
+        "INW RET",
+        "CHQ DEP RETURN",
+        "CHEQUE DEP RETURN",
+        "CHEQUE DEPOSIT RETURN",
+        "CHEQUE RETURNED",
+        "RETURNED CHEQUE",
+        "CREDIT RETURN",
+        "DEPOSIT RETURN",
+        "INWARD BOUNCE",
+        "INW BOUNCE",
+        "CLG RETURN",
+        "CLEARING RETURN"
+      ],
+      "patterns": [
+        "(I/W|INW|INWARD)\\s*(RETURN|RET|CHQ RET|BOUNCE)",
+        "(CLG|CLEARING)\\s*(RETURN|RET)"
+      ]
+    },
     "Salary Credits": {
       "exact": [
         "SALARY",

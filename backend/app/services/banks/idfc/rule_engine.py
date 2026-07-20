@@ -31,99 +31,52 @@ class RuleClassificationResult:
 
 
 class IDFCRuleEngine:
-    def __init__(self, keywords_file: Optional[str] = None):
-        self.keywords_file = keywords_file or self._resolve_keywords_file()
-        self.generic_rule_engine = GenericRuleEngine(CONFIG, keywords_file=self.keywords_file)
+    DEBIT_EXACT: List[Tuple[str, str, float]] = [
+        ("NACH/BAJAJ FINANCE", "Loan Payment", 0.99),
+        ("NACH/TVSCREDITSERVICES", "Loan Payment", 0.99),
+        ("TVS CREDIT SERVICES", "Loan Payment", 0.96),
+        ("NACH/SHRIRAMCITYUNIONFINA", "Loan Payment", 0.99),
+        ("NACH/SHUHARITECHVENTURES", "Loan Payment", 0.96),
+        ("NACH/1T9 TECHNOLOGY PVT L", "Loan Payment", 0.95),
+        ("NACH/WESTERN CAPITAL ADVI", "Loan Payment", 0.96),
+        ("CHARGE:AMB NON-MAINTENANCE", "Bank Charges", 0.99),
+        ("CGST ON CHARGE", "Tax Payment", 0.99),
+        ("SGST ON CHARGE", "Tax Payment", 0.99),
+        ("IMPS-MOB/FUND TRF", "Transfer", 0.95),
+        ("IMPS-INET/FUND TRF", "Transfer", 0.95),
+        ("NEFT/", "Transfer", 0.94),
+        ("PAY TO BHARATPE MERCHANT", "Shopping", 0.90),
+        ("PAY BY WHATSAPP", "Transfer", 0.88),
+        ("PAY TO R K S MOBILE SHOPPEE", "Shopping", 0.92),
+        ("PAYMENT FROM PHONEPE", "Transfer", 0.90),
+        ("UPI TRANSACTION FOR PPPL", "Transfer", 0.88),
+        ("MANDATE REQUEST", "Transfer", 0.84),
+    ]
+    CREDIT_EXACT: List[Tuple[str, str, float]] = [
+        ("UPI/CREDIT ADJUSTMENT", "Refund", 0.99),
+        ("MONTHLY SAVINGS INTEREST CREDIT", "Interest Income", 0.99),
+        ("MONTHLY SAVINGS INTEREST CREDI T", "Interest Income", 0.99),
+        ("IMPS-MOB/FUND TRF", "Transfer", 0.95),
+        ("IMPS-INET/FUND TRF", "Transfer", 0.95),
+        ("NEFT/", "Transfer", 0.94),
+        ("PAYMENT FROM PHONEPE", "Transfer", 0.90),
+        ("UPI TRANSACTION FOR PPPL", "Transfer", 0.88),
+        ("MANDATE REQUEST", "Transfer", 0.84),
+    ]
+
+    def __init__(self, rules_path: Optional[str] = None, keywords_file: Optional[str] = None):
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
-
-    def classify(self, transactions: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        processed: List[Dict[str, Any]] = []
-        unclassified: List[Dict[str, Any]] = []
-
-        for txn in transactions:
-            result = self._classify_single(txn)
-            txn_copy = dict(txn)
-            is_debit = bool(txn.get("debit"))
-            txn_copy["category"] = normalize_category(result.category, is_debit=is_debit)
-            txn_copy["confidence"] = result.confidence
-            txn_copy["source"] = result.source
-            txn_copy["matched_rule"] = result.matched_rule
-            txn_copy["matched_keyword"] = result.matched_keyword
-            processed.append(txn_copy)
-            if txn_copy["category"].startswith("Others"):
-                unclassified.append(txn_copy)
-
-        return processed, unclassified
-
-    def _classify_single(self, txn: Dict[str, Any]) -> RuleClassificationResult:
-        description = str(txn.get("description") or "").upper()
-        is_debit = bool(txn.get("debit"))
-
-        exact_rules = [
-            ("NACH/BAJAJ FINANCE", "Loan Payment", 0.99, "bajaj_nach"),
-            ("NACH/TVSCREDITSERVICES", "Loan Payment", 0.99, "tvs_nach"),
-            ("TVS CREDIT SERVICES", "Loan Payment", 0.96, "tvs_credit"),
-            ("NACH/SHRIRAMCITYUNIONFINA", "Loan Payment", 0.99, "shriram_nach"),
-            ("NACH/SHUHARITECHVENTURES", "Loan Payment", 0.96, "shuhari_nach"),
-            ("NACH/1T9 TECHNOLOGY PVT L", "Loan Payment", 0.95, "1t9_nach"),
-            ("NACH/WESTERN CAPITAL ADVI", "Loan Payment", 0.96, "western_capital_nach"),
-            ("UPI/CREDIT ADJUSTMENT", "Refund", 0.99, "upi_credit_adjustment"),
-            ("MONTHLY SAVINGS INTEREST CREDIT", "Interest Income", 0.99, "savings_interest"),
-            ("MONTHLY SAVINGS INTEREST CREDI T", "Interest Income", 0.99, "savings_interest_split"),
-            ("CHARGE:AMB NON-MAINTENANCE", "Bank Charges", 0.99, "amb_charge"),
-            ("CGST ON CHARGE", "Tax Payment", 0.99, "cgst_charge"),
-            ("SGST ON CHARGE", "Tax Payment", 0.99, "sgst_charge"),
-            ("IMPS-MOB/FUND TRF", "Transfer", 0.95, "imps_mob_transfer"),
-            ("IMPS-INET/FUND TRF", "Transfer", 0.95, "imps_inet_transfer"),
-            ("NEFT/", "Transfer", 0.94, "neft_transfer"),
-            ("PAY TO BHARATPE MERCHANT", "Shopping", 0.9, "bharatpe_merchant"),
-            ("PAY BY WHATSAPP", "Transfer", 0.88, "whatsapp_pay"),
-            ("PAY TO R K S MOBILE SHOPPEE", "Shopping", 0.92, "mobile_shop"),
-            ("PAYMENT FROM PHONEPE", "Transfer", 0.9, "phonepe_payment"),
-            ("UPI TRANSACTION FOR PPPL", "Transfer", 0.88, "pppl_upi"),
-            ("MANDATE REQUEST", "Transfer", 0.84, "mandate_request"),
-        ]
-        for token, category, confidence, matched_rule in exact_rules:
-            if token in description:
-                return RuleClassificationResult(
-                    category=category,
-                    confidence=confidence,
-                    source="rule_engine",
-                    matched_rule=matched_rule,
-                    matched_keyword=token,
-                )
-
-        generic_classified, generic_unclassified = self.generic_rule_engine.classify([txn])
-        if generic_classified and not generic_unclassified:
-            fallback = generic_classified[0]
-            return RuleClassificationResult(
-                category=str(fallback.get("category") or ("Others Debit" if is_debit else "Others Credit")),
-                confidence=float(fallback.get("confidence") or 0.85),
-                source=str(fallback.get("source") or "generic_rule_engine"),
-                matched_rule=fallback.get("matched_rule"),
-                matched_keyword=fallback.get("matched_keyword"),
-            )
-
-        return RuleClassificationResult(
-            category="Others Debit" if is_debit else "Others Credit",
-            confidence=0.5,
-            source="rule_engine",
-            matched_rule="default",
+        from app.services.pipeline.classification.rule_engine import (
+            JsonRuleEngine,
+            default_rules_path,
         )
+        path = rules_path or str(default_rules_path("idfc"))
+        self._engine = JsonRuleEngine(rules_path=path, bank_key="idfc")
 
-    def _resolve_keywords_file(self) -> Optional[str]:
-        current = Path(__file__).resolve()
-        repo_root = None
-        for parent in current.parents:
-            if parent.name == "backend":
-                repo_root = parent.parent
-                break
-        if repo_root is None:
-            repo_root = current.parents[-1]
-        bank_words = repo_root / "samples" / "idfc" / "output" / "words.json"
-        if bank_words.exists():
-            return str(bank_words)
-        shared_words = repo_root / "backend" / "words.json"
-        if shared_words.exists():
-            return str(shared_words)
-        return None
+    def classify(
+        self, transactions: List[Dict[str, Any]]
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        return self._engine.classify(transactions)
+
+    def get_statistics(self) -> Dict[str, Any]:
+        return self._engine.get_statistics()

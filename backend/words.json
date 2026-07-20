@@ -54,7 +54,10 @@
       "Loan Disbursed",
       "Investment Returns",
       "Rental Income",
-      "Others Credit"
+      "Others Credit",
+      "Inward Bounce",
+      "Outward Bounce",
+      "Bounce"
     ],
     "features": [
       "direction_awareness",
@@ -126,6 +129,7 @@
       "CASH_WITHDRAWAL": "ATM Withdrawal",
       "LOAN_PAYMENTS": "Loan Payment",
       "Loan Payments": "Loan Payment",
+      "Investments": "Investment",
       "Withdrawal": "ATM Withdrawal",
       "Others": "Others Debit",
       "Other Debit": "Others Debit",
@@ -1063,7 +1067,28 @@
       "cheque return chgs",
       "o/w chq ret",
       "outward chq ret",
-      "outward bounce"
+      "outward bounce",
+      "rtnchg",
+      "chq rtn",
+      "clg rtn",
+      "bnc chgs",
+      "return unpaid",
+      "mandate return unpaid",
+      "si return unpaid",
+      "upi return",
+      "debit failed",
+      "payment failed",
+      "transaction failed",
+      "bounce chgs",
+      "chq dishonour",
+      "outward chq return",
+      "o/w chq return",
+      "nach bounce",
+      "ecs bounce",
+      "ach bounce",
+      "mandate bounce",
+      "cheque bounce",
+      "chq bounce"
     ],
     "inward_bounce_patterns": [
       "i/w return",
@@ -1084,7 +1109,18 @@
       "clg return",
       "clearing return",
       "inward clg ret",
-      "credit reversal"
+      "credit reversal",
+      "i/w chq return",
+      "inward chq return",
+      "clg rtn",
+      "inw chg ret",
+      "cheque dep rtn",
+      "chq dep rtn",
+      "inward chq bounce",
+      "i/w bounce",
+      "deposit return chgs",
+      "clearing rtn",
+      "inward return chgs"
     ],
     "bounce_penalty_patterns": [
       "return chgs",
@@ -1096,7 +1132,59 @@
       "ecs return chgs",
       "nach return chgs",
       "penal charge",
-      "penalty charge"
+      "penalty charge",
+      "rtnchg",
+      "bnc chgs",
+      "penal chgs",
+      "late chgs",
+      "cheque bounce chgs",
+      "ecs bounce chgs",
+      "nach bounce chgs",
+      "penalty fee",
+      "dishonor charge",
+      "return unpaid",
+      "bounce chgs"
+    ],
+    "credit_card_patterns": [
+      "credit card payment",
+      "creditcard payment",
+      "cc payment",
+      "ccpayment",
+      "card payment",
+      "card bill",
+      "card bill payment",
+      "card repayment",
+      "card due",
+      "onecard",
+      "one card",
+      "cred.in",
+      "cred ",
+      "slice",
+      "slice card",
+      "jupiter card",
+      "jupiter",
+      "kiwi card",
+      "uni card",
+      "idfc power card",
+      "hdfc card",
+      "icici card",
+      "axis card",
+      "sbi card",
+      "credit card bill",
+      "cc bill"
+    ],
+    "salary_patterns": [
+      "salary",
+      "payroll",
+      "sal credit",
+      "sal cr",
+      "wages",
+      "stipend",
+      "monthly salary",
+      "salary credit",
+      "compensation",
+      "honorarium",
+      "remuneration"
     ]
   },
   "confidence_scoring": {
@@ -1767,6 +1855,132 @@
           "priority": 95,
           "confidence": "high"
         }
+      },
+      "kreditbee": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "navi finserv": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "navi": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "fibe": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "cashe": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "mpokket": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "flexmoney": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "earlysalary": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "payu finance": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
       }
     },
     "GENERIC_LENDER_TOKENS": {
@@ -1908,6 +2122,247 @@
           "category": "EMI_PAYMENT",
           "group": "FINANCIAL_INSTRUMENT",
           "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "CREDIT_CARD_PAYMENTS": {
+      "_description": "Credit card payment providers. Direction-aware: debit=credit card payment, credit=refund/reversal.",
+      "cred": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "cred.in": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "slice": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "jupiter": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "kiwi": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "uni card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "idfc power card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "hdfc card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "icici card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "axis card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "sbi card": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "card bill": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "card payment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 90,
+          "confidence": "high"
+        }
+      },
+      "cc payment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "ccpayment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "credit card payment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "creditcard payment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
           "confidence": "high"
         }
       }
@@ -3754,16 +4209,32 @@
         "confidence": "high"
       },
       "onecard": {
-        "category": "UPI_TRANSFER",
-        "group": "CHANNEL",
-        "priority": 80,
-        "confidence": "high"
+        "credit": {
+          "category": "TRANSFER_IN",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
       },
       "one card": {
-        "category": "UPI_TRANSFER",
-        "group": "CHANNEL",
-        "priority": 80,
-        "confidence": "high"
+        "credit": {
+          "category": "TRANSFER_IN",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
       },
       "samsung pay": {
         "category": "UPI_TRANSFER",

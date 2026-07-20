@@ -32,10 +32,16 @@ class RuleClassificationResult:
 
 
 class PaytmRuleEngine:
-    def __init__(self, keywords_file: Optional[str] = None):
+    def __init__(self, rules_path: Optional[str] = None, keywords_file: Optional[str] = None):
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        from app.services.pipeline.classification.rule_engine import (
+            JsonRuleEngine,
+            default_rules_path,
+        )
+        path = rules_path or str(default_rules_path("paytm"))
+        self._engine = JsonRuleEngine(rules_path=path, bank_key="paytm")
         self.keywords_file = keywords_file or self._resolve_keywords_file()
         self.generic_rule_engine = GenericRuleEngine(CONFIG, keywords_file=self.keywords_file)
-        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
 
     def classify(self, transactions: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         processed: List[Dict[str, Any]] = []
@@ -66,23 +72,17 @@ class PaytmRuleEngine:
         description = str(txn.get("description") or "").upper()
         is_debit = bool(txn.get("debit"))
 
-        # ── High-confidence specific rules (fire before generic UPI catch) ────
-        high_conf_rules = [
-            ("MONEY RECEIVED | RECEIVED FROM ONE97 COMMUNICATIONS LIMITED", "Business Income", 0.95, "one97_credit"),
-            ("RESTORED AGAINST FAILED PAYMENT", "Refund", 0.99, "failed_payment_restore"),
-            ("ADDED BACK TO SAVINGS ACCOUNT", "Refund", 0.96, "added_back"),
-            ("NACH RETURN CHARGES", "Bank Charges", 0.99, "nach_return_charge"),
-            ("DEDUCTED FOR AUTOMATIC PAYMENT", "Loan Payment", 0.97, "autopay_deduction"),
-            ("PAID TO CTRAZORPAY", "Loan Payment", 0.96, "ctrazorpay_autopay"),
-            ("PAYU FINANCE INDIA", "Loan Payment", 0.96, "payu_finance_autopay"),
-            ("CASHFREE PAYMENTS INDIA PRIVATE LIM", "Business Income", 0.95, "cashfree_credit"),
-            ("BHARATPE", "Shopping", 0.90, "bharatpe"),
-            ("AIRTEL", "Bill Payment", 0.92, "airtel_bill"),
-            ("PHONEPE", "Transfer", 0.88, "phonepe"),
-        ]
-        for token, category, confidence, matched_rule in high_conf_rules:
-            if token in description:
-                return RuleClassificationResult(category, confidence, "rule_engine", matched_rule, token)
+        # ── Try JsonRuleEngine first (rules.json exact/pattern + words.json fallback) ──
+        jrc, jru = self._engine.classify([txn])
+        if jrc and not jru:
+            fb = jrc[0]
+            cat = str(fb.get("category") or "")
+            if cat and not cat.startswith("Others"):
+                return RuleClassificationResult(
+                    cat, float(fb.get("confidence") or 0.85),
+                    str(fb.get("source") or "rule_engine"),
+                    fb.get("matched_rule"), fb.get("matched_keyword"),
+                )
 
         # ── For UPI sends/receives: extract merchant and run entity lookup ─────
         is_upi_narration = (
@@ -109,16 +109,6 @@ class PaytmRuleEngine:
             label = "upi_send" if is_debit else "upi_receive"
             return RuleClassificationResult("Transfer", 0.88, "rule_engine", label, "UPI")
 
-        # ── Paytm wallet / Add Money ──────────────────────────────────────────
-        wallet_rules = [
-            ("PAYTM ADD MONEY", "Transfer", 0.98, "paytm_add_money"),
-            ("WALLETMONEYTOBANK@PAYTM", "Transfer", 0.95, "wallet_to_bank"),
-            ("PAYTM", "Transfer", 0.82, "paytm_counterparty"),
-        ]
-        for token, category, confidence, matched_rule in wallet_rules:
-            if token in description:
-                return RuleClassificationResult(category, confidence, "rule_engine", matched_rule, token)
-
         # ── AMOUNT DEBITED — check entity lookup first (e.g. Bajaj Finance) ───
         if "AMOUNT DEBITED" in description:
             generic_classified, generic_unclassified = self.generic_rule_engine.classify([txn])
@@ -132,16 +122,14 @@ class PaytmRuleEngine:
                     )
             return RuleClassificationResult("Transfer", 0.84, "rule_engine", "amount_debited", "AMOUNT DEBITED")
 
-        # ── Generic fallback ──────────────────────────────────────────────────
-        generic_classified, generic_unclassified = self.generic_rule_engine.classify([txn])
-        if generic_classified and not generic_unclassified:
-            fb = generic_classified[0]
+        # ── Final fallback: use JsonRuleEngine result (may be Others) ──────────
+        if jrc:
+            fb = jrc[0]
             return RuleClassificationResult(
-                category=str(fb.get("category") or ("Others Debit" if is_debit else "Others Credit")),
-                confidence=float(fb.get("confidence") or 0.85),
-                source=str(fb.get("source") or "generic_rule_engine"),
-                matched_rule=fb.get("matched_rule"),
-                matched_keyword=fb.get("matched_keyword"),
+                str(fb.get("category") or ("Others Debit" if is_debit else "Others Credit")),
+                float(fb.get("confidence") or 0.5),
+                str(fb.get("source") or "rule_engine"),
+                fb.get("matched_rule"), fb.get("matched_keyword"),
             )
 
         return RuleClassificationResult(

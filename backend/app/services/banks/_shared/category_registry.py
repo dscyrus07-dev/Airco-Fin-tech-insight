@@ -54,10 +54,10 @@ _DISPLAY_ALIASES = {
     "Bank Transfer In": "Transfer",
     "Cash Deposit": "Business Income",
     "Loan Credit": "Loan Disbursed",
-    "Bounce": "Bank Charges",
     "Cheque": "Transfer",
     "Uncategorised": "Others Debit",
     # ── Rule engine legacy names ──────────────────────────────────────────────
+    "Investments": "Investment",
     "Loan EMI": "Loan Payment",
     "Loan Emi": "Loan Payment",
     "EMI": "Loan Payment",
