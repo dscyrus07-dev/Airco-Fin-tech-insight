@@ -213,19 +213,14 @@ def increment_processed_pdf_count(
 
 
 def reset_stale_pdf_counts(db: Session) -> int:
-    """One-shot: zero garbage PDF counters left by earlier bugs."""
+    """
+    Zero garbage PDF counters from earlier bugs.
+    Rule: PDFs can never exceed Usage (each completed PDF required at least one API call).
+    Also zero PDFs on keys that were never used.
+    """
     from sqlalchemy import text
 
     result = db.execute(
-        text(
-            "UPDATE api_keys "
-            "SET processed_pdf_count = 0 "
-            "WHERE COALESCE(processed_pdf_count, 0) > 0 "
-            "  AND COALESCE(usage_count, 0) = 0"
-        )
-    )
-    # Also fix active keys where PDFs >> usage (impossible if 1 upload = 1 usage min)
-    result2 = db.execute(
         text(
             "UPDATE api_keys "
             "SET processed_pdf_count = 0 "
@@ -233,7 +228,7 @@ def reset_stale_pdf_counts(db: Session) -> int:
         )
     )
     db.commit()
-    return int((result.rowcount or 0) + (result2.rowcount or 0))
+    return int(result.rowcount or 0)
 
 
 class _RateLimitRedis:
