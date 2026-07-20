@@ -301,23 +301,6 @@ class EventConsumer:
                     parser_used=parser_used,
                     processing_time_ms=processing_ms,
                 )
-                # Count one successful PDF per API key (idempotent by job_id)
-                platform_api_key_id = payload.get("platform_api_key_id")
-                if platform_api_key_id:
-                    try:
-                        from .api_key_service import increment_processed_pdf_count
-
-                        increment_processed_pdf_count(
-                            platform_api_key_id,
-                            fresh_db,
-                            job_id=job_id,
-                        )
-                    except Exception as pe:
-                        logger.warning(
-                            "Failed to increment processed PDF count",
-                            job_id=job_id,
-                            error=str(pe),
-                        )
                 fresh_db.close()
                 logger.info("Audit job updated to COMPLETED", job_id=job_id, bank_name=user_info.get("bank_name", ""))
             except Exception as ue:

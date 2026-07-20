@@ -154,6 +154,74 @@ def list_keys(user_id: str, db: Session) -> List[ApiKey]:
     )
 
 
+def count_pdfs_from_request_logs(key_ids: List[str], db: Session) -> dict:
+    """
+    Count successful statement uploads per API key from request logs.
+    One successful POST /api/v1/statements = one PDF.
+    """
+    if not key_ids:
+        return {}
+
+    from sqlalchemy import text
+
+    # Normalize ids to strings for VARCHAR api_key_id column
+    ids = [str(k) for k in key_ids if k]
+    if not ids:
+        return {}
+
+    # Build safe IN clause placeholders
+    placeholders = ", ".join(f":id{i}" for i in range(len(ids)))
+    params = {f"id{i}": kid for i, kid in enumerate(ids)}
+    result = db.execute(
+        text(
+            f"""
+            SELECT api_key_id, COUNT(*)::int AS pdf_count
+            FROM api_request_logs
+            WHERE api_key_id IN ({placeholders})
+              AND UPPER(method) = 'POST'
+              AND (
+                    path = '/api/v1/statements'
+                 OR path LIKE '%/api/v1/statements'
+              )
+              AND path NOT LIKE '%/api/v1/statements/%'
+              AND status_code >= 200
+              AND status_code < 300
+            GROUP BY api_key_id
+            """
+        ),
+        params,
+    )
+    return {str(row[0]): int(row[1] or 0) for row in result.fetchall()}
+
+
+def sync_processed_pdf_counts(keys: List[ApiKey], db: Session) -> dict:
+    """
+    Recompute processed_pdf_count from request logs and heal stale counters.
+    Returns map of key_id -> accurate count.
+    """
+    if not keys:
+        return {}
+
+    counts = count_pdfs_from_request_logs([str(k.id) for k in keys], db)
+    dirty = False
+    for key in keys:
+        kid = str(key.id)
+        accurate = int(counts.get(kid, 0))
+        if int(key.processed_pdf_count or 0) != accurate:
+            key.processed_pdf_count = accurate
+            dirty = True
+    if dirty:
+        try:
+            db.commit()
+            for key in keys:
+                db.refresh(key)
+        except Exception as exc:
+            db.rollback()
+            logger.warning("Failed to sync processed_pdf_count", error=str(exc))
+    return {str(k.id): int(k.processed_pdf_count or 0) for k in keys}
+
+
+
 class _RateLimitRedis:
     """Per-event-loop Redis client (same pattern as RedisJobStore)."""
 

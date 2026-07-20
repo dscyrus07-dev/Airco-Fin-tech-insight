@@ -18,6 +18,7 @@ from ...services.api_key_service import (
     create_key,
     list_keys,
     revoke_key,
+    sync_processed_pdf_counts,
 )
 from ...utils.logging import get_logger
 
@@ -88,6 +89,8 @@ async def list_api_keys(
     db: Session = Depends(get_db),
 ):
     keys = list_keys(current_user["id"], db)
+    # Heal stale counters (e.g. earlier overcount) from request logs
+    sync_processed_pdf_counts(keys, db)
     return [_serialize_key(k) for k in keys]
 
 
