@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { KeyRound, Plus, Trash2 } from 'lucide-react'
 import CreateKeyModal from './CreateKeyModal'
+import QuickStartGuide from './QuickStartGuide'
 
 export type ApiKeyRow = {
   id: string
@@ -221,21 +222,7 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
         </div>
       )}
 
-      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-        <p className="text-sm font-medium text-black">Quick start</p>
-        <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-relaxed text-neutral-600">{`# Upload
-curl -X POST "https://your-domain/api/v1/statements" \\
-  -H "X-API-Key: ${newestActivePrefix}YOUR_SECRET" \\
-  -F "file=@statement.pdf" -F "bank_name=HDFC" -F "mode=free"
-
-# Poll
-curl "https://your-domain/api/v1/jobs/JOB_ID" \\
-  -H "X-API-Key: ${newestActivePrefix}YOUR_SECRET"
-
-# Download
-curl -L "https://your-domain/api/v1/jobs/JOB_ID/download" \\
-  -H "X-API-Key: ${newestActivePrefix}YOUR_SECRET" -o report.xlsx`}</pre>
-      </div>
+      <QuickStartGuide keyPrefix={newestActivePrefix} />
 
       <CreateKeyModal
         open={modalOpen}
