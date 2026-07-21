@@ -233,9 +233,14 @@ class EventConsumer:
             except Exception:
                 pass
 
+            # Ensure audit metadata gets the real upload name (not tmp*.pdf path).
+            enriched_user_info = dict(user_info or {})
+            enriched_user_info.setdefault("original_filename", original_filename)
+            enriched_user_info.setdefault("filename", original_filename)
+
             result = process_statement(
                 file_path=processing_file_path,
-                user_info=user_info,
+                user_info=enriched_user_info,
                 mode=mode,
                 api_key=api_key,
                 output_dir=output_dir,

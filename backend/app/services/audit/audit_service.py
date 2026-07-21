@@ -941,7 +941,9 @@ class AuditService:
             "user_id": job.user_id,
             "job_id": job.job_id,
             "chitid": metadata.get("chitid") or job.job_id,
-            "filename": metadata.get("filename") or job.original_filename,
+            # Prefer the real upload name stored on the job; metadata often carries
+            # a temp basename (e.g. tmpabc123.pdf) from the local processing path.
+            "filename": job.original_filename or metadata.get("filename"),
             "bankname": metadata.get("bankname") or job.bank_name,
             "accountno": metadata.get("accountno"),
             "formatidentify": metadata.get("formatidentify"),

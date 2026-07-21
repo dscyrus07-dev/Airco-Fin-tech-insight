@@ -137,9 +137,19 @@ async def process_pdf_job(job: Job) -> Dict[str, Any]:
 
         # Process the statement using existing pipeline
         logger.info("Processing statement", job_id=job.id, file_path=file_path)
+        # Ensure audit metadata gets the real upload name (not tmp*.pdf path).
+        enriched_user_info = dict(user_info or {})
+        enriched_user_info.setdefault(
+            "original_filename",
+            job.input_data.get("original_filename") or os.path.basename(file_path),
+        )
+        enriched_user_info.setdefault(
+            "filename",
+            enriched_user_info.get("original_filename"),
+        )
         result = process_statement(
             file_path=file_path,
-            user_info=user_info,
+            user_info=enriched_user_info,
             mode=mode,
             api_key=api_key,
             output_dir=output_dir,

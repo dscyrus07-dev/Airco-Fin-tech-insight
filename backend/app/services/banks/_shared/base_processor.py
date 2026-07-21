@@ -604,9 +604,13 @@ class BaseBankProcessor:
                         statement_header={
                             "userid": (user_info or {}).get("user_id"),
                             "filename": (
-                                (file_path or "")
-                                .replace("\\", "/")
-                                .rsplit("/", 1)[-1]
+                                (user_info or {}).get("original_filename")
+                                or (user_info or {}).get("filename")
+                                or (
+                                    (file_path or "")
+                                    .replace("\\", "/")
+                                    .rsplit("/", 1)[-1]
+                                )
                             ),
                             "bankname": getattr(
                                 self.parser, "BANK_NAME", cfg.bank_name
