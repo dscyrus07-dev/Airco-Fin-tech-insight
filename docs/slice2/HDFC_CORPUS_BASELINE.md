@@ -47,14 +47,15 @@ Slice 2C registry: UNKNOWN on 1,657 of 1,694 (97.8%), because layout A/B headers
 By detector: none 79, hdfc 33, axis 1, union 1. Reading the first page:
 - Not bank statements: payslips, GST receipts, a loan statement, a credit-card statement, company letterheads (detector=hdfc fires on HDFC IFSC/name in the text). about 21 of the 33 detector=hdfc (the rest are the candidates below plus one IDFC-style statement).
 - Other-bank statements (e.g. IDFC "Account Number ... Transaction date : From ..."): the bulk of the detector=none group.
-- **Real HDFC candidates the old parser missed: about 11** - nine 1-page "PageNo.: / AccountBranch" statements and two "Page 1 of N ... Customer ID" statements, all NO_TRANSACTIONS. Needs manual confirmation (list by SHA in `manifest.csv`: filter `error_code=NO_TRANSACTIONS` and `detector_bank=hdfc`).
+- **Real HDFC candidates the old parser missed: 9 confirmed layout-A files** (1-page, 1-2 transactions, hard-coded y-bounds likely cause) plus 2 files in a different HDFC format (relationship-summary front page, header `Txn Date Narration Withdrawals Deposits Closing Balance`), all NO_TRANSACTIONS. Needs manual confirmation (list by SHA in `manifest.csv`: filter `error_code=NO_TRANSACTIONS` and `detector_bank=hdfc`).
 Conclusion: the old structure validator is weak both ways: it lets non-HDFC docs reach the parser (and the text fallback even succeeds on some), and it rejects some real HDFC variants.
 Detector-says-HDFC but excluded as NON_HDFC: 6 files (to inspect).
 
 ## 5. Verification and the closing-balance defect
 - Verification v1 (raw rows): FAILED 1,613 / VERIFIED 58 / REVIEW 23. 1,493 are REFERENCE_MISMATCH_ONLY, i.e. rows consistent, only the metadata reference is wrong.
 - Metadata `closing_balance` vs rows: equals the pre-first-transaction balance in **1,587** files (93.7%), None in 85, other in 18, correct in only **4**. `opening_balance` None in 99.8%. See `ISSUE_hdfc_legacy_closing_balance.md` (P1, separate).
-- Printed Dr/Cr counts and totals: present in 0 files. So V2 cannot cross-check against printed totals; the independent checks are the balance chain and period.
+- CORRECTION (after commit 5): the old parser extracted printed Dr/Cr counts and totals in 0 files, but HDFC layout A DOES print a `STATEMENT SUMMARY` block (opening balance, Dr count, Cr count, debits, credits, closing balance). A probe of 332 coordinate files found it in 311 (94%); printed opening matched the rows in 310, closing in 309, and counts/sums in 278 (the rest differ by a reversal-pair pattern or by row loss, under study). V2 can therefore use an independent printed reference.
+- Old side/amount logic: the old coordinate parser decides debit vs credit from the balance change (not the column), with hard-coded x/y bounds (y 230-790). Its 'zero chain breaks' is therefore partly circular; the oracle must be adjudicated, not trusted blindly (see HDFC_V2_DESIGN.md).
 
 ## 6. Golden cross-check
 2 of 5 snapshots had a capture, both 100% row-identical (366/366, 577/577 on date, amount, balance). Two source PDFs are not in this corpus; the 61XXXXX357 golden is a Kotak misfile.
@@ -64,7 +65,7 @@ Detector-says-HDFC but excluded as NON_HDFC: 6 files (to inspect).
 2. Do not copy the old text/dynamic fallbacks; they are the main source of wrong rows.
 3. Bank identification must precede extraction; the old structure validator should not be reused for it.
 4. Compare V2 against the 1,556 oracle-grade files first; review the 25+103 flagged files by hand before treating old output as truth there.
-5. Compare balance-chain and sums, not metadata; metadata closing is a known defect.
+5. Compare balance-chain and sums, not metadata; metadata closing is a known defect. Use the printed STATEMENT SUMMARY as an independent reference.
 6. Add Layout A/B headers to the Slice 2C registry (small, separate change) so analyze-first stops reporting UNKNOWN for HDFC.
 
 ## 8. Tool notes
