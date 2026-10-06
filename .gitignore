@@ -174,3 +174,6 @@ tok.txt
 *_debug*.txt
 report_test.xlsx
 ~$*.xlsx
+
+# Old-vs-new comparison captures (customer data; never commit)
+comparison/

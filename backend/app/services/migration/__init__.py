@@ -15,3 +15,5 @@ from .contract import (  # noqa: F401
     ExtractionResult,
     StatementExtractor,
 )
+
+from .old_result import load_extraction_result  # noqa: F401,E402
