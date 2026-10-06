@@ -1,0 +1,18 @@
+{
+  "id": "citibank",
+  "display_name": "Citibank",
+  "names": [
+    "citibank",
+    "citi bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "CITI"
+  ],
+  "domains": [
+    "citibank.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Citibank"
+}

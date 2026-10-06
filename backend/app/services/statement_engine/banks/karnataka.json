@@ -1,0 +1,18 @@
+{
+  "id": "karnataka",
+  "display_name": "Karnataka Bank",
+  "names": [
+    "karnataka bank limited",
+    "karnataka bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "KARB"
+  ],
+  "domains": [
+    "karnatakabank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "karnataka",
+  "corpus_folder": "Karnataka Bank"
+}

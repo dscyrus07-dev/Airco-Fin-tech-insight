@@ -1,0 +1,17 @@
+{
+  "id": "indusind",
+  "display_name": "IndusInd Bank",
+  "names": [
+    "indusind bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "INDB"
+  ],
+  "domains": [
+    "indusind.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "IndusInd Bank"
+}

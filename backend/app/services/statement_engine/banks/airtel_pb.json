@@ -1,0 +1,17 @@
+{
+  "id": "airtel_pb",
+  "display_name": "Airtel Payments Bank",
+  "names": [
+    "airtel payments bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "AIRP"
+  ],
+  "domains": [
+    "airtelbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Airtel Payments Bank"
+}

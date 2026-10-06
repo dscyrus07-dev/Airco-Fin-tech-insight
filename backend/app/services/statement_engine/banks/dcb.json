@@ -1,0 +1,17 @@
+{
+  "id": "dcb",
+  "display_name": "DCB Bank",
+  "names": [
+    "dcb bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "DCBL"
+  ],
+  "domains": [
+    "dcbbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "DCB Bank"
+}

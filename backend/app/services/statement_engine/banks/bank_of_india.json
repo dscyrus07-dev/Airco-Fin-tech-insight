@@ -1,0 +1,19 @@
+{
+  "id": "bank_of_india",
+  "display_name": "Bank of India",
+  "names": [
+    "bank of india"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "BKID"
+  ],
+  "domains": [
+    "bankofindia.co.in"
+  ],
+  "statement_phrases": [
+    "detailed statement"
+  ],
+  "processor_key": "bank_of_india",
+  "corpus_folder": "Bank of India"
+}

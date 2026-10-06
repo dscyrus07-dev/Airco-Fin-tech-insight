@@ -1,0 +1,17 @@
+# Failures that exist WITHOUT any Slice 1 / Slice 2 change (measured by the A/B run of 6 Oct 2026, docs/slice1/out/logs/04b, 05b).
+# The Slice 2 runner fails if any test OUTSIDE this list fails. Remove a line when its cause is fixed.
+# axis x2, canara, icici: the tests read PDFs from /samples/New Bank Samples Results/..., not mounted in the container (ENVIRONMENT until proven otherwise)
+tests/banks/test_axis_parser.py::test_axis_parser_prefers_reconciled_complete_parse[9150100489_1712733393035.pdf-49-10-03-2024-5]
+tests/banks/test_axis_parser.py::test_axis_parser_prefers_reconciled_complete_parse[Account_stmt_XX4549_21022026_282_29_1772258477250.pdf-413-01-10-2025-12]
+tests/banks/test_canara_parser.py::test_canara_first_row_credit_and_summary_dates[68d4de06cbe50_1758783422156.pdf-419-105284.0-2025-03-01-2025-09-25]
+tests/banks/test_icici_parser.py::test_icici_parser_keeps_eenadutele_mandate_row[Statement__1760079678114.pdf-196-8-4501.0]
+# PRE-EXISTING, unrelated to verification or detection
+tests/banks/test_finbit_analytics.py::test_compute_finbit_monthly_returns_ordered_metrics
+tests/banks/test_finbit_analytics.py::test_finbit_metrics_and_metadata
+tests/pipeline/test_json_rule_engine.py::test_json_engine_matches_legacy_hdfc_tables
+tests/pipeline/test_json_rule_engine.py::test_hdfc_wrapper_delegates
+tests/test_api_key_service.py::TestRateLimit::test_rate_limit_allows_then_blocks
+# collection error: imports _tag_as_others, which pipeline_orchestrator.py no longer defines
+tests/test_pipeline_orchestrator.py
+# golden snapshot 910010002434549_1661418866251.json: category assignment mismatch (snapshot vs current categorisation)
+tests/golden/test_regression.py::test_golden_snapshots_against_live_pipeline

@@ -1,0 +1,18 @@
+{
+  "id": "union",
+  "display_name": "Union Bank of India",
+  "names": [
+    "union bank of india",
+    "union bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "UBIN"
+  ],
+  "domains": [
+    "unionbankofindia.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": "union",
+  "corpus_folder": "Union Bank of India"
+}

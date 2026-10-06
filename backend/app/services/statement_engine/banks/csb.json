@@ -1,0 +1,17 @@
+{
+  "id": "csb",
+  "display_name": "CSB Bank",
+  "names": [
+    "csb bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "CSBK"
+  ],
+  "domains": [
+    "csb.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "CSB Bank"
+}

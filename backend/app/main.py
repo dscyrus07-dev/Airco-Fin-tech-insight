@@ -14,6 +14,7 @@ from app.api.routes import profile as profile_api
 from app.api.routes import auth as auth_api
 from app.api.routes import audit_admin as audit_admin_api
 from app.api.routes import v1_statements as v1_statements_api
+from app.api.routes import statements_analyze as statements_analyze_api
 from app.api.routes import v1_api_keys as v1_api_keys_api
 from app.services.retention_service import retention_service
 from app.middleware.correlation import CorrelationMiddleware
@@ -111,6 +112,7 @@ app.include_router(jobs_api.router, prefix="/api", tags=["Jobs"])
 app.include_router(profile_api.router, prefix="/api", tags=["Profile"])
 app.include_router(auth_api.router, prefix="/api", tags=["Authentication"])
 app.include_router(audit_admin_api.router, prefix="/api", tags=["Audit Admin"])
+app.include_router(statements_analyze_api.router, prefix="/api", tags=["Statements Analyze"])
 app.include_router(v1_statements_api.router, tags=["V1 Statements"])
 app.include_router(v1_api_keys_api.router, tags=["V1 API Keys"])
 

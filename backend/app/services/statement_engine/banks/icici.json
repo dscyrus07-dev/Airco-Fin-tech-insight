@@ -1,0 +1,23 @@
+{
+  "id": "icici",
+  "display_name": "ICICI Bank",
+  "names": [
+    "icici bank limited",
+    "icici bank"
+  ],
+  "short_names": [
+    "icici"
+  ],
+  "ifsc_prefixes": [
+    "ICIC"
+  ],
+  "domains": [
+    "icicibank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "icici",
+  "corpus_folder": "ICICI Bank",
+  "strong_phrases": [
+    "your base branch"
+  ]
+}

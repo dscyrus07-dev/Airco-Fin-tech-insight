@@ -1,0 +1,18 @@
+{
+  "id": "hsbc",
+  "display_name": "HSBC",
+  "names": [
+    "the hongkong and shanghai banking corporation",
+    "hsbc"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "HSBC"
+  ],
+  "domains": [
+    "hsbc.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "HSBC"
+}

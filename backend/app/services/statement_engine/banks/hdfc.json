@@ -1,0 +1,20 @@
+{
+  "id": "hdfc",
+  "display_name": "HDFC Bank",
+  "names": [
+    "hdfc bank limited",
+    "hdfc bank"
+  ],
+  "short_names": [
+    "hdfc"
+  ],
+  "ifsc_prefixes": [
+    "HDFC"
+  ],
+  "domains": [
+    "hdfcbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "hdfc",
+  "corpus_folder": "HDFC Bank"
+}

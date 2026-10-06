@@ -1,0 +1,17 @@
+{
+  "id": "yes",
+  "display_name": "Yes Bank",
+  "names": [
+    "yes bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "YESB"
+  ],
+  "domains": [
+    "yesbank.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Yes Bank"
+}

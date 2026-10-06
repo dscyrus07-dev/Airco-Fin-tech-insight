@@ -1,0 +1,20 @@
+{
+  "id": "bank_of_baroda",
+  "display_name": "Bank of Baroda",
+  "names": [
+    "bank of baroda"
+  ],
+  "short_names": [
+    "baroda"
+  ],
+  "ifsc_prefixes": [
+    "BARB"
+  ],
+  "domains": [
+    "bankofbaroda.in",
+    "bankofbaroda.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "bank_of_baroda",
+  "corpus_folder": "Bank of Baroda"
+}

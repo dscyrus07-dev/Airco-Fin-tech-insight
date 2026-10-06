@@ -1,0 +1,17 @@
+{
+  "id": "deutsche",
+  "display_name": "Deutsche Bank",
+  "names": [
+    "deutsche bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "DEUT"
+  ],
+  "domains": [
+    "db.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Deutsche Bank"
+}

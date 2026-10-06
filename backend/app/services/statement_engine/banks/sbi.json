@@ -1,0 +1,21 @@
+{
+  "id": "sbi",
+  "display_name": "State Bank of India",
+  "names": [
+    "state bank of india"
+  ],
+  "short_names": [
+    "sbi"
+  ],
+  "ifsc_prefixes": [
+    "SBIN"
+  ],
+  "domains": [
+    "sbi.co.in",
+    "onlinesbi.com",
+    "onlinesbi.sbi"
+  ],
+  "statement_phrases": [],
+  "processor_key": "sbi",
+  "corpus_folder": "SBI"
+}

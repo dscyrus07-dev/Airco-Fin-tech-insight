@@ -1,0 +1,17 @@
+{
+  "id": "federal",
+  "display_name": "Federal Bank",
+  "names": [
+    "federal bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "FDRL"
+  ],
+  "domains": [
+    "federalbank.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Federal Bank"
+}

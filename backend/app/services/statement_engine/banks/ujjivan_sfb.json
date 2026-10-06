@@ -1,0 +1,17 @@
+{
+  "id": "ujjivan_sfb",
+  "display_name": "Ujjivan Small Finance Bank",
+  "names": [
+    "ujjivan small finance bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "UJVN"
+  ],
+  "domains": [
+    "ujjivansfb.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Ujjivan Small Finance Bank"
+}

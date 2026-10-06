@@ -1,0 +1,17 @@
+{
+  "id": "central_bank",
+  "display_name": "Central Bank of India",
+  "names": [
+    "central bank of india"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "CBIN"
+  ],
+  "domains": [
+    "centralbankofindia.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Central Bank of India"
+}

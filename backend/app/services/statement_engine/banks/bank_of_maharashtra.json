@@ -1,0 +1,17 @@
+{
+  "id": "bank_of_maharashtra",
+  "display_name": "Bank of Maharashtra",
+  "names": [
+    "bank of maharashtra"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "MAHB"
+  ],
+  "domains": [
+    "bankofmaharashtra.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Bank of Maharashtra"
+}

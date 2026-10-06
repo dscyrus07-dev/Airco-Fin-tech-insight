@@ -48,6 +48,8 @@ class BasePipelineResult(GenericProcessingResult):
     data_quality: str = "high"
     reconciliation_status: str = "passed"
     data_quality_warnings: List[str] = field(default_factory=list)
+    # Verification v1 (observe-only): independent checks on raw parser rows, before repair.
+    verification: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         payload = super().to_dict()
@@ -56,6 +58,7 @@ class BasePipelineResult(GenericProcessingResult):
         payload["data_quality"] = self.data_quality
         payload["reconciliation_status"] = self.reconciliation_status
         payload["data_quality_warnings"] = self.data_quality_warnings
+        payload["verification"] = self.verification
         return payload
 
 
@@ -164,6 +167,27 @@ class BaseBankProcessor:
                 structure_result.metadata.closing_balance
                 or parse_result.closing_balance
             )
+            # Verification v1 (observe-only). Runs on the RAW parser rows, BEFORE
+            # repair_transaction_sides, so a repair cannot hide a parse error.
+            # Never changes `validated`, never raises into the pipeline.
+            _verification_report = None
+            _repair_stats: Dict[str, int] = {}
+            try:
+                from app.services.verification import verify_from_pipeline
+
+                _vf_meta = getattr(structure_result, "metadata", None)
+                _vf_opening = getattr(_vf_meta, "opening_balance", None)
+                _vf_closing = getattr(_vf_meta, "closing_balance", None)
+                _verification_report = verify_from_pipeline(
+                    parse_result.transactions,
+                    structure_metadata=_vf_meta,
+                    opening=_vf_opening if _vf_opening is not None else parse_result.opening_balance,
+                    closing=_vf_closing if _vf_closing is not None else parse_result.closing_balance,
+                    validated_count=len(validated),
+                )
+            except Exception:
+                self.logger.debug("verification v1 skipped", exc_info=True)
+
             try:
                 from app.services.pipeline.reconciliation import repair_transaction_sides
 
@@ -181,6 +205,8 @@ class BaseBankProcessor:
                     )
             except Exception:
                 self.logger.debug("recon repair skipped", exc_info=True)
+            if _verification_report is not None:
+                _verification_report.repairs = dict(_repair_stats or {})
 
             # reconcile() returns either a plain dict or an XxxReconciliationResult object.
             _recon_raw = self._time_step(
@@ -655,6 +681,7 @@ class BaseBankProcessor:
                 data_quality=data_quality.value,
                 reconciliation_status=recon_status,
                 data_quality_warnings=dq_warnings,
+                verification=_verification_report.to_dict() if _verification_report else None,
             )
 
         except Exception as exc:

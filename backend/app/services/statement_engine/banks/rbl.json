@@ -1,0 +1,17 @@
+{
+  "id": "rbl",
+  "display_name": "RBL Bank",
+  "names": [
+    "rbl bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "RATN"
+  ],
+  "domains": [
+    "rblbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "RBL Bank"
+}

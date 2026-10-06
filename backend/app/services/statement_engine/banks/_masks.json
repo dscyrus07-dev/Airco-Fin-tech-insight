@@ -1,0 +1,11 @@
+{
+  "_comment": "Phrases that contain a bank name but are NOT evidence of that bank. They are consumed before matching so shorter names cannot match inside them.",
+  "masks": [
+    "reserve bank of india",
+    "national payments corporation of india",
+    "bank of india act",
+    "state bank of india act",
+    "indian banks association",
+    "indian bank association"
+  ]
+}

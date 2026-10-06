@@ -158,8 +158,13 @@ local.env
 # Large local samples (optional; keep out of new repo by default)
 samples/
 
+# MyPaisaa statement fetch pipeline outputs (financial documents — never commit)
+New Dataset/bank_statements/
+bank_statements/
+
 # Debug / gate test artifacts (never commit)
 _*.py
+!__init__.py
 _*.txt
 gate_results.md
 gate_run_log.txt

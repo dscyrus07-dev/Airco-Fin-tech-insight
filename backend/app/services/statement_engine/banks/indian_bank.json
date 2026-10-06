@@ -1,0 +1,20 @@
+{
+  "id": "indian_bank",
+  "display_name": "Indian Bank",
+  "names": [
+    "indian bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "IDIB"
+  ],
+  "domains": [
+    "indianbank.in",
+    "indianbank.net.in"
+  ],
+  "statement_phrases": [
+    "account activity"
+  ],
+  "processor_key": "indian_bank",
+  "corpus_folder": "Indian Bank"
+}

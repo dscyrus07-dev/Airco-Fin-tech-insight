@@ -1,0 +1,18 @@
+{
+  "id": "standard_chartered",
+  "display_name": "Standard Chartered Bank",
+  "names": [
+    "standard chartered bank",
+    "standard chartered"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "SCBL"
+  ],
+  "domains": [
+    "sc.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Standard Chartered Bank"
+}

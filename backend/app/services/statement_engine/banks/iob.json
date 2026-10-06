@@ -1,0 +1,17 @@
+{
+  "id": "iob",
+  "display_name": "Indian Overseas Bank",
+  "names": [
+    "indian overseas bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "IOBA"
+  ],
+  "domains": [
+    "iob.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Indian Overseas Bank"
+}

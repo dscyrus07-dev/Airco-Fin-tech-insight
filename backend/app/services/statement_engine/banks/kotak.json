@@ -1,0 +1,25 @@
+{
+  "id": "kotak",
+  "display_name": "Kotak Mahindra Bank",
+  "names": [
+    "kotak mahindra bank limited",
+    "kotak mahindra bank",
+    "kotak mahindra",
+    "kotak bank"
+  ],
+  "short_names": [
+    "kotak"
+  ],
+  "ifsc_prefixes": [
+    "KKBK"
+  ],
+  "domains": [
+    "kotak.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "kotak",
+  "corpus_folder": "Kotak Mahindra Bank",
+  "strong_phrases": [
+    "brought to the notice of kotak mahindra bank"
+  ]
+}

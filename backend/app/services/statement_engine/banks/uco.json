@@ -1,0 +1,17 @@
+{
+  "id": "uco",
+  "display_name": "UCO Bank",
+  "names": [
+    "uco bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "UCBA"
+  ],
+  "domains": [
+    "ucobank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "UCO Bank"
+}

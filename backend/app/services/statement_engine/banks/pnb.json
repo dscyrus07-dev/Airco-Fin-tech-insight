@@ -1,0 +1,17 @@
+{
+  "id": "pnb",
+  "display_name": "Punjab National Bank",
+  "names": [
+    "punjab national bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "PUNB"
+  ],
+  "domains": [
+    "pnbindia.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Punjab National Bank"
+}

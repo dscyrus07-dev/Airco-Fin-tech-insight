@@ -1,0 +1,17 @@
+{
+  "id": "equitas_sfb",
+  "display_name": "Equitas Small Finance Bank",
+  "names": [
+    "equitas small finance bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "ESFB"
+  ],
+  "domains": [
+    "equitasbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Equitas Small Finance Bank"
+}

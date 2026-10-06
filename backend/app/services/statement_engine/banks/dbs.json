@@ -1,0 +1,18 @@
+{
+  "id": "dbs",
+  "display_name": "DBS Bank",
+  "names": [
+    "dbs bank india",
+    "dbs bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "DBSS"
+  ],
+  "domains": [
+    "dbs.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "DBS Bank"
+}

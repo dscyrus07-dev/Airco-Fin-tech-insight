@@ -1,0 +1,17 @@
+{
+  "id": "kvb",
+  "display_name": "Karur Vysya Bank",
+  "names": [
+    "karur vysya bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "KVBL"
+  ],
+  "domains": [
+    "kvb.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Karur Vysya Bank"
+}

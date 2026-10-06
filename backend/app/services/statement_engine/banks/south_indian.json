@@ -1,0 +1,17 @@
+{
+  "id": "south_indian",
+  "display_name": "South Indian Bank",
+  "names": [
+    "south indian bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "SIBL"
+  ],
+  "domains": [
+    "southindianbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "South Indian Bank"
+}

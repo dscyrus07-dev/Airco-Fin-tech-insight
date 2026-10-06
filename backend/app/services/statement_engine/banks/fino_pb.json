@@ -1,0 +1,17 @@
+{
+  "id": "fino_pb",
+  "display_name": "Fino Payments Bank",
+  "names": [
+    "fino payments bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "FINO"
+  ],
+  "domains": [
+    "finobank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Fino Payments Bank"
+}

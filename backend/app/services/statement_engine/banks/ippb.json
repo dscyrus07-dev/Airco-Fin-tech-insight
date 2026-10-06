@@ -1,0 +1,17 @@
+{
+  "id": "ippb",
+  "display_name": "India Post Payments Bank",
+  "names": [
+    "india post payments bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "IPOS"
+  ],
+  "domains": [
+    "ippbonline.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "India Post Payments Bank"
+}

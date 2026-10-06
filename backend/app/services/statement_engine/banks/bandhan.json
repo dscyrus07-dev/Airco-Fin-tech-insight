@@ -1,0 +1,17 @@
+{
+  "id": "bandhan",
+  "display_name": "Bandhan Bank",
+  "names": [
+    "bandhan bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "BDBL"
+  ],
+  "domains": [
+    "bandhanbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Bandhan Bank"
+}

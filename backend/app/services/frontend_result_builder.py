@@ -117,6 +117,10 @@ def build_frontend_processing_result(
     if result.get("ai_usage") is not None:
         response["ai_usage"] = result.get("ai_usage")
 
+    # Verification v1 (observe-only, additive diagnostic): independent checks on raw parser rows.
+    if result.get("verification") is not None:
+        response["verification"] = result.get("verification")
+
     if result.get("error"):
         response["error"] = result["error"]
 

@@ -1,0 +1,17 @@
+{
+  "id": "au_sfb",
+  "display_name": "AU Small Finance Bank",
+  "names": [
+    "au small finance bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "AUBL"
+  ],
+  "domains": [
+    "aubank.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "AU Small Finance Bank"
+}

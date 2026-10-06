@@ -1,0 +1,24 @@
+{
+  "id": "axis",
+  "display_name": "Axis Bank",
+  "names": [
+    "axis bank limited",
+    "axis bank"
+  ],
+  "short_names": [
+    "axis"
+  ],
+  "ifsc_prefixes": [
+    "UTIB"
+  ],
+  "domains": [
+    "axisbank.com",
+    "axisbank.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": "axis",
+  "corpus_folder": "Axis Bank",
+  "strong_phrases": [
+    "statement of axis account no"
+  ]
+}

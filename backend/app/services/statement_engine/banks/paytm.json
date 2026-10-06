@@ -1,0 +1,24 @@
+{
+  "id": "paytm",
+  "display_name": "Paytm Payments Bank",
+  "names": [
+    "paytm payments bank limited",
+    "paytm payments bank",
+    "paytm bank"
+  ],
+  "short_names": [
+    "paytm"
+  ],
+  "ifsc_prefixes": [
+    "PYTM"
+  ],
+  "domains": [
+    "paytmbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "paytm",
+  "corpus_folder": "Paytm Payments Bank",
+  "strong_phrases": [
+    "ppbl noida branch"
+  ]
+}

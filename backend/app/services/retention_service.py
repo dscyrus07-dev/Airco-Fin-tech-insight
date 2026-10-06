@@ -55,6 +55,15 @@ class RetentionService:
                     error=str(exc),
                 )
 
+        try:  # unconfirmed analyze-first uploads expire on their own (ANALYSIS_TTL_SECONDS)
+            from .analysis_service import analysis_service
+
+            purged = await analysis_service.purge_expired()
+            if purged:
+                logger.info("Retention sweep purged expired analyses", purged=purged)
+        except Exception as exc:
+            logger.warning("Analysis purge failed", error=str(exc))
+
         if deleted_count:
             logger.info("Retention sweep deleted expired files", deleted_count=deleted_count)
         return deleted_count

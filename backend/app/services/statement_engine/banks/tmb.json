@@ -1,0 +1,17 @@
+{
+  "id": "tmb",
+  "display_name": "Tamilnad Mercantile Bank",
+  "names": [
+    "tamilnad mercantile bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "TMBL"
+  ],
+  "domains": [
+    "tmb.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Tamilnad Mercantile Bank"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "idbi",
+  "display_name": "IDBI Bank",
+  "names": [
+    "idbi bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "IBKL"
+  ],
+  "domains": [
+    "idbibank.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "IDBI Bank"
+}

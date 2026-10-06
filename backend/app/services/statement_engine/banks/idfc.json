@@ -1,0 +1,22 @@
+{
+  "id": "idfc",
+  "display_name": "IDFC FIRST Bank",
+  "names": [
+    "idfc first bank limited",
+    "idfc first bank",
+    "idfc bank",
+    "idfc first"
+  ],
+  "short_names": [
+    "idfc"
+  ],
+  "ifsc_prefixes": [
+    "IDFB"
+  ],
+  "domains": [
+    "idfcfirstbank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "idfc",
+  "corpus_folder": "IDFC First Bank"
+}

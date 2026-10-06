@@ -31,6 +31,12 @@ export default function Header({ onProfileClick }: HeaderProps) {
         </div>
         <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 lg:right-8">
           <Link
+            href="/analyze"
+            className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+          >
+            Analyze
+          </Link>
+          <Link
             href="/dashboard/api-keys"
             className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
           >

@@ -1,0 +1,19 @@
+{
+  "id": "canara",
+  "display_name": "Canara Bank",
+  "names": [
+    "canara bank"
+  ],
+  "short_names": [
+    "canara"
+  ],
+  "ifsc_prefixes": [
+    "CNRB"
+  ],
+  "domains": [
+    "canarabank.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": "canara",
+  "corpus_folder": "Canara Bank"
+}

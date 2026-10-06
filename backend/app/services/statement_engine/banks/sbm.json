@@ -1,0 +1,16 @@
+{
+  "id": "sbm",
+  "display_name": "SBM Bank (India)",
+  "names": [
+    "sbm bank india",
+    "sbm bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [],
+  "domains": [
+    "sbmbank.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "SBM Bank"
+}
