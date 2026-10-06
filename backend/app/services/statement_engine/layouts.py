@@ -24,6 +24,35 @@ _COLUMN_VOCAB = frozenset({
     "ref", "withdrawal", "withdrawals", "debit", "credit", "deposit", "deposits", "balance", "amount", "type",
     "dr", "cr", "transaction", "txn", "remarks",
 })
+# Some statements print column titles glued together ("WithdrawalAmt.", "ClosingBalance", "ValueDt"). These
+# fillers let such a token be split into vocabulary words; a token that cannot be split fully is ignored as before.
+_GLUE_FILLERS = frozenset({"amt", "dt", "closing", "no"})
+_SPLITTABLE = _COLUMN_VOCAB | _GLUE_FILLERS
+
+
+def _split_glued(token: str) -> Tuple[str, ...]:
+    """Segment `token` into known header words, or return () when it is not made only of them."""
+    if token in _COLUMN_VOCAB:
+        return (token,)
+    best: Dict[int, Optional[Tuple[str, ...]]] = {0: ()}
+    for end in range(1, len(token) + 1):
+        best[end] = None
+        for start in range(max(0, end - 11), end):
+            part = token[start:end]
+            if best.get(start) is not None and part in _SPLITTABLE:
+                best[end] = best[start] + (part,)
+                break
+    parts = best[len(token)]
+    return tuple(w for w in parts if w in _COLUMN_VOCAB) if parts else ()
+
+
+def _header_words(text: str) -> FrozenSet[str]:
+    words = set()
+    for tok in re.findall(r"[a-z]+", text.lower()):
+        words.update(_split_glued(tok))
+    return frozenset(words)
+
+
 _MONEY_WORDS = frozenset({"balance", "amount", "debit", "credit", "withdrawal", "withdrawals", "deposit", "deposits", "dr", "cr"})
 
 
@@ -50,6 +79,12 @@ class LayoutDefinition:
 
 # Most specific first. Built only from column layouts present in the benchmark corpus.
 DEFAULT_LAYOUTS: Tuple[LayoutDefinition, ...] = (
+    # HDFC account statement: "Date Narration Chq./Ref.No. ValueDt WithdrawalAmt. DepositAmt. ClosingBalance"
+    # (also printed with spaced words). 99% of the HDFC benchmark corpus; value-date and reference columns present.
+    LayoutDefinition("hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing",
+                     "HDFC: date, narration, chq/ref no, value date, withdrawal, deposit, closing balance",
+                     frozenset({"date", "narration", "chq", "ref", "value", "withdrawal", "deposit", "balance"}),
+                     supported_banks=("hdfc",), date_formats=("dd/mm/yy",), multiline_rows=True),
     LayoutDefinition("value_post_remitter_dr_cr_balance",
                      "Value date, post date, remitter branch, description, DR/CR, balance",
                      frozenset({"value", "post", "remitter", "balance"}), date_formats=("dd/mm/yyyy",), multiline_rows=True),
@@ -127,11 +162,9 @@ def _find_column_header(page_texts: Sequence[str]) -> Tuple[FrozenSet[str], str]
     for text in list(page_texts)[:2]:
         lines = [ln.strip() for ln in (text or "").splitlines() if ln.strip()]
         for i, ln in enumerate(lines):
-            words = frozenset(w for w in re.findall(r"[a-z]+", ln.lower()) if w in _COLUMN_VOCAB)
+            words = _header_words(ln)
             if len(words) < 3 and i + 1 < len(lines):  # wrapped header: join with the next line
-                words = frozenset(
-                    w for w in re.findall(r"[a-z]+", (ln + " " + lines[i + 1]).lower()) if w in _COLUMN_VOCAB
-                )
+                words = _header_words(ln + " " + lines[i + 1])
             if len(words) >= 3 and words & _MONEY_WORDS and (words & {"date", "value", "post", "details", "transaction", "txn"}):
                 return words, ln
     return frozenset(), ""
