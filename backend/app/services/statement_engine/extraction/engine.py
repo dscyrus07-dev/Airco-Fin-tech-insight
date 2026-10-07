@@ -79,19 +79,21 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out.ifsc = m.group(0) if m else ""
     out.account_number = _account_number(first.words, spec)
     out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
-    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re):
+    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re):
         # printed opening / closing balance lines are still references to verify the derived values against
-        opening = closing = None
+        opening = closing = debits = credits = None
         try:
             mo = spec.opening_balance_re.search(page1_text) if spec.opening_balance_re else None
             if mo:
                 opening = Decimal(mo.group(1).replace(",", ""))
             if table.printed_closing:
                 closing = Decimal(table.printed_closing.replace(",", ""))
+            if table.printed_totals:
+                debits, credits = (Decimal(x.replace(",", "")) for x in table.printed_totals)
         except ArithmeticError:
-            opening = closing = None
-        if opening is not None or closing is not None:
-            out.summary = PrintedSummary(opening=opening, closing=closing)
+            opening = closing = debits = credits = None
+        if any(v is not None for v in (opening, closing, debits, credits)):
+            out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits)
     rows, errors = normalize_rows(table.rows, spec)
     out.rows = rows
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):

@@ -356,3 +356,33 @@ def test_header_with_an_unknown_extra_column_is_refused():
     page_ = echo_page(alpha_rows())
     page_.words.append(w("Mode", 250, 200))   # extra title between known columns => a different layout
     assert extract_pages([page_], ECHO).failure == "NO_TABLE_HEADER"
+
+
+# ---------------------------------------------------------------- FOXTROT: transaction-total line, page-top continuation,
+# balances printed without a leading zero, stray words right of the money columns
+FOXTROT = replace(ECHO, layout_id="foxtrot", bank_key="foxtrot", amount_re=re.compile(r"^-?[\d,]*\.\d{2}$"),
+                  totals_line_re=re.compile(r"^TRANSACTIONTOTAL(-?[\d,]*\.\d{2})(-?[\d,]*\.\d{2})$"), continuation_start="top",
+                  side_flip_policy="fail")
+GEO["foxtrot"] = GEO["alpha"]
+
+
+def fox_page(rows, totals=("100.00", "1,000.00")):
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    for r in rows:
+        ws += r
+    ws += [w("TRANSACTION TOTAL", 30, 330), rt(totals[0], 400, 330), rt(totals[1], 470, 330),
+           w("Closing", 120, 345), w("Balance", 170, 345), rt("1,900.00", 560, 345), w("END OF STATEMENT", 30, 380)]
+    return Page(ws, W)
+
+
+def test_foxtrot_totals_line_zero_balance_without_leading_zero_and_stray_trailing_word():
+    rows = [row(FOXTROT, 220, "01-04-2022", "SHOP", debit="100.00", balance="900.00"),
+            row(FOXTROT, 237, "02-04-2022", "REFUND", debit="900.00", balance=".00") + [w("514", 585, 237)],
+            row(FOXTROT, 254, "03-04-2022", "SALARY", credit="1,000.00", balance="1,000.00")]
+    out = extract_pages([fox_page(rows, totals=("1,000.00", "1,000.00"))], FOXTROT)
+    assert [r.txn.balance for r in out.rows] == [Decimal("900.00"), Decimal("0.00"), Decimal("1000.00")]
+    assert out.rows[1].txn.debit == Decimal("900.00")
+    assert out.summary.debits == Decimal("1000.00") and out.summary.credits == Decimal("1000.00")
+    assert out.checks.results["totals"].status == "pass"
+    bad = extract_pages([fox_page(rows, totals=("999.00", "1,000.00"))], FOXTROT)
+    assert bad.checks.results["totals"].status == "fail"

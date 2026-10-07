@@ -34,6 +34,7 @@ _DATE_FALLBACK_LEFT_PAD = 8.0
 _DATE_FALLBACK_RIGHT_PAD = 10.0
 _DATE_DATA_LEFT_PAD = 3.0
 _DATE_DATA_RIGHT_PAD = 3.0
+_TRAILING_COLUMN_GAP = 20.0
 
 
 def _tokens(line: Sequence[Word]) -> List[Tuple[str, float, float]]:
@@ -127,6 +128,9 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if spec.date_tail_re and spec.date_tail_re.match(text):
             return "date_tail"
         return "narration"   # undated text in the date band = narration wrap
+    # a non-amount word right of the money columns belongs to a trailing column the layout does not use (e.g. branch code)
+    if anchors.amount_edges and word.x0 > max(anchors.amount_edges.values()) + _TRAILING_COLUMN_GAP and not spec.amount_re.match(text):
+        return None
     band = spec.text_columns[1]
     for col in spec.text_columns[1:]:
         if word.x0 >= anchors.text_lefts[col]:

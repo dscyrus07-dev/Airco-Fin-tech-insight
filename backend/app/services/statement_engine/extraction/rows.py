@@ -42,6 +42,7 @@ class AssembledTable:
     period: Optional[Tuple[str, str]] = None                # (from, to) as printed, dd/mm/yyyy
     summary_lines: List[List[Word]] = field(default_factory=list)   # lines from the summary marker onward
     summary_page: Optional[int] = None
+    printed_totals: Optional[Tuple[str, str]] = None        # (debits, credits) printed as a totals line inside the table
     printed_closing: Optional[str] = None                   # closing balance printed as a line inside the table
     warnings: List[str] = field(default_factory=list)
 
@@ -79,6 +80,8 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
             return _first_dated(lines, found[0] + 1, anchors, spec), period, True
     if marker_idx is not None:
         return marker_idx + 1, period, True
+    if spec.continuation_start == "top":
+        return 0, period, True
     return 0, period, False
 
 
@@ -140,6 +143,12 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 mc = spec.closing_balance_re.search(flat)
                 if mc:   # printed closing balance line: a reference value, not a transaction or a narration wrap
                     table.printed_closing = mc.group(1)
+                    current = None
+                    continue
+            if spec.totals_line_re:
+                mt = spec.totals_line_re.search(flat)
+                if mt:
+                    table.printed_totals = (mt.group(1), mt.group(2))
                     current = None
                     continue
             cols: Dict[str, List[str]] = {}

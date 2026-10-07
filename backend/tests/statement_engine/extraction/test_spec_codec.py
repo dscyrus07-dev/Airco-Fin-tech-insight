@@ -3,6 +3,7 @@ import json
 from app.services.statement_engine.extraction.spec_codec import spec_from_dict, spec_to_dict
 from app.services.statement_engine.extractors.hdfc.layout_spec import HDFC_LAYOUT_A
 from app.services.statement_engine.extractors.sbi.layout_spec import SBI_LAYOUT_1
+from app.services.statement_engine.extractors.axis.layout_spec import AXIS_LAYOUT_1
 from app.services.statement_engine.extractors.canara.layout_spec import CANARA_LAYOUT_1
 from tests.statement_engine.extraction.test_generic_engine import ALPHA, BETA, GAMMA, DELTA, alpha_rows, ALPHA_PERIOD, alpha_summary, page
 from app.services.statement_engine.extraction.engine import extract_pages
@@ -21,7 +22,7 @@ def _same(a, b):
 
 
 def test_roundtrip_through_json_for_all_layouts():
-    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
+    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
         again = spec_from_dict(json.loads(json.dumps(spec_to_dict(spec))))
         assert _same(spec, again), spec.layout_id
 
