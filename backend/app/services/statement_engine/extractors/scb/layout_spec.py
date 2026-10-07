@@ -4,6 +4,7 @@ the top of later pages; a TOTAL line prints credits, debits, closing). Facts onl
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 
 from ...extraction.layout_spec import LayoutSpec
 
@@ -46,3 +47,16 @@ SCB_LAYOUT_1 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 SCB_LAYOUT_1.validate()
+
+
+# Same statement, printed without a year on each date ("Feb 01"); the year comes from the printed statement period.
+SCB_LAYOUT_2 = replace(
+    SCB_LAYOUT_1,
+    layout_id="scb_date_valuedate_description_cheque_deposit_withdrawal_balance_yearless",
+    date_re=re.compile(r"^[A-Za-z]{3} \d{2}$"),
+    date_format="%b %d %Y",
+    period_re=re.compile(r"(\d{2}[A-Za-z]{3}\d{4})To(\d{2}[A-Za-z]{3}\d{4})"),
+    period_date_format="%d%b%Y",
+    year_from_period=True,
+)
+SCB_LAYOUT_2.validate()

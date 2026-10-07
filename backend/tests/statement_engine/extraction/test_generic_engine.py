@@ -710,3 +710,16 @@ def test_row_order_auto_reverses_only_when_the_chain_holds_newest_first():
     assert "row_order:reversed" in rev.notes and "row_order:reversed" not in fwd.notes
     bad = extract_pages([page(("01-04-2022", "SHOP", "100.00", None, "900.00"), ("02-04-2022", "PAY", None, "50.00", "999.00"))], spec)
     assert "row_order:reversed" not in bad.notes and bad.checks.verdict != "VERIFIED"
+
+
+def test_year_from_period_picks_the_year_inside_the_period():
+    from types import SimpleNamespace
+    from app.services.statement_engine.extraction.engine import _add_years
+    from app.services.statement_engine.extraction.rows import RawRow
+    spec = SimpleNamespace(period_date_format="%d%b%Y", date_format="%b %d %Y")
+    rows = [RawRow(page=1, top=0, date="Dec 30", value_date="Dec 31"), RawRow(page=1, top=1, date="Jan 02")]
+    _add_years(rows, ("15Nov2024", "15Feb2025"), spec)
+    assert (rows[0].date, rows[0].value_date, rows[1].date) == ("Dec 30 2024", "Dec 31 2024", "Jan 02 2025")
+    rows = [RawRow(page=1, top=0, date="Dec 30")]
+    _add_years(rows, None, spec)          # no period: left as printed
+    assert rows[0].date == "Dec 30"

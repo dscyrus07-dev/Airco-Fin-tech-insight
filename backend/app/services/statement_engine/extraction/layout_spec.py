@@ -56,6 +56,7 @@ class LayoutSpec:
     empty_amount_marker: str = ""              # text printed in a money cell that has no amount (e.g. "-"); read as empty, never as narration
     monospace_text: bool = False               # text-rendered page: each line arrives as one word; split on whitespace, x divided by character count
     bank_markers: Tuple[str, ...] = ()         # whitespace-free UPPER-CASE bank names as printed above the table header; used by the registry to refuse a header that another bank's statement shares
+    year_from_period: bool = False             # printed dates carry no year: take it from the printed statement period (the year that puts the date inside the period)
     merge_statements: bool = False             # a PDF that holds several statements: ignore empty ones, merge overlapping / contiguous ones, else REVIEW
     dated_rows_after_end_ok: bool = False      # dated lines after the end marker (e.g. a trailing summary table) are not another statement
     amount_prefix: str = ""                    # currency text printed in front of amounts ("Rs.", several as "Rs.|₹"), stripped before matching

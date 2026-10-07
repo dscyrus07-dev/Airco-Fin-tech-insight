@@ -3,6 +3,7 @@ LayoutSpec. The pdfplumber glue is in pdf_extractor.py."""
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from decimal import Decimal
 from dataclasses import dataclass, field
 from typing import List, Optional, Sequence, Tuple
@@ -156,6 +157,8 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out.table = table
     out.consumed_pages = consumed_base + (table.summary_page or len(pages))
     out.period = table.period
+    if spec.year_from_period:
+        _add_years(table.rows, table.period, spec)
     out.warnings.extend(table.warnings)
     page1_text = "".join(squash(line) for line in group_lines(first.words))
     m = spec.ifsc_re.search(page1_text) if spec.ifsc_re else None
@@ -264,6 +267,35 @@ def _merge(o1: V2Outcome, o2: V2Outcome, spec: LayoutSpec) -> Optional[V2Outcome
     merged.checks = run_checks(merged.rows, merged.period, merged.summary, merged.schema_errors, merged.warnings, spec.period_date_format,
                                spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
     return merged
+
+
+def _add_years(rows, period, spec) -> None:
+    """Dates printed without a year: append the year that puts the date inside the printed period. Without a parseable
+    period the rows are left as printed, so normalisation reports them rather than guessing."""
+    if not period:
+        return
+    try:
+        start, end = (datetime.strptime(period[i], spec.period_date_format).date() for i in (0, 1))
+    except ValueError:
+        return
+    years = list(range(start.year, end.year + 1))
+
+    def fix(text: str) -> str:
+        text = text.strip()
+        if not text:
+            return text
+        for y in years:
+            try:
+                d = datetime.strptime(f"{text} {y}", spec.date_format).date()
+            except ValueError:
+                continue
+            if start <= d <= end:
+                return f"{text} {y}"
+        return f"{text} {years[0]}"
+
+    for r in rows:
+        r.date = fix(r.date)
+        r.value_date = fix(r.value_date)
 
 
 def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
