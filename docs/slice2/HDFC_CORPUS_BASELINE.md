@@ -40,21 +40,21 @@ Old-parser faults on the text/dynamic set are heavy: 21 of 35 have chain breaks,
 | C | header not found, still parsed by coordinate | dd/mm/yy | yes | 1 |
 
 Not HDFC-native but captured by fallback: header `... Value Date Withdrawal Amount Deposit Amount Closing Balance*` (dd/mm/yyyy, no value date column; 10 files, text/dynamic) and header-less statements (21 files, text). Treat as separate layouts/other banks until proven HDFC.
-Pages: 1 to 277 (62 coordinate files have >= 100 pages). Rows per file: 3 to 3,838 (median 286). First-transaction years: 2020-2026 (one 2014 outlier).
+Pages: 1 to 277 (62 coordinate files have >= 100 pages). Rows per file: 3 to 3,838 (coordinate median 289). First-transaction years: 2020-2026 (one 2014 outlier).
 Slice 2C registry: UNKNOWN on 1,657 of 1,694 (97.8%), because layout A/B headers are not in the registry.
 
 ## 4. PARSER_ERROR triage (114 unique) - not the same as "old parser failed on HDFC"
 By detector: none 79, hdfc 33, axis 1, union 1. Reading the first page:
 - Not bank statements: payslips, GST receipts, a loan statement, a credit-card statement, company letterheads (detector=hdfc fires on HDFC IFSC/name in the text). about 21 of the 33 detector=hdfc (the rest are the candidates below plus one IDFC-style statement).
 - Other-bank statements (e.g. IDFC "Account Number ... Transaction date : From ..."): the bulk of the detector=none group.
-- **Real HDFC candidates the old parser missed: 9 confirmed layout-A files** (1-page, 1-2 transactions, hard-coded y-bounds likely cause) plus 2 files in a different HDFC format (relationship-summary front page, header `Txn Date Narration Withdrawals Deposits Closing Balance`), all NO_TRANSACTIONS. Needs manual confirmation (list by SHA in `manifest.csv`: filter `error_code=NO_TRANSACTIONS` and `detector_bank=hdfc`).
+- **Real HDFC candidates the old parser missed: 9 confirmed layout-A files** (1-page, 1-2 transactions; rejected by the old parser's `< 3 transactions` validity gate, `parser.py:310`, confirmed by independent review) plus 2 files in a different HDFC format (relationship-summary front page, header `Txn Date Narration Withdrawals Deposits Closing Balance`), all NO_TRANSACTIONS. Needs manual confirmation (list by SHA in `manifest.csv`: filter `error_code=NO_TRANSACTIONS` and `detector_bank=hdfc`).
 Conclusion: the old structure validator is weak both ways: it lets non-HDFC docs reach the parser (and the text fallback even succeeds on some), and it rejects some real HDFC variants.
 Detector-says-HDFC but excluded as NON_HDFC: 6 files (to inspect).
 
 ## 5. Verification and the closing-balance defect
 - Verification v1 (raw rows): FAILED 1,613 / VERIFIED 58 / REVIEW 23. 1,493 are REFERENCE_MISMATCH_ONLY, i.e. rows consistent, only the metadata reference is wrong.
 - Metadata `closing_balance` vs rows: equals the pre-first-transaction balance in **1,587** files (93.7%), None in 85, other in 18, correct in only **4**. `opening_balance` None in 99.8%. See `ISSUE_hdfc_legacy_closing_balance.md` (P1, separate).
-- CORRECTION (after commit 5): the old parser extracted printed Dr/Cr counts and totals in 0 files, but HDFC layout A DOES print a `STATEMENT SUMMARY` block (opening balance, Dr count, Cr count, debits, credits, closing balance). A probe of 332 coordinate files found it in 311 (94%); printed opening matched the rows in 310, closing in 309, and counts/sums in 278 (the rest differ by a reversal-pair pattern or by row loss, under study). V2 can therefore use an independent printed reference.
+- CORRECTION (after commit 5): the old parser extracted printed Dr/Cr counts and totals in 0 files, but HDFC layout A DOES print a `STATEMENT SUMMARY` block (opening balance, Dr count, Cr count, debits, credits, closing balance). An independent full scan of all 1,659 coordinate files found it in 1,593 (96.0%); printed opening matched the rows in 1,586 (99.6%), closing in 1,585 (99.5%), counts and sums in 1,441 (90.5%). The mismatches are mostly reversals: HDFC prints a reversal as a negative amount in the Withdrawal column, and the old parser relabels it as a credit from the balance change; the rest are row loss in chain-broken files. V2 can therefore use an independent printed reference.
 - Old side/amount logic: the old coordinate parser decides debit vs credit from the balance change (not the column), with hard-coded x/y bounds (y 230-790). Its 'zero chain breaks' is therefore partly circular; the oracle must be adjudicated, not trusted blindly (see HDFC_V2_DESIGN.md).
 
 ## 6. Golden cross-check
@@ -72,3 +72,6 @@ Detector-says-HDFC but excluded as NON_HDFC: 6 files (to inspect).
 - Resume re-hashes all inputs on every chunk (59 chunks, about 2h47m wall). Acceptable; a hash cache would make resume O(new files).
 - Result schema has no per-file timing (removed on purpose for determinism).
 - `manifest.csv` records source file names verbatim; some names in `Locked PDFs/` embed passwords. Keep it local.
+
+## 9. Independent review addendum
+A read-only falsification review (Devin, all scripts in Docker, no customer data in the report) confirmed counts, oracle size (1,556 / 594,516), the closing-balance defect rates and the layout A'/D census. Corrections folded in above: summary block rate (96.0%), the cause of the one-page failures (`< 3` gate), and period rows before the printed From date in 99 files (up to 62 days; after-To never more than 1 day).
