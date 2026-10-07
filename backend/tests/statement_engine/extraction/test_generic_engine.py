@@ -607,3 +607,55 @@ def test_monospace_page_with_inline_page_break_keeps_rows_on_both_sides_and_bala
     out = extract_pages([p1], MONO)
     assert out.failure is None and [r.txn.description for r in out.rows] == ["SHOP", "BILL"]
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+# ---------------------------------------------------------------- registry resolution: bank anchoring and ambiguity
+def _shared_header_registry():
+    a1 = replace(ALPHA, layout_id="shared_a", bank_key="bank_a", bank_markers=("ALPHABANK",))
+    a2 = replace(ALPHA, layout_id="shared_b", bank_key="bank_b", bank_markers=("BRAVOBANK",))
+    return LayoutRegistry([a1, a2])
+
+
+def _page_with_banner(banner):
+    return Page(([w(banner, 30, 40)] if banner else []) + header(ALPHA, 100.0), W)
+
+
+def test_resolve_refuses_a_header_when_the_page_names_another_bank():
+    reg = LayoutRegistry([replace(ALPHA, layout_id="only_a", bank_key="bank_a", bank_markers=("ALPHABANK",)),
+                          replace(BETA, layout_id="only_b", bank_key="bank_b", bank_markers=("BRAVOBANK",))])
+    res = reg.resolve([_page_with_banner("BRAVOBANK")])
+    assert res.spec is None and res.status == "foreign_bank" and res.rejected == ["only_a"]
+
+
+def test_resolve_prefers_the_layout_whose_bank_is_named_on_a_shared_header():
+    res = _shared_header_registry().resolve([_page_with_banner("BRAVOBANK")])
+    assert res.status == "resolved" and res.spec.layout_id == "shared_b" and "shared_a" in res.candidates
+
+
+def test_resolve_shared_header_without_any_bank_name_is_ambiguous_not_first_registered():
+    res = _shared_header_registry().resolve([_page_with_banner("")])
+    assert res.spec is None and res.status == "ambiguous"
+
+
+def test_resolve_accepts_a_page_that_names_no_bank_when_only_one_layout_matches():
+    reg = LayoutRegistry([replace(ALPHA, layout_id="only_a", bank_key="bank_a", bank_markers=("ALPHABANK",))])
+    assert reg.resolve([_page_with_banner("")]).spec.layout_id == "only_a"
+
+
+def test_resolve_prefers_primary_header_spelling_over_a_fallback_alternative():
+    loose = replace(ALPHA, layout_id="loose", bank_key="bank_b", columns={**ALPHA.columns, "narration": (("zzz",), ("particulars",))})
+    res = LayoutRegistry([loose, replace(ALPHA, layout_id="exact", bank_key="bank_a")]).resolve([_page_with_banner("")])
+    assert res.status == "resolved" and res.spec.layout_id == "exact"
+
+
+def test_default_registry_every_layout_names_its_bank_and_markers_do_not_collide():
+    owners = {}
+    for sp in DEFAULT_REGISTRY.specs():
+        assert sp.bank_markers, sp.layout_id
+        for m in sp.bank_markers:
+            assert owners.setdefault(m, sp.bank_key) == sp.bank_key, (m, sp.layout_id)
+
+
+def test_default_registry_older_icici_header_is_icici_not_canara():
+    spec = DEFAULT_REGISTRY.get("icici_date_mode_particulars_deposits_withdrawals_balance")
+    assert spec.bank_key == "icici" and not any(s.bank_key == "canara" and s.columns.keys() == spec.columns.keys() for s in DEFAULT_REGISTRY.specs())

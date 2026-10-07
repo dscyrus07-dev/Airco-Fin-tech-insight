@@ -9,6 +9,7 @@ from ...extraction.layout_spec import LayoutSpec
 FEDERAL_LAYOUT_1 = LayoutSpec(
     layout_id="federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr",
     bank_key="federal",
+    bank_markers=("FEDERALBANK",),
     merge_statements=True,
     bank_name="Federal Bank",
     columns={

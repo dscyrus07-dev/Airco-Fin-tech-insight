@@ -1,0 +1,262 @@
+[
+  {
+    "bank": "Axis",
+    "file": "/samples/Axis Bank/161741_Statement_2024MTH10_995574499_1735296375187.pdf",
+    "reason": "BOTH_PARSERS_FAILED",
+    "timestamp": "2026-10-05T16:23:26.457195",
+    "attempts": [],
+    "id": "Axis_20261005_162326_0000",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:23:26.458100"
+  },
+  {
+    "bank": "Axis",
+    "file": "/samples/Axis Bank/3338957_gayatri_1727330553711.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Axis Bank statement. Please ensure this is a valid text-based Axis Bank statement PDF.",
+    "timestamp": "2026-10-05T16:23:45.693518",
+    "attempts": [],
+    "id": "Axis_20261005_162345_0001",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:23:45.696162"
+  },
+  {
+    "bank": "Canara",
+    "file": "/samples/Canara Bank/1212931_260423_1651992578458_1652072258717.pdf",
+    "reason": "PARSER_ERROR: Could not extract transactions from this Canara PDF.",
+    "timestamp": "2026-10-05T16:25:05.459094",
+    "attempts": [],
+    "id": "Canara_20261005_162505_0002",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:25:05.461343"
+  },
+  {
+    "bank": "HDFC",
+    "file": "/samples/HDFC Bank/3076820_2024-24-8-_1724501617194.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from HDFC statement",
+    "timestamp": "2026-10-05T16:26:16.950924",
+    "attempts": [],
+    "id": "HDFC_20261005_162616_0003",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:26:16.953281"
+  },
+  {
+    "bank": "HDFC",
+    "file": "/samples/HDFC Bank/640058_Statement_1658725689550_220725_103822_1658725755931.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from HDFC statement",
+    "timestamp": "2026-10-05T16:26:26.918740",
+    "attempts": [],
+    "id": "HDFC_20261005_162626_0004",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:26:26.921464"
+  },
+  {
+    "bank": "ICICI",
+    "file": "/samples/ICICI Bank/2237752_S32171_JUN_2023(2)_1688983251737.pdf",
+    "reason": "BOTH_PARSERS_FAILED",
+    "timestamp": "2026-10-05T16:26:51.672182",
+    "attempts": [],
+    "id": "ICICI_20261005_162651_0005",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:26:51.674586"
+  },
+  {
+    "bank": "ICICI",
+    "file": "/samples/ICICI Bank/6677896_2025122518_1766668978763.pdf",
+    "reason": "BOTH_PARSERS_FAILED",
+    "timestamp": "2026-10-05T16:27:07.428479",
+    "attempts": [],
+    "id": "ICICI_20261005_162707_0006",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:27:07.430926"
+  },
+  {
+    "bank": "Karnataka",
+    "file": "/samples/Karnataka Bank/6991358_Account_statement_20250502104856_1747302476899.pdf",
+    "reason": "BOTH_PARSERS_FAILED",
+    "timestamp": "2026-10-05T16:28:02.475043",
+    "attempts": [],
+    "id": "Karnataka_20261005_162802_0007",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:02.477475"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/1540348_15665893-X_1704903962603.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:04.718813",
+    "attempts": [],
+    "id": "Kotak_20261005_162804_0008",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:04.721622"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/1789626_Sep-23_500023_1701250079423_1701431929231.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:06.765212",
+    "attempts": [],
+    "id": "Kotak_20261005_162806_0009",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:06.767679"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/1924114_FSFB_Acct__1713773841339.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:09.584747",
+    "attempts": [],
+    "id": "Kotak_20261005_162809_0010",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:09.587614"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2086367_2024-01-10_1707378652511.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:11.851701",
+    "attempts": [],
+    "id": "Kotak_20261005_162811_0011",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:11.854187"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2314043_2023-05-15-17-51-57Mar-23_515004_1690357859954.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:13.559507",
+    "attempts": [],
+    "id": "Kotak_20261005_162813_0012",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:13.562336"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2468904_2023-05-13-13-37-06Feb-23_500001_1685613238291.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:15.825097",
+    "attempts": [],
+    "id": "Kotak_20261005_162815_0013",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:15.827424"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2694544_2023-05-23-15-06-31Nov-22_500072_1684834857043.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:16.768850",
+    "attempts": [],
+    "id": "Kotak_20261005_162816_0014",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:16.771329"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2770952_2023-04-21-17-38-26Feb-23_533101_1682164268803.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:18.012874",
+    "attempts": [],
+    "id": "Kotak_20261005_162818_0015",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:18.015813"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/2890082_Novembers_1717110636598.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:19.162535",
+    "attempts": [],
+    "id": "Kotak_20261005_162819_0016",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:19.165286"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/3077160_XXXXXX737_Feb-23_1684242587470.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:19.716239",
+    "attempts": [],
+    "id": "Kotak_20261005_162819_0017",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:19.719323"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/3689347_16671393-X_1721048665398.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:20.524829",
+    "attempts": [],
+    "id": "Kotak_20261005_162820_0018",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:20.526959"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/48503_Jun-21_500019.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:21.241735",
+    "attempts": [],
+    "id": "Kotak_20261005_162821_0019",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:21.244029"
+  },
+  {
+    "bank": "Kotak",
+    "file": "/samples/Kotak Mahindra Bank/5835372_2026-03-03-16-01-55Oct-25_530001_1777264679738.pdf",
+    "reason": "PARSER_ERROR: No transactions extracted from Kotak Bank statement. Please ensure this is a valid text-based Kotak Bank statement PDF.",
+    "timestamp": "2026-10-05T16:28:22.020212",
+    "attempts": [],
+    "id": "Kotak_20261005_162822_0020",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:22.022599"
+  },
+  {
+    "bank": "Paytm",
+    "file": "/samples/Paytm Payments Bank/271667_Account_Statement_010221_180821.pdf",
+    "reason": "PARSER_ERROR: Could not extract transactions from this Paytm PDF.",
+    "timestamp": "2026-10-05T16:28:47.855263",
+    "attempts": [],
+    "id": "Paytm_20261005_162847_0021",
+    "status": "pending_review",
+    "added_at": "2026-10-05T16:28:47.857808"
+  },
+  {
+    "bank": "Axis",
+    "file": "/samples/New Bank Samples Results/Axis/9150100489_1712733393035.pdf",
+    "reason": "PARSER_ERROR: Failed to extract text from PDF: [Errno 2] No such file or directory: '/samples/New Bank Samples Results/Axis/9150100489_1712733393035.pdf'",
+    "timestamp": "2026-10-07T09:58:20.480987",
+    "attempts": [],
+    "id": "Axis_20261007_095820_0022",
+    "status": "pending_review",
+    "added_at": "2026-10-07T09:58:20.489521"
+  },
+  {
+    "bank": "Axis",
+    "file": "/samples/New Bank Samples Results/Axis/Account_stmt_XX4549_21022026_282_29_1772258477250.pdf",
+    "reason": "PARSER_ERROR: Failed to extract text from PDF: [Errno 2] No such file or directory: '/samples/New Bank Samples Results/Axis/Account_stmt_XX4549_21022026_282_29_1772258477250.pdf'",
+    "timestamp": "2026-10-07T09:58:20.522038",
+    "attempts": [],
+    "id": "Axis_20261007_095820_0023",
+    "status": "pending_review",
+    "added_at": "2026-10-07T09:58:20.524385"
+  },
+  {
+    "bank": "Axis",
+    "file": "/samples/New Bank Samples Results/Axis/9150100489_1712733393035.pdf",
+    "reason": "PARSER_ERROR: Failed to extract text from PDF: [Errno 2] No such file or directory: '/samples/New Bank Samples Results/Axis/9150100489_1712733393035.pdf'",
+    "timestamp": "2026-10-07T11:24:50.479799",
+    "attempts": [],
+    "id": "Axis_20261007_112450_0024",
+    "status": "pending_review",
+    "added_at": "2026-10-07T11:24:50.482110"
+  },
+  {
+    "bank": "Axis",
+    "file": "/samples/New Bank Samples Results/Axis/Account_stmt_XX4549_21022026_282_29_1772258477250.pdf",
+    "reason": "PARSER_ERROR: Failed to extract text from PDF: [Errno 2] No such file or directory: '/samples/New Bank Samples Results/Axis/Account_stmt_XX4549_21022026_282_29_1772258477250.pdf'",
+    "timestamp": "2026-10-07T11:24:50.515395",
+    "attempts": [],
+    "id": "Axis_20261007_112450_0025",
+    "status": "pending_review",
+    "added_at": "2026-10-07T11:24:50.518344"
+  }
+]

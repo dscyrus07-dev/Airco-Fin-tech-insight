@@ -90,12 +90,11 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
     narration_limit = text_lefts[spec.text_columns[2]] if len(spec.text_columns) > 2 else float("inf")
 
     first_date: Optional[Word] = None
+    header_mid = (spans["date"][0] + spans["date"][1]) / 2.0
     for line in lines[idx + 1:]:
-        for w in line:
-            if spec.date_re.match(w.text.strip()) and w.x0 < narration_limit:
-                first_date = w
-                break
-        if first_date:
+        cands = [w for w in line if spec.date_re.match(w.text.strip()) and w.x0 < narration_limit]
+        if cands:   # a line can carry several date-shaped cells (e.g. a value date left of the transaction date): take the one under the date title
+            first_date = min(cands, key=lambda w: abs((w.x0 + w.x1) / 2.0 - header_mid))
             break
     if first_date:
         date_left = min(first_date.x0, spans["date"][0]) - _DATE_DATA_LEFT_PAD   # date cells may be right-aligned

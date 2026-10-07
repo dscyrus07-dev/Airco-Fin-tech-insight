@@ -50,6 +50,7 @@ class LayoutSpec:
     page_break_re: Optional[Pattern[str]] = None       # whitespace-free line that opens a printed page break inside a PDF page; lines up to and including the next header row are skipped
     opening_row_balance_only: bool = False    # the first row is the opening balance when it carries a balance and no debit/credit amount (any narration)
     monospace_text: bool = False               # text-rendered page: each line arrives as one word; split on whitespace, x divided by character count
+    bank_markers: Tuple[str, ...] = ()         # whitespace-free UPPER-CASE bank names as printed above the table header; used by the registry to refuse a header that another bank's statement shares
     merge_statements: bool = False             # a PDF that holds several statements: ignore empty ones, merge overlapping / contiguous ones, else REVIEW
     dated_rows_after_end_ok: bool = False      # dated lines after the end marker (e.g. a trailing summary table) are not another statement
     amount_prefix: str = ""                    # currency text printed in front of amounts ("Rs.", several as "Rs.|₹"), stripped before matching

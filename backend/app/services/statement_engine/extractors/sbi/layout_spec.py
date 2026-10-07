@@ -11,6 +11,7 @@ SBI_TXN_VALUE_DESC_REF_DR_CR_BAL_ID = "sbi_txndate_valuedate_description_refcheq
 SBI_LAYOUT_1 = LayoutSpec(
     layout_id=SBI_TXN_VALUE_DESC_REF_DR_CR_BAL_ID,
     bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
     merge_statements=True,
     bank_name="State Bank of India",
     columns={

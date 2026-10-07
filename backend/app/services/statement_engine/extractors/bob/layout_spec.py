@@ -9,6 +9,7 @@ from ...extraction.layout_spec import LayoutSpec
 BOB_LAYOUT_1 = LayoutSpec(
     layout_id="bob_serial_transactiondate_valuedate_description_cheque_debit_credit_balance",
     bank_key="bob",
+    bank_markers=("BANKOFBARODA",),
     merge_statements=True,
     bank_name="Bank of Baroda",
     columns={
@@ -43,6 +44,7 @@ BOB_LAYOUT_1.validate()
 BOB_LAYOUT_2 = LayoutSpec(     # "date | narration | chq.no. | withdrawal (dr) | deposit (cr) | balance cr/dr"
     layout_id="bob_date_narration_chqno_withdrawaldr_depositcr_balance",
     bank_key="bob",
+    bank_markers=("BANKOFBARODA",),
     merge_statements=True,
     bank_name="Bank of Baroda",
     columns={
@@ -76,6 +78,7 @@ BOB_LAYOUT_2.validate()
 BOB_LAYOUT_3 = LayoutSpec(     # fixed-pitch text pages: "date | particulars | chq.no. | withdrawals | deposits | balance"
     layout_id="bob_date_particulars_chqno_withdrawals_deposits_balance",
     bank_key="bob",
+    bank_markers=("BANKOFBARODA",),
     merge_statements=True,
     monospace_text=True,
     bank_name="Bank of Baroda",

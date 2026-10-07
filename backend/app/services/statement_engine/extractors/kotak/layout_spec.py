@@ -9,6 +9,7 @@ from ...extraction.layout_spec import LayoutSpec
 KOTAK_LAYOUT_1 = LayoutSpec(
     layout_id="kotak_date_transactiondetails_chequereference_debit_credit_balance",
     bank_key="kotak",
+    bank_markers=("KOTAKMAHINDRA",),
     merge_statements=True,
     bank_name="Kotak Mahindra Bank",
     columns={
@@ -42,6 +43,7 @@ KOTAK_LAYOUT_1.validate()
 KOTAK_LAYOUT_2 = LayoutSpec(     # "date | narration | chq/ref no | withdrawal (dr) | deposit (cr) | balance"; balance carries (Cr)/(Dr)
     layout_id="kotak_date_narration_chqrefno_withdrawaldr_depositcr_balance",
     bank_key="kotak",
+    bank_markers=("KOTAKMAHINDRA",),
     merge_statements=True,
     bank_name="Kotak Mahindra Bank",
     columns={

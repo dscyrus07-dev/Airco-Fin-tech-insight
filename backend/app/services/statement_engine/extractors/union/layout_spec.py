@@ -10,6 +10,7 @@ from ...extraction.layout_spec import LayoutSpec
 UNION_LAYOUT_1 = LayoutSpec(
     layout_id="union_sno_date_transactionid_remarks_amount_balance",
     bank_key="union",
+    bank_markers=("UNIONBANKOFINDIA",),
     merge_statements=True,
     bank_name="Union Bank of India",
     columns={

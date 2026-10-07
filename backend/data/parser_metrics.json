@@ -1,0 +1,1218 @@
+{
+  "attempts": {
+    "Axis": [
+      {
+        "timestamp": "2026-10-05T16:23:24.304346",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1341,
+        "file_hash": null,
+        "processing_time_ms": 3333
+      },
+      {
+        "timestamp": "2026-10-05T16:23:25.159997",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 88,
+        "file_hash": null,
+        "processing_time_ms": 386
+      },
+      {
+        "timestamp": "2026-10-05T16:23:26.461101",
+        "bank": "Axis",
+        "method": "unsupported",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 840
+      },
+      {
+        "timestamp": "2026-10-05T16:23:28.351064",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 402,
+        "file_hash": null,
+        "processing_time_ms": 1021
+      },
+      {
+        "timestamp": "2026-10-05T16:23:30.209381",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 371,
+        "file_hash": null,
+        "processing_time_ms": 975
+      },
+      {
+        "timestamp": "2026-10-05T16:23:33.160449",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 617,
+        "file_hash": null,
+        "processing_time_ms": 1569
+      },
+      {
+        "timestamp": "2026-10-05T16:23:34.508846",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 247,
+        "file_hash": null,
+        "processing_time_ms": 739
+      },
+      {
+        "timestamp": "2026-10-05T16:23:36.095992",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 296,
+        "file_hash": null,
+        "processing_time_ms": 875
+      },
+      {
+        "timestamp": "2026-10-05T16:23:37.735905",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 299,
+        "file_hash": null,
+        "processing_time_ms": 896
+      },
+      {
+        "timestamp": "2026-10-05T16:23:39.514087",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 348,
+        "file_hash": null,
+        "processing_time_ms": 983
+      },
+      {
+        "timestamp": "2026-10-05T16:23:45.700396",
+        "bank": "Axis",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 3153
+      },
+      {
+        "timestamp": "2026-10-05T16:23:47.080013",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 231,
+        "file_hash": null,
+        "processing_time_ms": 697
+      },
+      {
+        "timestamp": "2026-10-05T16:23:47.441694",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 7,
+        "file_hash": null,
+        "processing_time_ms": 216
+      },
+      {
+        "timestamp": "2026-10-05T16:23:50.804772",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 656,
+        "file_hash": null,
+        "processing_time_ms": 1793
+      },
+      {
+        "timestamp": "2026-10-05T16:23:51.625820",
+        "bank": "Axis",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 120,
+        "file_hash": null,
+        "processing_time_ms": 427
+      },
+      {
+        "timestamp": "2026-10-07T09:58:20.493770",
+        "bank": "Axis",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 20
+      },
+      {
+        "timestamp": "2026-10-07T09:58:20.528085",
+        "bank": "Axis",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 11
+      },
+      {
+        "timestamp": "2026-10-07T11:24:50.485360",
+        "bank": "Axis",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 14
+      },
+      {
+        "timestamp": "2026-10-07T11:24:50.522626",
+        "bank": "Axis",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 13
+      }
+    ],
+    "Bank of Baroda": [
+      {
+        "timestamp": "2026-10-05T16:23:52.732476",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 121,
+        "file_hash": null,
+        "processing_time_ms": 559
+      },
+      {
+        "timestamp": "2026-10-05T16:23:53.708860",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 95,
+        "file_hash": null,
+        "processing_time_ms": 482
+      },
+      {
+        "timestamp": "2026-10-05T16:23:56.675593",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 445,
+        "file_hash": null,
+        "processing_time_ms": 1588
+      },
+      {
+        "timestamp": "2026-10-05T16:23:57.581772",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 97,
+        "file_hash": null,
+        "processing_time_ms": 477
+      },
+      {
+        "timestamp": "2026-10-05T16:23:58.347801",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 83,
+        "file_hash": null,
+        "processing_time_ms": 422
+      },
+      {
+        "timestamp": "2026-10-05T16:23:58.683188",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 16,
+        "file_hash": null,
+        "processing_time_ms": 211
+      },
+      {
+        "timestamp": "2026-10-05T16:24:00.829798",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 311,
+        "file_hash": null,
+        "processing_time_ms": 1165
+      },
+      {
+        "timestamp": "2026-10-05T16:24:01.665880",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 86,
+        "file_hash": null,
+        "processing_time_ms": 460
+      },
+      {
+        "timestamp": "2026-10-05T16:24:02.440010",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 90,
+        "file_hash": null,
+        "processing_time_ms": 456
+      },
+      {
+        "timestamp": "2026-10-05T16:24:08.682458",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 949,
+        "file_hash": null,
+        "processing_time_ms": 3349
+      },
+      {
+        "timestamp": "2026-10-05T16:24:11.703888",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 452,
+        "file_hash": null,
+        "processing_time_ms": 1569
+      },
+      {
+        "timestamp": "2026-10-05T16:24:20.881950",
+        "bank": "Bank of Baroda",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 298,
+        "file_hash": null,
+        "processing_time_ms": 1180
+      }
+    ],
+    "Canara": [
+      {
+        "timestamp": "2026-10-05T16:25:05.464692",
+        "bank": "Canara",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 1727
+      },
+      {
+        "timestamp": "2026-10-05T16:25:17.277993",
+        "bank": "Canara",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 499,
+        "file_hash": null,
+        "processing_time_ms": 5755
+      },
+      {
+        "timestamp": "2026-10-05T16:25:28.310760",
+        "bank": "Canara",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 319,
+        "file_hash": null,
+        "processing_time_ms": 3759
+      },
+      {
+        "timestamp": "2026-10-05T16:25:42.177925",
+        "bank": "Canara",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 419,
+        "file_hash": null,
+        "processing_time_ms": 4682
+      }
+    ],
+    "HDFC": [
+      {
+        "timestamp": "2026-10-05T16:25:45.328741",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 324,
+        "file_hash": null,
+        "processing_time_ms": 1598
+      },
+      {
+        "timestamp": "2026-10-05T16:25:53.764624",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 793,
+        "file_hash": null,
+        "processing_time_ms": 4503
+      },
+      {
+        "timestamp": "2026-10-05T16:25:54.293007",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 30,
+        "file_hash": null,
+        "processing_time_ms": 275
+      },
+      {
+        "timestamp": "2026-10-05T16:26:08.632253",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1630,
+        "file_hash": null,
+        "processing_time_ms": 7156
+      },
+      {
+        "timestamp": "2026-10-05T16:26:15.139701",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 608,
+        "file_hash": null,
+        "processing_time_ms": 2672
+      },
+      {
+        "timestamp": "2026-10-05T16:26:16.581130",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 108,
+        "file_hash": null,
+        "processing_time_ms": 731
+      },
+      {
+        "timestamp": "2026-10-05T16:26:16.956471",
+        "bank": "HDFC",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 196
+      },
+      {
+        "timestamp": "2026-10-05T16:26:19.128003",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 185,
+        "file_hash": null,
+        "processing_time_ms": 1017
+      },
+      {
+        "timestamp": "2026-10-05T16:26:25.667547",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 665,
+        "file_hash": null,
+        "processing_time_ms": 3414
+      },
+      {
+        "timestamp": "2026-10-05T16:26:26.925337",
+        "bank": "HDFC",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 528
+      },
+      {
+        "timestamp": "2026-10-05T16:26:31.092012",
+        "bank": "HDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 402,
+        "file_hash": null,
+        "processing_time_ms": 2191
+      }
+    ],
+    "ICICI": [
+      {
+        "timestamp": "2026-10-05T16:26:40.019691",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 330,
+        "file_hash": null,
+        "processing_time_ms": 3776
+      },
+      {
+        "timestamp": "2026-10-05T16:26:41.679419",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 236,
+        "file_hash": null,
+        "processing_time_ms": 833
+      },
+      {
+        "timestamp": "2026-10-05T16:26:48.485625",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1134,
+        "file_hash": null,
+        "processing_time_ms": 3613
+      },
+      {
+        "timestamp": "2026-10-05T16:26:49.548136",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 46,
+        "file_hash": null,
+        "processing_time_ms": 777
+      },
+      {
+        "timestamp": "2026-10-05T16:26:51.256012",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 154,
+        "file_hash": null,
+        "processing_time_ms": 979
+      },
+      {
+        "timestamp": "2026-10-05T16:26:51.677443",
+        "bank": "ICICI",
+        "method": "unsupported",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 324
+      },
+      {
+        "timestamp": "2026-10-05T16:26:52.771840",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 7,
+        "file_hash": null,
+        "processing_time_ms": 774
+      },
+      {
+        "timestamp": "2026-10-05T16:26:54.170226",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 145,
+        "file_hash": null,
+        "processing_time_ms": 833
+      },
+      {
+        "timestamp": "2026-10-05T16:26:56.258513",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 168,
+        "file_hash": null,
+        "processing_time_ms": 1190
+      },
+      {
+        "timestamp": "2026-10-05T16:26:58.307611",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 319,
+        "file_hash": null,
+        "processing_time_ms": 1116
+      },
+      {
+        "timestamp": "2026-10-05T16:27:01.986631",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 348,
+        "file_hash": null,
+        "processing_time_ms": 1980
+      },
+      {
+        "timestamp": "2026-10-05T16:27:02.575410",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 75,
+        "file_hash": null,
+        "processing_time_ms": 268
+      },
+      {
+        "timestamp": "2026-10-05T16:27:03.249925",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 53,
+        "file_hash": null,
+        "processing_time_ms": 428
+      },
+      {
+        "timestamp": "2026-10-05T16:27:06.469291",
+        "bank": "ICICI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 380,
+        "file_hash": null,
+        "processing_time_ms": 1805
+      },
+      {
+        "timestamp": "2026-10-05T16:27:07.434049",
+        "bank": "ICICI",
+        "method": "unsupported",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 538
+      }
+    ],
+    "IDFC": [
+      {
+        "timestamp": "2026-10-05T16:27:11.987673",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 861,
+        "file_hash": null,
+        "processing_time_ms": 2452
+      },
+      {
+        "timestamp": "2026-10-05T16:27:12.856790",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 97,
+        "file_hash": null,
+        "processing_time_ms": 582
+      },
+      {
+        "timestamp": "2026-10-05T16:27:13.787512",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 151,
+        "file_hash": null,
+        "processing_time_ms": 530
+      },
+      {
+        "timestamp": "2026-10-05T16:27:14.386425",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 49,
+        "file_hash": null,
+        "processing_time_ms": 358
+      },
+      {
+        "timestamp": "2026-10-05T16:27:17.833272",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 50,
+        "file_hash": null,
+        "processing_time_ms": 447
+      },
+      {
+        "timestamp": "2026-10-05T16:27:18.584116",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 104,
+        "file_hash": null,
+        "processing_time_ms": 444
+      },
+      {
+        "timestamp": "2026-10-05T16:27:18.988681",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 16,
+        "file_hash": null,
+        "processing_time_ms": 277
+      },
+      {
+        "timestamp": "2026-10-05T16:27:20.033444",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 48,
+        "file_hash": null,
+        "processing_time_ms": 336
+      },
+      {
+        "timestamp": "2026-10-05T16:27:23.950274",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 799,
+        "file_hash": null,
+        "processing_time_ms": 2047
+      },
+      {
+        "timestamp": "2026-10-05T16:27:24.611928",
+        "bank": "IDFC",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 88,
+        "file_hash": null,
+        "processing_time_ms": 433
+      }
+    ],
+    "Karnataka": [
+      {
+        "timestamp": "2026-10-05T16:27:43.819239",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 342,
+        "file_hash": null,
+        "processing_time_ms": 622
+      },
+      {
+        "timestamp": "2026-10-05T16:27:46.235081",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 753,
+        "file_hash": null,
+        "processing_time_ms": 1285
+      },
+      {
+        "timestamp": "2026-10-05T16:27:47.139814",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 225,
+        "file_hash": null,
+        "processing_time_ms": 438
+      },
+      {
+        "timestamp": "2026-10-05T16:27:49.493844",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 713,
+        "file_hash": null,
+        "processing_time_ms": 1242
+      },
+      {
+        "timestamp": "2026-10-05T16:27:50.081452",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 35,
+        "file_hash": null,
+        "processing_time_ms": 401
+      },
+      {
+        "timestamp": "2026-10-05T16:27:50.367421",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 36,
+        "file_hash": null,
+        "processing_time_ms": 190
+      },
+      {
+        "timestamp": "2026-10-05T16:27:52.082097",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 605,
+        "file_hash": null,
+        "processing_time_ms": 916
+      },
+      {
+        "timestamp": "2026-10-05T16:27:56.552792",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1389,
+        "file_hash": null,
+        "processing_time_ms": 2308
+      },
+      {
+        "timestamp": "2026-10-05T16:27:58.261969",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 452,
+        "file_hash": null,
+        "processing_time_ms": 794
+      },
+      {
+        "timestamp": "2026-10-05T16:27:58.913762",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 161,
+        "file_hash": null,
+        "processing_time_ms": 337
+      },
+      {
+        "timestamp": "2026-10-05T16:27:59.906800",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 277,
+        "file_hash": null,
+        "processing_time_ms": 539
+      },
+      {
+        "timestamp": "2026-10-05T16:28:00.099873",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 5,
+        "file_hash": null,
+        "processing_time_ms": 121
+      },
+      {
+        "timestamp": "2026-10-05T16:28:02.236035",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 600,
+        "file_hash": null,
+        "processing_time_ms": 1143
+      },
+      {
+        "timestamp": "2026-10-05T16:28:02.480504",
+        "bank": "Karnataka",
+        "method": "unsupported",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 97
+      },
+      {
+        "timestamp": "2026-10-05T16:28:02.749225",
+        "bank": "Karnataka",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 31,
+        "file_hash": null,
+        "processing_time_ms": 178
+      }
+    ],
+    "Kotak": [
+      {
+        "timestamp": "2026-10-05T16:28:04.032264",
+        "bank": "Kotak",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 144,
+        "file_hash": null,
+        "processing_time_ms": 764
+      },
+      {
+        "timestamp": "2026-10-05T16:28:04.725899",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 442
+      },
+      {
+        "timestamp": "2026-10-05T16:28:06.771253",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 1110
+      },
+      {
+        "timestamp": "2026-10-05T16:28:09.591348",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 1486
+      },
+      {
+        "timestamp": "2026-10-05T16:28:11.857603",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 1191
+      },
+      {
+        "timestamp": "2026-10-05T16:28:13.565751",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 936
+      },
+      {
+        "timestamp": "2026-10-05T16:28:15.830585",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 1162
+      },
+      {
+        "timestamp": "2026-10-05T16:28:16.774928",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 526
+      },
+      {
+        "timestamp": "2026-10-05T16:28:18.019227",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 714
+      },
+      {
+        "timestamp": "2026-10-05T16:28:19.169041",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 626
+      },
+      {
+        "timestamp": "2026-10-05T16:28:19.722851",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 375
+      },
+      {
+        "timestamp": "2026-10-05T16:28:20.530355",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 491
+      },
+      {
+        "timestamp": "2026-10-05T16:28:21.247701",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 457
+      },
+      {
+        "timestamp": "2026-10-05T16:28:22.026040",
+        "bank": "Kotak",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 468
+      },
+      {
+        "timestamp": "2026-10-05T16:28:22.995948",
+        "bank": "Kotak",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 99,
+        "file_hash": null,
+        "processing_time_ms": 575
+      }
+    ],
+    "Paytm": [
+      {
+        "timestamp": "2026-10-05T16:28:38.128792",
+        "bank": "Paytm",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 638,
+        "file_hash": null,
+        "processing_time_ms": 4412
+      },
+      {
+        "timestamp": "2026-10-05T16:28:39.758000",
+        "bank": "Paytm",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 96,
+        "file_hash": null,
+        "processing_time_ms": 775
+      },
+      {
+        "timestamp": "2026-10-05T16:28:47.861199",
+        "bank": "Paytm",
+        "method": "error",
+        "success": false,
+        "transaction_count": 0,
+        "file_hash": null,
+        "processing_time_ms": 4370
+      },
+      {
+        "timestamp": "2026-10-05T16:28:49.449448",
+        "bank": "Paytm",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 44,
+        "file_hash": null,
+        "processing_time_ms": 478
+      },
+      {
+        "timestamp": "2026-10-05T16:28:59.545353",
+        "bank": "Paytm",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 845,
+        "file_hash": null,
+        "processing_time_ms": 5386
+      }
+    ],
+    "SBI": [
+      {
+        "timestamp": "2026-10-05T16:29:34.095743",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1468,
+        "file_hash": null,
+        "processing_time_ms": 16650
+      },
+      {
+        "timestamp": "2026-10-05T16:29:36.519441",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 149,
+        "file_hash": null,
+        "processing_time_ms": 1795
+      },
+      {
+        "timestamp": "2026-10-05T16:29:38.164475",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 269,
+        "file_hash": null,
+        "processing_time_ms": 885
+      },
+      {
+        "timestamp": "2026-10-05T16:29:39.477893",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 211,
+        "file_hash": null,
+        "processing_time_ms": 701
+      },
+      {
+        "timestamp": "2026-10-05T16:29:40.859223",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 229,
+        "file_hash": null,
+        "processing_time_ms": 730
+      },
+      {
+        "timestamp": "2026-10-05T16:29:45.647348",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 149,
+        "file_hash": null,
+        "processing_time_ms": 818
+      },
+      {
+        "timestamp": "2026-10-05T16:29:46.217299",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 53,
+        "file_hash": null,
+        "processing_time_ms": 340
+      },
+      {
+        "timestamp": "2026-10-05T16:29:47.970295",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 299,
+        "file_hash": null,
+        "processing_time_ms": 971
+      },
+      {
+        "timestamp": "2026-10-05T16:30:00.247989",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 286,
+        "file_hash": null,
+        "processing_time_ms": 961
+      },
+      {
+        "timestamp": "2026-10-05T16:30:02.013754",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 299,
+        "file_hash": null,
+        "processing_time_ms": 939
+      },
+      {
+        "timestamp": "2026-10-05T16:30:02.872882",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 121,
+        "file_hash": null,
+        "processing_time_ms": 461
+      },
+      {
+        "timestamp": "2026-10-05T16:30:03.935358",
+        "bank": "SBI",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 104,
+        "file_hash": null,
+        "processing_time_ms": 581
+      }
+    ],
+    "Union": [
+      {
+        "timestamp": "2026-10-05T16:30:04.733639",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 48,
+        "file_hash": null,
+        "processing_time_ms": 482
+      },
+      {
+        "timestamp": "2026-10-05T16:30:11.312793",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 630,
+        "file_hash": null,
+        "processing_time_ms": 3091
+      },
+      {
+        "timestamp": "2026-10-05T16:30:12.241887",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 38,
+        "file_hash": null,
+        "processing_time_ms": 664
+      },
+      {
+        "timestamp": "2026-10-05T16:30:14.009883",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 160,
+        "file_hash": null,
+        "processing_time_ms": 999
+      },
+      {
+        "timestamp": "2026-10-05T16:30:19.590111",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 600,
+        "file_hash": null,
+        "processing_time_ms": 3001
+      },
+      {
+        "timestamp": "2026-10-05T16:30:21.731329",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 183,
+        "file_hash": null,
+        "processing_time_ms": 1090
+      },
+      {
+        "timestamp": "2026-10-05T16:30:23.225844",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 126,
+        "file_hash": null,
+        "processing_time_ms": 821
+      },
+      {
+        "timestamp": "2026-10-05T16:30:29.291764",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 647,
+        "file_hash": null,
+        "processing_time_ms": 3291
+      },
+      {
+        "timestamp": "2026-10-05T16:30:32.226382",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 263,
+        "file_hash": null,
+        "processing_time_ms": 1547
+      },
+      {
+        "timestamp": "2026-10-05T16:30:35.373803",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 315,
+        "file_hash": null,
+        "processing_time_ms": 1659
+      },
+      {
+        "timestamp": "2026-10-05T16:30:47.223393",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 1274,
+        "file_hash": null,
+        "processing_time_ms": 6238
+      },
+      {
+        "timestamp": "2026-10-05T16:30:50.607903",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 302,
+        "file_hash": null,
+        "processing_time_ms": 1656
+      },
+      {
+        "timestamp": "2026-10-05T16:30:51.295806",
+        "bank": "Union",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 30,
+        "file_hash": null,
+        "processing_time_ms": 370
+      }
+    ],
+    "Unknown": [
+      {
+        "timestamp": "2026-10-05T16:30:53.704110",
+        "bank": "Unknown",
+        "method": "hardcoded",
+        "success": true,
+        "transaction_count": 8,
+        "file_hash": null,
+        "processing_time_ms": 609
+      }
+    ]
+  },
+  "format_changes": {},
+  "last_updated": "2026-10-07T11:24:50.522661"
+}

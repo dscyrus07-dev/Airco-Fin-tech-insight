@@ -14,6 +14,7 @@ _AMT = r"(-?[\d,]*\.\d{2})"
 AXIS_LAYOUT_1 = LayoutSpec(
     layout_id=AXIS_TRAN_CHQ_PARTICULARS_DR_CR_BAL_ID,
     bank_key="axis",
+    bank_markers=("AXISBANK",),
     merge_statements=True,
     bank_name="Axis Bank",
     columns={

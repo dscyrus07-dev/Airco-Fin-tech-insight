@@ -10,6 +10,7 @@ HDFC_LAYOUT_A_ID = "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing"
 HDFC_LAYOUT_A = LayoutSpec(
     layout_id=HDFC_LAYOUT_A_ID,
     bank_key="hdfc",
+    bank_markers=("HDFCBANK",),
     bank_name="HDFC Bank",
     columns={
         "date": (("date",),),
