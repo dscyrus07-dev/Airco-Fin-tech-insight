@@ -62,7 +62,10 @@ def seed_sql(registry: LayoutRegistry) -> str:
             f"SELECT b.id, f.id, {_q(r['layout_id'])}, {r['priority']}, {_q(cfg)}::jsonb "
             f"FROM public.banks b, public.layout_families f WHERE b.code = {_q(r['bank_code'])} AND f.code = {_q(r['family_code'])} "
             "ON CONFLICT (layout_id) DO UPDATE SET config_json = EXCLUDED.config_json, priority = EXCLUDED.priority, "
-            "layout_family_id = EXCLUDED.layout_family_id, config_version = public.bank_layouts.config_version + 1, updated_at = now();")
+            "layout_family_id = EXCLUDED.layout_family_id, config_version = public.bank_layouts.config_version + 1, updated_at = now() "
+            "WHERE public.bank_layouts.config_json IS DISTINCT FROM EXCLUDED.config_json "
+            "OR public.bank_layouts.priority IS DISTINCT FROM EXCLUDED.priority "
+            "OR public.bank_layouts.layout_family_id IS DISTINCT FROM EXCLUDED.layout_family_id;")
     out.append("COMMIT;")
     return "\n".join(out) + "\n"
 

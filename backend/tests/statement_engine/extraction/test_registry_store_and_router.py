@@ -74,3 +74,11 @@ def test_router_routes_a_resolved_layout_through_the_engine():
     routed = route_pages([Page(ws, 600.0)], LayoutRegistry([ALPHA]))
     assert routed.status == "v2" and routed.layout_id == ALPHA.layout_id and routed.use_v2
     assert len(routed.result.transactions) == 1
+
+
+def test_seed_sql_update_only_when_config_changed():
+    from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
+    from app.services.statement_engine.extraction.registry_store import seed_sql
+    for line in seed_sql(DEFAULT_REGISTRY).splitlines():
+        if "INTO public.bank_layouts" in line:
+            assert "IS DISTINCT FROM EXCLUDED.config_json" in line
