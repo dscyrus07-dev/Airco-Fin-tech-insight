@@ -8,7 +8,7 @@ schema and date checks. Independent validation (Devin) is the next step; treat e
 | Bank | Layouts | Probe result (dominant fingerprint) | Notes |
 |---|---|---|---|
 | HDFC | A (existing) | unchanged vs 3A on a 42-file sample (verdict, row count, comparator class) | regression gate for every engine change |
-| SBI | 1 | 83 VERIFIED, 3 REVIEW of 86 | no printed summary |
+| SBI | 1 | 83 VERIFIED, 3 REVIEW of 86 (multi-statement PDFs merged where tails overlap; true gaps stay REVIEW) | no printed summary |
 | Canara | 1, 2 (mode column) | L1 76 VERIFIED, 5 REVIEW, 2 FAILED of the 83 files that carry its header; L2 23 of 29 | L2 failures are tail rows after the statement |
 | Axis | 1 | 96 of 97 VERIFIED, 1 FAILED (printed 1.73 chain gap) | also verifies Paytm-folder files of the same layout |
 | IDFC | 1 (3 header variants) | 110 VERIFIED, 1 REVIEW, 1 FAILED of 140 | FAILED: printed totals differ by 594,476.00 on both sides |
@@ -27,7 +27,7 @@ Federal / ICICI / Paytm / Union fingerprints, banks outside the census.
 `opening_row_marker`, `closing_row_marker`, `sign_is_decoration`, `^`/`=` anchored end markers, Cr/Dr balance suffix,
 fused-date splitting, leading cover pages, `band_left_pad`, `page_footer_markers`, `merge_drcr_suffix`,
 `single_amount_column`, `row_order`, `zero_amount_is_empty`, `amount_prefix`, `merge_sign_prefix`,
-`dated_rows_after_end_ok`. Engine diff since SBI/Canara: about 200 added lines for eight further banks; each new spec
+`dated_rows_after_end_ok`, `merge_statements`. Engine diff since SBI/Canara: about 200 added lines for eight further banks; each new spec
 is 38-85 lines of configuration.
 
 ## Known limits
