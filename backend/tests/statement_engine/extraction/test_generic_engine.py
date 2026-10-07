@@ -220,7 +220,7 @@ def test_default_registry_has_hdfc_layout_a():
 def test_engine_package_has_no_bank_specific_strings():
     pkg = Path(registry_mod.__file__).parent
     banks = re.compile(r"hdfc|sbi\b|axis|kotak|icici|withdrawal|deposit|valuedt|chqrefno|ifsc", re.I)
-    offenders = {f.name: banks.findall(f.read_text()) for f in pkg.glob("*.py") if banks.search(f.read_text())}
+    offenders = {f.name: banks.findall(f.read_text()) for f in pkg.rglob("*.py") if banks.search(f.read_text())}
     # ifsc is an optional spec field (ifsc_re); any other hit is a generalisation leak
     offenders = {k: [x for x in v if x.lower() != "ifsc"] for k, v in offenders.items()}
     offenders = {k: v for k, v in offenders.items() if v}
