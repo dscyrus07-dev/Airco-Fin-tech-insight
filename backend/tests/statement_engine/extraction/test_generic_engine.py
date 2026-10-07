@@ -429,3 +429,10 @@ def test_hotel_cover_page_opening_row_signed_amounts_suffix_fused_date_and_summa
     assert out.checks.results["chain"].status == "pass" and out.checks.results["reference"].status == "pass", out.checks.reasons
     dr = parse_amount("100.00(Dr)", suffix_sign=True)
     assert dr == Decimal("-100.00") and parse_amount("(100.00)") == Decimal("-100.00")
+
+
+def test_band_left_pad_lets_narration_data_start_left_of_a_centred_title():
+    from app.services.statement_engine.extraction.anchors import derive_anchors
+    base = derive_anchors(header(ALPHA) + [w("01-04-2022", 30, 220)], ALPHA, W)
+    padded = derive_anchors(header(ALPHA) + [w("01-04-2022", 30, 220)], replace(ALPHA, band_left_pad={"narration": 40.0}), W)
+    assert padded.text_lefts["narration"] == base.text_lefts["narration"] - 36.0   # default pad is 4

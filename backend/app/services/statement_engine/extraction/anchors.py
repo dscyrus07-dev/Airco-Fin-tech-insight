@@ -85,7 +85,7 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
     header_line = lines[idx]
     header_top = min(w.top for w in header_line)
     header_bottom = max((w.bottom or w.top) for w in header_line)
-    text_lefts = {col: spans[col][0] - _BOUNDARY_PAD for col in spec.text_columns[1:]}
+    text_lefts = {col: spans[col][0] - spec.band_left_pad.get(col, _BOUNDARY_PAD) for col in spec.text_columns[1:]}
     # a first dated data row must sit left of the second text column after date (or anywhere when there is none)
     narration_limit = text_lefts[spec.text_columns[2]] if len(spec.text_columns) > 2 else float("inf")
 

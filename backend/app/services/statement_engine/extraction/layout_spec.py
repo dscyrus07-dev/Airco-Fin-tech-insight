@@ -7,7 +7,7 @@ right edge. Single signed-amount columns and Dr/Cr suffix layouts are NOT suppor
 the engine capability (see layout census)."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Optional, Pattern, Tuple
 
 DEFAULT_SUMMARY_FIELDS: Tuple[str, ...] = ("opening", "dr_count", "cr_count", "debits", "credits", "closing")
@@ -47,6 +47,7 @@ class LayoutSpec:
     totals_line_re: Optional[Pattern[str]] = None      # whitespace-free line inside the table; groups 1,2 = printed debit, credit sums
     opening_row_marker: str = ""               # whitespace-free upper-case start of the narration of a dated "opening balance" row (dropped; its balance is the printed opening)
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
+    band_left_pad: Dict[str, float] = field(default_factory=dict)   # text column -> how far left of its header title its data may start (centred titles)
     summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
