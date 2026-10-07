@@ -53,6 +53,7 @@ class LayoutSpec:
     carry_forward_re: Optional[Pattern[str]] = None    # whitespace-free line that restates the running balance at the top of a page; dropped unless it is the table's first row
     undated_rows_inherit_date: bool = False    # a line with a balance and a debit/credit amount but no date is a new row on the previous row's date
     totals_accumulate: bool = False            # the totals line repeats (per printed section): sum the debits and credits of every match, closing from the last
+    empty_amount_marker: str = ""              # text printed in a money cell that has no amount (e.g. "-"); read as empty, never as narration
     monospace_text: bool = False               # text-rendered page: each line arrives as one word; split on whitespace, x divided by character count
     bank_markers: Tuple[str, ...] = ()         # whitespace-free UPPER-CASE bank names as printed above the table header; used by the registry to refuse a header that another bank's statement shares
     merge_statements: bool = False             # a PDF that holds several statements: ignore empty ones, merge overlapping / contiguous ones, else REVIEW

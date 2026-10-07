@@ -683,3 +683,14 @@ def test_undated_rows_carry_forward_lines_and_repeated_credit_first_totals():
     assert [r.txn.description for r in out.rows] == ["SHOP", "SHOP2", "SHOP3"] and {r.txn.date for r in out.rows} == {"2022-04-02"}
     assert out.summary.debits == Decimal("150.00") and out.summary.credits == Decimal("25.00") and out.summary.closing == Decimal("875.00")
     assert out.checks.verdict == "VERIFIED", out.checks.reasons
+
+
+def test_empty_amount_marker_in_a_money_cell_is_empty_not_narration():
+    spec = replace(ALPHA, empty_amount_marker="-", summary_expected=False)
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    ws += [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("-", 470, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
+    ws += [w("02-04-2022", 30, 237), w("PAY", 120, 237), rt("-", 400, 237), rt("50.00", 470, 237), rt("950.00", 560, 237)]
+    out = extract_pages([Page(ws, W)], spec)
+    assert [r.txn.description for r in out.rows] == ["SHOP", "PAY"]
+    assert out.rows[0].txn.debit == Decimal("100.00") and out.rows[1].txn.credit == Decimal("50.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons

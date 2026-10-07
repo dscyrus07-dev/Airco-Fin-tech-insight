@@ -211,7 +211,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if spec.secondary_date_column:
                     current.value_date = " ".join(cols.get(spec.secondary_date_column, [])) or (prev.value_date if inherit else "")
                 for name in spec.amount_columns:
-                    vals = cols.get(name, [])
+                    vals = [v for v in cols.get(name, []) if not (spec.empty_amount_marker and v == spec.empty_amount_marker)]
                     if vals:
                         current.amounts[name] = vals[0]
                         if len(vals) > 1:

@@ -145,7 +145,7 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
             return None
     elif not last_band:
         return band
-    if spec.amount_re.match(text):
+    if spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker):
         edges = anchors.amount_edges
         nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
         # an amount must sit close to a money column's right edge; reject stray numbers elsewhere
