@@ -141,7 +141,8 @@ def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]
     })
 
 
-def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnings: Sequence[str], has_rows: bool) -> Tuple[str, List[str]]:
+def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnings: Sequence[str], has_rows: bool,
+           summary_expected: bool = True) -> Tuple[str, List[str]]:
     reasons: List[str] = []
     if schema_errors:
         reasons.append(f"schema errors: {len(schema_errors)}")
@@ -152,7 +153,7 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
         reasons.append("totals mismatch")
     if reasons:
         return FAILED, reasons
-    if results["reference"].status == SKIPPED and has_rows:
+    if results["reference"].status == SKIPPED and has_rows and summary_expected:
         reasons.append("no printed summary to verify against")
     if results["totals"].status == WARN:
         reasons.append("printed counts/sums differ with reversal signature but no proof")
@@ -166,7 +167,8 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
 
 
 def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], summary: Optional[PrintedSummary],
-               schema_errors: Sequence[str], warnings: Sequence[str], period_format: str = "%d/%m/%Y") -> Checks:
+               schema_errors: Sequence[str], warnings: Sequence[str], period_format: str = "%d/%m/%Y",
+               summary_expected: bool = True) -> Checks:
     derived = derive(rows)
     c1, c2 = check_chain(rows)
     results = {
@@ -178,5 +180,5 @@ def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]],
         "dates": check_dates(rows),
         "period": check_period(rows, period, period_format),
     }
-    verdict, reasons = decide(results, schema_errors, warnings, bool(rows))
+    verdict, reasons = decide(results, schema_errors, warnings, bool(rows), summary_expected)
     return Checks(results=results, verdict=verdict, reasons=reasons, derived=derived)

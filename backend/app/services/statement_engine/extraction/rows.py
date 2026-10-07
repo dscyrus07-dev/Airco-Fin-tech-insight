@@ -48,6 +48,15 @@ class AssembledTable:
 _SUMMARY_TAIL_LINES = 14
 
 
+def _first_dated(lines: List[List[Word]], begin: int, anchors: ColumnAnchors, spec: LayoutSpec) -> int:
+    """Index of the first line at or after `begin` that starts a row; lines before it are header continuation."""
+    end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
+    for i in range(begin, len(lines)):
+        if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or any(m in squash(lines[i]).upper() for m in end_markers):
+            return i
+    return len(lines)
+
+
 def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors, spec: LayoutSpec) -> Tuple[int, Optional[Tuple[str, str]], bool]:
     """(index of first table line, period if a From/To line was seen, whether a start marker was found)."""
     period = None
@@ -61,12 +70,12 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
     if page_no == 1:
         for i, line in enumerate(lines):
             if min(w.top for w in line) > anchors.header_top + 1.0:
-                return i, period, True
+                return _first_dated(lines, i, anchors, spec), period, True
         return len(lines), period, True
     if spec.header_repeats:
         found = find_header(lines, spec)
         if found:
-            return found[0] + 1, period, True
+            return _first_dated(lines, found[0] + 1, anchors, spec), period, True
     if marker_idx is not None:
         return marker_idx + 1, period, True
     return 0, period, False
@@ -80,6 +89,7 @@ def _has_dated_row(lines: List[List[Word]], anchors: ColumnAnchors, spec: Layout
 
 def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) -> AssembledTable:
     table = AssembledTable()
+    end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
     current: Optional[RawRow] = None
     ended = False
     for pno, page in enumerate(pages, start=1):
@@ -102,13 +112,20 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
         if not marked:
             first_dated = next((i for i, ln in enumerate(lines) if any(classify_word(w, anchors, spec) == "date" for w in ln)), None)
             if first_dated is None:
+                # a page without rows can still be the footer page that ends the statement
+                for li, line in enumerate(lines):
+                    if any(m in squash(line).upper() for m in end_markers):
+                        table.summary_page = pno
+                        table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
+                        ended = True
+                        break
                 continue
             start = first_dated
             table.warnings.append(f"no_period_marker:page{pno}")
         for li in range(start, len(lines)):
             line = lines[li]
             text = squash(line).upper()
-            if spec.summary_marker in text:
+            if any(m in text for m in end_markers):
                 table.summary_page = pno
                 table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
                 ended = True
@@ -135,6 +152,11 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                         if len(vals) > 1:
                             current.warnings.append(f"multiple_values:{name}")
             elif current is not None:
+                if "date_tail" in cols:
+                    current.date = f"{current.date} {' '.join(cols['date_tail'])}"
+                tail = (spec.secondary_date_column or "") + "_tail"
+                if tail in cols:
+                    current.value_date = f"{current.value_date} {' '.join(cols[tail])}".strip()
                 if any(c in cols for c in spec.amount_columns):
                     current.warnings.append("orphan_amount_on_wrapped_line")
                 if "narration" in cols:

@@ -78,8 +78,8 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
     header_line = lines[idx]
     header_top = min(w.top for w in header_line)
     header_bottom = max((w.bottom or w.top) for w in header_line)
-    text_lefts = {col: spans[col][0] - _BOUNDARY_PAD for col in spec.text_columns[2:]}
-    # a first dated data row must sit left of the first text column after narration (or anywhere when there is none)
+    text_lefts = {col: spans[col][0] - _BOUNDARY_PAD for col in spec.text_columns[1:]}
+    # a first dated data row must sit left of the second text column after date (or anywhere when there is none)
     narration_limit = text_lefts[spec.text_columns[2]] if len(spec.text_columns) > 2 else float("inf")
 
     first_date: Optional[Word] = None
@@ -91,8 +91,8 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
         if first_date:
             break
     if first_date:
-        date_left = first_date.x0 - _DATE_DATA_LEFT_PAD
-        date_right = first_date.x1 + _DATE_DATA_RIGHT_PAD
+        date_left = min(first_date.x0, spans["date"][0]) - _DATE_DATA_LEFT_PAD   # date cells may be right-aligned
+        date_right = min(first_date.x1 + _DATE_DATA_RIGHT_PAD, text_lefts[spec.text_columns[1]])
     else:
         date_left = spans["date"][0] - _DATE_FALLBACK_LEFT_PAD
         date_right = spans["date"][1] + _DATE_FALLBACK_RIGHT_PAD
@@ -110,23 +110,32 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
 
 
 def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optional[str]:
-    """Column role of a data word, or None when the word is page furniture / unclassifiable."""
+    """Column role of a data word, or None when the word is page furniture / unclassifiable. A wrapped date cell's
+    continuation is reported as "date_tail" / "<secondary>_tail"."""
     text = word.text.strip()
     if word.x0 < anchors.date_left:
         return None
     if word.x0 < anchors.date_right:
-        return "date" if spec.date_re.match(text) else "narration"   # undated text in the date band = narration wrap
-    band = "narration"
-    last_band = True
-    for col in spec.text_columns[2:]:
+        if spec.date_re.match(text):
+            return "date"
+        if spec.date_tail_re and spec.date_tail_re.match(text):
+            return "date_tail"
+        return "narration"   # undated text in the date band = narration wrap
+    band = spec.text_columns[1]
+    for col in spec.text_columns[1:]:
         if word.x0 >= anchors.text_lefts[col]:
             band = col
     last_band = band == spec.text_columns[-1]
-    if not last_band:
-        return band
     secondary = spec.secondary_date_column
-    if secondary and band == secondary and spec.date_re.match(text):
-        return secondary
+    if secondary and band == secondary:
+        if spec.date_re.match(text):
+            return secondary
+        if spec.date_tail_re and spec.date_tail_re.match(text):
+            return secondary + "_tail"
+        if not last_band:
+            return None
+    elif not last_band:
+        return band
     if spec.amount_re.match(text):
         edges = anchors.amount_edges
         nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))

@@ -25,6 +25,9 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "summary_fields": list(spec.summary_fields),
         "secondary_date_column": spec.secondary_date_column, "header_repeats": spec.header_repeats,
         "ifsc_re": spec.ifsc_re.pattern if spec.ifsc_re else None, "account_label": spec.account_label,
+        "end_markers": list(spec.end_markers), "date_tail_re": spec.date_tail_re.pattern if spec.date_tail_re else None,
+        "summary_expected": spec.summary_expected,
+        "opening_balance_re": spec.opening_balance_re.pattern if spec.opening_balance_re else None,
     }
 
 
@@ -44,6 +47,10 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             summary_fields=tuple(data.get("summary_fields") or DEFAULT_SUMMARY_FIELDS),
             secondary_date_column=data.get("secondary_date_column"), header_repeats=bool(data.get("header_repeats", False)),
             ifsc_re=re.compile(data["ifsc_re"]) if data.get("ifsc_re") else None, account_label=data.get("account_label", ""),
+            end_markers=tuple(data.get("end_markers") or ()),
+            date_tail_re=re.compile(data["date_tail_re"]) if data.get("date_tail_re") else None,
+            summary_expected=bool(data.get("summary_expected", True)),
+            opening_balance_re=re.compile(data["opening_balance_re"]) if data.get("opening_balance_re") else None,
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc

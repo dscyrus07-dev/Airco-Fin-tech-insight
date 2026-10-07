@@ -2,20 +2,23 @@ import json
 
 from app.services.statement_engine.extraction.spec_codec import spec_from_dict, spec_to_dict
 from app.services.statement_engine.extractors.hdfc.layout_spec import HDFC_LAYOUT_A
-from tests.statement_engine.extraction.test_generic_engine import ALPHA, BETA, GAMMA, alpha_rows, ALPHA_PERIOD, alpha_summary, page
+from app.services.statement_engine.extractors.sbi.layout_spec import SBI_LAYOUT_1
+from tests.statement_engine.extraction.test_generic_engine import ALPHA, BETA, GAMMA, DELTA, alpha_rows, ALPHA_PERIOD, alpha_summary, page
 from app.services.statement_engine.extraction.engine import extract_pages
 
 
 def _same(a, b):
-    ra = {**a.__dict__, "date_re": a.date_re.pattern, "amount_re": a.amount_re.pattern, "period_re": a.period_re.pattern,
-          "ifsc_re": a.ifsc_re.pattern if a.ifsc_re else None}
-    rb = {**b.__dict__, "date_re": b.date_re.pattern, "amount_re": b.amount_re.pattern, "period_re": b.period_re.pattern,
-          "ifsc_re": b.ifsc_re.pattern if b.ifsc_re else None}
-    return ra == rb
+    def norm(x):
+        d = dict(x.__dict__)
+        for k, v in d.items():
+            if hasattr(v, "pattern"):
+                d[k] = v.pattern
+        return d
+    return norm(a) == norm(b)
 
 
 def test_roundtrip_through_json_for_all_layouts():
-    for spec in (HDFC_LAYOUT_A, ALPHA, BETA, GAMMA):
+    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
         again = spec_from_dict(json.loads(json.dumps(spec_to_dict(spec))))
         assert _same(spec, again), spec.layout_id
 

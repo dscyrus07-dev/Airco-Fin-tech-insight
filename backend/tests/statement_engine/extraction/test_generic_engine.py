@@ -212,6 +212,7 @@ def test_registry_rejects_duplicate_and_invalid_specs():
 
 def test_default_registry_has_hdfc_layout_a():
     assert DEFAULT_REGISTRY.get(HDFC_LAYOUT_A.layout_id) is HDFC_LAYOUT_A and DEFAULT_REGISTRY.for_bank("hdfc")
+    assert DEFAULT_REGISTRY.for_bank("sbi")
 
 
 # ---------------------------------------------------------------- the engine contains no bank-specific code
@@ -223,3 +224,86 @@ def test_engine_package_has_no_bank_specific_strings():
     offenders = {k: [x for x in v if x.lower() != "ifsc"] for k, v in offenders.items()}
     offenders = {k: v for k, v in offenders.items() if v}
     assert not offenders, offenders
+
+
+# ---------------------------------------------------------------- DELTA: value date before narration, wrapped date cell,
+# footer end marker, no summary block, printed opening balance ("Balance as on ...")
+DELTA = LayoutSpec(
+    layout_id="delta", bank_key="delta", bank_name="Delta Bank",
+    columns={"date": (("txndate",), ("txn", "date")), "value_date": (("value",),), "narration": (("description",),), "debit": (("debit",),),
+             "credit": (("credit",),), "balance": (("balance",),)},
+    text_columns=("date", "value_date", "narration"), debit_column="debit", credit_column="credit", balance_column="balance",
+    date_re=re.compile(r"^\d{1,2} [A-Za-z]{3}(?: \d{4})?$"), date_tail_re=re.compile(r"^\d{4}$"), date_format="%d %b %Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"Statementfrom(\d{1,2}[A-Za-z]{3}\d{4})to(\d{1,2}[A-Za-z]{3}\d{4})"), period_date_format="%d%b%Y",
+    summary_marker="", summary_label_text="", summary_expected=False, end_markers=("COMPUTERGENERATEDSTATEMENT",),
+    secondary_date_column="value_date", header_repeats=True,
+    opening_balance_re=re.compile(r"Balanceason\d{1,2}[A-Za-z]{3}\d{4}:(-?[\d,]+\.\d{2})"), account_label="accountnumber")
+GEO["delta"] = dict(text={"date": 40, "value_date": 95, "narration": 145}, money={"debit": 414, "credit": 478, "balance": 557},
+                    titles={"date": ["Txn", "Date"], "value_date": ["Value"], "narration": ["Description"], "debit": ["Debit"], "credit": ["Credit"], "balance": ["Balance"]})
+DELTA_TOP = [w("Account", 36, 60), w("Number", 80, 60), w(":", 130, 60), w("12345678901", 140, 60),
+             w("Balance", 36, 80), w("as", 80, 80), w("on", 100, 80), w("1", 120, 80), w("Jan", 130, 80), w("2023", 150, 80), w(":", 180, 80), w("1,000.00", 190, 80),
+             w("Statement", 36, 100), w("from", 90, 100), w("1", 120, 100), w("Jan", 130, 100), w("2023", 150, 100), w("to", 180, 100), w("31", 200, 100), w("Jan", 215, 100), w("2023", 240, 100)]
+
+
+def drow(top, date, vdate, narr, debit=None, credit=None, balance="0.00", wrapped=False):
+    g = GEO["delta"]
+    if wrapped:   # right-aligned date cell wrapped onto two lines: "10 Jan" / "2023"
+        d, y = date.rsplit(" ", 1)
+        ws = [rt(d, 87, top), rt(vdate.rsplit(" ", 1)[0], 140, top), w(narr, 145, top)]
+        ws += [rt(y, 87, top + 9), rt(vdate.rsplit(" ", 1)[1], 140, top + 9)]
+    else:
+        ws = [rt(date, 87, top), rt(vdate, 140, top), w(narr, 145, top)]
+    if debit is not None:
+        ws.append(rt(debit, 414, top))
+    if credit is not None:
+        ws.append(rt(credit, 478, top))
+    ws.append(rt(balance, 557, top))
+    return ws
+
+
+def delta_header(top=200.0):
+    return header(DELTA, top) + [w("Date", 95, top + 10)]   # second header line ("Value" / "Date")
+
+
+def delta_page(rows, with_header=True, extra=None):
+    ws = list(extra or [])
+    if with_header:
+        ws += delta_header()
+    for r in rows:
+        ws += r
+    return Page(ws, 595.0)
+
+
+def test_delta_wrapped_dates_value_before_narration_footer_and_opening():
+    rows = [drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00"),
+            drow(250, "10 Jan 2023", "10 Jan 2023", "SALARY", credit="1,000.00", balance="1,900.00", wrapped=True)]
+    footer = [w("Please do not share your PIN", 36, 400), w("This is a computer generated statement", 36, 420)]
+    out = extract_pages([delta_page(rows, extra=DELTA_TOP + footer)], DELTA)
+    assert out.failure is None and len(out.rows) == 2
+    assert out.rows[1].txn.date == "2023-01-10" and out.rows[1].txn.value_date == "2023-01-10"
+    assert out.rows[0].txn.description == "SHOP" and out.account_number == "12345678901"
+    assert out.summary.opening == Decimal("1000.00") and out.checks.results["reference"].status == "pass"
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
+    assert "footer" not in out.rows[1].txn.description.lower()
+
+
+def test_delta_second_header_line_is_not_a_continuation_of_previous_row():
+    p1 = delta_page([drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")], extra=DELTA_TOP)
+    p2 = delta_page([drow(230, "6 Jan 2023", "6 Jan 2023", "BILL", debit="50.00", balance="850.00")])
+    out = extract_pages([p1, p2], DELTA)
+    assert len(out.rows) == 2 and out.rows[0].txn.description == "SHOP" and out.rows[0].txn.ref_no == ""
+
+
+def test_delta_statement_after_footer_page_is_review():
+    p1 = delta_page([drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")], extra=DELTA_TOP)
+    foot = Page([w("This is a computer generated statement", 36, 100)], 595.0)
+    p3 = delta_page([drow(230, "9 Mar 2023", "9 Mar 2023", "OTHER", debit="5.00", balance="5.00")])
+    out = extract_pages([p1, foot, p3], DELTA)
+    assert len(out.rows) == 1 and out.checks.verdict == "REVIEW" and any(x.startswith("additional_statement") for x in out.warnings)
+
+
+def test_summary_not_expected_means_missing_summary_is_not_a_review_reason():
+    rows = [drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")]
+    out = extract_pages([delta_page(rows, extra=DELTA_TOP[:3] + DELTA_TOP[3:] if False else DELTA_TOP[:4] + DELTA_TOP[14:])], DELTA)
+    assert out.summary is None and out.checks.verdict == "VERIFIED", out.checks.reasons

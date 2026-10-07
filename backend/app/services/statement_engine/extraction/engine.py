@@ -3,6 +3,7 @@ LayoutSpec. The pdfplumber glue is in pdf_extractor.py."""
 from __future__ import annotations
 
 import re
+from decimal import Decimal
 from dataclasses import dataclass, field
 from typing import List, Optional, Sequence, Tuple
 
@@ -48,6 +49,9 @@ def _account_number(page_words: Sequence[Word], spec: LayoutSpec) -> str:
                         t = nxt.text.strip()
                         if t and t != ":" and re.fullmatch(r"\d{6,}", t):
                             return t
+                        found = re.search(r"\d{6,}", t) if t.startswith(":") else None
+                        if found:
+                            return found.group(0)
                     break
                 if not spec.account_label.startswith(acc):
                     break
@@ -74,11 +78,18 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     m = spec.ifsc_re.search(page1_text) if spec.ifsc_re else None
     out.ifsc = m.group(0) if m else ""
     out.account_number = _account_number(first.words, spec)
-    out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines else None
+    out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
+    if out.summary is None and spec.opening_balance_re:
+        mo = spec.opening_balance_re.search(page1_text)
+        if mo:   # a printed opening balance is still a reference to verify the derived opening against
+            try:
+                out.summary = PrintedSummary(opening=Decimal(mo.group(1).replace(",", "")))
+            except ArithmeticError:
+                pass
     rows, errors = normalize_rows(table.rows, spec)
     out.rows = rows
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):
         out.failure, out.failure_detail = NO_ROWS, "header found but no transaction rows"
         return out
-    out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format)
+    out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected)
     return out
