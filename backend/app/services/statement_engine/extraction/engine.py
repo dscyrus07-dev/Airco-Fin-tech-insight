@@ -10,7 +10,7 @@ from typing import List, Optional, Sequence, Tuple
 from .anchors import AnchorError, ColumnAnchors, derive_anchors
 from .checks import Checks, run_checks
 from .layout_spec import LayoutSpec
-from .normalize import NormalizedRow, normalize_rows
+from .normalize import NormalizeError, NormalizedRow, normalize_rows, parse_amount
 from .rows import AssembledTable, Page, assemble
 from .summary import PrintedSummary, parse_summary
 from .words import Word, group_lines, norm_token, squash
@@ -58,17 +58,44 @@ def _account_number(page_words: Sequence[Word], spec: LayoutSpec) -> str:
     return ""
 
 
+def _split_merged_dates(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
+    """A date cell can be extracted fused with the start of the narration ("08-Apr-22 NEFT"): split it at the first space
+    after which the head is a complete date, dividing the x-extent by character count."""
+    out: List[Word] = []
+    for w in words:
+        text = w.text.strip()
+        if " " in text and not spec.date_re.match(text):
+            for i, ch in enumerate(text):
+                if ch == " " and spec.date_re.match(text[:i]):
+                    cut = w.x0 + (w.x1 - w.x0) * i / len(text)
+                    out.append(Word(text[:i], w.x0, cut, w.top, w.bottom))
+                    out.append(Word(text[i + 1:], cut, w.x1, w.top, w.bottom))
+                    break
+            else:
+                out.append(w)
+        else:
+            out.append(w)
+    return out
+
+
 def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
+    pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
     if not pages:
         out.failure, out.failure_detail = NO_TABLE_HEADER, "no pages"
         return out
-    first = pages[0]
-    try:
-        anchors = derive_anchors(first.words, spec, first.width)
-    except AnchorError as exc:
-        out.failure, out.failure_detail = NO_TABLE_HEADER, str(exc)
+    anchors = None
+    skipped = 0
+    for skipped, first in enumerate(pages):     # a cover / portfolio page may precede the table: anchor on the first page that carries the header
+        try:
+            anchors = derive_anchors(first.words, spec, first.width)
+            break
+        except AnchorError as exc:
+            last_error = exc
+    if anchors is None:
+        out.failure, out.failure_detail = NO_TABLE_HEADER, str(last_error)
         return out
+    pages = pages[skipped:]       # pages before the header page (cover, portfolio summary) carry no table rows
     out.anchors = anchors
     table = assemble(pages, anchors, spec)
     out.table = table
@@ -83,13 +110,28 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.summary = parse_summary(above, spec) if above else None
     else:
         out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
-    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re):
+    row_opening = None
+    if spec.opening_row_marker and table.rows and re.sub(r"\s+", "", table.rows[0].narration).upper().startswith(spec.opening_row_marker):
+        first_row = table.rows.pop(0)
+        try:
+            row_opening = parse_amount(first_row.amounts.get(spec.balance_column, ""), suffix_sign=True)
+        except (ArithmeticError, NormalizeError):
+            row_opening = None
+    if spec.closing_balance_re and not table.printed_closing:
+        for ln in table.summary_lines:
+            mc = spec.closing_balance_re.search(squash(ln))
+            if mc:
+                table.printed_closing = mc.group(1)
+                break
+    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re or row_opening is not None):
         # printed opening / closing balance lines are still references to verify the derived values against
         opening = closing = debits = credits = None
         try:
             mo = spec.opening_balance_re.search(page1_text) if spec.opening_balance_re else None
             if mo:
                 opening = Decimal(mo.group(1).replace(",", ""))
+            elif row_opening is not None:
+                opening = row_opening
             if table.printed_closing:
                 closing = Decimal(table.printed_closing.replace(",", ""))
             if table.printed_totals:

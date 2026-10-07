@@ -50,11 +50,16 @@ class AssembledTable:
 _SUMMARY_TAIL_LINES = 14
 
 
+def _ends(text: str, markers) -> bool:
+    """True when the (upper-cased, whitespace-free) line text carries an end marker; a marker starting with "=" must equal the whole line, one starting with "^" must open it."""
+    return any((text == m[1:]) if m.startswith("=") else text.startswith(m[1:]) if m.startswith("^") else (m in text) for m in markers)
+
+
 def _first_dated(lines: List[List[Word]], begin: int, anchors: ColumnAnchors, spec: LayoutSpec) -> int:
     """Index of the first line at or after `begin` that starts a row; lines before it are header continuation."""
     end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
     for i in range(begin, len(lines)):
-        if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or any(m in squash(lines[i]).upper() for m in end_markers):
+        if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or _ends(squash(lines[i]).upper(), end_markers):
             return i
     return len(lines)
 
@@ -118,7 +123,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
             if first_dated is None:
                 # a page without rows can still be the footer page that ends the statement
                 for li, line in enumerate(lines):
-                    if any(m in squash(line).upper() for m in end_markers):
+                    if _ends(squash(line).upper(), end_markers):
                         table.summary_page = pno
                         table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
                         ended = True
@@ -129,7 +134,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
         for li in range(start, len(lines)):
             line = lines[li]
             text = squash(line).upper()
-            if any(m in text for m in end_markers):
+            if _ends(text, end_markers):
                 table.summary_page = pno
                 table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
                 ended = True

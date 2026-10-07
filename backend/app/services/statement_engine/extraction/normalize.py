@@ -17,12 +17,18 @@ class NormalizeError(ValueError):
     pass
 
 
-def parse_amount(text: str) -> Optional[Decimal]:
-    """Decimal from a printed amount ("1,234.50", "-20,000.00"); None for empty text."""
+def parse_amount(text: str, suffix_sign: bool = False) -> Optional[Decimal]:
+    """Decimal from a printed amount ("1,234.50", "-20,000.00"); None for empty text. With suffix_sign a trailing
+    "(Cr)"/"Cr" keeps the value and a trailing "(Dr)"/"Dr" negates it (balance printed with its side)."""
     t = (text or "").strip()
     if not t:
         return None
     t = t.replace(",", "")
+    if suffix_sign:
+        m = re.search(r"(?i)\(?(cr|dr)\)?$", t)
+        if m:
+            t = t[:m.start()]
+            t = f"-{t.lstrip('-')}" if m.group(1).lower() == "dr" else t
     negative = t.startswith("(") and t.endswith(")")     # accounting style: (1234.50) is -1234.50
     if negative:
         t = t[1:-1]
@@ -60,7 +66,7 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None
             wd = parse_amount(r.amounts.get(spec.debit_column, ""))
             dp = parse_amount(r.amounts.get(spec.credit_column, ""))
-            bal = parse_amount(r.amounts.get(spec.balance_column, ""))
+            bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True)
             if bal is None:
                 raise NormalizeError("missing balance")
             if (wd is None) == (dp is None):
@@ -69,7 +75,7 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
                 side, amount = spec.debit_column, wd
             else:
                 side, amount = spec.credit_column, dp  # type: ignore[assignment]
-            reversal = amount < 0
+            reversal = amount < 0 and not spec.sign_is_decoration
             magnitude = abs(amount)
             # canonical debit/credit are non-negative and consistent with the balance move: a negative debit-column amount
             # (reversal of a debit) is a credit, a negative credit-column amount is a debit

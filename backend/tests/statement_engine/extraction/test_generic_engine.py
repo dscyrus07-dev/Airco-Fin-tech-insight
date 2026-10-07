@@ -8,6 +8,7 @@ from decimal import Decimal
 from app.services.statement_engine.extraction import registry as registry_mod
 from app.services.statement_engine.extraction.engine import extract_pages
 from app.services.statement_engine.extraction.layout_spec import LayoutSpec
+from app.services.statement_engine.extraction.normalize import parse_amount
 from app.services.statement_engine.extraction.registry import LayoutRegistry
 from app.services.statement_engine.extraction.rows import Page
 from app.services.statement_engine.extraction.words import Word
@@ -403,3 +404,28 @@ def test_golf_summary_above_table_and_bracketed_negative_balances():
     assert [r.txn.balance for r in out.rows] == [Decimal("-100.00"), Decimal("900.00")]
     assert out.summary is not None and out.summary.closing == Decimal("900.00") and out.summary.debits == Decimal("1100.00")
     assert out.checks.results["totals"].status == "pass"
+
+
+# ---------------------------------------------------------------- HOTEL: cover page before the table, dated OPENING BALANCE row, +/- decorated
+# amounts, "(Cr)" balance suffix, date fused with narration, "^SUMMARY" end marker
+HOTEL = replace(ALPHA, layout_id="hotel", bank_key="hotel", sign_is_decoration=True, opening_row_marker="OPENINGBALANCE",
+                amount_re=re.compile(r"^[+-]?[\d,]+\.\d{2}(?:\(Cr\))?$"), summary_marker="", summary_label_text="", summary_expected=False,
+                end_markers=("^SUMMARY",), closing_balance_re=re.compile(r"^ClosingBalance([\d,]+\.\d{2})\(Cr\)$"))
+GEO["hotel"] = GEO["alpha"]
+
+
+def test_hotel_cover_page_opening_row_signed_amounts_suffix_fused_date_and_summary_marker():
+    cover = Page([w("Portfolio", 30, 100), w("overview", 100, 100)], W)
+    ws = list(ALPHA_PERIOD) + header(HOTEL)
+    ws += [w("01-04-2022", 30, 220), w("OPENING", 120, 220), w("BALANCE", 180, 220), rt("1,000.00(Cr)", 560, 220)]
+    ws += [Word("02-04-2022 SHOP", 30, 30 + 5.5 * 15, 237, 245), rt("-100.00", 400, 237), rt("900.00(Cr)", 560, 237)]
+    ws += [w("03-04-2022", 30, 254), w("PAY", 120, 254), rt("+50.00", 470, 254), rt("950.00(Cr)", 560, 254)]
+    ws += [w("SUMMARY", 30, 300), w("Closing", 30, 315), w("Balance", 90, 315), rt("950.00(Cr)", 560, 315)]
+    out = extract_pages([cover, Page(ws, W)], HOTEL)
+    assert [r.txn.date for r in out.rows] == ["2022-04-02", "2022-04-03"]
+    assert out.rows[0].txn.debit == Decimal("100.00") and out.rows[1].txn.credit == Decimal("50.00")
+    assert not any(r.reversal for r in out.rows)
+    assert out.summary.opening == Decimal("1000.00") and out.summary.closing == Decimal("950.00")
+    assert out.checks.results["chain"].status == "pass" and out.checks.results["reference"].status == "pass", out.checks.reasons
+    dr = parse_amount("100.00(Dr)", suffix_sign=True)
+    assert dr == Decimal("-100.00") and parse_amount("(100.00)") == Decimal("-100.00")

@@ -45,6 +45,8 @@ class LayoutSpec:
     opening_balance_re: Optional[Pattern[str]] = None  # whitespace-free page-1 text; group 1 = printed opening balance
     closing_balance_re: Optional[Pattern[str]] = None  # whitespace-free text of ONE line inside the table; group 1 = closing balance
     totals_line_re: Optional[Pattern[str]] = None      # whitespace-free line inside the table; groups 1,2 = printed debit, credit sums
+    opening_row_marker: str = ""               # whitespace-free upper-case start of the narration of a dated "opening balance" row (dropped; its balance is the printed opening)
+    sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
     summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
