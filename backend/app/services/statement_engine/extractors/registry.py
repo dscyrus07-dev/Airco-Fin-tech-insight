@@ -11,8 +11,9 @@ from .icici.layout_spec import ICICI_LAYOUT_1, ICICI_LAYOUT_2
 from .union.layout_spec import UNION_LAYOUT_1
 from .paytm.layout_spec import PAYTM_LAYOUT_1
 from .sbi.layout_spec import SBI_LAYOUT_1
+from .scb.layout_spec import SCB_LAYOUT_1
 
 DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, IDFC_LAYOUT_1,
                                    KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, FEDERAL_LAYOUT_1,
                                    BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3,
-                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1])
+                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1, SCB_LAYOUT_1])

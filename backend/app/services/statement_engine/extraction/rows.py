@@ -6,6 +6,8 @@ position relative to the period line / summary marker / left margin, never by fi
 """
 from __future__ import annotations
 
+from decimal import Decimal
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -172,9 +174,25 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
             if spec.totals_line_re:
                 mt = spec.totals_line_re.search(flat)
                 if mt:
-                    table.printed_totals = (mt.group(1), mt.group(2))
+                    g = mt.groups()
+                    pair = (g[1], g[0]) if spec.totals_credit_first else (g[0], g[1])
+                    if spec.totals_accumulate and table.printed_totals:
+                        pair = tuple(str(Decimal(a.replace(",", "")) + Decimal(b.replace(",", ""))) for a, b in zip(table.printed_totals, pair))
+                    table.printed_totals = pair
+                    if len(g) >= 3 and g[2]:
+                        table.printed_closing = g[2]
                     current = None
                     continue
+            if spec.carry_forward_re is not None and table.rows and spec.carry_forward_re.search(flat):
+                # restated running balance, not a transaction; its dates seed rows printed without a date below it
+                cf = {}
+                for w in line:
+                    col = classify_word(w, anchors, spec)
+                    if col:
+                        cf.setdefault(col, []).append(w.text.strip())
+                current = RawRow(page=pno, top=min(w.top for w in line), date=(cf.get("date") or [""])[0],
+                                 value_date=" ".join(cf.get(spec.secondary_date_column, [])) if spec.secondary_date_column else "")
+                continue
             cols: Dict[str, List[str]] = {}
             for w in line:
                 col = classify_word(w, anchors, spec)
@@ -182,12 +200,16 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     cols.setdefault(col, []).append(w.text.strip())
             if not cols:
                 continue
-            if "date" in cols:
-                current = RawRow(page=pno, top=min(w.top for w in line), date=cols["date"][0])
+            inherit = (spec.undated_rows_inherit_date and "date" not in cols and current is not None and spec.balance_column in cols
+                       and any(c in cols for c in (spec.debit_column, spec.credit_column)))
+            if "date" in cols or inherit:
+                prev = current
+                current = RawRow(page=pno, top=min(w.top for w in line), date=cols["date"][0] if "date" in cols else prev.date)
                 table.rows.append(current)
                 current.narration_lines.append(" ".join(cols.get("narration", [])))
                 current.ref = "".join(cols.get("ref", []))
-                current.value_date = " ".join(cols.get(spec.secondary_date_column, [])) if spec.secondary_date_column else ""
+                if spec.secondary_date_column:
+                    current.value_date = " ".join(cols.get(spec.secondary_date_column, [])) or (prev.value_date if inherit else "")
                 for name in spec.amount_columns:
                     vals = cols.get(name, [])
                     if vals:

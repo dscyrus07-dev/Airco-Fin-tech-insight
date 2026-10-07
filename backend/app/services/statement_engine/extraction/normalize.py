@@ -40,10 +40,12 @@ def parse_amount(text: str, suffix_sign: bool = False) -> Optional[Decimal]:
 
 def parse_date(text: str, fmt: str) -> str:
     """ISO date from a printed date; an impossible calendar date is an error, never coerced."""
-    try:
-        return datetime.strptime(text.strip(), fmt).date().isoformat()
-    except ValueError as exc:
-        raise NormalizeError(f"bad date {text!r}") from exc
+    for one in fmt.split("|"):          # several accepted spellings, e.g. a two- and a four-digit year
+        try:
+            return datetime.strptime(text.strip(), one).date().isoformat()
+        except ValueError:
+            continue
+    raise NormalizeError(f"bad date {text!r}")
 
 
 @dataclass

@@ -49,6 +49,10 @@ class LayoutSpec:
     closing_row_marker: str = ""               # same for a dated "closing balance" row at the end of the table
     page_break_re: Optional[Pattern[str]] = None       # whitespace-free line that opens a printed page break inside a PDF page; lines up to and including the next header row are skipped
     opening_row_balance_only: bool = False    # the first row is the opening balance when it carries a balance and no debit/credit amount (any narration)
+    totals_credit_first: bool = False          # the totals line prints credits before debits; a third group, when present, is the printed closing balance
+    carry_forward_re: Optional[Pattern[str]] = None    # whitespace-free line that restates the running balance at the top of a page; dropped unless it is the table's first row
+    undated_rows_inherit_date: bool = False    # a line with a balance and a debit/credit amount but no date is a new row on the previous row's date
+    totals_accumulate: bool = False            # the totals line repeats (per printed section): sum the debits and credits of every match, closing from the last
     monospace_text: bool = False               # text-rendered page: each line arrives as one word; split on whitespace, x divided by character count
     bank_markers: Tuple[str, ...] = ()         # whitespace-free UPPER-CASE bank names as printed above the table header; used by the registry to refuse a header that another bank's statement shares
     merge_statements: bool = False             # a PDF that holds several statements: ignore empty ones, merge overlapping / contiguous ones, else REVIEW

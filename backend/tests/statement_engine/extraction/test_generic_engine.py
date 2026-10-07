@@ -659,3 +659,27 @@ def test_default_registry_every_layout_names_its_bank_and_markers_do_not_collide
 def test_default_registry_older_icici_header_is_icici_not_canara():
     spec = DEFAULT_REGISTRY.get("icici_date_mode_particulars_deposits_withdrawals_balance")
     assert spec.bank_key == "icici" and not any(s.bank_key == "canara" and s.columns.keys() == spec.columns.keys() for s in DEFAULT_REGISTRY.specs())
+
+
+# ---------------------------------------------------------------- undated rows, carried-forward balance, repeated credit-first totals
+def test_parse_date_accepts_alternative_spellings():
+    from app.services.statement_engine.extraction.normalize import parse_date
+    assert parse_date("05 Jan 23", "%d %b %y|%d %b %Y") == parse_date("05 Jan 2023", "%d %b %y|%d %b %Y") == "2023-01-05"
+
+
+def test_undated_rows_carry_forward_lines_and_repeated_credit_first_totals():
+    spec = replace(MONO, undated_rows_inherit_date=True, carry_forward_re=re.compile(r"BALANCEFORWARD"), opening_row_balance_only=True,
+                   totals_line_re=re.compile(r"^TOTAL([\d,]+\.\d{2})([\d,]+\.\d{2})([\d,]+\.\d{2})$"), totals_credit_first=True, totals_accumulate=True)
+    pg = _mono_page(["Statement of account for the period of 01-04-2022 to 30-04-2022", "-" * 80, _MONO_HEADER, "-" * 80,
+                     _mono_row("01-04-22", "OPENING", bal="1,000.00"),
+                     _mono_row("02-04-22", "SHOP", debit="100.00", bal="900.00"),
+                     _mono_row("        ", "SHOP2", debit="50.00", bal="850.00"),
+                     "TOTAL        0.00        150.00        850.00",
+                     _mono_row("02-04-22", "BALANCE FORWARD", bal="850.00"),
+                     _mono_row("        ", "SHOP3", credit="25.00", bal="875.00"),
+                     "TOTAL       25.00          0.00        875.00"])
+    out = extract_pages([pg], spec)
+    assert out.failure is None, out.failure_detail
+    assert [r.txn.description for r in out.rows] == ["SHOP", "SHOP2", "SHOP3"] and {r.txn.date for r in out.rows} == {"2022-04-02"}
+    assert out.summary.debits == Decimal("150.00") and out.summary.credits == Decimal("25.00") and out.summary.closing == Decimal("875.00")
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
