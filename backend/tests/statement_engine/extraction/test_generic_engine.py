@@ -1,0 +1,225 @@
+"""Proof that the extraction engine is configuration-driven: three synthetic layouts that differ from HDFC (column
+set and order, date formats, header repetition, summary shape, period format) run through the SAME engine code, plus
+HDFC through the registry. Pages are built from word coordinates; no PDFs, no customer data."""
+import re
+from pathlib import Path
+from decimal import Decimal
+
+from app.services.statement_engine.extraction import registry as registry_mod
+from app.services.statement_engine.extraction.engine import extract_pages
+from app.services.statement_engine.extraction.layout_spec import LayoutSpec
+from app.services.statement_engine.extraction.registry import LayoutRegistry
+from app.services.statement_engine.extraction.rows import Page
+from app.services.statement_engine.extraction.words import Word
+from app.services.statement_engine.extractors.hdfc.layout_spec import HDFC_LAYOUT_A
+from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
+
+W = 600.0
+
+
+def w(text, x0, top):
+    return Word(text, x0, x0 + 5.5 * len(text), top, top + 8)
+
+
+def rt(text, edge, top):
+    return Word(text, edge - 5.5 * len(text), edge, top, top + 8)
+
+
+# ---------------------------------------------------------------- three alternative layouts
+ALPHA = LayoutSpec(   # Date | Particulars | Debit | Credit | Balance ; no reference column; header on every page
+    layout_id="alpha", bank_key="alpha", bank_name="Alpha Bank",
+    columns={"date": (("txn", "date"),), "narration": (("particulars",),), "debit": (("debit",),), "credit": (("credit",),), "balance": (("balance",),)},
+    text_columns=("date", "narration"), debit_column="debit", credit_column="credit", balance_column="balance",
+    date_re=re.compile(r"^\d{2}-\d{2}-\d{4}$"), date_format="%d-%m-%Y", amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"Period:(\d{2}-\d{2}-\d{4})to(\d{2}-\d{2}-\d{4})"), period_date_format="%d-%m-%Y",
+    summary_marker="ACCOUNTSUMMARY", summary_label_text="totaldebitstotalcreditsclosingbalance",
+    summary_fields=("debits", "credits", "closing"), header_repeats=True, account_label="accountnumber")
+BETA = LayoutSpec(    # Date | Details | Chq No | Credit | Debit | Balance ; credit left of debit; summary prints only opening/closing
+    layout_id="beta", bank_key="beta", bank_name="Beta Bank",
+    columns={"date": (("date",),), "narration": (("details",),), "ref": (("chq", "no"),), "credit": (("credit",),), "debit": (("debit",),), "balance": (("balance",),)},
+    text_columns=("date", "narration", "ref"), debit_column="debit", credit_column="credit", balance_column="balance",
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"), date_format="%d/%m/%Y", amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"Statementperiod:(\d{2}/\d{2}/\d{4})-(\d{2}/\d{2}/\d{4})"), period_date_format="%d/%m/%Y",
+    summary_marker="SUMMARY", summary_label_text="openingclosing", summary_fields=("opening", "closing"), account_label="acno")
+GAMMA = LayoutSpec(   # Date | Description | Ref | Value Date | Money Out | Money In | Balance ; 3-letter month dates ; no summary block
+    layout_id="gamma", bank_key="gamma", bank_name="Gamma Bank",
+    columns={"date": (("date",),), "narration": (("description",),), "ref": (("ref",),), "value_date": (("value", "date"),),
+             "out": (("money", "out"),), "in": (("money", "in"),), "balance": (("balance",),)},
+    text_columns=("date", "narration", "ref", "value_date"), debit_column="out", credit_column="in", balance_column="balance",
+    date_re=re.compile(r"^\d{2}-[A-Za-z]{3}-\d{2}$"), date_format="%d-%b-%y", amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"From(\d{2}-[A-Za-z]{3}-\d{4})To(\d{2}-[A-Za-z]{3}-\d{4})"), period_date_format="%d-%b-%Y",
+    summary_marker="NOSUMMARYMARKER", summary_label_text="x", secondary_date_column="value_date", account_label="account")
+
+GEO = {   # x0 of text columns, right edge of money columns, per layout
+    "alpha": dict(text={"date": 30, "narration": 120}, money={"debit": 400, "credit": 470, "balance": 560},
+                  titles={"date": ["Txn", "Date"], "narration": ["Particulars"], "debit": ["Debit"], "credit": ["Credit"], "balance": ["Balance"]}),
+    "beta": dict(text={"date": 25, "narration": 100, "ref": 260}, money={"credit": 380, "debit": 450, "balance": 540},
+                 titles={"date": ["Date"], "narration": ["Details"], "ref": ["Chq", "No"], "credit": ["Credit"], "debit": ["Debit"], "balance": ["Balance"]}),
+    "gamma": dict(text={"date": 20, "narration": 90, "ref": 240, "value_date": 300}, money={"out": 410, "in": 480, "balance": 570},
+                  titles={"date": ["Date"], "narration": ["Description"], "ref": ["Ref"], "value_date": ["Value", "Date"], "out": ["Money", "Out"], "in": ["Money", "In"], "balance": ["Balance"]}),
+}
+
+
+def header(spec, top=200.0):
+    g = GEO[spec.layout_id]
+    out = []
+    for col, toks in g["titles"].items():
+        if col in g["text"]:
+            x = g["text"][col]
+            for t in toks:
+                out.append(w(t, x, top)); x += 5.5 * len(t) + 4
+        else:
+            edge = g["money"][col]
+            x = edge - sum(5.5 * len(t) + 4 for t in toks) + 4
+            for t in toks:
+                out.append(w(t, x, top)); x += 5.5 * len(t) + 4
+    return out
+
+
+def row(spec, top, date, narr, debit=None, credit=None, balance="0.00", ref="", vdate=None):
+    g = GEO[spec.layout_id]
+    ws = [w(date, g["text"]["date"], top), w(narr, g["text"]["narration"], top)]
+    if "ref" in g["text"]:
+        ws.append(w(ref or "R1", g["text"]["ref"], top))
+    if "value_date" in g["text"]:
+        ws.append(w(vdate or date, g["text"]["value_date"], top))
+    if debit is not None:
+        ws.append(rt(debit, g["money"][spec.debit_column], top))
+    if credit is not None:
+        ws.append(rt(credit, g["money"][spec.credit_column], top))
+    ws.append(rt(balance, g["money"][spec.balance_column], top))
+    return ws
+
+
+def page(spec, rows, period_words=None, summary_words=None, with_header=True, extra=None):
+    ws = list(extra or []) + list(period_words or [])
+    if with_header:
+        ws += header(spec)
+    for r in rows:
+        ws += r
+    ws += summary_words or []
+    return Page(ws, W)
+
+
+# ---- alpha
+def alpha_rows():
+    return [row(ALPHA, 220, "01-04-2022", "SHOP", debit="100.00", balance="900.00"),
+            row(ALPHA, 237, "02-04-2022", "SALARY", credit="1,000.00", balance="1,900.00")]
+
+
+ALPHA_PERIOD = [w("Period:", 30, 170), w("01-04-2022", 80, 170), w("to", 150, 170), w("30-04-2022", 165, 170)]
+
+
+def alpha_summary(top=400, debits="100.00", credits="1,000.00", closing="1,900.00"):
+    return [w("Account Summary", 30, top), w("Total", 30, top + 14), w("Debits", 70, top + 14), w("Total", 120, top + 14), w("Credits", 160, top + 14),
+            w("Closing", 220, top + 14), w("Balance", 270, top + 14), w(debits, 30, top + 28), w(credits, 120, top + 28), w(closing, 220, top + 28)]
+
+
+def test_alpha_header_every_page_and_threecolumn_summary():
+    p1 = page(ALPHA, alpha_rows(), ALPHA_PERIOD)
+    p2 = page(ALPHA, [row(ALPHA, 220, "03-04-2022", "BILL", debit="50.00", balance="1,850.00")], ALPHA_PERIOD, alpha_summary(300, "150.00", "1,000.00", "1,850.00"))
+    out = extract_pages([p1, p2], ALPHA)
+    assert out.failure is None and len(out.rows) == 3 and out.rows[2].page == 2
+    assert out.rows[1].txn.credit == Decimal("1000.00") and out.rows[0].txn.date == "2022-04-01"
+    assert out.summary.debits == Decimal("150.00") and out.summary.dr_count is None
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
+
+
+def test_alpha_mismatching_summary_fails_and_chain_break_fails():
+    p = page(ALPHA, alpha_rows(), ALPHA_PERIOD, alpha_summary(closing="1,901.00"))
+    assert extract_pages([p], ALPHA).checks.verdict == "FAILED"
+    rows = alpha_rows(); rows[1] = row(ALPHA, 237, "02-04-2022", "SALARY", credit="1,000.00", balance="1,950.00")
+    assert extract_pages([page(ALPHA, rows, ALPHA_PERIOD, alpha_summary())], ALPHA).checks.results["chain"].status == "fail"
+
+
+def test_alpha_account_number_and_no_ref_column():
+    extra = [w("Account", 30, 150), w("Number", 80, 150), w("1234567890", 130, 150)]
+    out = extract_pages([page(ALPHA, alpha_rows(), ALPHA_PERIOD, alpha_summary(), extra=extra)], ALPHA)
+    assert out.account_number == "1234567890" and out.rows[0].txn.ref_no == ""
+
+
+# ---- beta
+BETA_PERIOD = [w("Statement", 25, 170), w("period:", 80, 170), w("01/04/2022", 130, 170), w("-", 200, 170), w("30/04/2022", 215, 170)]
+
+
+def beta_rows():
+    return [row(BETA, 220, "01/04/2022", "SHOP", debit="100.00", balance="900.00", ref="C1"),
+            row(BETA, 237, "02/04/2022", "SALARY", credit="1,000.00", balance="1,900.00", ref="C2")]
+
+
+def beta_summary(opening="1,000.00", closing="1,900.00"):
+    return [w("Summary", 25, 400), w("Opening", 25, 414), w("Closing", 100, 414), w(opening, 25, 428), w(closing, 100, 428)]
+
+
+def test_beta_credit_column_left_of_debit_and_partial_summary():
+    out = extract_pages([page(BETA, beta_rows(), BETA_PERIOD, beta_summary())], BETA)
+    assert out.failure is None and out.rows[0].txn.debit == Decimal("100.00") and out.rows[1].txn.credit == Decimal("1000.00")
+    assert out.rows[0].txn.ref_no == "C1"
+    assert out.checks.results["reference"].status == "pass" and out.checks.results["totals"].status == "skipped"
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
+
+
+def test_beta_header_only_on_first_page_continuation_works():
+    p2 = page(BETA, [row(BETA, 220, "03/04/2022", "BILL", debit="50.00", balance="1,850.00", ref="C3")], BETA_PERIOD, beta_summary(closing="1,850.00"), with_header=False)
+    out = extract_pages([page(BETA, beta_rows(), BETA_PERIOD), p2], BETA)
+    assert len(out.rows) == 3 and out.checks.verdict == "VERIFIED", out.checks.reasons
+
+
+def test_beta_reversal_uses_spec_debit_column():
+    rows = [row(BETA, 220, "01/04/2022", "PAY", debit="100.00", balance="900.00"), row(BETA, 237, "02/04/2022", "REV", debit="-100.00", balance="1,000.00")]
+    out = extract_pages([page(BETA, rows, BETA_PERIOD, beta_summary(closing="1,000.00"))], BETA)
+    assert out.rows[1].reversal and out.rows[1].printed_side == "debit" and out.rows[1].txn.credit == Decimal("100.00")
+
+
+# ---- gamma
+GAMMA_PERIOD = [w("From", 20, 170), w("01-Apr-2022", 60, 170), w("To", 140, 170), w("30-Apr-2022", 170, 170)]
+
+
+def test_gamma_value_date_month_names_no_summary_is_review():
+    rows = [row(GAMMA, 220, "01-Apr-22", "SHOP", debit="100.00", balance="900.00", vdate="02-Apr-22"),
+            row(GAMMA, 237, "03-Apr-22", "SALARY", credit="1,000.00", balance="1,900.00")]
+    out = extract_pages([page(GAMMA, rows, GAMMA_PERIOD)], GAMMA)
+    assert out.failure is None and out.rows[0].txn.value_date == "2022-04-02" and out.rows[0].txn.date == "2022-04-01"
+    assert out.checks.verdict == "REVIEW"
+
+
+# ---------------------------------------------------------------- registry and detection
+def test_detect_layout_picks_the_matching_spec_and_rejects_others():
+    reg = LayoutRegistry([HDFC_LAYOUT_A, ALPHA, BETA, GAMMA])
+    assert [s.layout_id for s in reg.detect([page(ALPHA, alpha_rows(), ALPHA_PERIOD)])] == ["alpha"]
+    assert [s.layout_id for s in reg.detect([page(BETA, beta_rows(), BETA_PERIOD)])] == ["beta"]
+    assert [s.layout_id for s in reg.detect([page(GAMMA, [], GAMMA_PERIOD)])] == ["gamma"]
+    assert reg.detect([Page([w("nothing", 10, 10)], W)]) == []
+    assert [s.bank_key for s in reg.for_bank("beta")] == ["beta"]
+
+
+def test_registry_rejects_duplicate_and_invalid_specs():
+    reg = LayoutRegistry([ALPHA])
+    for bad in (lambda: reg.register(ALPHA),):
+        try:
+            bad()
+        except ValueError:
+            continue
+        raise AssertionError("duplicate accepted")
+    broken = LayoutSpec(**{**ALPHA.__dict__, "layout_id": "broken", "text_columns": ("date",)})
+    try:
+        LayoutRegistry([broken])
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("invalid spec accepted")
+
+
+def test_default_registry_has_hdfc_layout_a():
+    assert DEFAULT_REGISTRY.get(HDFC_LAYOUT_A.layout_id) is HDFC_LAYOUT_A and DEFAULT_REGISTRY.for_bank("hdfc")
+
+
+# ---------------------------------------------------------------- the engine contains no bank-specific code
+def test_engine_package_has_no_bank_specific_strings():
+    pkg = Path(registry_mod.__file__).parent
+    banks = re.compile(r"hdfc|sbi\b|axis|kotak|icici|withdrawal|deposit|valuedt|chqrefno|ifsc", re.I)
+    offenders = {f.name: banks.findall(f.read_text()) for f in pkg.glob("*.py") if banks.search(f.read_text())}
+    # ifsc is an optional spec field (ifsc_re); any other hit is a generalisation leak
+    offenders = {k: [x for x in v if x.lower() != "ifsc"] for k, v in offenders.items()}
+    offenders = {k: v for k, v in offenders.items() if v}
+    assert not offenders, offenders
