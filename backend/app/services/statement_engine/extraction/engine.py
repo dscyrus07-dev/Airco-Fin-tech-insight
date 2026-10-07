@@ -80,7 +80,7 @@ def _merge_drcr_suffix(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     """Attach a separate "Cr"/"Dr" word to the amount printed immediately before it on the same line."""
     out: List[Word] = []
     for w in words:
-        if w.text.strip().lower() in ("cr", "dr") and out:
+        if w.text.strip().lower() in ("cr", "dr", "(cr)", "(dr)") and out:
             prev = out[-1]
             if abs(prev.top - w.top) <= 3.0 and -1.0 <= w.x0 - prev.x1 <= 12.0 and spec.amount_re.match(prev.text.strip()):
                 out[-1] = Word(prev.text.strip() + w.text.strip(), prev.x0, w.x1, prev.top, prev.bottom)
@@ -162,6 +162,8 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         if any(v is not None for v in (opening, closing, debits, credits)):
             out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits)
     rows, errors = normalize_rows(table.rows, spec)
+    if spec.row_order == "reverse":
+        rows.reverse()
     out.rows = rows
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):
         out.failure, out.failure_detail = NO_ROWS, "header found but no transaction rows"

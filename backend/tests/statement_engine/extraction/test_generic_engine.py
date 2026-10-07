@@ -459,3 +459,33 @@ def test_india_footer_cr_suffix_word_closing_row_and_fused_date():
     assert out.rows[0].txn.balance == Decimal("900.00") and out.rows[1].txn.credit == Decimal("50.00")
     assert out.summary.opening == Decimal("1000.00") and out.summary.closing == Decimal("950.00")
     assert out.checks.results["reference"].status == "pass" and out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+# ---------------------------------------------------------------- JULIET: ONE amount column ending in (Dr)/(Cr), newest row first, zero-as-empty pair
+JULIET = replace(ALPHA, layout_id="juliet", bank_key="juliet", single_amount_column="amount", debit_column="amount_dr", credit_column="amount_cr",
+                 columns={"date": (("txn", "date"),), "narration": (("particulars",),), "amount": (("amount",),), "balance": (("balance",),)},
+                 amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?: ?\((?:Cr|Dr)\))?$"), row_order="reverse",
+                 summary_marker="", summary_label_text="", summary_expected=False)
+GEO["juliet"] = dict(text={"date": 30, "narration": 120}, money={"amount": 400, "balance": 560},
+                     titles={"date": ["Txn", "Date"], "narration": ["Particulars"], "amount": ["Amount"], "balance": ["Balance"]})
+
+
+def test_juliet_single_signed_amount_column_and_reverse_order():
+    def jrow(top, date, narr, amt, bal):
+        return [w(date, 30, top), w(narr, 120, top), rt(amt, 400, top), rt(bal, 560, top)]
+    ws = list(ALPHA_PERIOD) + header(JULIET)
+    ws += jrow(220, "02-04-2022", "SALARY", "1,000.00 (Cr)", "1,900.00 (Cr)")       # newest first
+    ws += jrow(237, "01-04-2022", "SHOP", "100.00 (Dr)", "900.00 (Cr)")
+    out = extract_pages([Page(ws, W)], JULIET)
+    assert [r.txn.date for r in out.rows] == ["2022-04-01", "2022-04-02"]
+    assert out.rows[0].txn.debit == Decimal("100.00") and out.rows[1].txn.credit == Decimal("1000.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+def test_zero_amount_is_empty_pairs_the_side_with_the_value():
+    spec = replace(ALPHA, zero_amount_is_empty=True)
+    from app.services.statement_engine.extraction.rows import RawRow
+    rows = [RawRow(page=1, top=1, date="01-04-2022", narration_lines=["X"], amounts={"debit": "5.0", "credit": "0.0", "balance": "95.00"})]
+    from app.services.statement_engine.extraction.normalize import normalize_rows
+    out, errs = normalize_rows(rows, spec)
+    assert not errs and out[0].txn.debit == Decimal("5.0") and out[0].txn.credit is None

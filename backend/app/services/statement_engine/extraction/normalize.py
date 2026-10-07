@@ -64,9 +64,22 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
         try:
             date = parse_date(r.date, spec.date_format)
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None
-            wd = parse_amount(r.amounts.get(spec.debit_column, ""))
-            dp = parse_amount(r.amounts.get(spec.credit_column, ""))
+            if spec.single_amount_column:
+                cell = r.amounts.get(spec.single_amount_column, "").strip()
+                m = re.search(r"(?i)\(?(cr|dr)\)?$", cell)
+                if not m:
+                    raise NormalizeError("amount cell carries no Dr/Cr marker")
+                value = parse_amount(cell[:m.start()])
+                wd, dp = (value, None) if m.group(1).lower() == "dr" else (None, value)
+            else:
+                wd = parse_amount(r.amounts.get(spec.debit_column, ""))
+                dp = parse_amount(r.amounts.get(spec.credit_column, ""))
             bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True)
+            if spec.zero_amount_is_empty and wd is not None and dp is not None:
+                if wd == 0 and dp != 0:
+                    wd = None
+                elif dp == 0 and wd != 0:
+                    dp = None
             if bal is None:
                 raise NormalizeError("missing balance")
             if (wd is None) == (dp is None):

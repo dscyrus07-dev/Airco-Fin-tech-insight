@@ -47,6 +47,9 @@ class LayoutSpec:
     totals_line_re: Optional[Pattern[str]] = None      # whitespace-free line inside the table; groups 1,2 = printed debit, credit sums
     opening_row_marker: str = ""               # whitespace-free upper-case start of the narration of a dated "opening balance" row (dropped; its balance is the printed opening)
     closing_row_marker: str = ""               # same for a dated "closing balance" row at the end of the table
+    single_amount_column: str = ""             # one signed money column whose cells end in Dr/Cr; debit_column/credit_column are then virtual names
+    row_order: str = "forward"                 # "reverse": the statement lists the newest transaction first
+    zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
     merge_drcr_suffix: bool = False            # a separate "Cr"/"Dr" word right after an amount is part of that amount ("3514.56 Cr")
     page_footer_markers: Tuple[str, ...] = ()   # whitespace-free upper-case line starts: everything below such a line on a page is footer, the table goes on next page
@@ -57,6 +60,8 @@ class LayoutSpec:
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
+        if self.single_amount_column:
+            return (self.single_amount_column, self.balance_column)
         return (self.debit_column, self.credit_column, self.balance_column)
 
     def validate(self) -> None:
@@ -65,6 +70,10 @@ class LayoutSpec:
         for col in (*self.text_columns, *self.amount_columns):
             if col not in self.columns:
                 raise ValueError(f"column {col!r} has no header token sequence")
+        if self.row_order not in ("forward", "reverse"):
+            raise ValueError("row_order must be 'forward' or 'reverse'")
+        if self.single_amount_column and self.debit_column == self.credit_column:
+            raise ValueError("single_amount_column needs distinct virtual debit/credit names")
         if self.summary_position not in ("after", "before"):
             raise ValueError("summary_position must be 'after' or 'before'")
         if self.continuation_start not in ("marker", "top"):
