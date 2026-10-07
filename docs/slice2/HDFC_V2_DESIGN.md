@@ -151,3 +151,12 @@ Layout-specific facts live in a declarative `LayoutSpec` (header words that anch
 5. ~~Layout A'~~ DECIDED: Phase 2 follow-up. ~~Layout D~~ DECIDED: future-layout queue.
 6. ~~Printed summary absent~~ RESOLVED: absent in 66 of 1,659 files (4.0%). Policy: a file without a parseable printed summary is at most REVIEW, never VERIFIED. The summary scan covers all pages.
 7. Shadow-run storage and retention (7-day compliance applies to stored captures).
+
+## Amendment A1 (Slice 3A implementation notes)
+
+Recorded when the pure extraction infrastructure was implemented; no change to the frozen scope.
+
+1. **Period check tolerance.** A row dated up to 1 day outside the printed From/To is informational (observed: rows after To by at most 1 day in 299 oracle files); a larger distance in either direction is a warning (REVIEW).
+2. **Summary across a page break.** The STATEMENT SUMMARY labels can sit at the bottom of one page and the numbers at the top of the next, below the repeated customer block and period line. The assembler therefore also collects the table-region lines of the page following the summary marker, and the summary parser accepts the first following line that carries exactly six numeric tokens (Indian digit grouping and a Cr/Dr suffix are tolerated).
+3. **Printed inconsistencies are reported, not repaired.** Probe on 166 oracle files: V2 reproduces the legacy rows one-for-one on 165 and flags 4 files FAILED. All four are inconsistencies printed in the PDF itself (balance unchanged with a printed amount, a deposit printed against a balance fall, or printed summary debits that disagree with the balance chain). The legacy parser hid these by inferring the side from the balance; V2 keeps the printed side and fails the verification.
+4. **Corpus stays out of Git.** Tests build pages from synthetic word coordinates.
