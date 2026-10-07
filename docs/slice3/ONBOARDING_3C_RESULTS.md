@@ -19,7 +19,7 @@ schema and date checks. Independent validation (Devin) is the next step; treat e
 | Union | 1 | 57 of 57 VERIFIED | single Dr/Cr amount column, newest row first |
 | Paytm | 1 | 43 of 43 VERIFIED | single signed amount column |
 
-11 banks, 17 layouts. Not onboarded (header fingerprints are refused rather than guessed): headerless variants, other
+11 banks, 18 layouts. Not onboarded (header fingerprints are refused rather than guessed): headerless variants, other
 Federal / ICICI / Paytm / Union fingerprints, banks outside the census.
 
 ## What the engine needed (cumulative; all optional spec fields, defaults keep the old behaviour)
@@ -27,7 +27,7 @@ Federal / ICICI / Paytm / Union fingerprints, banks outside the census.
 `opening_row_marker`, `closing_row_marker`, `sign_is_decoration`, `^`/`=` anchored end markers, Cr/Dr balance suffix,
 fused-date splitting, leading cover pages, `band_left_pad`, `page_footer_markers`, `merge_drcr_suffix`,
 `single_amount_column`, `row_order`, `zero_amount_is_empty`, `amount_prefix`, `merge_sign_prefix`,
-`dated_rows_after_end_ok`, `merge_statements`. Engine diff since SBI/Canara: about 200 added lines for eight further banks; each new spec
+`dated_rows_after_end_ok`, `merge_statements`, `monospace_text`, `page_break_re`, `opening_row_balance_only`. Engine diff since SBI/Canara: about 200 added lines for eight further banks; each new spec
 is 38-85 lines of configuration.
 
 ## Known limits

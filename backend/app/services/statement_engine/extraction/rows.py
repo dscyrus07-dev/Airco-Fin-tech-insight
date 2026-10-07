@@ -81,9 +81,15 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
         return len(lines), period, True
     if spec.header_repeats:
         found = find_header(lines, spec)
+        if found and spec.page_break_re is not None and any(
+                any(classify_word(w, anchors, spec) == "date" for w in ln) for ln in lines[:found[0]]):
+            return 0, period, True      # rows sit above the header: a printed page break falls inside this PDF page
         if found:
             return _first_dated(lines, found[0] + 1, anchors, spec), period, True
     if marker_idx is not None:
+        if spec.page_break_re is not None and any(
+                any(classify_word(w, anchors, spec) == "date" for w in ln) for ln in lines[:marker_idx]):
+            return 0, period, True      # rows above the period line: the printed page break falls after them
         return marker_idx + 1, period, True
     if spec.continuation_start == "top":
         return 0, period, True
@@ -130,10 +136,21 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                         break
                 continue
             start = first_dated
-            table.warnings.append(f"no_period_marker:page{pno}")
+            if spec.page_break_re is None:
+                table.warnings.append(f"no_period_marker:page{pno}")
+        in_break = False
         for li in range(start, len(lines)):
             line = lines[li]
             text = squash(line).upper()
+            if spec.page_break_re is not None:
+                if in_break:
+                    if find_header([line], spec):
+                        in_break = False
+                    continue
+                if spec.page_break_re.search(squash(line)):
+                    in_break = True
+                    current = None
+                    continue
             if spec.page_footer_markers and any(text.startswith(m) for m in spec.page_footer_markers):
                 break
             if _ends(text, end_markers):

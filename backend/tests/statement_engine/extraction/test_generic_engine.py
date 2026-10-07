@@ -566,3 +566,44 @@ def test_merge_statements_different_account_is_not_merged():
 def test_merge_statements_is_off_by_default():
     out = extract_pages(_two_statements([_bill()]), DELTA)
     assert len(out.rows) == 1 and any(x.startswith("additional_statement") for x in out.warnings)
+
+
+# ---------------------------------------------------------------- monospace text pages, inline page breaks, balance-only opening row
+def _line(top, text):
+    return Word(text, 57.0, 57.0 + 5.0 * len(text), top, top + 9)
+
+
+def _mono_page(lines, start_top=100.0):
+    return Page([_line(start_top + 11 * i, t) for i, t in enumerate(lines)], 595.0)
+
+
+_MONO_HEADER = "DATE     PARTICULARS    CHQ.NO.      WITHDRAWALS        DEPOSITS         BALANCE"
+MONO = replace(
+    ALPHA, layout_id="mono", bank_key="mono", bank_name="Mono Bank", monospace_text=True, opening_row_balance_only=True,
+    page_break_re=re.compile(r"^PageTotal:"), ignore_line_res=(re.compile(r"^-{10,}$"),),
+    columns={"date": (("date",),), "narration": (("particulars",),), "ref": (("chqno",),), "debit": (("withdrawals",),),
+             "credit": (("deposits",),), "balance": (("balance",),)},
+    text_columns=("date", "narration", "ref"), date_re=re.compile(r"^\d{2}-\d{2}-\d{2}$"), date_format="%d-%m-%y",
+    period_re=re.compile(r"(\d{2}-\d{2}-\d{4})to(\d{2}-\d{2}-\d{4})"), summary_marker="NOSUMMARYMARKER", summary_label_text="x",
+    summary_fields=(), summary_expected=False, header_repeats=True, account_label="a/cnumber")
+
+
+def _mono_row(date, narr, debit="", credit="", bal=""):
+    return f"{date} {narr:<14}{'':<10}{debit:>11}{'':<8}{credit:>11}{'':<6}{bal:>12}"
+
+
+def test_monospace_split_places_each_piece_by_character_offset():
+    from app.services.statement_engine.extraction.engine import _split_monospace
+    got = _split_monospace([Word("AB   CD", 10.0, 17.0, 0, 8)])
+    assert [x.text for x in got] == ["AB", "CD"] and abs(got[1].x0 - 15.0) < 1e-6
+
+
+def test_monospace_page_with_inline_page_break_keeps_rows_on_both_sides_and_balance_only_opening():
+    p1 = _mono_page(["Statement of account for the period of 01-04-2022 to 30-04-2022", "-" * 80, _MONO_HEADER, "-" * 80,
+                     _mono_row("01-04-22", "B/F", bal="1,000.00"),
+                     _mono_row("02-04-22", "SHOP", debit="100.00", bal="900.00"),
+                     "-" * 80, "Page Total:", "Statement of account for the period of 01-04-2022 to 30-04-2022", "-" * 80, _MONO_HEADER, "-" * 80,
+                     _mono_row("03-04-22", "BILL", debit="50.00", bal="850.00")])
+    out = extract_pages([p1], MONO)
+    assert out.failure is None and [r.txn.description for r in out.rows] == ["SHOP", "BILL"]
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons

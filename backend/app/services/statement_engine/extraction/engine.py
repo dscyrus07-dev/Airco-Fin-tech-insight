@@ -80,6 +80,21 @@ def _split_merged_dates(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
+def _split_monospace(words: Sequence[Word]) -> List[Word]:
+    """A text-rendered (fixed-pitch) page is read as one word per line: split on whitespace and place each piece by its
+    character offset, so the ordinary header-anchored column logic applies."""
+    out: List[Word] = []
+    for w in words:
+        text = w.text
+        if len(text) < 2 or not re.search(r"\s", text.strip()):
+            out.append(w)
+            continue
+        pitch = (w.x1 - w.x0) / len(text)
+        for m in re.finditer(r"\S+", text):
+            out.append(Word(m.group(), w.x0 + m.start() * pitch, w.x0 + m.end() * pitch, w.top, w.bottom))
+    return out
+
+
 def _merge_drcr_suffix(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     """Attach a separate "Cr"/"Dr" word to the amount printed immediately before it on the same line."""
     out: List[Word] = []
@@ -113,6 +128,8 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
 
 def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
+    if spec.monospace_text:
+        pages = [Page(_split_monospace(p.words), p.width) for p in pages]
     if spec.amount_prefix or spec.merge_sign_prefix:
         pages = [Page(_prepare_amounts(p.words, spec), p.width) for p in pages]
     pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
@@ -150,7 +167,9 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     else:
         out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
     row_opening = None
-    if spec.opening_row_marker and table.rows and re.sub(r"\s+", "", table.rows[0].narration).upper().startswith(spec.opening_row_marker):
+    balance_only_first = bool(spec.opening_row_balance_only and table.rows and table.rows[0].amounts.get(spec.balance_column)
+                              and not table.rows[0].amounts.get(spec.debit_column) and not table.rows[0].amounts.get(spec.credit_column))
+    if table.rows and (balance_only_first or (spec.opening_row_marker and re.sub(r"\s+", "", table.rows[0].narration).upper().startswith(spec.opening_row_marker))):
         first_row = table.rows.pop(0)
         try:
             row_opening = parse_amount(first_row.amounts.get(spec.balance_column, ""), suffix_sign=True)
