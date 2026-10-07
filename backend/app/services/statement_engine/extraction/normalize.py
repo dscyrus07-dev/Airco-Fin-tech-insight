@@ -67,10 +67,14 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             if spec.single_amount_column:
                 cell = r.amounts.get(spec.single_amount_column, "").strip()
                 m = re.search(r"(?i)\(?(cr|dr)\)?$", cell)
-                if not m:
+                if m:
+                    value = parse_amount(cell[:m.start()])
+                    wd, dp = (value, None) if m.group(1).lower() == "dr" else (None, value)
+                elif cell[:1] in ("+", "-") and spec.merge_sign_prefix:
+                    value = parse_amount(cell[1:])
+                    wd, dp = (value, None) if cell[0] == "-" else (None, value)
+                else:
                     raise NormalizeError("amount cell carries no Dr/Cr marker")
-                value = parse_amount(cell[:m.start()])
-                wd, dp = (value, None) if m.group(1).lower() == "dr" else (None, value)
             else:
                 wd = parse_amount(r.amounts.get(spec.debit_column, ""))
                 dp = parse_amount(r.amounts.get(spec.credit_column, ""))

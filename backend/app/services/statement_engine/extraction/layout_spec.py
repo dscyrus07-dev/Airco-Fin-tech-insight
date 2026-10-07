@@ -47,6 +47,9 @@ class LayoutSpec:
     totals_line_re: Optional[Pattern[str]] = None      # whitespace-free line inside the table; groups 1,2 = printed debit, credit sums
     opening_row_marker: str = ""               # whitespace-free upper-case start of the narration of a dated "opening balance" row (dropped; its balance is the printed opening)
     closing_row_marker: str = ""               # same for a dated "closing balance" row at the end of the table
+    dated_rows_after_end_ok: bool = False      # dated lines after the end marker (e.g. a trailing summary table) are not another statement
+    amount_prefix: str = ""                    # currency text printed in front of amounts ("Rs.", several as "Rs.|₹"), stripped before matching
+    merge_sign_prefix: bool = False            # a standalone "+"/"-" word right before an amount belongs to it (single_amount_column: + credit, - debit)
     single_amount_column: str = ""             # one signed money column whose cells end in Dr/Cr; debit_column/credit_column are then virtual names
     row_order: str = "forward"                 # "reverse": the statement lists the newest transaction first
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"

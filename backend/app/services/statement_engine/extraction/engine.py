@@ -89,8 +89,28 @@ def _merge_drcr_suffix(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
+def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
+    """Strip the currency prefix and attach a standalone +/- word to the amount that follows it."""
+    out: List[Word] = []
+    for w in words:
+        text = w.text.strip()
+        if spec.amount_prefix:
+            stripped = re.sub(r"^([+-]?)\s*" + "(?:" + "|".join(re.escape(x) for x in spec.amount_prefix.split("|") if x) + r")\s*", r"\1", text)
+            if stripped != text:
+                text = stripped
+                w = Word(text, w.x0, w.x1, w.top, w.bottom)
+        if spec.merge_sign_prefix and out and out[-1].text.strip() in ("+", "-") and abs(out[-1].top - w.top) <= 3.0 \
+                and 0.0 <= w.x0 - out[-1].x1 <= 14.0 and spec.amount_re.match(text):
+            prev = out.pop()
+            w = Word(prev.text.strip() + text, prev.x0, w.x1, w.top, w.bottom)
+        out.append(w)
+    return out
+
+
 def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
+    if spec.amount_prefix or spec.merge_sign_prefix:
+        pages = [Page(_prepare_amounts(p.words, spec), p.width) for p in pages]
     pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
     if spec.merge_drcr_suffix:
         pages = [Page(_merge_drcr_suffix(p.words, spec), p.width) for p in pages]

@@ -103,7 +103,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
     ended = False
     for pno, page in enumerate(pages, start=1):
         if ended:
-            if _has_dated_row(group_lines(page.words), anchors, spec) and not any(x.startswith("additional_statement") for x in table.warnings):
+            if not spec.dated_rows_after_end_ok and _has_dated_row(group_lines(page.words), anchors, spec) and not any(x.startswith("additional_statement") for x in table.warnings):
                 table.warnings.append(f"additional_statement_after_summary:page{pno}")
             # the summary labels can sit at the bottom of one page and the numbers at the top of the next, below the
             # repeated customer block: take the lines after the period line (the table region) of the next page
@@ -140,7 +140,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 table.summary_page = pno
                 table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
                 ended = True
-                if _has_dated_row(lines[li + 1:], anchors, spec):
+                if not spec.dated_rows_after_end_ok and _has_dated_row(lines[li + 1:], anchors, spec):
                     table.warnings.append(f"additional_statement_after_summary:page{pno}")
                 break
             flat = squash(line)

@@ -489,3 +489,11 @@ def test_zero_amount_is_empty_pairs_the_side_with_the_value():
     from app.services.statement_engine.extraction.normalize import normalize_rows
     out, errs = normalize_rows(rows, spec)
     assert not errs and out[0].txn.debit == Decimal("5.0") and out[0].txn.credit is None
+
+
+def test_currency_prefix_and_standalone_sign_word_form_one_signed_amount():
+    spec = replace(JULIET, amount_prefix="Rs.|₹", merge_sign_prefix=True, amount_re=re.compile(r"^[+-]?[\d,]+\.\d{2}$"))
+    from app.services.statement_engine.extraction.engine import _prepare_amounts
+    words = [w("+", 380, 100), w("Rs.2,318.00", 390, 100), Word("- ₹300.00", 380, 440, 120, 128), w("₹702.00", 500, 120)]
+    got = [x.text for x in _prepare_amounts(words, spec)]
+    assert got == ["+2,318.00", "-300.00", "702.00"]
