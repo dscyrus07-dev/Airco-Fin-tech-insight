@@ -66,7 +66,8 @@ def _split_merged_dates(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
         text = w.text
         stripped = text.strip()
         if len(stripped) > 6 and not spec.date_re.match(stripped):
-            cut_at = next((i for i in range(len(text) - 1, 5, -1) if spec.date_re.match(text[:i].strip()) and text[i:].strip()), None)
+            cut_at = next((i for i in range(len(text) - 1, 5, -1) if spec.date_re.match(text[:i].strip()) and text[i:].strip()
+                           and not (text[i].isdigit() or text[i] in "/-.,:")), None)   # never cut inside a longer date such as 01/04/2023
             if cut_at is not None:
                 cut = w.x0 + (w.x1 - w.x0) * cut_at / len(text)
                 out.append(Word(text[:cut_at].strip(), w.x0, cut, w.top, w.bottom))

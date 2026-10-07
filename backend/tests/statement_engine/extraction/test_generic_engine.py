@@ -497,3 +497,10 @@ def test_currency_prefix_and_standalone_sign_word_form_one_signed_amount():
     words = [w("+", 380, 100), w("Rs.2,318.00", 390, 100), Word("- ₹300.00", 380, 440, 120, 128), w("₹702.00", 500, 120)]
     got = [x.text for x in _prepare_amounts(words, spec)]
     assert got == ["+2,318.00", "-300.00", "702.00"]
+
+
+def test_date_prefix_split_never_cuts_inside_a_longer_date():
+    from app.services.statement_engine.extraction.engine import _split_merged_dates
+    spec = replace(ALPHA, date_re=re.compile(r"^\d{2}/\d{2}/\d{2}$"), date_format="%d/%m/%y")
+    assert [x.text for x in _split_merged_dates([w("01/04/2023", 30, 100)], spec)] == ["01/04/2023"]
+    assert [x.text for x in _split_merged_dates([w("01/04/23DEBIT", 30, 100)], spec)] == ["01/04/23", "DEBIT"]
