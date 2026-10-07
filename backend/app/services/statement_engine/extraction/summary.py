@@ -9,7 +9,7 @@ from typing import List, Optional, Sequence
 from .layout_spec import LayoutSpec
 from .words import Word, norm_token
 
-_NUM = re.compile(r"^-?[\d,]+(?:\.\d+)?(?:cr|dr)?$", re.I)
+_NUM = re.compile(r"^(?:-?[\d,]+(?:\.\d+)?(?:cr|dr)?|\(-?[\d,]+(?:\.\d+)?\))$", re.I)
 
 
 @dataclass(frozen=True)
@@ -24,7 +24,8 @@ class PrintedSummary:
 
 
 def _dec(tok: str) -> Decimal:
-    return Decimal(re.sub(r"(?i)(cr|dr)$", "", tok).replace(",", ""))
+    t = re.sub(r"(?i)(cr|dr)$", "", tok).replace(",", "")
+    return -Decimal(t[1:-1]) if t.startswith("(") and t.endswith(")") else Decimal(t)
 
 
 def _line_tokens(line: Sequence[Word]) -> List[str]:

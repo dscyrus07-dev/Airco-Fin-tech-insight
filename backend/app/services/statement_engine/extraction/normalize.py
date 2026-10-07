@@ -23,8 +23,11 @@ def parse_amount(text: str) -> Optional[Decimal]:
     if not t:
         return None
     t = t.replace(",", "")
+    negative = t.startswith("(") and t.endswith(")")     # accounting style: (1234.50) is -1234.50
+    if negative:
+        t = t[1:-1]
     try:
-        return Decimal(t)
+        return -Decimal(t) if negative else Decimal(t)
     except InvalidOperation as exc:
         raise NormalizeError(f"bad amount {text!r}") from exc
 

@@ -78,7 +78,11 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     m = spec.ifsc_re.search(page1_text) if spec.ifsc_re else None
     out.ifsc = m.group(0) if m else ""
     out.account_number = _account_number(first.words, spec)
-    out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
+    if spec.summary_label_text and spec.summary_position == "before":
+        above = [ln for ln in group_lines(first.words) if max(w.bottom for w in ln) <= anchors.header_top + 1.0]
+        out.summary = parse_summary(above, spec) if above else None
+    else:
+        out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
     if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re):
         # printed opening / closing balance lines are still references to verify the derived values against
         opening = closing = debits = credits = None

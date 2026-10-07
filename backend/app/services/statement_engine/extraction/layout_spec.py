@@ -45,6 +45,7 @@ class LayoutSpec:
     opening_balance_re: Optional[Pattern[str]] = None  # whitespace-free page-1 text; group 1 = printed opening balance
     closing_balance_re: Optional[Pattern[str]] = None  # whitespace-free text of ONE line inside the table; group 1 = closing balance
     totals_line_re: Optional[Pattern[str]] = None      # whitespace-free line inside the table; groups 1,2 = printed debit, credit sums
+    summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
 
@@ -58,6 +59,8 @@ class LayoutSpec:
         for col in (*self.text_columns, *self.amount_columns):
             if col not in self.columns:
                 raise ValueError(f"column {col!r} has no header token sequence")
+        if self.summary_position not in ("after", "before"):
+            raise ValueError("summary_position must be 'after' or 'before'")
         if self.continuation_start not in ("marker", "top"):
             raise ValueError("continuation_start must be 'marker' or 'top'")
         if self.side_flip_policy not in ("fail", "review"):

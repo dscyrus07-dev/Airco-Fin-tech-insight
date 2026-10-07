@@ -386,3 +386,20 @@ def test_foxtrot_totals_line_zero_balance_without_leading_zero_and_stray_trailin
     assert out.checks.results["totals"].status == "pass"
     bad = extract_pages([fox_page(rows, totals=("999.00", "1,000.00"))], FOXTROT)
     assert bad.checks.results["totals"].status == "fail"
+
+
+# ---------------------------------------------------------------- GOLF: summary printed ABOVE the table, overdraft balances in brackets
+GOLF = replace(ALPHA, layout_id="golf", bank_key="golf", summary_position="before",
+               amount_re=re.compile(r"^(?:-?[\d,]*\.\d{2}|\(-?[\d,]*\.\d{2}\))$"),
+               summary_label_text="totaldebitstotalcreditsclosingbalance")
+GEO["golf"] = GEO["alpha"]
+
+
+def test_golf_summary_above_table_and_bracketed_negative_balances():
+    rows = [row(GOLF, 220, "01-04-2022", "SHOP", debit="1,100.00", balance="(100.00)"),
+            row(GOLF, 237, "02-04-2022", "SALARY", credit="1,000.00", balance="900.00")]
+    summ = alpha_summary(top=90, debits="1,100.00", credits="1,000.00", closing="900.00")
+    out = extract_pages([page(GOLF, rows, period_words=ALPHA_PERIOD, summary_words=summ)], GOLF)
+    assert [r.txn.balance for r in out.rows] == [Decimal("-100.00"), Decimal("900.00")]
+    assert out.summary is not None and out.summary.closing == Decimal("900.00") and out.summary.debits == Decimal("1100.00")
+    assert out.checks.results["totals"].status == "pass"
