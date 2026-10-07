@@ -694,3 +694,19 @@ def test_empty_amount_marker_in_a_money_cell_is_empty_not_narration():
     assert [r.txn.description for r in out.rows] == ["SHOP", "PAY"]
     assert out.rows[0].txn.debit == Decimal("100.00") and out.rows[1].txn.credit == Decimal("50.00")
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+def test_row_order_auto_reverses_only_when_the_chain_holds_newest_first():
+    spec = replace(ALPHA, row_order="auto")
+    def page(first, second):
+        ws = list(ALPHA_PERIOD) + header(ALPHA)
+        for top, (date, narr, dr, cr, bal) in zip((220, 237), (first, second)):
+            ws += [w(date, 30, top), w(narr, 120, top)] + ([rt(dr, 400, top)] if dr else []) + ([rt(cr, 470, top)] if cr else []) + [rt(bal, 560, top)]
+        return Page(ws, W)
+    shop, pay = ("01-04-2022", "SHOP", "100.00", None, "900.00"), ("02-04-2022", "PAY", None, "50.00", "950.00")
+    fwd = extract_pages([page(shop, pay)], spec)
+    rev = extract_pages([page(pay, shop)], spec)
+    assert [r.txn.description for r in fwd.rows] == ["SHOP", "PAY"] and [r.txn.description for r in rev.rows] == ["SHOP", "PAY"]
+    assert "row_order:reversed" in rev.notes and "row_order:reversed" not in fwd.notes
+    bad = extract_pages([page(("01-04-2022", "SHOP", "100.00", None, "900.00"), ("02-04-2022", "PAY", None, "50.00", "999.00"))], spec)
+    assert "row_order:reversed" not in bad.notes and bad.checks.verdict != "VERIFIED"

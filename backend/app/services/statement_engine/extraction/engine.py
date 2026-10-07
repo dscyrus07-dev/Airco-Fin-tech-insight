@@ -209,6 +209,14 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     rows, errors = normalize_rows(table.rows, spec)
     if spec.row_order == "reverse":
         rows.reverse()
+    elif spec.row_order == "auto" and len(rows) > 1:
+        # printed oldest-first or newest-first depending on the file: reverse only when the balance chain is unbroken
+        # newest-first and broken oldest-first (evidence, never a guess)
+        fwd = all(_chain_ok(a, b) for a, b in zip(rows, rows[1:]))
+        rev = all(_chain_ok(a, b) for a, b in zip(rows[::-1], rows[::-1][1:]))
+        if rev and not fwd:
+            rows.reverse()
+            out.notes.append("row_order:reversed")
     out.rows = rows
     out.schema_errors = list(errors)
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):

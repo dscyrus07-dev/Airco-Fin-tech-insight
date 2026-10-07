@@ -33,7 +33,7 @@ INDIAN_BANK_LAYOUT_1 = LayoutSpec(
     summary_label_text="",
     summary_expected=False,
     header_repeats=True,
-    row_order="reverse",
+    row_order="auto",
     dates_monotonic_expected=False,
 )
 INDIAN_BANK_LAYOUT_1.validate()

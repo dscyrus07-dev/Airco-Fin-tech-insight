@@ -61,7 +61,7 @@ class LayoutSpec:
     amount_prefix: str = ""                    # currency text printed in front of amounts ("Rs.", several as "Rs.|₹"), stripped before matching
     merge_sign_prefix: bool = False            # a standalone "+"/"-" word right before an amount belongs to it (single_amount_column: + credit, - debit)
     single_amount_column: str = ""             # one signed money column whose cells end in Dr/Cr; debit_column/credit_column are then virtual names
-    row_order: str = "forward"                 # "reverse": the statement lists the newest transaction first
+    row_order: str = "forward"                 # "reverse": newest first; "auto": reversed only when the balance chain holds newest-first and breaks oldest-first
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
     merge_drcr_suffix: bool = False            # a separate "Cr"/"Dr" word right after an amount is part of that amount ("3514.56 Cr")
@@ -83,8 +83,8 @@ class LayoutSpec:
         for col in (*self.text_columns, *self.amount_columns):
             if col not in self.columns:
                 raise ValueError(f"column {col!r} has no header token sequence")
-        if self.row_order not in ("forward", "reverse"):
-            raise ValueError("row_order must be 'forward' or 'reverse'")
+        if self.row_order not in ("forward", "reverse", "auto"):
+            raise ValueError("row_order must be 'forward', 'reverse' or 'auto'")
         if self.single_amount_column and self.debit_column == self.credit_column:
             raise ValueError("single_amount_column needs distinct virtual debit/credit names")
         if self.summary_position not in ("after", "before"):
