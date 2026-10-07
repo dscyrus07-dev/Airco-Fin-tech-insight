@@ -45,7 +45,7 @@ KOTAK_LAYOUT_2 = LayoutSpec(     # "date | narration | chq/ref no | withdrawal (
     columns={
         "date": (("date",),),
         "narration": (("narration",),),
-        "ref": (("chqref", "no"), ("chqrefno",), ("chq", "ref", "no")),
+        "ref": (("chqref", "no"), ("chqrefno",), ("chq", "ref", "no"), ("chq", "no"), ("chqno",)),
         "debit": (("withdrawal", "dr"), ("withdrawaldr",)),
         "credit": (("depositcr",), ("deposit", "cr")),
         "balance": (("balance",),),

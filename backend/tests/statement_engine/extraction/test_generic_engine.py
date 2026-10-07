@@ -436,3 +436,26 @@ def test_band_left_pad_lets_narration_data_start_left_of_a_centred_title():
     base = derive_anchors(header(ALPHA) + [w("01-04-2022", 30, 220)], ALPHA, W)
     padded = derive_anchors(header(ALPHA) + [w("01-04-2022", 30, 220)], replace(ALPHA, band_left_pad={"narration": 40.0}), W)
     assert padded.text_lefts["narration"] == base.text_lefts["narration"] - 36.0   # default pad is 4
+
+
+# ---------------------------------------------------------------- INDIA: per-page footer, separate Cr/Dr balance word, dated CLOSING row,
+# date fused directly with the next cell, band_left_pad via spec
+INDIA = replace(ALPHA, layout_id="india", bank_key="india", amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?: ?(?:Cr|Dr))?$"),
+                summary_marker="", summary_label_text="", summary_expected=False, merge_drcr_suffix=True,
+                opening_row_marker="OPENINGBALANCE", closing_row_marker="CLOSINGBALANCE", page_footer_markers=("NOTE:INCASE",))
+GEO["india"] = GEO["alpha"]
+
+
+def test_india_footer_cr_suffix_word_closing_row_and_fused_date():
+    ws1 = list(ALPHA_PERIOD) + header(INDIA)
+    ws1 += [w("01-04-2022", 30, 220), w("OPENING", 120, 220), w("BALANCE", 180, 220), rt("1,000.00", 545, 220), w("Cr", 548, 220)]
+    ws1 += [Word("02-04-2022SHOP", 30, 30 + 5.5 * 14, 237, 245), rt("100.00", 400, 237), rt("900.00", 545, 237), w("Cr", 548, 237)]
+    ws1 += [w("Note: In case you find", 30, 700), w("computer generated 03-04-2022 text", 30, 712)]      # footer: must not become rows
+    ws2 = list(ALPHA_PERIOD) + header(INDIA)
+    ws2 += [w("03-04-2022", 30, 220), w("PAY", 120, 220), rt("50.00", 470, 220), rt("950.00", 545, 220), w("Cr", 548, 220)]
+    ws2 += [w("04-04-2022", 30, 237), w("CLOSING", 120, 237), w("BALANCE", 180, 237), rt("950.00", 545, 237), w("Cr", 548, 237)]
+    out = extract_pages([Page(ws1, W), Page(ws2, W)], INDIA)
+    assert [r.txn.date for r in out.rows] == ["2022-04-02", "2022-04-03"], [r.txn.date for r in out.rows]
+    assert out.rows[0].txn.balance == Decimal("900.00") and out.rows[1].txn.credit == Decimal("50.00")
+    assert out.summary.opening == Decimal("1000.00") and out.summary.closing == Decimal("950.00")
+    assert out.checks.results["reference"].status == "pass" and out.checks.results["chain"].status == "pass", out.checks.reasons

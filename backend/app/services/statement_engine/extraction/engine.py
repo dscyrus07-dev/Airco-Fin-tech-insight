@@ -59,28 +59,41 @@ def _account_number(page_words: Sequence[Word], spec: LayoutSpec) -> str:
 
 
 def _split_merged_dates(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
-    """A date cell can be extracted fused with the start of the narration ("08-Apr-22 NEFT"): split it at the first space
-    after which the head is a complete date, dividing the x-extent by character count."""
+    """A date cell can be extracted fused with the start of the narration ("08-Apr-22 NEFT" or "04-01-2024DEBIT"): split
+    after the longest leading part that is a complete date, dividing the x-extent by character count."""
     out: List[Word] = []
     for w in words:
-        text = w.text.strip()
-        if " " in text and not spec.date_re.match(text):
-            for i, ch in enumerate(text):
-                if ch == " " and spec.date_re.match(text[:i]):
-                    cut = w.x0 + (w.x1 - w.x0) * i / len(text)
-                    out.append(Word(text[:i], w.x0, cut, w.top, w.bottom))
-                    out.append(Word(text[i + 1:], cut, w.x1, w.top, w.bottom))
-                    break
-            else:
-                out.append(w)
-        else:
-            out.append(w)
+        text = w.text
+        stripped = text.strip()
+        if len(stripped) > 6 and not spec.date_re.match(stripped):
+            cut_at = next((i for i in range(len(text) - 1, 5, -1) if spec.date_re.match(text[:i].strip()) and text[i:].strip()), None)
+            if cut_at is not None:
+                cut = w.x0 + (w.x1 - w.x0) * cut_at / len(text)
+                out.append(Word(text[:cut_at].strip(), w.x0, cut, w.top, w.bottom))
+                out.append(Word(text[cut_at:].strip(), cut, w.x1, w.top, w.bottom))
+                continue
+        out.append(w)
+    return out
+
+
+def _merge_drcr_suffix(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
+    """Attach a separate "Cr"/"Dr" word to the amount printed immediately before it on the same line."""
+    out: List[Word] = []
+    for w in words:
+        if w.text.strip().lower() in ("cr", "dr") and out:
+            prev = out[-1]
+            if abs(prev.top - w.top) <= 3.0 and -1.0 <= w.x0 - prev.x1 <= 12.0 and spec.amount_re.match(prev.text.strip()):
+                out[-1] = Word(prev.text.strip() + w.text.strip(), prev.x0, w.x1, prev.top, prev.bottom)
+                continue
+        out.append(w)
     return out
 
 
 def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
     pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
+    if spec.merge_drcr_suffix:
+        pages = [Page(_merge_drcr_suffix(p.words, spec), p.width) for p in pages]
     if not pages:
         out.failure, out.failure_detail = NO_TABLE_HEADER, "no pages"
         return out
@@ -117,6 +130,14 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
             row_opening = parse_amount(first_row.amounts.get(spec.balance_column, ""), suffix_sign=True)
         except (ArithmeticError, NormalizeError):
             row_opening = None
+    if spec.closing_row_marker and table.rows and re.sub(r"\s+", "", table.rows[-1].narration).upper().startswith(spec.closing_row_marker):
+        last_row = table.rows.pop()
+        printed = last_row.amounts.get(spec.balance_column, "")
+        try:
+            val = parse_amount(printed, suffix_sign=True)
+            table.printed_closing = None if val is None else str(val)
+        except NormalizeError:
+            pass
     if spec.closing_balance_re and not table.printed_closing:
         for ln in table.summary_lines:
             mc = spec.closing_balance_re.search(squash(ln))

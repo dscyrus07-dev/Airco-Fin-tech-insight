@@ -134,6 +134,8 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
         for li in range(start, len(lines)):
             line = lines[li]
             text = squash(line).upper()
+            if spec.page_footer_markers and any(text.startswith(m) for m in spec.page_footer_markers):
+                break
             if _ends(text, end_markers):
                 table.summary_page = pno
                 table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
