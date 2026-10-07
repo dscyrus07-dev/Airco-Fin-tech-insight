@@ -180,3 +180,19 @@ def test_allow_minor_only_when_explicit():
     old, new = Fake("old", {"a.pdf": res()}), Fake("v2", {"a.pdf": res("v2", t=t)})
     assert run_parity(corpus, old, new).summary()["passed"] == 0
     assert run_parity(corpus, old, new, allow_minor=True).summary()["passed"] == 1
+
+
+def test_extractor_reconciled_printed_totals_are_not_flagged():
+    # the extractor proved the printed totals reconcile (e.g. via the reversal rule): no PRINTED_* finding for it
+    r = cmp(res(), res("v2", printed_total_debit=D("351"), printed_totals_reconciled=True))
+    assert "NEW_PRINTED_DEBIT" not in codes(r)
+    r2 = cmp(res(), res("v2", printed_total_debit=D("351"), printed_totals_reconciled=False))
+    assert "NEW_PRINTED_DEBIT" in codes(r2)
+
+
+def test_ignore_codes_gives_rows_only_view():
+    from app.services.migration.comparator import LEGACY_METADATA_DEFECT_CODES
+    new = res("v2", m=meta(closing_balance=D("1"), account_number="9"), verification_status="VERIFIED")
+    old = res(verification_status="FAILED")
+    assert cmp(old, new).overall != Diff.EXACT_MATCH
+    assert cmp(old, new, cfg=ComparatorConfig(ignore_codes=LEGACY_METADATA_DEFECT_CODES)).overall == Diff.EXACT_MATCH

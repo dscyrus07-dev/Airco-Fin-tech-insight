@@ -261,3 +261,23 @@ def test_parse_amount_and_date():
     except NormalizeError:
         return
     raise AssertionError("expected NormalizeError")
+
+
+def test_second_statement_after_summary_is_review_not_silent_verified():
+    p2 = Page(customer_block() + period_line(200.0) + row(240, "05/04/22", "NEXT", "0009", wd="10.00", bal="990.00"), W)
+    out = extract_pages([page1(good_rows(), good_summary()), p2])
+    assert out.checks.verdict == "REVIEW" and any(x.startswith("additional_statement_after_summary") for x in out.warnings)
+    assert len(out.rows) == 3   # only the first statement is extracted
+
+
+def test_password_errors_map_to_locked():
+    from app.services.statement_engine.extraction.pdf_extractor import _is_password_error
+
+    class PDFPasswordIncorrect(Exception):
+        pass
+
+    class PdfminerException(Exception):
+        pass
+
+    assert _is_password_error(PdfminerException(PDFPasswordIncorrect()))
+    assert not _is_password_error(ValueError("bad xref"))

@@ -32,6 +32,7 @@ class ExtractionResult:
     stage: str = RAW_STAGE                        # must stay RAW (pre-repair)
     printed_total_debit: Optional[Decimal] = None   # totals printed on the statement, if the extractor read them
     printed_total_credit: Optional[Decimal] = None
+    printed_totals_reconciled: Optional[bool] = None  # extractor's own verdict: printed totals reconcile (incl. via reversal rule)
     verification_status: Optional[str] = None     # e.g. VERIFIED / REVIEW / FAILED from the verification engine
     failure: Optional[str] = None                 # set when extraction failed; transactions should then be empty
     warnings: List[str] = field(default_factory=list)

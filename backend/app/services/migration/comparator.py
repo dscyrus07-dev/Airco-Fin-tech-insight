@@ -12,7 +12,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Tuple
 
 from .contract import (
     ContractError,
@@ -93,6 +93,14 @@ class ComparatorConfig:
     amount_tolerance: Decimal = ZERO       # strict by default
     compare_ref_no: bool = False
     max_findings_per_item: int = 200
+    # finding codes to drop from the verdict (e.g. LEGACY_METADATA_DEFECT_CODES for a rows-only parity view)
+    ignore_codes: FrozenSet[str] = frozenset()
+
+
+# Differences caused by known legacy defects/cosmetics (legacy closing_balance metadata defect, legacy verdict labels,
+# legacy description tails). Use only for the rows-only parity view, never as the default.
+LEGACY_METADATA_DEFECT_CODES: FrozenSet[str] = frozenset(
+    {"OPENING_BALANCE", "CLOSING_BALANCE", "VERIFICATION", "DESCRIPTION", "ACCOUNT_NUMBER"})
 
 
 def _d(x: Optional[Decimal]) -> Decimal:
@@ -174,6 +182,8 @@ def compare_results(
         add(Diff.MAJOR_DIFFERENCE, "TOTAL_CREDIT", "total credits differ", o_sc, n_sc)
     # printed totals: each engine must agree with what the statement prints, when known
     for eng, r, sd, sc in (("OLD", old, o_sd, o_sc), ("NEW", new, n_sd, n_sc)):
+        if r.printed_totals_reconciled:   # extractor reconciled the printed totals itself (e.g. via the reversal rule)
+            continue
         if r.printed_total_debit is not None and not _eq(sd, _d(r.printed_total_debit), tol):
             add(Diff.MAJOR_DIFFERENCE, f"{eng}_PRINTED_DEBIT", "sum of debits != printed total", sd, r.printed_total_debit)
         if r.printed_total_credit is not None and not _eq(sc, _d(r.printed_total_credit), tol):
@@ -238,6 +248,8 @@ def compare_results(
 
 
 def _finish(res: ComparisonResult, findings: List[Finding], cfg: ComparatorConfig) -> ComparisonResult:
+    if cfg.ignore_codes:
+        findings = [x for x in findings if x.code not in cfg.ignore_codes]
     counts: Counter = Counter(x.kind.value for x in findings)
     res.counts = dict(counts)
     for kind in SEVERITY_ORDER:

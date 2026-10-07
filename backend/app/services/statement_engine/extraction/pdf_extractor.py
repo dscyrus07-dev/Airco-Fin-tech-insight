@@ -29,10 +29,12 @@ def read_pages(pdf_path: str, password: Optional[str] = None) -> List[Page]:
 
     pages: List[Page] = []
     with pdfplumber.open(pdf_path, password=password or None) as pdf:
-        for pg in pdf.pages:
+        for i in range(len(pdf.pages)):
+            pg = pdf.pages[i]
             words = [Word(w["text"], float(w["x0"]), float(w["x1"]), float(w["top"]), float(w["bottom"]))
                      for w in pg.extract_words(**_WORD_KWARGS)]
             pages.append(Page(words=words, width=float(pg.width)))
+            pg.flush_cache()   # release parsed page objects: keeps a 277-page file at ~50 MB instead of ~2 GB
     return pages
 
 
@@ -65,9 +67,26 @@ def to_extraction_result(outcome: V2Outcome, spec: LayoutSpec) -> ExtractionResu
         engine="v2", metadata=meta, transactions=[r.txn for r in outcome.rows],
         printed_total_debit=summ.debits if summ else None,
         printed_total_credit=summ.credits if summ else None,
+        printed_totals_reconciled=(checks.results["totals"].detail.get("outcome") in ("MATCH", "RECONCILED_VIA_REVERSALS")) if checks else None,
         verification_status=checks.verdict if checks else None,
         warnings=list(outcome.warnings) + (list(checks.reasons) if checks else []),
     )
+
+
+def _is_password_error(exc: BaseException) -> bool:
+    """pdfplumber wraps pdfminer errors (PdfminerException(PDFPasswordIncorrect)), so inspect the wrapped exception too."""
+    seen = []
+    stack = [exc]
+    while stack and len(seen) < 6:
+        e = stack.pop()
+        seen.append(e)
+        text = f"{type(e).__name__} {e}"
+        if "Password" in text or "Encrypt" in text or "encrypt" in text:
+            return True
+        stack.extend(a for a in getattr(e, "args", ()) if isinstance(a, BaseException))
+        if e.__cause__ is not None:
+            stack.append(e.__cause__)
+    return False
 
 
 class LayoutExtractor:
@@ -86,7 +105,7 @@ class LayoutExtractor:
             pages = read_pages(pdf_path, password)
         except Exception as exc:  # pdfplumber/pdfminer raise several types for encrypted or broken files
             name = type(exc).__name__
-            code = LOCKED if "Password" in name or "Encrypt" in name else READ_ERROR
+            code = LOCKED if _is_password_error(exc) else READ_ERROR
             return self._failure(f"{code}: {name}")
         if not any(p.words for p in pages):
             return self._failure(f"{SCANNED_NO_TEXT}: no text layer")

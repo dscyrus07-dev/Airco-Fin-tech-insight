@@ -72,12 +72,20 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
     return 0, period, False
 
 
+def _has_dated_row(lines: List[List[Word]], anchors: ColumnAnchors, spec: LayoutSpec) -> bool:
+    """True when a row-start date appears in the date column: used after the summary block, where it means that the
+    file carries another statement (merged PDFs), which a single-statement extraction must not silently drop."""
+    return any(classify_word(w, anchors, spec) == "date" for line in lines for w in line)
+
+
 def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) -> AssembledTable:
     table = AssembledTable()
     current: Optional[RawRow] = None
     ended = False
     for pno, page in enumerate(pages, start=1):
         if ended:
+            if _has_dated_row(group_lines(page.words), anchors, spec) and not any(x.startswith("additional_statement") for x in table.warnings):
+                table.warnings.append(f"additional_statement_after_summary:page{pno}")
             # the summary labels can sit at the bottom of one page and the numbers at the top of the next, below the
             # repeated customer block: take the lines after the period line (the table region) of the next page
             if len(table.summary_lines) < _SUMMARY_TAIL_LINES * 2:
@@ -104,6 +112,8 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 table.summary_page = pno
                 table.summary_lines = lines[li:li + _SUMMARY_TAIL_LINES]
                 ended = True
+                if _has_dated_row(lines[li + 1:], anchors, spec):
+                    table.warnings.append(f"additional_statement_after_summary:page{pno}")
                 break
             cols: Dict[str, List[str]] = {}
             for w in line:
