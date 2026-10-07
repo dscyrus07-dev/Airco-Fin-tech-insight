@@ -42,6 +42,7 @@ class AssembledTable:
     period: Optional[Tuple[str, str]] = None                # (from, to) as printed, dd/mm/yyyy
     summary_lines: List[List[Word]] = field(default_factory=list)   # lines from the summary marker onward
     summary_page: Optional[int] = None
+    printed_closing: Optional[str] = None                   # closing balance printed as a line inside the table
     warnings: List[str] = field(default_factory=list)
 
 
@@ -132,6 +133,15 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if _has_dated_row(lines[li + 1:], anchors, spec):
                     table.warnings.append(f"additional_statement_after_summary:page{pno}")
                 break
+            flat = squash(line)
+            if any(rx.search(flat) for rx in spec.ignore_line_res):
+                continue
+            if spec.closing_balance_re:
+                mc = spec.closing_balance_re.search(flat)
+                if mc:   # printed closing balance line: a reference value, not a transaction or a narration wrap
+                    table.printed_closing = mc.group(1)
+                    current = None
+                    continue
             cols: Dict[str, List[str]] = {}
             for w in line:
                 col = classify_word(w, anchors, spec)

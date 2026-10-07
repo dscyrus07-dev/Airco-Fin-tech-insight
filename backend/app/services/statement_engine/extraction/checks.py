@@ -53,7 +53,7 @@ def derive(rows: Sequence[NormalizedRow]) -> Dict[str, Any]:
     }
 
 
-def check_chain(rows: Sequence[NormalizedRow]) -> Tuple[CheckResult, CheckResult]:
+def check_chain(rows: Sequence[NormalizedRow], side_flip_policy: str = "fail") -> Tuple[CheckResult, CheckResult]:
     bad: List[int] = []
     side_flips: List[int] = []
     amount_errors: List[int] = []
@@ -64,8 +64,9 @@ def check_chain(rows: Sequence[NormalizedRow]) -> Tuple[CheckResult, CheckResult
         if delta != signed:
             bad.append(i)
             (side_flips if abs(delta) == abs(signed) else amount_errors).append(i)
-    c1 = CheckResult("chain", FAIL if bad else PASS, {"rows_checked": max(len(rows) - 1, 0), "breaks": len(bad), "examples": bad[:5]})
-    c2 = CheckResult("side", FAIL if bad else PASS, {"side_flips": len(side_flips), "amount_errors": len(amount_errors), "examples": (side_flips + amount_errors)[:5]})
+    flips_only = bool(bad) and not amount_errors and side_flip_policy == "review"
+    c1 = CheckResult("chain", (WARN if flips_only else FAIL) if bad else PASS, {"rows_checked": max(len(rows) - 1, 0), "breaks": len(bad), "examples": bad[:5]})
+    c2 = CheckResult("side", (WARN if flips_only else FAIL) if bad else PASS, {"side_flips": len(side_flips), "amount_errors": len(amount_errors), "examples": (side_flips + amount_errors)[:5]})
     return c1, c2
 
 
@@ -117,12 +118,13 @@ def check_totals(rows: Sequence[NormalizedRow], derived: Dict[str, Any], summary
     return CheckResult("totals", FAIL, {**detail, "outcome": "MISMATCH"})
 
 
-def check_dates(rows: Sequence[NormalizedRow]) -> CheckResult:
+def check_dates(rows: Sequence[NormalizedRow], monotonic_expected: bool = True) -> CheckResult:
     backwards = [i for i in range(1, len(rows)) if rows[i].txn.date < rows[i - 1].txn.date]
-    return CheckResult("dates", WARN if backwards else PASS, {"decreasing_at": backwards[:5], "count": len(backwards)})
+    return CheckResult("dates", (WARN if monotonic_expected else INFO) if backwards else PASS, {"decreasing_at": backwards[:5], "count": len(backwards)})
 
 
-def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], period_format: str = "%d/%m/%Y") -> CheckResult:
+def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], period_format: str = "%d/%m/%Y",
+                 tolerance_days: int = _PERIOD_TOLERANCE_DAYS) -> CheckResult:
     if period is None or not rows:
         return CheckResult("period", SKIPPED, {"reason": "no printed period or no rows"})
     try:
@@ -134,7 +136,7 @@ def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]
     before = [(start - date.fromisoformat(r.txn.date)).days for r in rows if date.fromisoformat(r.txn.date) < start]
     after = [(date.fromisoformat(r.txn.date) - end).days for r in rows if date.fromisoformat(r.txn.date) > end]
     worst = max(before + after, default=0)
-    status = PASS if not (before or after) else (INFO if worst <= _PERIOD_TOLERANCE_DAYS else WARN)
+    status = PASS if not (before or after) else (INFO if worst <= tolerance_days else WARN)
     return CheckResult("period", status, {
         "rows_before_from": len(before), "rows_after_to": len(after), "max_days_outside": worst,
         "first_row": first.isoformat(), "last_row": last.isoformat(), "printed": list(period),
@@ -155,12 +157,14 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
         return FAILED, reasons
     if results["reference"].status == SKIPPED and has_rows and summary_expected:
         reasons.append("no printed summary to verify against")
+    if results["side"].status == WARN:
+        reasons.append("printed side disagrees with the balance movement on some rows (possible reversals)")
     if results["totals"].status == WARN:
         reasons.append("printed counts/sums differ with reversal signature but no proof")
     if results["dates"].status == WARN:
         reasons.append("dates not monotonic")
     if results["period"].status == WARN:
-        reasons.append("rows more than 1 day outside printed period")
+        reasons.append("rows outside the printed period beyond the layout tolerance")
     if warnings:
         reasons.append(f"extraction warnings: {len(warnings)}")
     return (REVIEW if reasons else VERIFIED), reasons
@@ -168,17 +172,18 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
 
 def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], summary: Optional[PrintedSummary],
                schema_errors: Sequence[str], warnings: Sequence[str], period_format: str = "%d/%m/%Y",
-               summary_expected: bool = True) -> Checks:
+               summary_expected: bool = True, dates_monotonic_expected: bool = True, period_tolerance_days: int = _PERIOD_TOLERANCE_DAYS,
+               side_flip_policy: str = "fail") -> Checks:
     derived = derive(rows)
-    c1, c2 = check_chain(rows)
+    c1, c2 = check_chain(rows, side_flip_policy)
     results = {
         "schema": CheckResult("schema", FAIL if schema_errors else PASS, {"errors": list(schema_errors)[:5], "count": len(schema_errors)}),
         "chain": c1,
         "side": c2,
         "reference": check_reference(derived, summary) if rows else CheckResult("reference", SKIPPED, {"reason": "no rows"}),
         "totals": check_totals(rows, derived, summary) if rows else CheckResult("totals", SKIPPED, {"reason": "no rows"}),
-        "dates": check_dates(rows),
-        "period": check_period(rows, period, period_format),
+        "dates": check_dates(rows, dates_monotonic_expected),
+        "period": check_period(rows, period, period_format, period_tolerance_days),
     }
     verdict, reasons = decide(results, schema_errors, warnings, bool(rows), summary_expected)
     return Checks(results=results, verdict=verdict, reasons=reasons, derived=derived)

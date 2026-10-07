@@ -65,6 +65,12 @@ def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[T
                     spans[col] = hit
                     break
         if len(spans) == len(spec.columns):
+            # a header with an extra, unknown column between the known ones is another layout: refuse it
+            lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
+            unknown = [w for w in line if norm_token(w.text) and lo <= w.x0 and w.x1 <= hi
+                       and not any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values())]
+            if unknown:
+                continue
             return idx, spans
     return None
 

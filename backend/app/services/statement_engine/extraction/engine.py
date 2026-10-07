@@ -79,17 +79,25 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out.ifsc = m.group(0) if m else ""
     out.account_number = _account_number(first.words, spec)
     out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
-    if out.summary is None and spec.opening_balance_re:
-        mo = spec.opening_balance_re.search(page1_text)
-        if mo:   # a printed opening balance is still a reference to verify the derived opening against
-            try:
-                out.summary = PrintedSummary(opening=Decimal(mo.group(1).replace(",", "")))
-            except ArithmeticError:
-                pass
+    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re):
+        # printed opening / closing balance lines are still references to verify the derived values against
+        opening = closing = None
+        try:
+            mo = spec.opening_balance_re.search(page1_text) if spec.opening_balance_re else None
+            if mo:
+                opening = Decimal(mo.group(1).replace(",", ""))
+            if table.printed_closing:
+                closing = Decimal(table.printed_closing.replace(",", ""))
+        except ArithmeticError:
+            opening = closing = None
+        if opening is not None or closing is not None:
+            out.summary = PrintedSummary(opening=opening, closing=closing)
     rows, errors = normalize_rows(table.rows, spec)
     out.rows = rows
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):
         out.failure, out.failure_detail = NO_ROWS, "header found but no transaction rows"
         return out
-    out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected)
+    out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected,
+                          spec.dates_monotonic_expected, spec.period_tolerance_days,
+                          spec.side_flip_policy)
     return out

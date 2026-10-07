@@ -307,3 +307,52 @@ def test_summary_not_expected_means_missing_summary_is_not_a_review_reason():
     rows = [drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")]
     out = extract_pages([delta_page(rows, extra=DELTA_TOP[:3] + DELTA_TOP[3:] if False else DELTA_TOP[:4] + DELTA_TOP[14:])], DELTA)
     assert out.summary is None and out.checks.verdict == "VERIFIED", out.checks.reasons
+
+
+# ---------------------------------------------------------------- ECHO: printed closing-balance line inside the table, page-number
+# lines, rows not date-sorted, isolated side flips treated as review, wider period tolerance, strict header gate
+from dataclasses import replace
+
+ECHO = replace(ALPHA, layout_id="echo", bank_key="echo", summary_marker="", summary_label_text="", summary_expected=False,
+               end_markers=("ENDOFSTATEMENT",), closing_balance_re=re.compile(r"^ClosingBalance(-?[\d,]+\.\d{2})$"),
+               ignore_line_res=(re.compile(r"^page\d+$", re.I),), dates_monotonic_expected=False, period_tolerance_days=3,
+               side_flip_policy="review")
+GEO["echo"] = GEO["alpha"]
+
+
+def echo_page(rows, closing=None, extra=()):
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    for r in rows:
+        ws += r
+    if closing:
+        ws += [w("Closing", 120, 330), w("Balance", 170, 330), rt(closing, 560, 330)]
+    ws += [w("page", 500, 800), w("1", 535, 800), w("END OF STATEMENT", 30, 360)] if closing else [w("page", 500, 800), w("1", 535, 800)]
+    return Page(ws + list(extra), W)
+
+
+def test_echo_closing_line_and_page_numbers_do_not_pollute_rows():
+    out = extract_pages([echo_page(alpha_rows(), closing="1,900.00")], ECHO)
+    assert len(out.rows) == 2 and "page" not in out.rows[1].txn.description.lower() and "Closing" not in out.rows[1].txn.description
+    assert out.summary.closing == Decimal("1900.00") and out.checks.results["reference"].status == "pass"
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
+    assert extract_pages([echo_page(alpha_rows(), closing="1,901.00")], ECHO).checks.verdict == "FAILED"
+
+
+def test_echo_side_flip_policy_review_and_unsorted_dates_and_period_tolerance():
+    rows = [row(ALPHA, 220, "05-04-2022", "A", debit="100.00", balance="900.00"),
+            row(ALPHA, 237, "02-04-2022", "B", debit="50.00", balance="950.00")]   # printed debit but balance rose
+    out = extract_pages([echo_page(rows)], ECHO)
+    assert out.checks.results["side"].status == "warn" and out.checks.verdict == "REVIEW"
+    assert extract_pages([echo_page(rows)], replace(ECHO, side_flip_policy="fail")).checks.verdict == "FAILED"
+    ok = [row(ALPHA, 220, "05-04-2022", "A", debit="100.00", balance="900.00"), row(ALPHA, 237, "02-04-2022", "B", credit="50.00", balance="950.00")]
+    assert extract_pages([echo_page(ok)], ECHO).checks.results["dates"].status == "info"
+    assert extract_pages([echo_page(ok)], replace(ECHO, dates_monotonic_expected=True)).checks.results["dates"].status == "warn"
+    late = [row(ALPHA, 220, "02-05-2022", "A", debit="100.00", balance="900.00")]   # 2 days after To (30-04-2022)
+    assert extract_pages([echo_page(late)], ECHO).checks.results["period"].status == "info"
+    assert extract_pages([echo_page(late)], replace(ECHO, period_tolerance_days=1)).checks.results["period"].status == "warn"
+
+
+def test_header_with_an_unknown_extra_column_is_refused():
+    page_ = echo_page(alpha_rows())
+    page_.words.append(w("Mode", 250, 200))   # extra title between known columns => a different layout
+    assert extract_pages([page_], ECHO).failure == "NO_TABLE_HEADER"

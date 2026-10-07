@@ -38,8 +38,13 @@ class LayoutSpec:
     account_label: str = ""                    # normalised token that precedes the account number value
     end_markers: Tuple[str, ...] = ()          # extra whitespace-free upper-case markers that end the table (footers)
     date_tail_re: Optional[Pattern[str]] = None  # continuation of a date cell wrapped onto the next line (e.g. the year)
+    side_flip_policy: str = "fail"             # "review": isolated printed-side/balance disagreements (amount equals the balance move) only warn
+    period_tolerance_days: int = 1             # rows this many days outside the printed period are informational only
+    dates_monotonic_expected: bool = True      # False: the bank prints rows in posting order that may not be date-sorted
     summary_expected: bool = True              # False: statements of this layout normally print no summary block
     opening_balance_re: Optional[Pattern[str]] = None  # whitespace-free page-1 text; group 1 = printed opening balance
+    closing_balance_re: Optional[Pattern[str]] = None  # whitespace-free text of ONE line inside the table; group 1 = closing balance
+    ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
@@ -51,5 +56,7 @@ class LayoutSpec:
         for col in (*self.text_columns, *self.amount_columns):
             if col not in self.columns:
                 raise ValueError(f"column {col!r} has no header token sequence")
+        if self.side_flip_policy not in ("fail", "review"):
+            raise ValueError("side_flip_policy must be 'fail' or 'review'")
         if self.secondary_date_column and self.secondary_date_column not in self.text_columns:
             raise ValueError("secondary_date_column must be one of text_columns")

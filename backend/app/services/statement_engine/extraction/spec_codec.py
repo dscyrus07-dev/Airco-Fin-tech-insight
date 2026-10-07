@@ -26,8 +26,11 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "secondary_date_column": spec.secondary_date_column, "header_repeats": spec.header_repeats,
         "ifsc_re": spec.ifsc_re.pattern if spec.ifsc_re else None, "account_label": spec.account_label,
         "end_markers": list(spec.end_markers), "date_tail_re": spec.date_tail_re.pattern if spec.date_tail_re else None,
-        "summary_expected": spec.summary_expected,
+        "summary_expected": spec.summary_expected, "dates_monotonic_expected": spec.dates_monotonic_expected,
+        "period_tolerance_days": spec.period_tolerance_days, "side_flip_policy": spec.side_flip_policy,
         "opening_balance_re": spec.opening_balance_re.pattern if spec.opening_balance_re else None,
+        "closing_balance_re": spec.closing_balance_re.pattern if spec.closing_balance_re else None,
+        "ignore_line_res": [r.pattern for r in spec.ignore_line_res],
     }
 
 
@@ -50,7 +53,12 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             end_markers=tuple(data.get("end_markers") or ()),
             date_tail_re=re.compile(data["date_tail_re"]) if data.get("date_tail_re") else None,
             summary_expected=bool(data.get("summary_expected", True)),
+            dates_monotonic_expected=bool(data.get("dates_monotonic_expected", True)),
+            period_tolerance_days=int(data.get("period_tolerance_days", 1)),
+            side_flip_policy=data.get("side_flip_policy", "fail"),
             opening_balance_re=re.compile(data["opening_balance_re"]) if data.get("opening_balance_re") else None,
+            closing_balance_re=re.compile(data["closing_balance_re"]) if data.get("closing_balance_re") else None,
+            ignore_line_res=tuple(re.compile(x) for x in data.get("ignore_line_res") or ()),
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc
