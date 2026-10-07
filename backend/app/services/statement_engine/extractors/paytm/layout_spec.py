@@ -9,6 +9,7 @@ from ...extraction.layout_spec import LayoutSpec
 PAYTM_LAYOUT_1 = LayoutSpec(
     layout_id="paytm_datetime_transactiondetails_amount_availablebalance",
     bank_key="paytm",
+    merge_statements=True,
     bank_name="Paytm Payments Bank",
     columns={
         "date": (("datetime",), ("date", "time")),

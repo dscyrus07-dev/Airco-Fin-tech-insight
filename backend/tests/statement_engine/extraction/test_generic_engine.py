@@ -504,3 +504,65 @@ def test_date_prefix_split_never_cuts_inside_a_longer_date():
     spec = replace(ALPHA, date_re=re.compile(r"^\d{2}/\d{2}/\d{2}$"), date_format="%d/%m/%y")
     assert [x.text for x in _split_merged_dates([w("01/04/2023", 30, 100)], spec)] == ["01/04/2023"]
     assert [x.text for x in _split_merged_dates([w("01/04/23DEBIT", 30, 100)], spec)] == ["01/04/23", "DEBIT"]
+
+
+# ---------------------------------------------------------------- merge_statements (several statements in one PDF)
+def _two_statements(second_rows, second_extra=None, second_header=True):
+    shop = drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")
+    p1 = delta_page([shop], extra=DELTA_TOP)
+    foot = Page([w("This is a computer generated statement", 36, 100)], 595.0)
+    p3 = delta_page(second_rows, with_header=second_header, extra=second_extra)
+    return [p1, foot, p3]
+
+
+def _bill(balance="850.00"):
+    return drow(230, "6 Jan 2023", "6 Jan 2023", "BILL", debit="50.00", balance=balance)
+
+
+def test_merge_statements_contiguous_second_statement_is_merged_and_verified():
+    spec = replace(DELTA, merge_statements=True)
+    out = extract_pages(_two_statements([_bill()]), spec)
+    assert [r.txn.description for r in out.rows] == ["SHOP", "BILL"]
+    assert not any(x.startswith("additional_statement") for x in out.warnings)
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+def test_merge_statements_overlapping_tail_is_deduplicated():
+    spec = replace(DELTA, merge_statements=True)
+    shop = drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")
+    bill = drow(250, "6 Jan 2023", "6 Jan 2023", "BILL", debit="50.00", balance="850.00")
+    out = extract_pages(_two_statements([shop, bill]), spec)
+    assert [r.txn.description for r in out.rows] == ["SHOP", "BILL"]
+    assert any("overlap_rows=1" in n for n in out.notes)
+
+
+def test_merge_statements_gap_stays_review_and_returns_first_statement_only():
+    spec = replace(DELTA, merge_statements=True)
+    out = extract_pages(_two_statements([_bill(balance="5.00")]), spec)
+    assert len(out.rows) == 1 and out.checks.verdict == "REVIEW"
+    assert any(x.startswith("additional_statement") for x in out.warnings)
+
+
+def test_merge_statements_empty_following_statement_leaves_first_verified():
+    spec = replace(DELTA, merge_statements=True)
+    out = extract_pages(_two_statements([]), spec)
+    assert len(out.rows) == 1 and not any(x.startswith("additional_statement") for x in out.warnings)
+    assert out.checks.verdict != "FAILED"
+
+
+def test_merge_statements_headerless_following_rows_stay_review():
+    spec = replace(DELTA, merge_statements=True)
+    out = extract_pages(_two_statements([_bill()], second_header=False), spec)
+    assert len(out.rows) == 1 and out.checks.verdict == "REVIEW"
+
+
+def test_merge_statements_different_account_is_not_merged():
+    spec = replace(DELTA, merge_statements=True)
+    other = [w("Account", 36, 60), w("Number", 80, 60), w(":", 130, 60), w("99999999999", 140, 60)]
+    out = extract_pages(_two_statements([_bill()], second_extra=other), spec)
+    assert len(out.rows) == 1 and out.checks.verdict == "REVIEW"
+
+
+def test_merge_statements_is_off_by_default():
+    out = extract_pages(_two_statements([_bill()]), DELTA)
+    assert len(out.rows) == 1 and any(x.startswith("additional_statement") for x in out.warnings)

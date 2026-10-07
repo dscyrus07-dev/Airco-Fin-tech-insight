@@ -10,6 +10,7 @@ from ...extraction.layout_spec import LayoutSpec
 ICICI_LAYOUT_1 = LayoutSpec(
     layout_id="icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance",
     bank_key="icici",
+    merge_statements=True,
     bank_name="ICICI Bank",
     columns={
         "date": (("transactiondate",), ("transaction", "date")),

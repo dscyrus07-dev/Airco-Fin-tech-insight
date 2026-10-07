@@ -9,6 +9,7 @@ from ...extraction.layout_spec import LayoutSpec
 IDFC_LAYOUT_1 = LayoutSpec(
     layout_id="idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance",
     bank_key="idfc",
+    merge_statements=True,
     bank_name="IDFC First Bank",
     columns={
         "date": (("transactiondate",), ("transaction", "date"), ("transaction",)),

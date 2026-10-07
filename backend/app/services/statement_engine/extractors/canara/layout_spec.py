@@ -11,6 +11,7 @@ CANARA_DEP_WD_BAL_ID = "canara_date_particulars_deposits_withdrawals_balance"
 CANARA_LAYOUT_1 = LayoutSpec(
     layout_id=CANARA_DEP_WD_BAL_ID,
     bank_key="canara",
+    merge_statements=True,
     bank_name="Canara Bank",
     columns={
         "date": (("date",),),
@@ -45,6 +46,7 @@ CANARA_LAYOUT_1.validate()
 CANARA_LAYOUT_2 = LayoutSpec(     # "date | mode | particulars | deposits | withdrawals | balance" with a dated B/F opening row
     layout_id="canara_date_mode_particulars_deposits_withdrawals_balance",
     bank_key="canara",
+    merge_statements=True,
     bank_name="Canara Bank",
     columns={
         "date": (("date",),),

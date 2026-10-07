@@ -33,6 +33,9 @@ class V2Outcome:
     account_number: str = ""
     ifsc: str = ""
     warnings: List[str] = field(default_factory=list)
+    notes: List[str] = field(default_factory=list)          # informational, never a review reason
+    schema_errors: List[str] = field(default_factory=list)
+    consumed_pages: int = 0                                  # pages (of the input list) up to and including this statement's end
 
 
 def _account_number(page_words: Sequence[Word], spec: LayoutSpec) -> str:
@@ -108,7 +111,7 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
-def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
+def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
     if spec.amount_prefix or spec.merge_sign_prefix:
         pages = [Page(_prepare_amounts(p.words, spec), p.width) for p in pages]
@@ -130,9 +133,11 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.failure, out.failure_detail = NO_TABLE_HEADER, str(last_error)
         return out
     pages = pages[skipped:]       # pages before the header page (cover, portfolio summary) carry no table rows
+    consumed_base = skipped
     out.anchors = anchors
     table = assemble(pages, anchors, spec)
     out.table = table
+    out.consumed_pages = consumed_base + (table.summary_page or len(pages))
     out.period = table.period
     out.warnings.extend(table.warnings)
     page1_text = "".join(squash(line) for line in group_lines(first.words))
@@ -186,10 +191,73 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     if spec.row_order == "reverse":
         rows.reverse()
     out.rows = rows
+    out.schema_errors = list(errors)
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):
         out.failure, out.failure_detail = NO_ROWS, "header found but no transaction rows"
         return out
     out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected,
                           spec.dates_monotonic_expected, spec.period_tolerance_days,
                           spec.side_flip_policy)
+    return out
+
+
+def _key(r: NormalizedRow):
+    t = r.txn
+    return (t.date, t.debit, t.credit, t.balance)
+
+
+def _chain_ok(prev: NormalizedRow, nxt: NormalizedRow) -> bool:
+    t = nxt.txn
+    return prev.txn.balance - (t.debit or Decimal(0)) + (t.credit or Decimal(0)) == t.balance
+
+
+def _merge(o1: V2Outcome, o2: V2Outcome, spec: LayoutSpec) -> Optional[V2Outcome]:
+    """Join the next statement onto o1 when it re-prints the tail of o1 (overlapping export) or continues it exactly; else None."""
+    if not o1.rows or not o2.rows or (o1.account_number and o2.account_number and o1.account_number != o2.account_number):
+        return None
+    a, b = o1.rows, o2.rows
+    start = None
+    for j in range(len(b)):                                  # overlap: b[:j+1] re-prints the last j+1 rows of a
+        if j + 1 <= len(a) and all(_key(b[t]) == _key(a[len(a) - j - 1 + t]) for t in range(j + 1)):
+            start = j + 1
+            break
+    if start is None:
+        if _chain_ok(a[-1], b[0]):
+            start = 0
+        else:
+            return None
+    merged = V2Outcome(rows=a + b[start:], anchors=o1.anchors, table=o1.table, account_number=o1.account_number or o2.account_number,
+                       ifsc=o1.ifsc or o2.ifsc, consumed_pages=o1.consumed_pages + o2.consumed_pages)
+    merged.period = (o1.period[0], o2.period[1]) if o1.period and o2.period else (o1.period or o2.period)
+    s1, s2 = o1.summary, o2.summary
+    merged.summary = PrintedSummary(opening=s1.opening if s1 else None, closing=s2.closing if s2 else None) if (s1 or s2) else None
+    merged.warnings = [w for w in o1.warnings if not w.startswith("additional_statement")] + list(o2.warnings)
+    merged.schema_errors = o1.schema_errors + o2.schema_errors
+    merged.notes = o1.notes + o2.notes + [f"merged_statement:overlap_rows={start if start else 0}"]
+    merged.checks = run_checks(merged.rows, merged.period, merged.summary, merged.schema_errors, merged.warnings, spec.period_date_format,
+                               spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+    return merged
+
+
+def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
+    out = _extract_one(pages, spec)
+    if not spec.merge_statements:
+        return out
+    for _ in range(8):
+        if out.failure or out.table is None or not any(w.startswith("additional_statement") for w in out.warnings):
+            break
+        rest = list(pages[out.consumed_pages:])
+        nxt = _extract_one(rest, spec) if rest else None
+        if nxt is None or nxt.failure == NO_ROWS:       # a header with no transaction rows is an empty statement; text without a header stays a REVIEW
+            out.warnings = [w for w in out.warnings if not w.startswith("additional_statement")]     # nothing usable follows
+            out.notes.append("ignored_empty_following_statement")
+            out.checks = run_checks(out.rows, out.period, out.summary, out.schema_errors, out.warnings, spec.period_date_format,
+                                    spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+            break
+        if nxt.failure:
+            break
+        merged = _merge(out, nxt, spec)
+        if merged is None:
+            break
+        out = merged
     return out
