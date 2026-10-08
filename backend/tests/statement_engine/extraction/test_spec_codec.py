@@ -18,6 +18,7 @@ from app.services.statement_engine.extractors.bob.layout_spec import BOB_LAYOUT_
 from app.services.statement_engine.extractors.idbi.layout_spec import IDBI_LAYOUT_1, IDBI_LAYOUT_2
 from app.services.statement_engine.extractors.pnb.layout_spec import PNB_LAYOUT_1
 from app.services.statement_engine.extractors.yes.layout_spec import YES_LAYOUT_1
+from app.services.statement_engine.extractors.iob.layout_spec import IOB_LAYOUT_1, IOB_LAYOUT_2
 from tests.statement_engine.extraction.test_generic_engine import ALPHA, BETA, GAMMA, DELTA, alpha_rows, ALPHA_PERIOD, alpha_summary, page
 from app.services.statement_engine.extraction.engine import extract_pages
 
@@ -35,7 +36,7 @@ def _same(a, b):
 
 
 def test_roundtrip_through_json_for_all_layouts():
-    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, IDFC_LAYOUT_1, KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, FEDERAL_LAYOUT_1, BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3, ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, KARNATAKA_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
+    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, IDFC_LAYOUT_1, KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, FEDERAL_LAYOUT_1, BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3, ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, KARNATAKA_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, ALPHA, BETA, GAMMA, DELTA):
         again = spec_from_dict(json.loads(json.dumps(spec_to_dict(spec))))
         assert _same(spec, again), spec.layout_id
 
