@@ -24,7 +24,7 @@ from .extraction.words import group_lines
 DETECTOR_TO_SPEC_BANK = {
     "hdfc": "hdfc", "sbi": "sbi", "canara": "canara", "axis": "axis", "idfc": "idfc", "kotak": "kotak",
     "federal": "federal", "bank_of_baroda": "bob", "icici": "icici", "union": "union", "paytm": "paytm",
-    "standard_chartered": "scb", "indian_bank": "indian_bank", "karnataka": "karnataka", "dbs": "dbs", "citibank": "citibank", "kvb": "kvb", "hsbc": "hsbc", "indusind": "indusind", "idbi": "idbi", "pnb": "pnb", "yes": "yes", "iob": "iob", "south_indian": "south_indian", "central_bank": "central_bank",
+    "standard_chartered": "scb", "indian_bank": "indian_bank", "karnataka": "karnataka", "dbs": "dbs", "citibank": "citibank", "kvb": "kvb", "hsbc": "hsbc", "indusind": "indusind", "idbi": "idbi", "pnb": "pnb", "yes": "yes", "iob": "iob", "south_indian": "south_indian", "central_bank": "central_bank", "equitas_sfb": "equitas_sfb",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 

@@ -107,6 +107,8 @@ def test_other_bank_name_on_the_page_refuses_a_shared_header():
     assert LayoutRegistry([alpha]).resolve(pages).status == "resolved"          # without the global list nothing is known
 
 
+
+
 def test_detector_ids_map_to_registered_spec_banks():
     from app.services.statement_engine.v2_router import DETECTOR_TO_SPEC_BANK
     from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
