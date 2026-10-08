@@ -228,6 +228,13 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if tail in cols:
                     current.value_date = f"{current.value_date} {' '.join(cols[tail])}".strip()
                 filled = False
+                if spec.wrapped_amount_tokens:
+                    for name in spec.amount_columns:
+                        for v in cols.get(name, []):
+                            prev_v = current.amounts.get(name)
+                            if prev_v and not spec.amount_re.match(prev_v) and spec.amount_re.match(prev_v + v):
+                                current.amounts[name] = prev_v + v
+                                filled = True
                 if spec.continuation_amounts:
                     for name in spec.amount_columns:
                         if cols.get(name) and not current.amounts.get(name):

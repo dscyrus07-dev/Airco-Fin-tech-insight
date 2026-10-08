@@ -64,6 +64,7 @@ class LayoutSpec:
     single_amount_column: str = ""             # one signed money column whose cells end in Dr/Cr; debit_column/credit_column are then virtual names
     side_marker_column: str = ""               # a text column (usually narration) whose Dr/Cr word supplies the side of single_amount_column when the marker prints outside the amount cell
     continuation_amounts: bool = False         # money cells may print on a row's continuation line: an undated line's amounts fill the current row's still-empty money cells
+    wrapped_amount_tokens: bool = False        # a money cell too wide for its column splits mid-number across the row line and its continuation ("9,99,999.9" + "9"): join the continuation token onto a still-invalid amount only when the result matches amount_re
     row_order: str = "forward"                 # "reverse": newest first; "auto": reversed only when the balance chain holds newest-first and breaks oldest-first
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal

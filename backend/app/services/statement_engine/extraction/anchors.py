@@ -4,6 +4,7 @@ Geometry is read from the document. Nothing is hard-coded: page width differs be
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -36,6 +37,11 @@ _DATE_FALLBACK_RIGHT_PAD = 10.0
 _DATE_DATA_LEFT_PAD = 3.0
 _DATE_DATA_RIGHT_PAD = 3.0
 _TRAILING_COLUMN_GAP = 20.0
+
+# A number that is only the visible part of a wrapped money cell: comma-grouped digits with a possibly cut
+# decimal ("9,99,999.9") or a lone 1-2 digit tail. Only meaningful when spec.wrapped_amount_tokens is on —
+# position (near a money column's right edge) still decides the column.
+_WRAPPED_AMOUNT_FRAGMENT = re.compile(r"^\d{1,3}(?:,\d{2,3})+\.?\d{0,2}$|^\.?\d{1,2}$")
 
 
 def _tokens(line: Sequence[Word]) -> List[Tuple[str, float, float]]:
@@ -147,7 +153,8 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
             return None
     elif not last_band:
         return band
-    if spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker):
+    if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
+            or (spec.wrapped_amount_tokens and _WRAPPED_AMOUNT_FRAGMENT.match(text))):
         edges = anchors.amount_edges
         nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
         # an amount must sit close to a money column's right edge; reject stray numbers elsewhere

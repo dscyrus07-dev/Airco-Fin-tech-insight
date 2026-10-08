@@ -794,3 +794,19 @@ def test_year_from_period_picks_the_year_inside_the_period():
     rows = [RawRow(page=1, top=0, date="Dec 30")]
     _add_years(rows, None, spec)          # no period: left as printed
     assert rows[0].date == "Dec 30"
+
+
+def test_wrapped_amount_tokens_join_a_money_cell_split_mid_number():
+    # a money cell too wide for its column prints its tail on the row's continuation line: "1,000.0" + "0"
+    spec = replace(ALPHA, wrapped_amount_tokens=True)
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    ws += [w("01-04-2022", 30, 220), w("SALARY", 120, 220), rt("1,000.0", 470, 220), rt("1,900.00", 560, 220)]
+    ws += [w("0", 469, 237)]
+    ws += [w("02-04-2022", 30, 254), w("SHOP", 120, 254), rt("100.00", 400, 254), rt("1,800.00", 560, 254)]
+    out = extract_pages([Page(ws, W)], spec)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[0].txn.credit == Decimal("1000.00") and out.rows[1].txn.debit == Decimal("100.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+    # flag off: the cut token must not be guessed, the row stays schema-broken
+    off = extract_pages([Page(ws, W)], ALPHA)
+    assert len(off.rows) < 2 or off.schema_errors
