@@ -43,3 +43,281 @@ SBI_LAYOUT_1 = LayoutSpec(
     account_label="accountnumber",
 )
 SBI_LAYOUT_1.validate()
+
+
+# ---------------------------------------------------------------------------
+# Wave-4 variants. Same SBI core-banking family, different printed column sets
+# or date formats. Registered AFTER SBI_LAYOUT_1 so the original keeps priority.
+# ---------------------------------------------------------------------------
+
+# "Date | Details | Debit | Credit | Balance" — no value-date, no ref column.
+SBI_LAYOUT_2 = LayoutSpec(
+    layout_id="sbi_date_details_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("date",),),
+        "narration": (("details",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{1,2} [A-Za-z]{3}(?: \d{4})?$"),
+    date_tail_re=re.compile(r"^\d{4}$"),
+    date_format="%d %b %Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    # "Search for <later> to <earlier>" prints a reversed range in this variant: deliberately never match
+    # (the period check then SKIPs instead of trusting a backwards window); "Balance as on" likewise prints the
+    # post-first-row balance, so opening_balance_re is left unset and the reference check SKIPs.
+    period_re=re.compile(r"(?!x)x"),
+    period_date_format="%d%b%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    empty_amount_marker="-",
+    row_order="auto",
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    header_repeats=True,
+    account_label="accountnumber",
+)
+SBI_LAYOUT_2.validate()
+
+# "Date | Details | Ref No./Cheque No. | Debit | Credit | Balance" — ref column present.
+SBI_LAYOUT_3 = LayoutSpec(
+    layout_id="sbi_date_details_refnocheque_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("date",),),
+        "narration": (("details",),),
+        "ref": (("refnocheque",), ("refno", "cheque"), ("ref", "nocheque")),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "narration", "ref"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{1,2} [A-Za-z]{3}(?: \d{4})?$"),
+    date_tail_re=re.compile(r"^\d{4}$"),
+    date_format="%d %b %Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    # "Search for <later> to <earlier>" prints a reversed range in this variant: deliberately never match
+    # (the period check then SKIPs instead of trusting a backwards window); "Balance as on" likewise prints the
+    # post-first-row balance, so opening_balance_re is left unset and the reference check SKIPs.
+    period_re=re.compile(r"(?!x)x"),
+    period_date_format="%d%b%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    empty_amount_marker="-",
+    row_order="auto",
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    header_repeats=True,
+    account_label="accountnumber",
+)
+SBI_LAYOUT_3.validate()
+
+# "Txn Date | Value Date | Description | Debit | Credit | Balance" — L1 without the ref column.
+SBI_LAYOUT_4 = LayoutSpec(
+    layout_id="sbi_txndate_valuedate_description_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("txndate",),),
+        "value_date": (("valuedate",), ("value",)),
+        "narration": (("description",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}[-/]\d{2}[-/]\d{4}$"),
+    date_format="%d-%m-%Y|%d/%m/%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?i:(?:cr|dr))?\.?$"),
+    merge_drcr_suffix=True,
+    drcr_suffix_decoration=True,
+    row_order="auto",
+    period_re=re.compile(r"(?:AccountStatementfrom|Searchfor)(\d{1,2}-\d{2}-\d{4})to(\d{1,2}-\d{2}-\d{4})"),
+    period_date_format="%d-%m-%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    empty_amount_marker="-",
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    secondary_date_column="value_date",
+    header_repeats=True,
+    # "Balance as on <dd-mm-yyyy>" here prints the statement-generation balance (a date after the period start),
+    # not the opening balance: left unset so the reference check SKIPs instead of comparing against a wrong anchor.
+    opening_balance_re=None,
+    account_label="accountnumber",
+)
+SBI_LAYOUT_4.validate()
+
+# "Post Date | Value Date | Description | Debit | Credit | Balance" — dd-mm-yyyy, balance carries a fused Cr/Dr suffix.
+SBI_LAYOUT_5 = LayoutSpec(
+    layout_id="sbi_postdate_valuedate_description_cheque_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("postdate",),),
+        "value_date": (("valuedate",), ("value",)),
+        "narration": (("description",),),
+        "cheque": (("cheque",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "narration", "cheque"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}-\d{2}-\d{4}$"),
+    date_format="%d-%m-%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?i:(?:cr|dr))?\.?$"),
+    row_order="auto",
+    period_re=re.compile(r"Statementfrom:?(\d{2}-\d{2}-\d{4})To(\d{2}-\d{2}-\d{4})"),
+    period_date_format="%d-%m-%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    secondary_date_column="value_date",
+    header_repeats=True,
+    account_label="accountnumber",
+)
+SBI_LAYOUT_5.validate()
+
+# "Txn Date | Value Date | Description | Ref No./Cheque | Branch | Debit | Credit | Balance" — L1 + branch column.
+SBI_LAYOUT_6 = LayoutSpec(
+    layout_id="sbi_txndate_valuedate_description_refcheque_branch_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("txndate",),),
+        "value_date": (("valuedate",), ("value",)),
+        "narration": (("description",),),
+        "ref": (("refnocheque",), ("refno", "cheque"), ("ref", "nocheque")),
+        "branch": (("branch",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "narration", "ref", "branch"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
+    date_format="%d/%m/%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"AccountStatementfrom(\d{1,2}[A-Za-z]{3}\d{4})to(\d{1,2}[A-Za-z]{3}\d{4})"),
+    period_date_format="%d%b%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    secondary_date_column="value_date",
+    header_repeats=True,
+    opening_balance_re=re.compile(r"Balanceason\d{1,2}[A-Za-z]{3}\d{4}:(?:\(cid:\d+\))?(-?[\d,]+\.\d{2})"),
+    account_label="accountnumber",
+)
+SBI_LAYOUT_6.validate()
+
+# "Txn | Value | Description | Ref | Branch | Debit | Credit | Balance" — short titles, yearless "d Mmm" dates.
+SBI_LAYOUT_7 = LayoutSpec(
+    layout_id="sbi_txn_value_description_ref_branch_debit_credit_balance",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("txn",),),
+        "value_date": (("value",),),
+        "narration": (("description",),),
+        "ref": (("ref",),),
+        "branch": (("branch",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "narration", "ref", "branch"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{1,2} [A-Za-z]{3}$"),
+    date_format="%d %b %Y",
+    year_from_period=True,
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    wrapped_amount_tokens=True,
+    period_re=re.compile(r"AccountStatementfrom(\d{1,2}[A-Za-z]{3}\d{4})to(\d{1,2}[A-Za-z]{3}\d{4})"),
+    period_date_format="%d%b%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    secondary_date_column="value_date",
+    header_repeats=True,
+    opening_balance_re=re.compile(r"Balanceason\d{1,2}[A-Za-z]{3}\d{4}:(?:\(cid:\d+\))?(-?[\d,]+\.\d{2})"),
+    account_label="accountnumber",
+)
+SBI_LAYOUT_7.validate()
+
+
+# "Txn Date | Value Date | Description | Ref/Cheque | Debit | Credit | Balance" — dd-mm-yy dates, Cr/Dr suffix words.
+SBI_LAYOUT_8 = LayoutSpec(
+    layout_id="sbi_txndate_valuedate_description_refcheque_debit_credit_balance_ddmmyy",
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="State Bank of India",
+    columns={
+        "date": (("txndate",),),
+        "value_date": (("valuedate",), ("value",)),
+        "narration": (("description",),),
+        "ref": (("refcheque",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "narration", "ref"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}-\d{2}-\d{2}$"),
+    date_format="%d-%m-%y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?i:(?:cr|dr))?\.?$"),
+    merge_drcr_suffix=True,
+    drcr_suffix_decoration=True,
+    empty_amount_marker="-",
+    row_order="auto",
+    # no period range or opening anchor is printed in this variant ("Statement of Account Date" is the print date):
+    # the reference and period checks SKIP rather than trust a wrong anchor.
+    period_re=re.compile(r"(?!x)x"),
+    period_date_format="%d-%m-%y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    secondary_date_column="value_date",
+    header_repeats=True,
+    account_label="accountnumber",
+)
+SBI_LAYOUT_8.validate()
