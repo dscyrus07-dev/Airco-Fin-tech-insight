@@ -6,6 +6,7 @@ position relative to the period line / summary marker / left margin, never by fi
 """
 from __future__ import annotations
 
+import re
 from decimal import Decimal
 
 from dataclasses import dataclass, field
@@ -216,6 +217,10 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                         current.amounts[name] = vals[0]
                         if len(vals) > 1:
                             current.warnings.append(f"multiple_values:{name}")
+                if spec.side_marker_column and cols.get(spec.side_marker_column):
+                    marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
+                    if marker and spec.single_amount_column in current.amounts:
+                        current.amounts[spec.single_amount_column] = current.amounts[spec.single_amount_column] + " " + marker
             elif current is not None:
                 if "date_tail" in cols:
                     current.date = f"{current.date} {' '.join(cols['date_tail'])}"

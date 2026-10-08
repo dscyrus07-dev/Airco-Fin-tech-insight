@@ -482,6 +482,34 @@ def test_juliet_single_signed_amount_column_and_reverse_order():
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
 
 
+# ---------------------------------------------------------------- KILO: single amount column, Dr/Cr marker prints in
+# a separate column between amount and balance (side_marker_column scans the text band that absorbs it)
+KILO = replace(ALPHA, layout_id="kilo", bank_key="kilo", single_amount_column="amount", side_marker_column="narration",
+               debit_column="amount_dr", credit_column="amount_cr",
+               columns={"date": (("date",),), "narration": (("remarks",),),
+                        "amount": (("amount",),), "balance": (("balance",),)},
+               amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+               summary_marker="", summary_label_text="", summary_expected=False)
+GEO["kilo"] = dict(text={"date": 30, "narration": 120}, money={"amount": 300, "balance": 400},
+                   titles={"date": ["Date"], "amount": ["Amount"], "balance": ["Balance"], "narration": ["Remarks"]})
+
+
+def test_kilo_side_marker_column_supplies_dr_cr_for_a_bare_amount():
+    def krow(top, date, amt, marker, bal, narr="UPI"):
+        ws = [w(date, 30, top), rt(amt, 300, top), rt(bal, 400, top), w(narr, 430, top)]
+        if marker:
+            ws.append(w(marker, 330, top))
+        return ws
+    ws = list(ALPHA_PERIOD) + header(KILO)
+    ws += krow(220, "01-04-2022", "100.00", "Cr", "1,100.00")
+    ws += krow(237, "02-04-2022", "50.00", "Dr", "1,050.00")
+    ws += krow(254, "03-04-2022", "10.00", "", "1,060.00")          # no marker: row must be rejected, not guessed
+    out = extract_pages([Page(ws, W)], KILO)
+    assert len(out.rows) == 2 and out.schema_errors, out.schema_errors
+    assert out.rows[0].txn.credit == Decimal("100.00") and out.rows[1].txn.debit == Decimal("50.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
 def test_zero_amount_is_empty_pairs_the_side_with_the_value():
     spec = replace(ALPHA, zero_amount_is_empty=True)
     from app.services.statement_engine.extraction.rows import RawRow

@@ -62,6 +62,7 @@ class LayoutSpec:
     amount_prefix: str = ""                    # currency text printed in front of amounts ("Rs.", several as "Rs.|₹"), stripped before matching
     merge_sign_prefix: bool = False            # a standalone "+"/"-" word right before an amount belongs to it (single_amount_column: + credit, - debit)
     single_amount_column: str = ""             # one signed money column whose cells end in Dr/Cr; debit_column/credit_column are then virtual names
+    side_marker_column: str = ""               # a text column (usually narration) whose Dr/Cr word supplies the side of single_amount_column when the marker prints outside the amount cell
     row_order: str = "forward"                 # "reverse": newest first; "auto": reversed only when the balance chain holds newest-first and breaks oldest-first
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
@@ -96,3 +97,8 @@ class LayoutSpec:
             raise ValueError("side_flip_policy must be 'fail' or 'review'")
         if self.secondary_date_column and self.secondary_date_column not in self.text_columns:
             raise ValueError("secondary_date_column must be one of text_columns")
+        if self.side_marker_column:
+            if not self.single_amount_column:
+                raise ValueError("side_marker_column requires single_amount_column")
+            if self.side_marker_column not in self.columns or self.side_marker_column not in self.text_columns:
+                raise ValueError("side_marker_column must be a declared text column")
