@@ -114,6 +114,11 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     out: List[Word] = []
     for w in words:
         text = w.text.strip()
+        if spec.amount_sign_gap:
+            collapsed = re.sub(r"^([+-])\s+", r"\g<1>", text)
+            if collapsed != text:
+                text = collapsed
+                w = Word(text, w.x0, w.x1, w.top, w.bottom)
         if spec.amount_prefix:
             stripped = re.sub(r"^([+-]?)\s*" + "(?:" + "|".join(re.escape(x) for x in spec.amount_prefix.split("|") if x) + r")\s*", r"\1", text)
             if stripped != text:
@@ -131,7 +136,7 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
     if spec.monospace_text:
         pages = [Page(_split_monospace(p.words), p.width) for p in pages]
-    if spec.amount_prefix or spec.merge_sign_prefix:
+    if spec.amount_prefix or spec.merge_sign_prefix or spec.amount_sign_gap:
         pages = [Page(_prepare_amounts(p.words, spec), p.width) for p in pages]
     pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
     if spec.merge_drcr_suffix:

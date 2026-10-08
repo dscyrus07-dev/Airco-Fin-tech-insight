@@ -542,6 +542,14 @@ def test_left_aligned_amounts_assign_money_by_the_column_left_edge():
     assert len(same_words_no_flag.rows) < 2
 
 
+def test_amount_sign_gap_collapses_space_between_sign_and_digits():
+    spec = replace(ALPHA, amount_sign_gap=True, amount_re=re.compile(r"^[+-]?[\d,]+\.\d{2}$"))
+    from app.services.statement_engine.extraction.engine import _prepare_amounts
+    words = [Word("-  4,928.58", 545, 578, 100, 108), w("+", 380, 100), w("1,000.00", 390, 100)]
+    got = [x.text for x in _prepare_amounts(words, spec)]
+    assert got == ["-4,928.58", "+", "1,000.00"]
+
+
 def test_zero_amount_is_empty_pairs_the_side_with_the_value():
     spec = replace(ALPHA, zero_amount_is_empty=True)
     from app.services.statement_engine.extraction.rows import RawRow
