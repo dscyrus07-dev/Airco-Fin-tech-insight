@@ -688,7 +688,7 @@ def test_resolve_prefers_primary_header_spelling_over_a_fallback_alternative():
     assert res.status == "resolved" and res.spec.layout_id == "exact"
 
 
-_NO_TEXT_BRAND = {"pnb", "yes", "iob"}   # banks whose brand never prints in the text layer; routing relies on the detector
+_NO_TEXT_BRAND = {"pnb", "yes", "iob", "south_indian"}   # banks whose brand never prints in the text layer; routing relies on the detector
 
 
 def test_default_registry_every_layout_names_its_bank_and_markers_do_not_collide():
