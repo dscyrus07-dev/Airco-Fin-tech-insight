@@ -17,7 +17,7 @@ _AMOUNT = re.compile(r"\d[\d,]*\.\d{2}")
 # Banks that have no layout yet. A header that one of our layouts shares verbatim with such a bank must be refused when
 # the statement names that bank (whitespace-free UPPER-CASE brand names). Never short fragments that sit inside other names.
 OTHER_BANK_MARKERS = (
-    "SOUTHINDIANBANK", "UCOBANK", "PUNJABNATIONALBANK", "YESBANK", "IDBIBANK",
+    "SOUTHINDIANBANK", "UCOBANK", "PUNJABNATIONALBANK", "YESBANK",
     "BANKOFMAHARASHTRA", "CENTRALBANKOFINDIA", "INDIANOVERSEASBANK", "RBLBANK",
     "BANDHANBANK", "AUSMALLFINANCEBANK", "UJJIVANSMALLFINANCEBANK", "EQUITASSMALLFINANCEBANK", "DCBBANK",
     "CITYUNIONBANK", "TAMILNADMERCANTILEBANK", "DHANLAXMIBANK", "CSBBANK", "SBMBANK", "DEUTSCHEBANK", "COSMOSBANK",
