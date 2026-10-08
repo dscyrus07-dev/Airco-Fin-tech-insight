@@ -28,6 +28,10 @@ DETECTOR_TO_SPEC_BANK = {
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 
+# Detector ids that must never be served by v2: these banks stay on their legacy parsers by decision. A confident
+# detection short-circuits before layout resolution, so a shared header can never pull a legacy-only bank into v2.
+LEGACY_ONLY_BANKS = frozenset({"bank_of_india"})
+
 
 def detect_spec_bank(pages: Sequence[Page]) -> tuple:
     """(spec bank_key or "", detector bank_id or ""): what the Slice 2 detector says about this statement. bank_key is
@@ -67,6 +71,8 @@ def route_pages(pages: Sequence[Page], registry: LayoutRegistry, bank_key: str =
         return RoutedExtraction("unsupported", fallback_reason=SCANNED_NO_TEXT.lower())
     if use_detector and not bank_key:
         bank_key, detected = detect_spec_bank(pages)
+        if detected in LEGACY_ONLY_BANKS:
+            return RoutedExtraction("fallback", fallback_reason=f"legacy_only:{detected}")
         if not bank_key and detected:
             return RoutedExtraction("fallback", fallback_reason=f"other_bank:{detected}")
     res = registry.resolve(pages, bank_key)

@@ -107,6 +107,46 @@ def test_other_bank_name_on_the_page_refuses_a_shared_header():
     assert LayoutRegistry([alpha]).resolve(pages).status == "resolved"          # without the global list nothing is known
 
 
+def _detector_pages(*lines):
+    """One Page whose words group into the given text lines (drives the real Slice 2 detector)."""
+    from tests.statement_engine.extraction.test_generic_engine import w
+    ws = []
+    for i, ln in enumerate(lines):
+        x = 30.0
+        for tok in ln.split():
+            ws.append(w(tok, x, 10 + i * 12))
+            x += 5.5 * len(tok) + 12
+    return [Page(ws, 600.0)]
+
+
+def test_legacy_only_bank_falls_back_before_layout_resolution():
+    alpha, _ = _alpha_pages()
+    pages = _detector_pages("Bank of India", "Detailed Statement", "IFSC: BKID0000123",
+                            "Txn Date Particulars Debit Credit Balance",
+                            *["01-04-2021 PAYMENT 100.00 5000.00"] * 30)
+    r = route_pages(pages, LayoutRegistry([alpha]), use_detector=True)
+    assert r.status == "fallback" and r.fallback_reason == "legacy_only:bank_of_india" and r.result is None
+
+
+def test_legacy_only_hold_is_not_overridden_by_header_only_mode():
+    alpha, _ = _alpha_pages()
+    pages = _detector_pages("Bank of India", "Detailed Statement", "IFSC: BKID0000123",
+                            "Txn Date Particulars Debit Credit Balance",
+                            *["01-04-2021 PAYMENT 100.00 5000.00"] * 30)
+    r = route_pages(pages, LayoutRegistry([alpha]), use_detector=True, allow_header_only=True)
+    assert r.status == "fallback" and r.fallback_reason == "legacy_only:bank_of_india"
+
+
+def test_legacy_only_hold_does_not_catch_other_india_banks():
+    from tests.statement_engine.extraction.test_generic_engine import ALPHA
+    for brand, ifsc in (("State Bank of India", "SBIN0004321"), ("Central Bank of India", "CBIN0284321")):
+        pages = _detector_pages(brand, "Account Statement", f"IFSC: {ifsc}",
+                                "Txn Date Particulars Debit Credit Balance",
+                                *["01-04-2021 PAYMENT 100.00 5000.00"] * 30)
+        r = route_pages(pages, LayoutRegistry([ALPHA]), use_detector=True)
+        assert r.fallback_reason != "legacy_only:bank_of_india", brand
+
+
 _NO_DETECTOR_ID = {"city_union", "apgv"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
 
 
