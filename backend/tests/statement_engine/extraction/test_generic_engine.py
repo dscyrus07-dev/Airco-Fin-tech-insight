@@ -810,3 +810,16 @@ def test_wrapped_amount_tokens_join_a_money_cell_split_mid_number():
     # flag off: the cut token must not be guessed, the row stays schema-broken
     off = extract_pages([Page(ws, W)], ALPHA)
     assert len(off.rows) < 2 or off.schema_errors
+
+
+def test_drcr_suffix_decoration_strips_redundant_side_words_on_split_columns():
+    # "220.00 DR" printed as one cell in the debit column: the suffix only restates the column
+    spec = replace(ALPHA, drcr_suffix_decoration=True,
+                   amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?i:(?:cr|dr))?\.?$"))
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    ws += [w("01-04-2022", 30, 220), w("SALARY", 120, 220), rt("1,000.00 CR", 470, 220), rt("1,900.00 CR", 560, 220)]
+    ws += [w("02-04-2022", 30, 254), w("SHOP", 120, 254), rt("100.00 DR", 400, 254), rt("1,800.00 CR", 560, 254)]
+    out = extract_pages([Page(ws, W)], spec)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[0].txn.credit == Decimal("1000.00") and out.rows[1].txn.debit == Decimal("100.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons

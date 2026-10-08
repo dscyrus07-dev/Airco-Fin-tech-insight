@@ -17,6 +17,13 @@ class NormalizeError(ValueError):
     pass
 
 
+def _strip_drcr(text: str, spec) -> str:
+    """Drop a trailing Dr/Cr word that only restates a split column ("220.00 DR" -> "220.00"); opt-in."""
+    if spec.drcr_suffix_decoration:
+        return re.sub(r"(?i)\s*\(?(cr|dr)\)?\.?$", "", (text or "").strip())
+    return text
+
+
 def parse_amount(text: str, suffix_sign: bool = False) -> Optional[Decimal]:
     """Decimal from a printed amount ("1,234.50", "-20,000.00"); None for empty text. With suffix_sign a trailing
     "(Cr)"/"Cr" keeps the value and a trailing "(Dr)"/"Dr" negates it (balance printed with its side)."""
@@ -78,8 +85,8 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
                 else:
                     raise NormalizeError("amount cell carries no Dr/Cr marker")
             else:
-                wd = parse_amount(r.amounts.get(spec.debit_column, ""))
-                dp = parse_amount(r.amounts.get(spec.credit_column, ""))
+                wd = parse_amount(_strip_drcr(r.amounts.get(spec.debit_column, ""), spec))
+                dp = parse_amount(_strip_drcr(r.amounts.get(spec.credit_column, ""), spec))
             bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True)
             if spec.zero_amount_is_empty and wd is not None and dp is not None:
                 if wd == 0 and dp != 0:

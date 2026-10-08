@@ -69,6 +69,7 @@ class LayoutSpec:
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
     merge_drcr_suffix: bool = False            # a separate "Cr"/"Dr" word right after an amount is part of that amount ("3514.56 Cr")
+    drcr_suffix_decoration: bool = False       # a Dr/Cr word at the end of a SPLIT debit/credit amount only restates the column ("220.00 DR" in the debit column): strip it before parsing
     left_aligned_amounts: bool = False         # money data is left-aligned under its column titles: assign by the column's left edge instead of right-edge proximity
     amount_sign_gap: bool = False              # the sign and the digits are separated by space(s) inside the same cell ("-  4,928.58")
     page_footer_markers: Tuple[str, ...] = ()   # whitespace-free upper-case line starts: everything below such a line on a page is footer, the table goes on next page
