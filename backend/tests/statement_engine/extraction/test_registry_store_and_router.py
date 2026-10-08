@@ -71,7 +71,10 @@ def test_router_reports_no_layout_with_an_explicit_reason():
 def test_router_routes_a_resolved_layout_through_the_engine():
     from tests.statement_engine.extraction.test_generic_engine import ALPHA, ALPHA_PERIOD, header, rt, w
     ws = list(ALPHA_PERIOD) + header(ALPHA) + [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
-    routed = route_pages([Page(ws, 600.0)], LayoutRegistry([ALPHA]))
+    # no bank name on the page and no detector bank: a header match alone is not trusted
+    unconfirmed = route_pages([Page(ws, 600.0)], LayoutRegistry([ALPHA]))
+    assert unconfirmed.status == "fallback" and unconfirmed.fallback_reason == "bank_unconfirmed" and not unconfirmed.use_v2
+    routed = route_pages([Page(ws, 600.0)], LayoutRegistry([ALPHA]), ALPHA.bank_key)     # the detector names the same bank
     assert routed.status == "v2" and routed.layout_id == ALPHA.layout_id and routed.use_v2
     assert len(routed.result.transactions) == 1
 
@@ -82,3 +85,29 @@ def test_seed_sql_update_only_when_config_changed():
     for line in seed_sql(DEFAULT_REGISTRY).splitlines():
         if "INTO public.bank_layouts" in line:
             assert "IS DISTINCT FROM EXCLUDED.config_json" in line
+
+
+def _alpha_pages():
+    from tests.statement_engine.extraction.test_generic_engine import ALPHA, ALPHA_PERIOD, header, rt, w
+    ws = list(ALPHA_PERIOD) + header(ALPHA) + [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
+    return ALPHA, [Page(ws, 600.0)]
+
+
+def test_header_only_match_is_opt_in():
+    alpha, pages = _alpha_pages()
+    r = route_pages(pages, LayoutRegistry([alpha]), allow_header_only=True)
+    assert r.status == "v2" and "bank_evidence:none" in r.notes
+
+
+def test_other_bank_name_on_the_page_refuses_a_shared_header():
+    from tests.statement_engine.extraction.test_generic_engine import w
+    alpha, pages = _alpha_pages()
+    pages[0].words.insert(0, w("YESBANK", 30, 5))
+    assert LayoutRegistry([alpha], foreign_markers=("YESBANK",)).resolve(pages).status == "foreign_bank"
+    assert LayoutRegistry([alpha]).resolve(pages).status == "resolved"          # without the global list nothing is known
+
+
+def test_detector_ids_map_to_registered_spec_banks():
+    from app.services.statement_engine.v2_router import DETECTOR_TO_SPEC_BANK
+    from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
+    assert set(DETECTOR_TO_SPEC_BANK.values()) == {s.bank_key for s in DEFAULT_REGISTRY.specs()}

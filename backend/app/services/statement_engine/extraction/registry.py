@@ -2,6 +2,7 @@
 the same LayoutSpec objects; the engine only ever sees specs."""
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
 
@@ -11,6 +12,17 @@ from .rows import Page
 from .words import group_lines
 
 _DETECT_PAGES = 3
+_AMOUNT = re.compile(r"\d[\d,]*\.\d{2}")
+
+# Banks that have no layout yet. A header that one of our layouts shares verbatim with such a bank must be refused when
+# the statement names that bank (whitespace-free UPPER-CASE brand names). Never short fragments that sit inside other names.
+OTHER_BANK_MARKERS = (
+    "SOUTHINDIANBANK", "UCOBANK", "PUNJABNATIONALBANK", "YESBANK", "IDBIBANK", "INDUSINDBANK", "DBSBANK", "CITIBANK",
+    "HSBC", "BANKOFMAHARASHTRA", "CENTRALBANKOFINDIA", "INDIANOVERSEASBANK", "KARURVYSYABANK", "RBLBANK",
+    "BANDHANBANK", "AUSMALLFINANCEBANK", "UJJIVANSMALLFINANCEBANK", "EQUITASSMALLFINANCEBANK", "DCBBANK",
+    "CITYUNIONBANK", "TAMILNADMERCANTILEBANK", "DHANLAXMIBANK", "CSBBANK", "SBMBANK", "DEUTSCHEBANK", "COSMOSBANK",
+    "INDIAPOSTPAYMENTSBANK", "AIRTELPAYMENTSBANK", "FINOPAYMENTSBANK", "PUNJAB&SINDBANK", "PUNJABANDSINDBANK",
+)
 
 
 @dataclass
@@ -21,6 +33,19 @@ class Resolution:
     candidates: List[str] = field(default_factory=list)      # layout ids that matched the header
     rejected: List[str] = field(default_factory=list)        # ids refused because the page names another bank
     notes: List[str] = field(default_factory=list)
+    bank_evidence: str = "none"                  # "region" | "document" | "detector" | "none": what ties the statement to the chosen layout's bank
+
+
+def _nonrow_text(pages: Sequence[Page]) -> str:
+    """Whitespace-free UPPER-CASE text of every line that carries no amount (page furniture: brand lines, footers,
+    registered-office notes), so a bank name inside a transaction narration is never read as the statement's bank."""
+    out = []
+    for pg in pages:
+        for ln in group_lines(pg.words):
+            text = " ".join(w.text for w in ln)
+            if not _AMOUNT.search(text):
+                out.append(text)
+    return "".join(out).replace(" ", "").upper()
 
 
 def _header_region_text(pages: Sequence[Page], spec_hits: Sequence[LayoutSpec]) -> str:
@@ -51,8 +76,8 @@ def _spelling_penalty(pages: Sequence[Page], spec: LayoutSpec) -> int:
     return 10 ** 6
 
 
-def _rank(pages: Sequence[Page], spec: LayoutSpec, own: bool):
-    return (own, -_spelling_penalty(pages, spec), _date_hits(pages, spec), len(spec.columns))
+def _rank(pages: Sequence[Page], spec: LayoutSpec, own: bool, doc_own: bool = False):
+    return (own, doc_own, -_spelling_penalty(pages, spec), _date_hits(pages, spec), len(spec.columns))
 
 
 def _date_hits(pages: Sequence[Page], spec: LayoutSpec) -> int:
@@ -60,7 +85,8 @@ def _date_hits(pages: Sequence[Page], spec: LayoutSpec) -> int:
 
 
 class LayoutRegistry:
-    def __init__(self, specs: Sequence[LayoutSpec] = ()):
+    def __init__(self, specs: Sequence[LayoutSpec] = (), foreign_markers: Sequence[str] = ()):
+        self._foreign = tuple(foreign_markers)
         self._specs: Dict[str, LayoutSpec] = {}
         for spec in specs:
             self.register(spec)
@@ -103,26 +129,38 @@ class LayoutRegistry:
         if not hits:
             return Resolution(None, "no_layout")
         region = _header_region_text(pages, hits)
-        known = {m for sp in self._specs.values() for m in sp.bank_markers}
+        furniture = _nonrow_text(pages)
+        known = {m for sp in self._specs.values() for m in sp.bank_markers} | set(self._foreign)
         accepted: List[LayoutSpec] = []
         rejected: List[str] = []
         own_hit: Dict[str, bool] = {}
+        doc_hit: Dict[str, bool] = {}
         for spec in hits:
             own = any(m in region for m in spec.bank_markers)
-            foreign = any(m in region for m in known if m not in spec.bank_markers)
-            own_hit[spec.layout_id] = own
-            if foreign and not own:
+            doc_own = any(m in furniture for m in spec.bank_markers)
+            others = [m for m in known if m not in spec.bank_markers]
+            foreign = any(m in region for m in others)
+            foreign_doc = any(m in furniture for m in others)
+            own_hit[spec.layout_id], doc_hit[spec.layout_id] = own, doc_own
+            # refuse when the page names another bank and not this layout's own: in the header region, or (with no own
+            # mention anywhere in the page furniture) anywhere in it
+            if (foreign and not own) or (foreign_doc and not own and not doc_own and bank_key != spec.bank_key):
                 rejected.append(spec.layout_id)
             else:
                 accepted.append(spec)
         ids = [s.layout_id for s in hits]
         if not accepted:
             return Resolution(None, "foreign_bank", ids, rejected)
-        ranked = sorted(accepted, key=lambda s: _rank(pages, s, own_hit[s.layout_id]), reverse=True)
+
+        def rank(sp: LayoutSpec):
+            return _rank(pages, sp, own_hit[sp.layout_id], doc_hit[sp.layout_id])
+
+        ranked = sorted(accepted, key=rank, reverse=True)
         top = ranked[0]
-        key = _rank(pages, top, own_hit[top.layout_id])
-        ties = [s for s in ranked[1:] if _rank(pages, s, own_hit[s.layout_id]) == key]
+        key = rank(top)
+        ties = [s for s in ranked[1:] if rank(s) == key]
         if any(t.bank_key != top.bank_key for t in ties):
             return Resolution(None, "ambiguous", ids, rejected, [f"tie:{top.layout_id},{','.join(t.layout_id for t in ties)}"])
         notes = [f"multiple_layouts_matched:{len(accepted)}"] if len(accepted) > 1 else []
-        return Resolution(top, "resolved", ids, rejected, notes)
+        evidence = "region" if own_hit[top.layout_id] else "document" if doc_hit[top.layout_id] else ("detector" if bank_key and bank_key == top.bank_key else "none")
+        return Resolution(top, "resolved", ids, rejected, notes, evidence)

@@ -8,7 +8,7 @@ import json
 from typing import Any, Dict, Iterable, List, Mapping
 
 from .layout_spec import LayoutSpec
-from .registry import LayoutRegistry
+from .registry import OTHER_BANK_MARKERS, LayoutRegistry
 from .spec_codec import spec_from_dict, spec_to_dict
 
 
@@ -30,7 +30,7 @@ def registry_to_rows(registry: LayoutRegistry) -> List[Dict[str, Any]]:
     return rows
 
 
-def registry_from_rows(rows: Iterable[Mapping[str, Any]]) -> LayoutRegistry:
+def registry_from_rows(rows: Iterable[Mapping[str, Any]], foreign_markers=OTHER_BANK_MARKERS) -> LayoutRegistry:
     """Build a registry from active rows, ordered by priority. config_json may be a dict or a JSON string."""
     chosen = sorted((r for r in rows if r.get("active", True)), key=lambda r: (r.get("priority", 100), r["layout_id"]))
     specs = []
@@ -40,7 +40,7 @@ def registry_from_rows(rows: Iterable[Mapping[str, Any]]) -> LayoutRegistry:
         if spec.layout_id != r["layout_id"]:
             raise ValueError(f"row layout_id {r['layout_id']!r} does not match its configuration {spec.layout_id!r}")
         specs.append(spec)
-    return LayoutRegistry(specs)
+    return LayoutRegistry(specs, foreign_markers)
 
 
 def _q(text: str) -> str:
