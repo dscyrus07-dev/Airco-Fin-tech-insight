@@ -386,6 +386,14 @@ def process_statement(
             )
     
     # =================================================================
+    # STEP 4b: v2 shadow (flag-gated; never changes the legacy response)
+    # =================================================================
+    from app.services.statement_engine.shadow import run_v2_shadow
+
+    if getattr(result, "status", "") == "success":
+        run_v2_shadow(file_path, bank_key, result, audit_service=audit_service, job_id=job_id)
+
+    # =================================================================
     # STEP 5: Build Response
     # =================================================================
     total_time_ms = round((time.monotonic() - pipeline_start) * 1000, 1)
