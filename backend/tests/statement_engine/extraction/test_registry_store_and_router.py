@@ -107,9 +107,12 @@ def test_other_bank_name_on_the_page_refuses_a_shared_header():
     assert LayoutRegistry([alpha]).resolve(pages).status == "resolved"          # without the global list nothing is known
 
 
+_NO_DETECTOR_ID = {"city_union"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
 
 
 def test_detector_ids_map_to_registered_spec_banks():
     from app.services.statement_engine.v2_router import DETECTOR_TO_SPEC_BANK
     from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
-    assert set(DETECTOR_TO_SPEC_BANK.values()) == {s.bank_key for s in DEFAULT_REGISTRY.specs()}
+    spec_banks = {s.bank_key for s in DEFAULT_REGISTRY.specs()}
+    assert set(DETECTOR_TO_SPEC_BANK.values()) | _NO_DETECTOR_ID == spec_banks
+    assert set(DETECTOR_TO_SPEC_BANK.values()) <= spec_banks
