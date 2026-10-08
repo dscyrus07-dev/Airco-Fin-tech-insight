@@ -68,6 +68,7 @@ class LayoutSpec:
     zero_amount_is_empty: bool = False         # both money cells are always printed; a zero in one is "no amount on this side"
     sign_is_decoration: bool = False           # a +/- printed on debit/credit amounts only restates the column, it is not a reversal
     merge_drcr_suffix: bool = False            # a separate "Cr"/"Dr" word right after an amount is part of that amount ("3514.56 Cr")
+    left_aligned_amounts: bool = False         # money data is left-aligned under its column titles: assign by the column's left edge instead of right-edge proximity
     page_footer_markers: Tuple[str, ...] = ()   # whitespace-free upper-case line starts: everything below such a line on a page is footer, the table goes on next page
     band_left_pad: Dict[str, float] = field(default_factory=dict)   # text column -> how far left of its header title its data may start (centred titles)
     summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1

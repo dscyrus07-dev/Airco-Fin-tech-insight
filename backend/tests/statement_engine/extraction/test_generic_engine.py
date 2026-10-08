@@ -522,6 +522,26 @@ def test_continuation_amounts_fill_a_dated_rows_empty_money_cells():
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
 
 
+LIMA = replace(ALPHA, layout_id="lima", bank_key="lima", left_aligned_amounts=True,
+               columns={"date": (("date",),), "narration": (("particulars",),),
+                        "debit": (("withdrawals",),), "credit": (("deposits",),), "balance": (("balance",),)})
+GEO["lima"] = dict(text={"date": 10, "narration": 79}, money={"debit": 442, "credit": 491, "balance": 560},
+                   titles={"date": ["Date"], "narration": ["Particulars"], "debit": ["Withdrawals"], "credit": ["Deposits"], "balance": ["Balance"]})
+
+
+def test_left_aligned_amounts_assign_money_by_the_column_left_edge():
+    # CSB-style statements print money left-aligned under its (wider) column title, so right-edge banding misses it
+    ws = list(ALPHA_PERIOD) + header(LIMA)
+    ws += [w("01-04-2022", 10, 220), w("DEBIT UPI", 79, 220), w("50.00", 381.5, 220), w("100.00", 521.5, 220)]
+    ws += [w("02-04-2022", 10, 237), w("CREDIT UPI", 79, 237), w("70.00", 447.0, 237), w("170.00", 521.5, 237)]
+    out = extract_pages([Page(ws, W)], LIMA)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[0].txn.debit == Decimal("50.00") and out.rows[1].txn.credit == Decimal("70.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+    same_words_no_flag = extract_pages([Page(ws, W)], replace(LIMA, left_aligned_amounts=False))
+    assert len(same_words_no_flag.rows) < 2
+
+
 def test_zero_amount_is_empty_pairs_the_side_with_the_value():
     spec = replace(ALPHA, zero_amount_is_empty=True)
     from app.services.statement_engine.extraction.rows import RawRow

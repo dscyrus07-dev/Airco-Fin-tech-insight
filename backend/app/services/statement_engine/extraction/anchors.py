@@ -4,7 +4,7 @@ Geometry is read from the document. Nothing is hard-coded: page width differs be
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from .layout_spec import LayoutSpec
@@ -22,6 +22,7 @@ class ColumnAnchors:
     date_right: float                          # date column | narration column boundary
     text_lefts: Dict[str, float]               # left boundary of each text column after narration
     amount_edges: Dict[str, float]             # money column -> right edge of its header title
+    amount_lefts: Dict[str, float] = field(default_factory=dict)   # money column -> left edge of its header title
 
 
 class AnchorError(ValueError):
@@ -112,6 +113,7 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
         date_right=date_right,
         text_lefts=text_lefts,
         amount_edges={c: spans[c][1] for c in spec.amount_columns},
+        amount_lefts={c: spans[c][0] for c in spec.amount_columns},
     )
 
 
@@ -149,6 +151,12 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         edges = anchors.amount_edges
         nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
         # an amount must sit close to a money column's right edge; reject stray numbers elsewhere
+        if spec.left_aligned_amounts:
+            lefts = anchors.amount_lefts or {c: edges[c] for c in edges}
+            for col in sorted(lefts, key=lefts.get, reverse=True):
+                if word.x0 >= lefts[col] - 2.0:
+                    return col
+            return None
         if abs(word.x1 - edges[nearest]) <= _amount_tolerance(edges, nearest):
             return nearest
     return None if band == secondary else band
