@@ -510,6 +510,18 @@ def test_kilo_side_marker_column_supplies_dr_cr_for_a_bare_amount():
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
 
 
+def test_continuation_amounts_fill_a_dated_rows_empty_money_cells():
+    spec = replace(ALPHA, continuation_amounts=True)
+    ws = list(ALPHA_PERIOD) + header(ALPHA)
+    ws += [w("01-04-2022", 30, 220), w("SALARY", 120, 220)]                                   # date + narration only
+    ws += [w("BY TRANSFER", 120, 237), rt("1,000.00", 470, 237), rt("1,900.00", 560, 237)]    # money on wrap line
+    ws += [w("02-04-2022", 30, 254), w("SHOP", 120, 254), rt("100.00", 400, 254), rt("1,800.00", 560, 254)]
+    out = extract_pages([Page(ws, W)], spec)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[0].txn.credit == Decimal("1000.00") and out.rows[1].txn.debit == Decimal("100.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
 def test_zero_amount_is_empty_pairs_the_side_with_the_value():
     spec = replace(ALPHA, zero_amount_is_empty=True)
     from app.services.statement_engine.extraction.rows import RawRow
@@ -676,7 +688,7 @@ def test_resolve_prefers_primary_header_spelling_over_a_fallback_alternative():
     assert res.status == "resolved" and res.spec.layout_id == "exact"
 
 
-_NO_TEXT_BRAND = {"pnb"}          # banks whose brand never prints in the text layer; routing relies on the detector
+_NO_TEXT_BRAND = {"pnb", "yes"}   # banks whose brand never prints in the text layer; routing relies on the detector
 
 
 def test_default_registry_every_layout_names_its_bank_and_markers_do_not_collide():

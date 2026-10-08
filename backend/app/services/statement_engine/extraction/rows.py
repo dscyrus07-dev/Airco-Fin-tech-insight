@@ -227,7 +227,13 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 tail = (spec.secondary_date_column or "") + "_tail"
                 if tail in cols:
                     current.value_date = f"{current.value_date} {' '.join(cols[tail])}".strip()
-                if any(c in cols for c in spec.amount_columns):
+                filled = False
+                if spec.continuation_amounts:
+                    for name in spec.amount_columns:
+                        if cols.get(name) and not current.amounts.get(name):
+                            current.amounts[name] = cols[name][0]
+                            filled = True
+                if any(c in cols for c in spec.amount_columns) and not filled:
                     current.warnings.append("orphan_amount_on_wrapped_line")
                 if "narration" in cols:
                     current.narration_lines.append(" ".join(cols["narration"]))
