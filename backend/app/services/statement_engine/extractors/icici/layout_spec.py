@@ -74,3 +74,79 @@ ICICI_LAYOUT_2 = LayoutSpec(     # older ICICI layout (previously mis-filed unde
     opening_row_marker="B/F",
 )
 ICICI_LAYOUT_2.validate()
+
+
+# "S No. | Transaction Date | Cheque Number | Transaction Remarks | Withdrawal | Deposit | Balance" —
+# two-line header: "Date"/"Amount (INR)"/"(INR)" sit on the second line. Rows carry one money cell
+# (the empty side prints nothing). Dates dd.mm.yyyy; period "for the period <Mon d, yyyy> - <Mon d, yyyy>".
+ICICI_LAYOUT_3 = LayoutSpec(
+    layout_id="icici_sno_transactiondate_chequenumber_transactionremarks_withdrawal_deposit_balance",
+    bank_key="icici",
+    bank_markers=("ICICIBANK",),
+    merge_statements=True,
+    bank_name="ICICI Bank",
+    columns={
+        "date": (("transaction",),),
+        "ref": (("chequenumber",), ("cheque", "number")),
+        "narration": (("transaction", "remarks"), ("transactionremarks",), ("remarks",)),
+        "debit": (("withdrawal",), ("withdrawalamount",), ("withdrawal", "amount")),
+        "credit": (("deposit",), ("depositamount",), ("deposit", "amount")),
+        "balance": (("balance",), ("balanceinr",), ("balance", "inr")),
+    },
+    text_columns=("date", "ref", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}\.\d{2}\.\d{4}$"),
+    date_format="%d.%m.%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{1,2}$"),
+    period_re=re.compile(r"fortheperiod([A-Za-z]+\d{1,2},\d{4})-([A-Za-z]+\d{1,2},\d{4})"),
+    period_date_format="%B%d,%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    continuation_start="top",
+    dates_monotonic_expected=False,
+)
+ICICI_LAYOUT_3.validate()
+
+
+# ICICI_LAYOUT_1 shape plus a real "Value Date" column between "S No." and "Transaction Date":
+# the extra word sits LEFT of the date title so it stays furniture (anchors expect text columns right
+# of date); it makes the layout-1 header an unknown-column rejection, so this needs its own spec.
+# Some files print dates "31,07,2023" (commas) and one-decimal amounts: date shape is wider than L1's,
+# which also lets _rank's date-hit term hand comma-date files to this spec over L1.
+# "Withdrawal"/"Deposit" print bare or as "... Amount"; "Balance (INR)" may keep "(INR)" on the same line.
+ICICI_LAYOUT_4 = LayoutSpec(
+    layout_id="icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance_vd",
+    bank_key="icici",
+    bank_markers=("ICICIBANK",),
+    merge_statements=True,
+    bank_name="ICICI Bank",
+    columns={
+        "date": (("transactiondate",), ("transaction", "date")),
+        "ref": (("chequenumber",), ("cheque", "number")),
+        "narration": (("transactionremarks",), ("transaction", "remarks")),
+        "debit": (("withdrawalamount",), ("withdrawal", "amount"), ("withdrawal",)),
+        "credit": (("depositamount",), ("deposit", "amount"), ("deposit",)),
+        "balance": (("balanceinr",), ("balance", "inr"), ("balance",)),
+    },
+    text_columns=("date", "ref", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}[/,]\d{2}[/,]\d{4}$"),
+    date_format="%d/%m/%Y|%d,%m,%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{1,2}$"),
+    period_re=re.compile(r"^NOPERIOD(\d)(\d)$"),
+    period_date_format="%d/%m/%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    zero_amount_is_empty=True,
+    continuation_start="top",
+    dates_monotonic_expected=False,
+)
+ICICI_LAYOUT_4.validate()
