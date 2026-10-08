@@ -28,6 +28,7 @@ from app.services.statement_engine.extractors.bom.layout_spec import BOM_LAYOUT_
 from app.services.statement_engine.extractors.bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2
 from app.services.statement_engine.extractors.au_sfb.layout_spec import AU_LAYOUT_1
 from app.services.statement_engine.extractors.dcb.layout_spec import DCB_LAYOUT_1
+from app.services.statement_engine.extractors.apgv.layout_spec import APGV_LAYOUT_1
 from tests.statement_engine.extraction.test_generic_engine import ALPHA, BETA, GAMMA, DELTA, alpha_rows, ALPHA_PERIOD, alpha_summary, page
 from app.services.statement_engine.extraction.engine import extract_pages
 
@@ -45,7 +46,7 @@ def _same(a, b):
 
 
 def test_roundtrip_through_json_for_all_layouts():
-    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, IDFC_LAYOUT_1, KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, FEDERAL_LAYOUT_1, BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3, ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, KARNATAKA_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
+    for spec in (HDFC_LAYOUT_A, SBI_LAYOUT_1, CANARA_LAYOUT_1, AXIS_LAYOUT_1, IDFC_LAYOUT_1, KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, FEDERAL_LAYOUT_1, BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3, ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, KARNATAKA_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, APGV_LAYOUT_1, ALPHA, BETA, GAMMA, DELTA):
         again = spec_from_dict(json.loads(json.dumps(spec_to_dict(spec))))
         assert _same(spec, again), spec.layout_id
 

@@ -107,7 +107,7 @@ def test_other_bank_name_on_the_page_refuses_a_shared_header():
     assert LayoutRegistry([alpha]).resolve(pages).status == "resolved"          # without the global list nothing is known
 
 
-_NO_DETECTOR_ID = {"city_union"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
+_NO_DETECTOR_ID = {"city_union", "apgv"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
 
 
 def test_detector_ids_map_to_registered_spec_banks():
