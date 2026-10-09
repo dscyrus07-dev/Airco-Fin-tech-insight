@@ -216,3 +216,13 @@ def test_header_only_ok_opt_in_field_accepts_header_evidence_none():
     assert r.status == "v2" and "bank_evidence:layout_policy" in r.notes
     default_off = route_pages(pages, LayoutRegistry([alpha]))
     assert default_off.status == "fallback" and default_off.fallback_reason == "bank_unconfirmed"
+
+
+def test_low_confidence_detection_never_produces_other_bank():
+    # a weak foreign-name mention (below MEDIUM) must not claim the file belongs to that bank
+    pages = _detector_pages("Statement", "Txn Date Particulars Debit Credit Balance",
+                            *["01-04-2021 PAYMENT 100.00 5000.00"] * 5,
+                            "queries: contact YES BANK support")
+    r = route_pages(pages, LayoutRegistry([]), use_detector=True)
+    assert r.fallback_reason != "other_bank:yes" and r.fallback_reason == "no_layout"
+    assert any(n.startswith("detector:") for n in r.notes)

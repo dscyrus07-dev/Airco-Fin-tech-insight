@@ -98,7 +98,7 @@ def route_pages(pages: Sequence[Page], registry: LayoutRegistry, bank_key: str =
     det = None
     if use_detector and not bank_key:
         bank_key, det = detect_spec_bank(pages)
-        detected = det.bank_id or ""
+        detected = det.bank_id if det.bank_id and det.confidence.name in _CONFIDENT else ""
         if detected in LEGACY_ONLY_BANKS:
             return RoutedExtraction("fallback", fallback_reason=f"legacy_only:{detected}", notes=_detector_notes(det))
         if not bank_key and detected:
