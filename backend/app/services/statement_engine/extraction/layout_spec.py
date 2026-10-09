@@ -77,6 +77,7 @@ class LayoutSpec:
     summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
+    clipped_drcr_suffix: bool = False        # page-edge-clipped balance cells print "…C"/"…D" instead of "…Cr"/"…Dr": a lone C/D suffix on the balance is treated as the clipped marker (chain must still prove the values)
     header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
                                             # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
 

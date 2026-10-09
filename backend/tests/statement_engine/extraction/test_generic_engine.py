@@ -865,3 +865,30 @@ def test_date_outlier_check_flags_an_isolated_row_only():
     quiet = ["2024-01-02", "2024-01-05", "2024-06-01", "2024-06-04", "2024-06-09"]      # a quiet spell is not an outlier
     assert check_date_outliers(mk(quiet)).status == "pass"
     assert check_date_outliers(mk(base[:2])).status == "skipped"
+
+
+# ---------------------------------------------------------------- CLIP: balance cells clipped at the page edge print "…C"/"…D" instead of
+# "…Cr"/"…Dr" (the Indian Bank post/remitter family). Opt-in field; the chain still proves every value.
+CLIP = replace(ALPHA, layout_id="clip", bank_key="clip",
+               amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?: ?(?:Cr|Dr|C|D))?$"), clipped_drcr_suffix=True)
+GEO["clip"] = GEO["alpha"]
+
+
+def test_clipped_drcr_suffix_reads_page_edge_balance_markers():
+    assert parse_amount("750041.02C", suffix_sign=True, clipped_sign=True) == Decimal("750041.02")
+    assert parse_amount("100.00D", suffix_sign=True, clipped_sign=True) == Decimal("-100.00")
+    assert parse_amount("100.00(Dr)", suffix_sign=True, clipped_sign=True) == Decimal("-100.00")   # full suffix still wins
+    rows = [row(CLIP, 220, "01-04-2022", "SHOP", debit="100.00", balance="900.00C"),
+            row(CLIP, 237, "02-04-2022", "SALARY", credit="1,000.00", balance="1,900.00C"),
+            row(CLIP, 254, "03-04-2022", "FEE", debit="2,000.00", balance="100.00D")]
+    out = extract_pages([page(CLIP, rows, ALPHA_PERIOD, alpha_summary(400, "2,100.00", "1,000.00", "-100.00"))], CLIP)
+    assert out.checks.verdict == "VERIFIED", out.checks.reasons
+    assert [r.txn.balance for r in out.rows] == [Decimal("900.00"), Decimal("1900.00"), Decimal("-100.00")]
+
+
+def test_clipped_drcr_suffix_is_opt_in():
+    rows = [row(CLIP, 220, "01-04-2022", "SHOP", debit="100.00", balance="900.00C"),
+            row(CLIP, 237, "02-04-2022", "SALARY", credit="1,000.00", balance="1,900.00C")]
+    out = extract_pages([page(CLIP, rows, ALPHA_PERIOD, alpha_summary(400, "100.00", "1,000.00", "1,900.00"))],
+                        replace(CLIP, clipped_drcr_suffix=False))
+    assert out.checks.verdict != "VERIFIED"

@@ -24,18 +24,21 @@ def _strip_drcr(text: str, spec) -> str:
     return text
 
 
-def parse_amount(text: str, suffix_sign: bool = False) -> Optional[Decimal]:
+def parse_amount(text: str, suffix_sign: bool = False, clipped_sign: bool = False) -> Optional[Decimal]:
     """Decimal from a printed amount ("1,234.50", "-20,000.00"); None for empty text. With suffix_sign a trailing
-    "(Cr)"/"Cr" keeps the value and a trailing "(Dr)"/"Dr" negates it (balance printed with its side)."""
+    "(Cr)"/"Cr" keeps the value and a trailing "(Dr)"/"Dr" negates it (balance printed with its side). With
+    clipped_sign a lone trailing C/D counts as a page-edge-clipped Cr/Dr (same sign semantics)."""
     t = (text or "").strip()
     if not t:
         return None
     t = t.replace(",", "")
     if suffix_sign:
         m = re.search(r"(?i)\(?(cr|dr)\)?$", t)
+        if not m and clipped_sign:
+            m = re.search(r"(?<=[\d.])([cCdD])\)?$", t)
         if m:
             t = t[:m.start()]
-            t = f"-{t.lstrip('-')}" if m.group(1).lower() == "dr" else t
+            t = f"-{t.lstrip('-')}" if m.group(1).lower().startswith("d") else t
     negative = t.startswith("(") and t.endswith(")")     # accounting style: (1234.50) is -1234.50
     if negative:
         t = t[1:-1]
@@ -87,7 +90,8 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             else:
                 wd = parse_amount(_strip_drcr(r.amounts.get(spec.debit_column, ""), spec))
                 dp = parse_amount(_strip_drcr(r.amounts.get(spec.credit_column, ""), spec))
-            bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True)
+            bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                               clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
             if spec.zero_amount_is_empty and wd is not None and dp is not None:
                 if wd == 0 and dp != 0:
                     wd = None
