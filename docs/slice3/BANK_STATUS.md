@@ -1,6 +1,6 @@
 # BANK STATUS — v2 statement engine coverage
 
-Branch `devin/wave3`. One row per bank. States:
+Branch `devin/wave5`. One row per bank. States:
 
 - **ONBOARDED** — registered `LayoutSpec`(s), verified on real files, routed.
 - **LEGACY-HOLD** — explicitly pinned to the legacy parser; the v2 router returns
@@ -9,7 +9,7 @@ Branch `devin/wave3`. One row per bank. States:
   `other_bank:*` / `foreign_bank` / `no_layout` rather than mis-accepting.
 - **INSUFFICIENT-DATA** — too few readable samples to build/validate a layout.
 
-## Onboarded (62 layouts / 33 bank keys — wave 4)
+## Onboarded (65 layouts / 33 bank keys — wave 5)
 
 | Bank | Layouts | Verified (in-scope) | Evidence |
 |------|---------|---------------------|----------|
@@ -21,31 +21,31 @@ Branch `devin/wave3`. One row per bank. States:
 | Kotak Mahindra | 7 | +173 VERIFIED corpus (wave 4) | region |
 | Bank of Baroda | 3 | slice3 baseline | document |
 | Federal Bank | 1 | wave 3 (L2/L3 parked post-corpus: 0 VERIFIED) | region |
-| Indian Bank | 1 | wave 3 (L2/L3 parked: clipped balances / embedded balances) | region |
+| Indian Bank | 2 | L2 `indianbank_postdate_remitter_*_yearless` 42/45 cluster forced VERIFIED (wave 5); L3 parked (embedded balances) | region |
 | Karnataka Bank | 1 | slice3 baseline | region |
 | IDFC First | 1 | slice3 baseline | region |
 | Paytm Payments Bank | 1 | slice3 baseline | region |
-| Union Bank of India | 3 | +90 VERIFIED corpus (wave 4) | region |
+| Union Bank of India | 4 | wave-5 routed 525 VERIFIED (+130 via L5 `union_trandate_tranid_*`); L3 one-decimal parked | region/detector |
 | Standard Chartered | 2 | slice3 baseline | region |
 | DBS | 1 | 38/46 hold-out | region |
 | Citibank | 1 | 23/24 hold-out | region/document |
-| Karur Vysya | 1 | 1/29 hold-out (PARTIAL) | document |
+| Karur Vysya | 1 | 1/29 hold-out (PARTIAL); wave 5: body text = CID glyph dumps, NO-GO w/o glyph decoder (`KVB_DESIGN_NOTE.md`) | document |
 | HSBC | 1 | 8/10 hold-out | region |
 | IndusInd | 1 | 34/34 hold-out | region/document |
 | Punjab National Bank | 1 | 23/23 hold-out | detector |
 | IDBI | 2 | 8/14 + 8/8 hold-out | document/region |
-| Yes Bank | 1 | 13/13 hold-out | detector |
+| Yes Bank | 2 | wave-5 honest re-measure 97 files: L1 36 + L3 8/9; L2 parked 5/21 (24% trusted) | detector |
 | Indian Overseas Bank | 2 | 12/12 + 9/9 hold-out | detector |
 | South Indian Bank | 1 | 11/12 hold-out | detector |
 | Central Bank of India | 2 | L1 8/10, L2 3/3 | region |
 | Equitas SFB | 1 | 9/12 hold-out | region |
-| City Union Bank | 2 | 31/31 + 6/6 | marker only (no detector id) |
+| City Union Bank | 2 | wave-5 routed 37/37 VERIFIED (detector unblocked: `city_union` json added) | detector+marker |
 | Ujjivan SFB | 1 | 8/10 hold-out | document |
 | Bank of Maharashtra | 2 | 11/11 + 6/6 | document |
-| Bandhan Bank | 2 | 7/8 + 5/5 | region/document |
-| AU Small Finance Bank | 1 | 14/14 | region |
-| DCB Bank | 1 | 14/15 | region |
-| APGV Bank | 1 | 13/13 | region (no detector id) |
+| Bandhan Bank | 2 | wave-5 routed 10/18 (8 unrouted sub-threshold clusters — coverage PARTIAL) | region/document |
+| AU Small Finance Bank | 1 | wave-5 routed 14/17 | region |
+| DCB Bank | 1 | wave-5 routed 14/15 (1 FAILED) | region |
+| APGV Bank | 1 | wave-5 routed 13/15 | region (no detector id) |
 
 ## LEGACY-HOLD
 
@@ -69,4 +69,4 @@ Branch `devin/wave3`. One row per bank. States:
 | Fino Payments Bank | 1 | `other_bank:fino_pb` ×1 | INSUFFICIENT-DATA |
 | RBL Bank | 0 | — | INSUFFICIENT-DATA (CSV only) |
 | SBM Bank | 0 | — | INSUFFICIENT-DATA (CSV only) |
-| CSB Bank | ~8 true | `other_bank:csb` / `no_layout` | REFUSED-CORRECTLY (folder contaminated with Federal misfiles; real CSB files split across sub-threshold shapes) |
+| CSB Bank | ~18 | `other_bank:csb` / `no_layout` | REFUSED-CORRECTLY (wave 5: draft `csb_date_particulars_*` spec forced-probed 0/18 VERIFIED — parked, spec removed) |

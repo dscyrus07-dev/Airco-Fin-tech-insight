@@ -69,11 +69,16 @@ exception (same pattern as Wave 1 SIB→BoB).
 - **APGB→APGV**: same-fingerprint sibling, verifies under forced spec; refused at
   routing via `ANDHRAPRAGATHIGRAMEENABANK`. Any future APGB onboarding must keep
   this marker.
-- **City Union detector block**: the `union` detector false-positives on "Union" in
-  CUB files → `other_bank:union` → legacy fallback. Layouts are registered and
-  codec-tested but routing never reaches them until the detector gains precision;
-  CUB relies on `bank_markers` evidence (no `banks/*.json` detector id), documented
-  in `_NO_DETECTOR_ID` alongside `apgv`.
+- **City Union detector block** *(resolved in Wave 5)*: the `union` detector
+  false-positived on "Union" in CUB files → `other_bank:union` → legacy fallback.
+  Wave 5 added a `city_union` detector entry (`banks/city_union.json`) with
+  DOMAIN/HEADER_NAME/IFSC evidence; CUB now detects `city_union` at
+  VERY_HIGH/HIGH and the layouts route — re-measure: **37/37 VERIFIED**.
+- **Wave-5 routed re-measurement** (full folder, current code): DCB 14/15
+  VERIFIED + 1 FAILED; APGV 13/15 VERIFIED + 2 unrouted; AU 14/17 VERIFIED + 3
+  unrouted; Bandhan **10/18 VERIFIED + 8 unrouted** — Bandhan coverage is
+  materially weaker than the hold-out numbers implied; the 8 unrouted files are
+  sub-threshold clusters not yet onboarded. See `WAVE5_RESULTS.md`.
 
 ## Tests
 
