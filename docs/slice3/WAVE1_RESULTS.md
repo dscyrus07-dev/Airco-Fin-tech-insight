@@ -45,7 +45,7 @@ parked. See `WAVE5_RESULTS.md`.
 ## Parked / honest residuals
 
 - **DBS**: multi-account bundles break the chain at account boundaries mid-page (capability gap); one legitimately empty statement (NO_ROWS).
-- **Citibank**: 5-file `(INR)` variant omits balance on most rows — unverifiable by chain check, parked. 1 image-insert page file.
+- **Citibank**: 5-file `(INR)` variant (`Withdrawals (INR) | Deposits (INR) | Balance(INR)` header) stays parked, reason corrected in Phase 7 follow-up: the Balance(INR) column header IS present in 5/5 files; what is missing is a running balance on every dated line. Dated lines carrying a single money token (amount only, no balance): 12/25, 7/12, 1/6, 3/13, 88/109 per file, so a per-row balance chain cannot be proven. (A Phase 7 sample of n=2 saw three amounts per row and called the earlier reason contradicted; the 5-file count above does not support that.) 1 image-insert page file.
 - **KVB**: transaction text arrives as CID glyph dumps — Wave 5 re-examination
   showed 19/20 sampled files DO have a ToUnicode map, but the *transaction rows*
   map to `(cid:NN)` glyphs while headers stay readable. Decoding needs per-glyph

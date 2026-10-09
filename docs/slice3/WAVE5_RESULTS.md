@@ -15,7 +15,7 @@ production defaults, 4 workers). Working artifacts: `comparison/wave5/` (untrack
 | `7fe013e` | engine | opt-in `clipped_drcr_suffix` — a lone trailing `C`/`D` on a balance token completes clipped `Cr`/`Dr`; chain check still governs |
 | `ecea5aa` | engine | `_add_years` leaves dates already completed by `date_tail` alone; `|`-alternation date formats supported; candidate years tried in order until one fits the printed period |
 | `94db5e0` | feat | Indian Bank L2 `indianbank_postdate_remitter_description_chequeno_dr_cr_balance_yearless` — 42/45 cluster VERIFIED, G3 0 foreign, G7 0 diffs |
-| `44fd191` | feat | Yes Bank L3 `yes_transaction_valuedate_referencenumber_*_runningbalance` (8/9 trusted); L2 wrapped-running-balance defined but **parked** (5/21 = 24% trusted) |
+| `44fd191` | feat | Yes Bank L3 `yes_transaction_valuedate_referencenumber_*_runningbalance` (8/9 on the referencenumber sub-cluster; **13/30 = 43% corpus-wide**, see Phase 7 correction); L2 wrapped-running-balance defined but **parked** (5/21 = 24% trusted) |
 
 ## Part A — detector precision
 
@@ -79,7 +79,7 @@ headers hit own-folder exclusively and are defensible candidates; none enabled.
 |------|---------|
 | KVB (~70 files) | **NO-GO** — transaction rows arrive as `(cid:NN)` glyph dumps; needs a glyph-decoding algorithm, not a spec field. `KVB_DESIGN_NOTE.md`. |
 | Indian Bank L2 (45 files) | **DONE** — `clipped_drcr_suffix` + consolidated date-tail shapes; 42/45 forced VERIFIED, G3 clean, G7 clean. |
-| Yes Bank wrapped `Running\|Balance` (L2) | **PARKED** — forced probe 5/21 (24%) trusted; registered L3 instead (8/9). |
+| Yes Bank wrapped `Running\|Balance` (L2) | **PARKED** — forced probe 5/21 (24%) trusted; registered L3 instead (8/9 on its sub-cluster; 13/30 = 43% corpus-wide). |
 | ICICI stale-balance `Transactions List` (L3/L4, ~98 files) | DESIGN NOTE only — `ICICI_STALE_BALANCE_DESIGN_NOTE.md`; needs reversal-pair-aware check, `checks.py` untouched. |
 | Kotak K8/K9, Union one-decimal, Federal F-A | no single-field solution found within timebox; remain parked. |
 | CSB (18 files) | draft spec forced-probed 0/18 — parked, untracked draft removed. |
@@ -96,7 +96,7 @@ these banks predate the split requirement; this is the *production* truth):
 | APGV | 13/13 | 13 VERIFIED, 2 unrouted |
 | AU SFB | 14/14 | 14 VERIFIED, 3 unrouted |
 | Bandhan | 7/8 + 5/5 | **10 VERIFIED, 8 unrouted** — PARTIAL coverage, docs updated |
-| Yes Bank | 13/13 hold-out | 49 VERIFIED / 28 FAILED / 20 unrouted of 97 (L1+L3); L2 parked at 24% |
+| Yes Bank | 13/13 hold-out (overall claim not reproduced; Yes L3 alone is 13/30 = 43% on a fresh corpus-wide sample) | 49 VERIFIED / 28 FAILED / 20 unrouted of 97 (L1+L3); L2 parked at 24% |
 
 ## Part D-bis — independent re-derivation (SIB / HSBC / PNB)
 
@@ -164,3 +164,11 @@ Same-layout row-hash / verdict diffs across all previously-routed files: **0**
 - `pikepdf` is absent in the local env — `test_capability_and_states.py`
   (pytest-only import) and any pikepdf-dependent suites cannot run locally;
   all runnable statement-engine extraction tests pass (169).
+
+
+## Phase 7 correction: Yes Bank L3 (added during shadow-readiness fixes)
+The "8/9 trusted" figure for Yes L3 was measured on the 9-file `referencenumber` sub-cluster. The layout header matches a
+broader family: on a fresh corpus-wide sample it matches 30 files and verifies 13 (43.3%); the other 17 are honest FAILED
+(chain/side checks), none falsely VERIFIED. The layout was **not** tightened to raise the score (that would fit the
+sample, not the family). Treat Yes L3 as a low-yield, safe layout; Yes Bank statements it cannot verify fall back to the
+legacy parser.

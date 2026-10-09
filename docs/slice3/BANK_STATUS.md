@@ -34,7 +34,7 @@ Branch `devin/wave5`. One row per bank. States:
 | IndusInd | 1 | 34/34 hold-out | region/document |
 | Punjab National Bank | 1 | 23/23 hold-out | detector |
 | IDBI | 2 | 8/14 + 8/8 hold-out | document/region |
-| Yes Bank | 2 | wave-5 honest re-measure 97 files: L1 36 + L3 8/9; L2 parked 5/21 (24% trusted) | detector |
+| Yes Bank | 2 | wave-5 honest re-measure 97 files: L1 36 + L3 **13/30 = 43% corpus-wide** (the earlier 8/9 was one sub-cluster only; all misses are honest FAILED, none falsely VERIFIED); L2 parked 5/21 (24% trusted) | detector |
 | Indian Overseas Bank | 2 | 12/12 + 9/9 hold-out | detector |
 | South Indian Bank | 1 | 11/12 hold-out | detector |
 | Central Bank of India | 2 | L1 8/10, L2 3/3 | region |
@@ -70,3 +70,11 @@ Branch `devin/wave5`. One row per bank. States:
 | RBL Bank | 0 | — | INSUFFICIENT-DATA (CSV only) |
 | SBM Bank | 0 | — | INSUFFICIENT-DATA (CSV only) |
 | CSB Bank | ~18 | `other_bank:csb` / `no_layout` | REFUSED-CORRECTLY (wave 5: draft `csb_date_particulars_*` spec forced-probed 0/18 VERIFIED — parked, spec removed) |
+
+## Notes added during shadow-readiness fixes
+- Citibank `(INR)` variant (5 files): parked because dated lines mostly carry one money token (no per-row running balance); the
+  Balance(INR) header is present. See WAVE1_RESULTS.md.
+- SBI layout 2 (`sbi_date_details_debit_credit_balance`) was dead code: 0 of 12,249 corpus files route to it. It is no longer
+  registered; 2,497 SBI-related files give identical routes, verdicts and row hashes with and without it.
+- Verdict policy: a result with no independent printed opening/closing anchor is capped at REVIEW (balance chain alone cannot
+  prove row 0). 1,989 previously VERIFIED files moved to REVIEW; see SHADOW_READINESS.md.
