@@ -304,10 +304,13 @@ def test_delta_statement_after_footer_page_is_review():
     assert len(out.rows) == 1 and out.checks.verdict == "REVIEW" and any(x.startswith("additional_statement") for x in out.warnings)
 
 
-def test_summary_not_expected_means_missing_summary_is_not_a_review_reason():
+def test_summary_not_expected_still_cannot_verify_without_an_independent_anchor():
+    # Superseded assertion (was: summary-less layouts reach VERIFIED). A balance chain whose opening is derived from
+    # row 0 cannot prove row 0, so without a printed opening/closing the result is capped at REVIEW.
     rows = [drow(230, "5 Jan 2023", "5 Jan 2023", "SHOP", debit="100.00", balance="900.00")]
     out = extract_pages([delta_page(rows, extra=DELTA_TOP[:3] + DELTA_TOP[3:] if False else DELTA_TOP[:4] + DELTA_TOP[14:])], DELTA)
-    assert out.summary is None and out.checks.verdict == "VERIFIED", out.checks.reasons
+    assert out.summary is None and out.checks.verdict == "REVIEW", out.checks.reasons
+    assert any("independent opening/closing anchor" in r for r in out.checks.reasons)
 
 
 # ---------------------------------------------------------------- ECHO: printed closing-balance line inside the table, page-number

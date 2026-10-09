@@ -183,8 +183,12 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
         reasons.append("totals mismatch")
     if reasons:
         return FAILED, reasons
-    if results["reference"].status == SKIPPED and has_rows and summary_expected:
-        reasons.append("no printed summary to verify against")
+    if results["reference"].status == SKIPPED and has_rows:
+        # No independent opening/closing anchor: the chain's opening is derived from row 0 itself, so a corrupted first
+        # row shifts the whole chain in lockstep and cannot be detected. Such results are capped at REVIEW, whether or
+        # not the layout is expected to print a summary (summary_expected only changes the wording of the reason).
+        reasons.append("no printed summary to verify against" if summary_expected
+                       else "no independent opening/closing anchor: balance chain is self-derived")
     if results["side"].status == WARN:
         reasons.append("printed side disagrees with the balance movement on some rows (possible reversals)")
     if results["totals"].status == WARN:
