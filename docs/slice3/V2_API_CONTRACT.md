@@ -61,3 +61,13 @@ When the user selected "Auto-detect" (or an unknown/other bank), the Slice 2 det
 higher; otherwise the request fails with the existing "unsupported bank" error. A user-selected bank is never silently overridden:
 if the detector confidently names a different bank, the response carries `detected_bank.source = "detector"` and a
 `BANK_MISMATCH` review code, and the user-selected bank's processor is still used.
+
+## 7. Bank list (extends the existing `GET /api/statements/banks`, additive only)
+Each entry keeps its current fields and gains `"engines": ["legacy"]`, `["legacy","v2"]` or `["v2"]`, and `"v2_served": true|false`
+(true only when the mode is `serve` and the bank's spec key is in `STATEMENT_ENGINE_V2_SERVE_BANKS`). A bank with `engines == ["v2"]`
+is listed (selectable and auto-detectable) only when `v2_served` is true. The response never lists a bank that cannot be processed.
+
+## 8. Where it plugs in
+The user flow is analyse (`/api/statements/analyze`, Slice 2 detection) -> confirm -> process (`/api/statements/{id}/process`, which
+calls `pipeline_orchestrator.process_statement`) and the public `POST /api/v1/statements`. The serving decision lives in one place,
+called from `process_statement`, so every entry point behaves the same.
