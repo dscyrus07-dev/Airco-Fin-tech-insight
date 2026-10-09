@@ -240,6 +240,11 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                         if cols.get(name) and not current.amounts.get(name):
                             current.amounts[name] = cols[name][0]
                             filled = True
+                if spec.side_marker_column and cols.get(spec.side_marker_column) and spec.single_amount_column in current.amounts:
+                    marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
+                    cell = current.amounts[spec.single_amount_column]
+                    if marker and not re.search(r"(?i)\(?(cr|dr)\)?$", cell):
+                        current.amounts[spec.single_amount_column] = cell + " " + marker
                 if any(c in cols for c in spec.amount_columns) and not filled:
                     current.warnings.append("orphan_amount_on_wrapped_line")
                 if "narration" in cols:

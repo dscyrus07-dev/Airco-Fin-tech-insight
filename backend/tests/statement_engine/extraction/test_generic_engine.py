@@ -812,6 +812,33 @@ def test_wrapped_amount_tokens_join_a_money_cell_split_mid_number():
     assert len(off.rows) < 2 or off.schema_errors
 
 
+def test_side_marker_on_continuation_line_supplies_the_side_of_a_wrapped_amount():
+    # a row whose money cell and Dr/Cr marker sit on the undated wrap line still gets its side
+    spec = LayoutSpec(
+        layout_id="sigma", bank_key="sigma", bank_name="Sigma Bank",
+        columns={"date": (("date",),), "narration": (("description",),), "ref": (("ref",),),
+                 "amount": (("amount",),), "drcr": (("drcr",), ("dr", "cr")), "balance": (("balance",),)},
+        text_columns=("date", "narration", "ref", "drcr"),
+        debit_column="amount_dr", credit_column="amount_cr",
+        single_amount_column="amount", side_marker_column="drcr", balance_column="balance",
+        continuation_amounts=True, band_left_pad={"drcr": 130.0},
+        date_re=re.compile(r"^\d{2}-\d{2}-\d{4}$"), date_format="%d-%m-%Y",
+        amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?:\s+(?i:cr|dr))?$"),
+        period_re=re.compile(r"Period:(\d{2}-\d{2}-\d{4})to(\d{2}-\d{2}-\d{4})"), period_date_format="%d-%m-%Y",
+        summary_marker="", summary_label_text="", header_repeats=True)
+    ws = [w("Period : 01-04-2022 to 05-04-2022", 20, 70)]
+    ws += [w("Date", 20, 50), w("Description", 80, 50), w("Ref", 210, 50), w("Amount", 300, 50),
+           w("Dr / Cr", 380, 50), w("Balance", 460, 50)]
+    ws += [w("01-04-2022", 20, 100), w("SALARY", 80, 100), w("R1", 210, 100), rt("1,000.00", 330, 100),
+           w("CR", 380, 100), rt("1,900.00", 490, 100)]
+    ws += [w("02-04-2022", 20, 124), w("SHOP", 80, 124), w("R2", 210, 124), rt("1,800.00", 490, 124)]
+    ws += [w("at counter", 80, 141), rt("100.00", 330, 141), w("DR", 380, 141)]
+    out = extract_pages([Page(ws, W)], spec)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[1].txn.debit == Decimal("100.00"), out.rows[1].txn
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
 def test_drcr_suffix_decoration_strips_redundant_side_words_on_split_columns():
     # "220.00 DR" printed as one cell in the debit column: the suffix only restates the column
     spec = replace(ALPHA, drcr_suffix_decoration=True,
