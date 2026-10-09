@@ -41,9 +41,13 @@ INDIAN_BANK_LAYOUT_1.validate()
 
 # "Value Date | Post Date | Remitter Branch | Description | Cheque No | DR | CR | Balance" on two
 # header lines ("Value"/"Post"/"Remitter" on line 1, "Date"/"Date"/"Branch" on line 2): the row date
-# is the Post Date column and prints yearless "MM/DD", resolved through the printed
-# "STATEMENT OF ACCOUNT from dd/mm/yyyy to dd/mm/yyyy" range. Money splits into a DR and a CR column;
-# the balance carries a CR suffix and the first row is a "BALANCE B/F" opening line.
+# is the Post Date column and prints in three wrap shapes — bare "dd/mm" (year injected from the printed
+# "STATEMENT OF ACCOUNT from dd/mm/yyyy to dd/mm/yyyy" range via year_from_period), "dd/mm/" + "yyyy" on
+# the continuation line, and "dd/mm" + "/yyyy" on the continuation line (date_tail completes the date and
+# _add_years leaves it alone because it already parses). Money splits into a DR and a CR column; the
+# balance carries a Cr suffix clipped at the page edge ("750041.02C" — opt-in clipped_drcr_suffix field),
+# the ref title prints "Cheque No"/fused "Chq No/Ref"/clipped "Chequ", and the opening line prints
+# "BALANCE B/F" or "Opening Balance :".
 INDIAN_BANK_LAYOUT_2 = LayoutSpec(
     layout_id="indianbank_postdate_remitter_description_chequeno_dr_cr_balance_yearless",
     bank_key="indian_bank",
@@ -54,7 +58,8 @@ INDIAN_BANK_LAYOUT_2 = LayoutSpec(
         "date": (("post",), ("postdate",), ("post", "date")),
         "remitter": (("remitter",),),
         "narration": (("description",),),
-        "ref": (("chequeno",), ("cheque", "no")),
+        "ref": (("chequeno",), ("cheque", "no"), ("chq", "noref"), ("chq", "no"), ("chqno",), ("chqnoref",),
+                ("chequ",), ("chq",), ("chequ", "no")),
         "debit": (("dr",),),
         "credit": (("cr",),),
         "balance": (("balance",),),
@@ -65,10 +70,12 @@ INDIAN_BANK_LAYOUT_2 = LayoutSpec(
     balance_column="balance",
     year_from_period=True,
     continuation_amounts=True,
-    date_re=re.compile(r"^\d{2}/\d{2}$"),
-    date_format="%d/%m %Y",  # _add_years joins "dd/mm yyyy" with a space
-    amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?i:(?:cr|dr))?$"),
-    opening_balance_re=re.compile(r"(?i)balanceb/f(-?[\d,]+\.\d{2})"),
+    clipped_drcr_suffix=True,   # balance tokens clip at the page edge ("750041.02C" for "…Cr")
+    date_re=re.compile(r"^\d{2}/\d{2}/?$"),
+    date_tail_re=re.compile(r"^/?\d{4}$"),
+    date_format="%d/%m %Y|%d/%m/ %Y|%d/%m /%Y|%d/%m/%Y",  # tail joins "dd/mm"/"dd/mm/" + [" "]yyyy or /yyyy
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?i:(?:cr|dr|c|d))?$"),
+    opening_balance_re=re.compile(r"(?i)(?:balanceb/f|openingbalance)[:\s]*(-?[\d,]+\.\d{2})"),
     period_re=re.compile(r"(?i)from(\d{2}/\d{2}/\d{4})to(\d{2}/\d{2}/\d{4})"),
     period_date_format="%d/%m/%Y",
     summary_marker="",
