@@ -147,7 +147,7 @@ def test_legacy_only_hold_does_not_catch_other_india_banks():
         assert r.fallback_reason != "legacy_only:bank_of_india", brand
 
 
-_NO_DETECTOR_ID = {"city_union", "apgv"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
+_NO_DETECTOR_ID = {"apgv"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
 
 
 def test_detector_ids_map_to_registered_spec_banks():
@@ -156,3 +156,53 @@ def test_detector_ids_map_to_registered_spec_banks():
     spec_banks = {s.bank_key for s in DEFAULT_REGISTRY.specs()}
     assert set(DETECTOR_TO_SPEC_BANK.values()) | _NO_DETECTOR_ID == spec_banks
     assert set(DETECTOR_TO_SPEC_BANK.values()) <= spec_banks
+
+
+def _pnb_markerless_pages(with_ifsc=True, second_mention=False):
+    """ALPHA layout re-keyed to a marker-less detector bank (like pnb), plus issuer text for the real detector."""
+    from dataclasses import replace
+    from tests.statement_engine.extraction.test_generic_engine import ALPHA, ALPHA_PERIOD, header, rt, w
+    spec = replace(ALPHA, bank_key="pnb", bank_name="Punjab National Bank", bank_markers=())
+    ws = list(ALPHA_PERIOD)
+    ws += [w("PUNJAB", 30, 5), w("NATIONAL", 62, 5), w("BANK", 112, 5)]
+    if with_ifsc:
+        ws += [w("IFSC:", 30, 17), w("PUNB0000123", 62, 17)]
+    if second_mention:
+        ws += [w("Punjab", 30, 500), w("National", 56, 500), w("Bank", 105, 500), w("customer", 132, 500), w("copy", 172, 500)]
+    ws += header(spec) + [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
+    return spec, [Page(ws, 600.0)]
+
+
+def test_detector_driven_route_records_confidence_and_runner_up():
+    spec, pages = _pnb_markerless_pages()
+    r = route_pages(pages, LayoutRegistry([spec]), use_detector=True)
+    assert r.status == "v2" and r.layout_id == spec.layout_id
+    assert any(n.startswith("detector:pnb:VERY_HIGH:") or n.startswith("detector:pnb:HIGH:") for n in r.notes), r.notes
+    assert any(n.startswith("runner_up:") for n in r.notes)
+
+
+def test_markerless_bank_thin_medium_is_refused():
+    # header name alone = a single-kind MEDIUM win: not enough when the layout prints no bank marker
+    spec, pages = _pnb_markerless_pages(with_ifsc=False)
+    r = route_pages(pages, LayoutRegistry([spec]), use_detector=True)
+    assert r.status == "fallback" and r.fallback_reason == "detector_weak" and not r.use_v2
+
+
+def test_markerless_bank_multi_kind_medium_routes():
+    # header name + a second page-1 mention: MEDIUM with two kinds and no runner-up passes the gate
+    spec, pages = _pnb_markerless_pages(with_ifsc=False, second_mention=True)
+    r = route_pages(pages, LayoutRegistry([spec]), use_detector=True)
+    assert r.status == "v2" and r.layout_id == spec.layout_id
+
+
+def test_detector_only_gate_rule():
+    from app.services.statement_engine.contracts import Confidence, DetectionResult, Evidence, EvidenceKind
+    from app.services.statement_engine.v2_router import detector_only_confident
+    ev = lambda k, w: Evidence(k, "pnb", w, "x", 1)
+    assert detector_only_confident(DetectionResult("pnb", "PNB", Confidence.HIGH, 30, evidence=[ev(EvidenceKind.HEADER_NAME, 30)]))
+    assert detector_only_confident(DetectionResult("pnb", "PNB", Confidence.MEDIUM, 28, runner_up_id="iob", runner_up_score=8,
+                                                   evidence=[ev(EvidenceKind.HEADER_NAME, 20), ev(EvidenceKind.PAGE1_NAME, 8)]))
+    assert not detector_only_confident(DetectionResult("pnb", "PNB", Confidence.MEDIUM, 28, runner_up_id="iob", runner_up_score=20,
+                                                       evidence=[ev(EvidenceKind.HEADER_NAME, 20), ev(EvidenceKind.PAGE1_NAME, 8)]))
+    assert not detector_only_confident(DetectionResult("pnb", "PNB", Confidence.MEDIUM, 30, evidence=[ev(EvidenceKind.HEADER_NAME, 30)]))
+    assert not detector_only_confident(DetectionResult("pnb", "PNB", Confidence.LOW, 15, evidence=[ev(EvidenceKind.PAGE1_NAME, 8)]))

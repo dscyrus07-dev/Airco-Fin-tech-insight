@@ -25,6 +25,7 @@ DETECTOR_TO_SPEC_BANK = {
     "hdfc": "hdfc", "sbi": "sbi", "canara": "canara", "axis": "axis", "idfc": "idfc", "kotak": "kotak",
     "federal": "federal", "bank_of_baroda": "bob", "icici": "icici", "union": "union", "paytm": "paytm",
     "standard_chartered": "scb", "indian_bank": "indian_bank", "karnataka": "karnataka", "dbs": "dbs", "citibank": "citibank", "kvb": "kvb", "hsbc": "hsbc", "indusind": "indusind", "idbi": "idbi", "pnb": "pnb", "yes": "yes", "iob": "iob", "south_indian": "south_indian", "central_bank": "central_bank", "equitas_sfb": "equitas_sfb", "ujjivan_sfb": "ujjivan_sfb", "bank_of_maharashtra": "bank_of_maharashtra", "bandhan": "bandhan", "au_sfb": "au_sfb", "dcb": "dcb",
+    "city_union": "city_union",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 
@@ -34,14 +35,39 @@ LEGACY_ONLY_BANKS = frozenset({"bank_of_india"})
 
 
 def detect_spec_bank(pages: Sequence[Page]) -> tuple:
-    """(spec bank_key or "", detector bank_id or ""): what the Slice 2 detector says about this statement. bank_key is
-    empty when the detector is not confident or names a bank without a layout."""
+    """(spec bank_key or "", DetectionResult): the detector outcome plus the full result, so the router can record
+    confidence, score and runner-up instead of a bare id. bank_key is empty when the detector is not confident or
+    names a bank without a layout."""
     from .detector import detect_bank
     texts = ["\n".join(" ".join(w.text for w in ln) for ln in group_lines(p.words)) for p in pages[:6]]
     det = detect_bank(texts)
     if det.bank_id is None or det.confidence.name not in _CONFIDENT:
-        return "", ""
-    return DETECTOR_TO_SPEC_BANK.get(det.bank_id, ""), det.bank_id
+        return "", det
+    return DETECTOR_TO_SPEC_BANK.get(det.bank_id, ""), det
+
+
+def _detector_notes(det) -> List[str]:
+    """Auditable detector outcome for every detector-driven route: winner:confidence:score and runner-up."""
+    if det is None:
+        return []
+    return [
+        f"detector:{det.bank_id}:{det.confidence.name}:{det.score}",
+        f"runner_up:{det.runner_up_id or 'none'}:{det.runner_up_score}",
+    ]
+
+
+def detector_only_confident(det) -> bool:
+    """Gate for banks whose layouts print no bank marker (bank_markers empty): the detector alone is the evidence, so
+    a thin win is not enough. Route on HIGH/VERY_HIGH, or on MEDIUM only when at least two distinct evidence kinds
+    scored and the runner-up is at most half the winner's score."""
+    from .contracts import Confidence
+    if det.confidence in (Confidence.HIGH, Confidence.VERY_HIGH):
+        return True
+    return (
+        det.confidence == Confidence.MEDIUM
+        and len(det.evidence) >= 2
+        and det.runner_up_score * 2 <= det.score
+    )
 
 
 # failures where the file may still be handled by the legacy path
@@ -69,22 +95,28 @@ def route_pages(pages: Sequence[Page], registry: LayoutRegistry, bank_key: str =
     without a layout is a fallback (other_bank:<id>), never a header-only guess."""
     if not any(p.words for p in pages):
         return RoutedExtraction("unsupported", fallback_reason=SCANNED_NO_TEXT.lower())
+    det = None
     if use_detector and not bank_key:
-        bank_key, detected = detect_spec_bank(pages)
+        bank_key, det = detect_spec_bank(pages)
+        detected = det.bank_id or ""
         if detected in LEGACY_ONLY_BANKS:
-            return RoutedExtraction("fallback", fallback_reason=f"legacy_only:{detected}")
+            return RoutedExtraction("fallback", fallback_reason=f"legacy_only:{detected}", notes=_detector_notes(det))
         if not bank_key and detected:
-            return RoutedExtraction("fallback", fallback_reason=f"other_bank:{detected}")
+            return RoutedExtraction("fallback", fallback_reason=f"other_bank:{detected}", notes=_detector_notes(det))
     res = registry.resolve(pages, bank_key)
     if res.spec is None:
-        return RoutedExtraction("fallback", fallback_reason=res.status, candidates=res.candidates, notes=res.notes + [f"rejected:{x}" for x in res.rejected])
+        return RoutedExtraction("fallback", fallback_reason=res.status, candidates=res.candidates, notes=_detector_notes(det) + res.notes + [f"rejected:{x}" for x in res.rejected])
     if res.bank_evidence == "none" and not allow_header_only:
         # a header match alone is not proof of the bank: without a bank name on the statement (or a detector bank that
         # agrees with the layout) the result could not be trusted as this bank's, so v2 is not used
-        return RoutedExtraction("fallback", fallback_reason="bank_unconfirmed", candidates=res.candidates, notes=res.notes + [f"layout:{res.spec.layout_id}"])
+        return RoutedExtraction("fallback", fallback_reason="bank_unconfirmed", candidates=res.candidates, notes=_detector_notes(det) + res.notes + [f"layout:{res.spec.layout_id}"])
+    if det is not None and res.bank_evidence == "detector" and not res.spec.bank_markers and not detector_only_confident(det):
+        # the layout prints no bank marker, so detection is the only bank evidence: a thin detector win must not route
+        return RoutedExtraction("fallback", fallback_reason="detector_weak", candidates=res.candidates,
+                                notes=_detector_notes(det) + res.notes + [f"layout:{res.spec.layout_id}"])
     outcome = extract_pages(pages, res.spec)
     result = to_extraction_result(outcome, res.spec)
-    routed = RoutedExtraction("v2", res.spec.layout_id, result, candidates=res.candidates, notes=res.notes + list(outcome.notes) + [f"bank_evidence:{res.bank_evidence}"])
+    routed = RoutedExtraction("v2", res.spec.layout_id, result, candidates=res.candidates, notes=_detector_notes(det) + res.notes + list(outcome.notes) + [f"bank_evidence:{res.bank_evidence}"])
     if outcome.failure:
         code = outcome.failure
         routed.status = "fallback" if code in _RECOVERABLE else "v2"
