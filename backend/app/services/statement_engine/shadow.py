@@ -7,7 +7,8 @@ STATEMENT_ENGINE_V2_MODE:
             PII-free comparison record is persisted via the caller's sink (audit job
             event, which lives under the existing 7-day retention) or the module log.
             The legacy response, status code and error paths are never touched.
-    serve   not enabled; selecting it raises immediately so it can never be half-on.
+    serve   not enabled; v2_mode() raises for it, and run_v2_shadow() turns that into a logged error and skips v2,
+            so a stray "serve" can never be half-on and can never interrupt or change the legacy result.
 """
 from __future__ import annotations
 
@@ -129,9 +130,16 @@ def run_v2_shadow(
 
     Returns None in "off" mode. In "shadow" it never raises into the pipeline: every
     failure — v2 exception, timeout, comparator problem, sink problem — is recorded as
-    shadow_error:<type> and swallowed. "serve" raises via v2_mode().
+    shadow_error:<type> and swallowed. An unsupported mode (v2_mode() raising) is logged and treated as off.
     """
-    if v2_mode() != "shadow":
+    try:
+        mode = v2_mode()
+    except Exception as exc:
+        # an unsupported setting (e.g. "serve") must never interrupt or change the legacy result: log the setting name
+        # and error type only, then behave as off
+        log.error("%s configuration rejected (%s); v2 shadow skipped, legacy result unaffected", MODE_ENV, type(exc).__name__)
+        return None
+    if mode != "shadow":
         return None
     record: Dict[str, Any] = {"bank_key": bank_key}
     try:

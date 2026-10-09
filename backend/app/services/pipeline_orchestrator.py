@@ -391,7 +391,10 @@ def process_statement(
     from app.services.statement_engine.shadow import run_v2_shadow
 
     if getattr(result, "status", "") == "success":
-        run_v2_shadow(file_path, bank_key, result, audit_service=audit_service, job_id=job_id)
+        try:
+            run_v2_shadow(file_path, bank_key, result, audit_service=audit_service, job_id=job_id)
+        except Exception as exc:    # defence in depth: shadow work can never change the legacy response
+            logger.error("v2 shadow hook failed (%s); legacy result unaffected", type(exc).__name__)
 
     # =================================================================
     # STEP 5: Build Response

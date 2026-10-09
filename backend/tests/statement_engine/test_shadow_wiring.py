@@ -33,9 +33,19 @@ def test_flag_unset_defaults_to_off(monkeypatch):
 
 
 def test_serve_mode_raises_clearly(monkeypatch):
+    # v2_mode() still refuses "serve" loudly ...
     monkeypatch.setenv(shadow.MODE_ENV, "serve")
     with pytest.raises(RuntimeError, match="not enabled"):
-        shadow.run_v2_shadow("no/such/file.pdf", "alpha", _FakeLegacyResult())
+        shadow.v2_mode()
+
+
+def test_serve_mode_never_interrupts_the_hook(monkeypatch):
+    # ... but the hook (run inside the user's pipeline) turns that into a logged skip: superseded assertion, the hook
+    # used to re-raise, which could break a legacy upload on a stray setting
+    monkeypatch.setenv(shadow.MODE_ENV, "serve")
+    calls = []
+    assert shadow.run_v2_shadow("no/such/file.pdf", "alpha", _FakeLegacyResult(), sink=calls.append) is None
+    assert calls == []
 
 
 def test_shadow_swallows_v2_exceptions_and_records_them(monkeypatch):
