@@ -206,3 +206,13 @@ def test_detector_only_gate_rule():
                                                        evidence=[ev(EvidenceKind.HEADER_NAME, 20), ev(EvidenceKind.PAGE1_NAME, 8)]))
     assert not detector_only_confident(DetectionResult("pnb", "PNB", Confidence.MEDIUM, 30, evidence=[ev(EvidenceKind.HEADER_NAME, 30)]))
     assert not detector_only_confident(DetectionResult("pnb", "PNB", Confidence.LOW, 15, evidence=[ev(EvidenceKind.PAGE1_NAME, 8)]))
+
+
+def test_header_only_ok_opt_in_field_accepts_header_evidence_none():
+    from dataclasses import replace
+    alpha, pages = _alpha_pages()
+    ho = replace(alpha, layout_id="alpha_ho", header_only_ok=True)
+    r = route_pages(pages, LayoutRegistry([ho]))
+    assert r.status == "v2" and "bank_evidence:layout_policy" in r.notes
+    default_off = route_pages(pages, LayoutRegistry([alpha]))
+    assert default_off.status == "fallback" and default_off.fallback_reason == "bank_unconfirmed"

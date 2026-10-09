@@ -106,9 +106,10 @@ def route_pages(pages: Sequence[Page], registry: LayoutRegistry, bank_key: str =
     res = registry.resolve(pages, bank_key)
     if res.spec is None:
         return RoutedExtraction("fallback", fallback_reason=res.status, candidates=res.candidates, notes=_detector_notes(det) + res.notes + [f"rejected:{x}" for x in res.rejected])
-    if res.bank_evidence == "none" and not allow_header_only:
+    if res.bank_evidence == "none" and not (allow_header_only or res.spec.header_only_ok):
         # a header match alone is not proof of the bank: without a bank name on the statement (or a detector bank that
-        # agrees with the layout) the result could not be trusted as this bank's, so v2 is not used
+        # agrees with the layout) the result could not be trusted as this bank's, so v2 is not used. A spec may opt in
+        # to header-only acceptance (header_only_ok) only after its candidacy is proven per HEADER_ONLY_CANDIDATES.md.
         return RoutedExtraction("fallback", fallback_reason="bank_unconfirmed", candidates=res.candidates, notes=_detector_notes(det) + res.notes + [f"layout:{res.spec.layout_id}"])
     if det is not None and res.bank_evidence == "detector" and not res.spec.bank_markers and not detector_only_confident(det):
         # the layout prints no bank marker, so detection is the only bank evidence: a thin detector win must not route
@@ -116,7 +117,8 @@ def route_pages(pages: Sequence[Page], registry: LayoutRegistry, bank_key: str =
                                 notes=_detector_notes(det) + res.notes + [f"layout:{res.spec.layout_id}"])
     outcome = extract_pages(pages, res.spec)
     result = to_extraction_result(outcome, res.spec)
-    routed = RoutedExtraction("v2", res.spec.layout_id, result, candidates=res.candidates, notes=_detector_notes(det) + res.notes + list(outcome.notes) + [f"bank_evidence:{res.bank_evidence}"])
+    evidence_note = "bank_evidence:layout_policy" if res.bank_evidence == "none" and res.spec.header_only_ok else f"bank_evidence:{res.bank_evidence}"
+    routed = RoutedExtraction("v2", res.spec.layout_id, result, candidates=res.candidates, notes=_detector_notes(det) + res.notes + list(outcome.notes) + [evidence_note])
     if outcome.failure:
         code = outcome.failure
         routed.status = "fallback" if code in _RECOVERABLE else "v2"

@@ -77,6 +77,8 @@ class LayoutSpec:
     summary_position: str = "after"             # "after": summary block follows the table; "before": printed above the header on page 1
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
+    header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
+                                            # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
