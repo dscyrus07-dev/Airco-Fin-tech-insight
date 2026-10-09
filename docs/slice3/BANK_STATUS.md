@@ -9,23 +9,23 @@ Branch `devin/wave3`. One row per bank. States:
   `other_bank:*` / `foreign_bank` / `no_layout` rather than mis-accepting.
 - **INSUFFICIENT-DATA** — too few readable samples to build/validate a layout.
 
-## Onboarded (45 layouts / 33 bank keys)
+## Onboarded (62 layouts / 33 bank keys — wave 4)
 
 | Bank | Layouts | Verified (in-scope) | Evidence |
 |------|---------|---------------------|----------|
 | HDFC | 1 | slice3 baseline | region |
-| SBI | 1 | slice3 baseline | detector/region |
-| ICICI | 2 | slice3 baseline | region |
-| Axis | 1 | slice3 baseline | region |
-| Canara | 1 | slice3 baseline | region |
-| Kotak Mahindra | 3 | slice3 baseline | region |
+| SBI | 8 | +483 VERIFIED corpus (wave 4) | detector/region |
+| ICICI | 2 | wave 3 (L3/L4 parked post-corpus: 38–41% trusted) | region |
+| Axis | 2 | +46 VERIFIED corpus (wave 4) | region |
+| Canara | 4 | +59 VERIFIED corpus (wave 4) | region |
+| Kotak Mahindra | 7 | +173 VERIFIED corpus (wave 4) | region |
 | Bank of Baroda | 3 | slice3 baseline | document |
-| Federal Bank | 1 | slice3 baseline | region |
-| Indian Bank | 1 | slice3 baseline | region |
+| Federal Bank | 1 | wave 3 (L2/L3 parked post-corpus: 0 VERIFIED) | region |
+| Indian Bank | 1 | wave 3 (L2/L3 parked: clipped balances / embedded balances) | region |
 | Karnataka Bank | 1 | slice3 baseline | region |
 | IDFC First | 1 | slice3 baseline | region |
 | Paytm Payments Bank | 1 | slice3 baseline | region |
-| Union Bank of India | 1 | slice3 baseline | region |
+| Union Bank of India | 3 | +90 VERIFIED corpus (wave 4) | region |
 | Standard Chartered | 2 | slice3 baseline | region |
 | DBS | 1 | 38/46 hold-out | region |
 | Citibank | 1 | 23/24 hold-out | region/document |
