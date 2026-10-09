@@ -158,3 +158,42 @@ UNION_LAYOUT_4 = LayoutSpec(
     continuation_start="top",
 )
 UNION_LAYOUT_4.validate()
+
+
+# "Tran Date | Tran Id | Remarks | Amount (Rs.) | Balance (Rs.)" export: same single-amount (Dr)/(Cr)
+# family as layout-1 but without the serial column and with "Tran" titles; the transaction-id cell
+# sits leftmost on the dated line and Remarks arrive on continuation lines. Period line prints
+# "Statement Period : <d/m/Y> <h:m> <am/pm> ........ From -<d/m/Y> To <d/m/Y>".
+UNION_LAYOUT_5 = LayoutSpec(
+    layout_id="union_trandate_tranid_remarks_amount_balance",
+    bank_key="union",
+    bank_markers=("UNIONBANKOFINDIA",),
+    merge_statements=True,
+    bank_name="Union Bank of India",
+    columns={
+        "date": (("tran", "date"), ("trandate",)),
+        "ref": (("tran", "id"), ("tranid",)),
+        "narration": (("remarks",),),
+        "amount": (("amountrs",), ("amount",)),
+        "balance": (("balancers",), ("balance",)),
+    },
+    text_columns=("date", "narration"),
+    band_left_pad={"narration": 90.0},
+    debit_column="amount_dr",
+    credit_column="amount_cr",
+    single_amount_column="amount",
+    balance_column="balance",
+    row_order="reverse",
+    merge_drcr_suffix=True,
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
+    date_format="%d/%m/%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?: ?\((?:Cr|Dr)\))?$"),
+    period_re=re.compile(r"From-?(\d{2}/\d{2}/\d{4})To(\d{2}/\d{2}/\d{4})"),
+    period_date_format="%d/%m/%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    continuation_start="top",
+)
+UNION_LAYOUT_5.validate()
