@@ -892,3 +892,14 @@ def test_clipped_drcr_suffix_is_opt_in():
     out = extract_pages([page(CLIP, rows, ALPHA_PERIOD, alpha_summary(400, "100.00", "1,000.00", "1,900.00"))],
                         replace(CLIP, clipped_drcr_suffix=False))
     assert out.checks.verdict != "VERIFIED"
+
+
+def test_add_years_keeps_tail_completed_dates():
+    """year_from_period + date_tail: a continuation token that already carries the year is not appended again,
+    and a bare dd/mm still gets the year that lands inside the printed period (cross-year periods included)."""
+    from types import SimpleNamespace
+    from app.services.statement_engine.extraction.engine import _add_years
+    spec = SimpleNamespace(date_format="%d/%m %Y|%d/%m/ %Y", period_date_format="%d/%m/%Y")
+    rows = [SimpleNamespace(date="31/03/ 2024", value_date=""), SimpleNamespace(date="15/01", value_date="")]
+    _add_years(rows, ("01/10/2023", "31/03/2024"), spec)
+    assert rows[0].date == "31/03/ 2024" and rows[1].date == "15/01 2024"

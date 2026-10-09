@@ -284,18 +284,27 @@ def _add_years(rows, period, spec) -> None:
     except ValueError:
         return
     years = list(range(start.year, end.year + 1))
+    formats = spec.date_format.split("|")
 
     def fix(text: str) -> str:
         text = text.strip()
         if not text:
             return text
-        for y in years:
+        for one in formats:                      # a date_tail may have already supplied the year
             try:
-                d = datetime.strptime(f"{text} {y}", spec.date_format).date()
+                datetime.strptime(text, one)
+                return text
             except ValueError:
                 continue
-            if start <= d <= end:
-                return f"{text} {y}"
+        for y in years:
+            for one in formats:
+                try:
+                    d = datetime.strptime(f"{text} {y}", one).date()
+                except ValueError:
+                    continue
+                if start <= d <= end:
+                    return f"{text} {y}"
+                break           # parsed but outside the period: wrong year, try the next one
         return f"{text} {years[0]}"
 
     for r in rows:
