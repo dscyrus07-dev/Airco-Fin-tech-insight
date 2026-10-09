@@ -22,7 +22,7 @@ from typing import Any, Callable, Dict, Optional
 log = logging.getLogger(__name__)
 
 MODE_ENV = "STATEMENT_ENGINE_V2_MODE"
-SHADOW_TIMEOUT_S = 60.0
+SHADOW_TIMEOUT_S = float(os.getenv("STATEMENT_ENGINE_V2_SHADOW_TIMEOUT_S", "20"))   # shadow runs inline: keep the worst-case delay to a user small
 _POOL = ThreadPoolExecutor(max_workers=1, thread_name_prefix="v2-shadow")
 
 ShadowSink = Callable[[Dict[str, Any]], None]

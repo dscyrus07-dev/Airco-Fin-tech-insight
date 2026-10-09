@@ -39,7 +39,7 @@ _DATE_DATA_RIGHT_PAD = 3.0
 _TRAILING_COLUMN_GAP = 20.0
 
 # A number that is only the visible part of a wrapped money cell: comma-grouped digits with a possibly cut
-# decimal ("9,99,999.9") or a lone 1-2 digit tail. Only meaningful when spec.wrapped_amount_tokens is on —
+# decimal ("9,99,999.9") or a lone 1-2 digit tail. Only meaningful when spec.wrapped_amount_tokens is on -
 # position (near a money column's right edge) still decides the column.
 _WRAPPED_AMOUNT_FRAGMENT = re.compile(r"^\d{1,3}(?:,\d{2,3})+\.?\d{0,2}$|^\.?\d{1,2}$")
 
