@@ -14,7 +14,7 @@ from .sbi.layout_spec import (SBI_LAYOUT_1, SBI_LAYOUT_2, SBI_LAYOUT_3, SBI_LAYO
                             SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8)
 from .scb.layout_spec import SCB_LAYOUT_1, SCB_LAYOUT_2
 from ..extraction.registry import OTHER_BANK_MARKERS
-from .indian_bank.layout_spec import INDIAN_BANK_LAYOUT_1
+from .indian_bank.layout_spec import INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2, INDIAN_BANK_LAYOUT_3
 from .karnataka.layout_spec import KARNATAKA_LAYOUT_1
 from .dbs.layout_spec import DBS_LAYOUT_1
 from .citibank.layout_spec import CITIBANK_LAYOUT_1
@@ -42,5 +42,8 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, SBI_LAYOUT_1, SBI_LAYOUT_2, SB
                                    # KOTAK_LAYOUT_9 parked: wrap-line side markers, unverifiable
                                    FEDERAL_LAYOUT_1, FEDERAL_LAYOUT_2, FEDERAL_LAYOUT_3,
                                    BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3,
-                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4, UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, APGV_LAYOUT_1],
+                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4, UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1,
+                                   # INDIAN_BANK_LAYOUT_2 parked: balance tokens clip at the page edge, needs clipped-suffix engine support
+                                   # INDIAN_BANK_LAYOUT_3 parked: 62%/56% trusted on build/hold-out (Mmm-first sub-variant embeds balances inside narration)
+                                   KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, APGV_LAYOUT_1],
                                   foreign_markers=OTHER_BANK_MARKERS)
