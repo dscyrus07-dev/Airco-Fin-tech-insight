@@ -1,0 +1,19 @@
+{
+  "id": "city_union",
+  "display_name": "City Union Bank",
+  "names": [
+    "city union bank limited",
+    "city union bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "CIUB"
+  ],
+  "domains": [
+    "cityunionbank.com",
+    "cityunionbankltd.com"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "City Union Bank"
+}

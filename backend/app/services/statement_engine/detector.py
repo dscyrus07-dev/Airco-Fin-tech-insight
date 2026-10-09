@@ -84,6 +84,8 @@ _PERIOD_WORDS = re.compile(r"\b(?:to|from|between|period|as on|as of|generated|g
 _DATE_WORD = re.compile(r"\bdate\b", re.I)
 _MONEY_WORDS = re.compile(r"balance|withdraw\w*|debit|credit|deposit\w*|amount|\bdr\b|\bcr\b", re.I)
 _TEXT_WORDS = re.compile(r"narration|particulars|description|details|remarks|cheque|chq|ref(?:erence)?\b|type|value", re.I)
+# a payment-rail reference ("UPI/", "NEFT-", "IMPS/") marks a counterparty line even when it carries no amount
+_NARRATION_REF = re.compile(r"(?i)\b(?:upi|neft|imps|rtgs|ecs|ach|nach)\s*[/-]")
 
 
 def _is_txn_row(line: str) -> bool:
@@ -145,6 +147,24 @@ def _is_column_header(line: str) -> bool:
     """A transaction-table column line that does not need a 'Date' word (Value/Post Date, 'Reference ID ...')."""
     words = set(re.findall(r"[a-z]+", line.lower()))
     return "balance" in words and len(words & _COLUMN_WORDS) >= 2
+
+
+_DATE_AT_START = re.compile(r"^\s*" + _DATE_CORE + r"(?!\d)")
+
+
+def _may_carry_issuer_name(line: str) -> bool:
+    """Issuer-name evidence cannot come from a line that reads like a transaction or narration: one holding an
+    amount, one starting with a bare date, or one carrying a payment-rail reference. A bank name inside such a
+    line names a counterparty, never the issuer. A date+time page timestamp stays eligible (running header)."""
+    if _is_txn_row(line) or _is_table_header(line):
+        return False
+    if _AMOUNT.search(line):
+        return False
+    if _NARRATION_REF.search(line):
+        return False
+    if _DATE_AT_START.match(line) and not _TIMESTAMP_START.match(line):
+        return False
+    return True
 
 
 STRONG_PHRASE_WEIGHT = 25
@@ -247,16 +267,19 @@ def detect_bank(
         head = _head_lines(raw_pages[0])
         body = [ln for ln in raw_pages[0][len(head):] if not _is_txn_row(ln)]
         head_text = "\n".join(head)
+        # bank-name evidence is scanned only over lines that cannot be a transaction or narration
+        issuer_head = "\n".join(ln for ln in head if _may_carry_issuer_name(ln))
+        issuer_body = "\n".join(ln for ln in body if _may_carry_issuer_name(ln))
 
         # a real statement has a transaction table (a date+columns header, or several dated rows) somewhere
         txn_rows = sum(1 for rp in raw_pages for ln in rp if _is_txn_row(ln))
         looks_like_statement = txn_rows >= 3 or any(_is_table_header(ln) or _is_column_header(ln) for rp in raw_pages for ln in rp)
 
         # names in the issuer block above the table
-        for bank_id, (short, phrase) in idx.scan(head_text).items():
+        for bank_id, (short, phrase) in idx.scan(issuer_head).items():
             add(bank_id, EvidenceKind.HEADER_NAME, SHORT_NAME_WEIGHT if short else WEIGHTS[EvidenceKind.HEADER_NAME], phrase, 1)
         # PDFs whose text layer has no spaces ("KotakMahindraBank"): match long names on the compacted head
-        compact_head = _compact(head_text)
+        compact_head = _compact(issuer_head)
         phrases: List[Tuple[str, Optional[str], str]] = []  # (compact, bank_id or None for masks, original)
         for b in reg.banks.values():
             for n in b.names:
@@ -274,7 +297,7 @@ def detect_bank(
                 if bank_id and not (bank_id in ev and EvidenceKind.HEADER_NAME in ev[bank_id]):
                     add(bank_id, EvidenceKind.HEADER_NAME, WEIGHTS[EvidenceKind.HEADER_NAME], n, 1)
         # names elsewhere on page 1 (weak; bare tokens ignored there)
-        for bank_id, (short, phrase) in idx.scan("\n".join(body)).items():
+        for bank_id, (short, phrase) in idx.scan(issuer_body).items():
             if not short:
                 add(bank_id, EvidenceKind.PAGE1_NAME, WEIGHTS[EvidenceKind.PAGE1_NAME], phrase, 1)
 
@@ -282,7 +305,7 @@ def detect_bank(
         # Wrapped narration text differs from page to page, a real running header does not.
         edge_lines: Dict[str, List[int]] = {}
         for i, rp in enumerate(raw_pages, start=1):
-            edge = [ln for ln in (rp[:EDGE_LINES] + rp[-EDGE_LINES:]) if not _is_txn_row(ln) and not _is_table_header(ln)]
+            edge = [ln for ln in (rp[:EDGE_LINES] + rp[-EDGE_LINES:]) if _may_carry_issuer_name(ln)]
             for key in {_normalize_line(ln) for ln in edge}:
                 edge_lines.setdefault(key, []).append(i)
         running_text_parts: List[str] = []

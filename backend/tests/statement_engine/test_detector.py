@@ -258,3 +258,40 @@ def test_axis_older_domain_is_axis_evidence():
         "Tran Date Chq No Particulars Debit Credit Balance",
         "01-01-2022 UPI/1/x 10.00 100.00", "02-01-2022 UPI/2/x 10.00 90.00", "03-01-2022 UPI/3/x 10.00 80.00"))
     assert r.bank_id == "axis" and r.confidence.value != "UNKNOWN"
+
+
+# ---- Wave 5: issuer-line evidence tightening (a bank name inside a transaction-looking line is a counterparty) ----
+
+def test_bank_name_on_a_line_holding_an_amount_never_counts():
+    # a "closing balance" line in the issuer block carries a foreign bank name and an amount
+    p = page("Detailed Statement", "INDIAN OVERSEAS BANK A/c closing balance 55,432.00", TABLE, *filler(10))
+    r = detect_bank([p])
+    assert r.bank_id != "iob" or not r.confidence.auto_routable
+
+
+def test_repeated_transaction_like_footer_is_not_running_header_evidence():
+    # Phase-6 false-positive shape: a partner footer naming another bank repeated on every page reached MEDIUM
+    # via RUNNING_HEADER + PAGE1_NAME. The footer reads like a transaction, so it must yield nothing.
+    footer = "NEFT/YES BANK LTD PARTNER SETTLEMENT 1,234.00"
+    pages = [page("Statement", TABLE, *filler(8), footer) for _ in range(3)]
+    r = detect_bank(pages)
+    assert r.bank_id != "yes"
+
+
+def test_repeated_footer_with_a_date_is_not_running_header_evidence():
+    footer = "01-04-2023 paid via UNION BANK channel"
+    pages = [page("Statement", TABLE, *filler(8), footer) for _ in range(3)]
+    r = detect_bank(pages)
+    assert r.bank_id != "union" or not r.confidence.auto_routable
+
+
+def test_city_union_bank_is_not_union_bank_of_india():
+    r = detect_bank([page("CITY UNION BANK LIMITED", "Statement of account", "IFSC Code: CIUB0000123", TABLE, *filler(30))])
+    assert r.bank_id == "city_union"
+    assert r.confidence.auto_routable
+    assert r.runner_up_id != "union"
+
+
+def test_union_bank_of_india_still_detected_after_city_union_entry():
+    r = detect_bank([page("Union Bank of India", "Statement", "IFSC Code: UBIN0530000", TABLE, *filler(30))])
+    assert r.bank_id == "union" and r.confidence.auto_routable
