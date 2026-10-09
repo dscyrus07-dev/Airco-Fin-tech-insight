@@ -36,7 +36,8 @@ from .au_sfb.layout_spec import AU_LAYOUT_1
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
 
-DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, SBI_LAYOUT_1, SBI_LAYOUT_2, SBI_LAYOUT_3, SBI_LAYOUT_4, SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_3, CANARA_LAYOUT_4, AXIS_LAYOUT_1, AXIS_LAYOUT_2, IDFC_LAYOUT_1,
+DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, SBI_LAYOUT_1, SBI_LAYOUT_3, SBI_LAYOUT_4, SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_3, CANARA_LAYOUT_4, AXIS_LAYOUT_1, AXIS_LAYOUT_2, IDFC_LAYOUT_1,
+                                   # SBI_LAYOUT_2 retired: dead code (0/12,249 corpus files route to it; 2,497 SBI-related files identical without it; L3 handles them)
                                    KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, KOTAK_LAYOUT_4, KOTAK_LAYOUT_5, KOTAK_LAYOUT_6, KOTAK_LAYOUT_7,
                                    # KOTAK_LAYOUT_8 parked: 0/9 files carried bank evidence
                                    # KOTAK_LAYOUT_9 parked: wrap-line side markers, unverifiable
