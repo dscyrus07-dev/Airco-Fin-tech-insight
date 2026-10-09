@@ -850,3 +850,18 @@ def test_drcr_suffix_decoration_strips_redundant_side_words_on_split_columns():
     assert len(out.rows) == 2, out.schema_errors
     assert out.rows[0].txn.credit == Decimal("1000.00") and out.rows[1].txn.debit == Decimal("100.00")
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+def test_date_outlier_check_flags_an_isolated_row_only():
+    from types import SimpleNamespace
+    from app.services.statement_engine.extraction.checks import check_date_outliers
+    mk = lambda ds: [SimpleNamespace(txn=SimpleNamespace(date=d)) for d in ds]          # noqa: E731
+    base = ["2024-01-02", "2024-01-05", "2024-01-09", "2024-01-15", "2024-01-20"]
+    assert check_date_outliers(mk(base)).status == "pass"
+    shifted = base[:2] + ["2025-01-09"] + base[3:]                       # one row a year off, neighbours agree
+    assert check_date_outliers(mk(shifted)).status == "warn"
+    assert check_date_outliers(mk(["2025-01-02"] + base[1:])).status == "warn"          # first row
+    assert check_date_outliers(mk(base[:4] + ["2025-01-20"])).status == "warn"          # last row
+    quiet = ["2024-01-02", "2024-01-05", "2024-06-01", "2024-06-04", "2024-06-09"]      # a quiet spell is not an outlier
+    assert check_date_outliers(mk(quiet)).status == "pass"
+    assert check_date_outliers(mk(base[:2])).status == "skipped"

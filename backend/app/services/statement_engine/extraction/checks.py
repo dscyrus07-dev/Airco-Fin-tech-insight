@@ -123,6 +123,34 @@ def check_dates(rows: Sequence[NormalizedRow], monotonic_expected: bool = True) 
     return CheckResult("dates", (WARN if monotonic_expected else INFO) if backwards else PASS, {"decreasing_at": backwards[:5], "count": len(backwards)})
 
 
+_OUTLIER_GAP_DAYS = 62
+
+
+def check_date_outliers(rows: Sequence[NormalizedRow]) -> CheckResult:
+    """A row whose date is far from BOTH neighbours while the neighbours are close to each other was dated wrongly (a
+    mis-read or shifted date). Needs no printed period, works for any row order, and ignores long quiet spells: a gap
+    that separates two clusters of rows is not an isolated row."""
+    try:
+        ds = [date.fromisoformat(r.txn.date) for r in rows]
+    except ValueError:
+        return CheckResult("date_outliers", SKIPPED, {"reason": "unparseable row date"})
+    n = len(ds)
+    if n < 3:
+        return CheckResult("date_outliers", SKIPPED, {"reason": "fewer than three rows"})
+    far = lambda a, b: abs((a - b).days) > _OUTLIER_GAP_DAYS      # noqa: E731
+    out = []
+    for i in range(n):
+        if i == 0:
+            isolated = far(ds[0], ds[1]) and not far(ds[1], ds[2])
+        elif i == n - 1:
+            isolated = far(ds[i], ds[i - 1]) and not far(ds[i - 1], ds[i - 2])
+        else:
+            isolated = far(ds[i], ds[i - 1]) and far(ds[i], ds[i + 1]) and not far(ds[i - 1], ds[i + 1])
+        if isolated:
+            out.append(i)
+    return CheckResult("date_outliers", WARN if out else PASS, {"rows": out[:5], "count": len(out)})
+
+
 def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], period_format: str = "%d/%m/%Y",
                  tolerance_days: int = _PERIOD_TOLERANCE_DAYS) -> CheckResult:
     if period is None or not rows:
@@ -163,6 +191,8 @@ def decide(results: Dict[str, CheckResult], schema_errors: Sequence[str], warnin
         reasons.append("printed counts/sums differ with reversal signature but no proof")
     if results["dates"].status == WARN:
         reasons.append("dates not monotonic")
+    if results.get("date_outliers") is not None and results["date_outliers"].status == WARN:
+        reasons.append("a row's date is out of line with its neighbouring rows")
     if results["period"].status == WARN:
         reasons.append("rows outside the printed period beyond the layout tolerance")
     if warnings:
@@ -184,6 +214,7 @@ def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]],
         "totals": check_totals(rows, derived, summary) if rows else CheckResult("totals", SKIPPED, {"reason": "no rows"}),
         "dates": check_dates(rows, dates_monotonic_expected),
         "period": check_period(rows, period, period_format, period_tolerance_days),
+        "date_outliers": check_date_outliers(rows) if rows else CheckResult("date_outliers", SKIPPED, {"reason": "no rows"}),
     }
     verdict, reasons = decide(results, schema_errors, warnings, bool(rows), summary_expected)
     return Checks(results=results, verdict=verdict, reasons=reasons, derived=derived)
