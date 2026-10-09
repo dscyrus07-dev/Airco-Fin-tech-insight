@@ -40,9 +40,11 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, SBI_LAYOUT_1, SBI_LAYOUT_2, SB
                                    KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, KOTAK_LAYOUT_4, KOTAK_LAYOUT_5, KOTAK_LAYOUT_6, KOTAK_LAYOUT_7,
                                    # KOTAK_LAYOUT_8 parked: 0/9 files carried bank evidence
                                    # KOTAK_LAYOUT_9 parked: wrap-line side markers, unverifiable
-                                   FEDERAL_LAYOUT_1, FEDERAL_LAYOUT_2, FEDERAL_LAYOUT_3,
+                                   FEDERAL_LAYOUT_1,
+                                   # FEDERAL_LAYOUT_2/3 parked: 0 VERIFIED across corpus (REVIEW/FAILED only)
                                    BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3,
-                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4, UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1,
+                                   # ICICI_LAYOUT_3/4 parked: 38%/41% trusted (stale-balance export prints fail chain honestly)
+                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1,
                                    # INDIAN_BANK_LAYOUT_2 parked: balance tokens clip at the page edge, needs clipped-suffix engine support
                                    # INDIAN_BANK_LAYOUT_3 parked: 62%/56% trusted on build/hold-out (Mmm-first sub-variant embeds balances inside narration)
                                    KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, IOB_LAYOUT_1, IOB_LAYOUT_2, SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, APGV_LAYOUT_1],
