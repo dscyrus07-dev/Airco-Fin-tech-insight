@@ -49,6 +49,7 @@ and v2 also ran. With mode `off` the block is `{"engine": "legacy", "mode": "off
 | OUTSIDE_PERIOD | `period` warned |
 | SCHEMA_ERRORS | `schema` failed |
 | EXTRACTION_WARNINGS | engine warnings present |
+| BANK_MISMATCH | detector confidently names a different bank than the user selected (section 6) |
 User-facing wording for each code is defined by the UI; the API returns only codes.
 
 ## 5. Privacy and retention
