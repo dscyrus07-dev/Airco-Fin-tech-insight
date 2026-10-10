@@ -36,6 +36,9 @@ UNION_LAYOUT_1 = LayoutSpec(
     summary_marker="",
     summary_label_text="",
     summary_expected=False,
+    # closing_balance_re intentionally absent: this family prints ONLY a closing balance; with no
+    # independent opening or totals, a corrupted/dropped first row shifts the self-derived opening in
+    # lockstep and would stay VERIFIED -> honest REVIEW, not a partial anchor.
     header_repeats=True,
     continuation_start="top",
 )

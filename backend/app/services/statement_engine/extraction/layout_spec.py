@@ -80,6 +80,9 @@ class LayoutSpec:
     clipped_drcr_suffix: bool = False        # page-edge-clipped balance cells print "…C"/"…D" instead of "…Cr"/"…Dr": a lone C/D suffix on the balance is treated as the clipped marker (chain must still prove the values)
     header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
                                             # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
+    anchor_full: bool = False                # VERIFIED only when BOTH chain ends carry an independent printed figure:
+                                             # opening AND (closing or printed debit/credit totals). A single anchor leaves the
+                                             # far end of the chain self-derived -> first/last-row corruption survives as VERIFIED.
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:

@@ -53,6 +53,9 @@ SCB_LAYOUT_1.validate()
 SCB_LAYOUT_2 = replace(
     SCB_LAYOUT_1,
     layout_id="scb_date_valuedate_description_cheque_deposit_withdrawal_balance_yearless",
+    opening_balance_re=re.compile(r"(?i)BalanceBroughtForward(-?[\d,]+\.\d{2})"),
+    totals_line_re=re.compile(r"^Total(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{2})$"),
+    anchor_full=True,
     date_re=re.compile(r"^[A-Za-z]{3} \d{2}$"),
     date_format="%b %d %Y",
     period_re=re.compile(r"(\d{2}[A-Za-z]{3}\d{4})To(\d{2}[A-Za-z]{3}\d{4})"),

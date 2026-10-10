@@ -38,8 +38,9 @@ AU_LAYOUT_1 = LayoutSpec(
     summary_expected=False,
     header_repeats=True,
     empty_amount_marker="-",
-    opening_balance_re=re.compile(r"openingbalanceinr([\d,]+\.\d{2})"),
-    closing_balance_re=re.compile(r"closingbalanceinr([\d,]+\.\d{2})"),
+    opening_balance_re=re.compile(r"(?i)OpeningBalance[-:]?INR(-?[\d,]+\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)ClosingBalance[-:]?INR(-?[\d,]+\.\d{2})"),
+    anchor_full=True,
     row_order="auto",
 )
 AU_LAYOUT_1.validate()
