@@ -98,13 +98,10 @@ def _with_mode(value, fn):
             os.environ[shadow.MODE_ENV] = old
 
 
-def test_v2_mode_still_refuses_serve():
-    try:
-        _with_mode("serve", shadow.v2_mode)
-    except RuntimeError as exc:
-        assert "not enabled" in str(exc)
-    else:
-        raise AssertionError("v2_mode() must keep refusing serve")
+def test_v2_mode_accepts_serve_and_maps_garbage_to_off():
+    # contract §1 (Wave 8): "serve" is a supported mode; unsupported values are logged and treated as off
+    assert _with_mode("serve", shadow.v2_mode) == "serve"
+    assert _with_mode("garbage", shadow.v2_mode) == "off"
 
 
 def test_hook_is_failsafe_for_serve_and_garbage_modes():
