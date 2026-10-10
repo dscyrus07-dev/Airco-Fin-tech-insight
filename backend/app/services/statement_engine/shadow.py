@@ -7,8 +7,8 @@ STATEMENT_ENGINE_V2_MODE:
             PII-free comparison record is persisted via the caller's sink (audit job
             event, which lives under the existing 7-day retention) or the module log.
             The legacy response, status code and error paths are never touched.
-    serve   not enabled; v2_mode() raises for it, and run_v2_shadow() turns that into a logged error and skips v2,
-            so a stray "serve" can never be half-on and can never interrupt or change the legacy result.
+    serve   enabled by statement_engine.serve (allow-listed banks only); the shadow hook itself
+            stays shadow-only, so a stray "serve" still never runs shadow work.
 """
 from __future__ import annotations
 
@@ -30,11 +30,10 @@ ShadowSink = Callable[[Dict[str, Any]], None]
 
 
 def v2_mode() -> str:
-    """Current v2 mode: "off" | "shadow". "serve" raises — it is not enabled."""
+    """Current v2 mode: "off" | "shadow" | "serve". Anything else is logged and treated as off
+    (contract §1: an unsupported value never interrupts a request)."""
     mode = (os.getenv(MODE_ENV) or "off").strip().lower()
-    if mode == "serve":
-        raise RuntimeError(f"{MODE_ENV}=serve is not enabled: v2 results must never be served")
-    if mode not in ("off", "shadow"):
+    if mode not in ("off", "shadow", "serve"):
         log.warning("%s=%r is not a valid mode; treating as off", MODE_ENV, mode)
         return "off"
     return mode
