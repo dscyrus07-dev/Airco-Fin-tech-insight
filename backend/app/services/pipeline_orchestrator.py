@@ -325,15 +325,45 @@ def process_statement(
     # Extract and normalize bank name
     bank_name = user_info.get("bank_name", "")
     bank_key = _normalize_bank_name(bank_name)
-    
+
     logger.info("Processing %s statement: bank_key=%s job_id=%s", bank_name, bank_key, job_id)
-    
+
+    # =================================================================
+    # STEP 1b: v2 serve decision (flag-gated; additive statement_engine block)
+    # =================================================================
+    from app.services.statement_engine import serve as _v2serve
+
+    try:
+        _v2_mode = _v2serve.v2_mode()
+    except Exception:
+        _v2_mode = "off"
+    v2_plan = None
+    v2_block = _v2serve.minimal_block(_v2_mode)
+
+    if _v2_mode == "serve" and _v2serve.serving_enabled_for(bank_key):
+        _spec_key = _v2serve.spec_key_for(bank_key)
+        try:
+            _routed, _det, _ms = _v2serve.route_for_serve(file_path, _spec_key)
+        except Exception:
+            _routed, _det, _ms = None, None, 0.0
+        _routed_key = _v2serve._spec_key_of_routed(_routed, _spec_key)
+        _legacy_key = bank_key if _spec_key not in _v2serve._AUTO_KEYS else _v2serve.pipeline_key_for(_routed_key)
+        v2_plan = _v2serve.decide_serve(
+            bank_key=bank_key,
+            spec_key=_spec_key,
+            routed=_routed,
+            det=_det,
+            legacy_available=_get_bank_processor(_legacy_key) is not None,
+            routed_ms=_ms,
+        )
+        v2_block = v2_plan.block
+
     # =================================================================
     # STEP 2: Get Bank-Specific Processor
     # =================================================================
     ProcessorClass = _get_bank_processor(bank_key)
-    
-    if ProcessorClass is None:
+
+    if ProcessorClass is None and v2_plan is None:
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -345,7 +375,21 @@ def process_statement(
     # STEP 3: Initialize Processor
     # =================================================================
     enable_ai = mode == "hybrid"
-    
+
+    if v2_plan is not None and v2_plan.serve_v2:
+        # v2 rows are served through the (routed) bank's own downstream steps;
+        # v2-only banks use the generic unknown processor.
+        _serve_key = _v2serve.pipeline_key_for(v2_plan.v2_spec_key)
+        ProcessorClass = _get_bank_processor(_serve_key) or _get_bank_processor("unknown")
+
+    if ProcessorClass is None:
+        raise UnsupportedBankError(
+            f"Bank '{bank_name}' is not yet supported. "
+            f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
+            stage="bank_routing",
+            error_code="UNSUPPORTED_BANK"
+        )
+
     processor = ProcessorClass(
         strict_mode=False,  # Allow processing to continue with warnings
         enable_ai=enable_ai,
@@ -353,7 +397,7 @@ def process_statement(
         audit_service=audit_service,
         job_id=job_id,
     )
-    
+
     # =================================================================
     # STEP 4: Run Bank-Specific Processing
     # =================================================================
@@ -361,13 +405,72 @@ def process_statement(
         if output_dir is None:
             from app.utils.file_handler import get_temp_dir
             output_dir = get_temp_dir()
-        
-        result = processor.process(
-            file_path=file_path,
-            user_info=user_info,
-            output_dir=output_dir,
-        )
-        
+
+        if v2_plan is not None and v2_plan.serve_v2:
+            _row_source = _v2serve.row_source_from_routed(v2_plan.routed)
+            result = processor._run_pipeline(
+                file_path, user_info, output_dir, row_source=_row_source
+            )
+            if getattr(result, "status", "") != "success":
+                # serving v2 rows failed downstream: serve legacy instead when possible
+                logger.error("v2 served pipeline failed; falling back to legacy processing")
+                v2_plan.serve_v2 = False
+                v2_block = _v2serve.engine_block(
+                    engine="legacy", mode="serve", routed=v2_plan.routed,
+                    verdict=None, needs_review=False, codes=[],
+                    detected_bank=v2_block.get("detected_bank"),
+                    advisory=_v2serve.advisory_block(v2_plan.routed),
+                )
+                if _get_bank_processor(bank_key) is not None:
+                    processor = _get_bank_processor(bank_key)(
+                        strict_mode=False, enable_ai=enable_ai,
+                        api_key=api_key if enable_ai else None,
+                        audit_service=audit_service, job_id=job_id,
+                    )
+                    result = processor.process(
+                        file_path=file_path, user_info=user_info, output_dir=output_dir,
+                    )
+        elif ProcessorClass is not None:
+            result = processor.process(
+                file_path=file_path,
+                user_info=user_info,
+                output_dir=output_dir,
+            )
+        else:
+            raise UnsupportedBankError(
+                f"Bank '{bank_name}' is not yet supported. "
+                f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
+                stage="bank_routing",
+                error_code="UNSUPPORTED_BANK"
+            )
+
+        # REVIEW + no usable legacy outcome -> serve the v2 rows flagged for review
+        if (
+            v2_plan is not None and not v2_plan.serve_v2
+            and _v2serve.v2_verdict(v2_plan.routed) == "REVIEW"
+            and not v2_plan.mismatch
+            and (result is None or getattr(result, "status", "") != "success")
+        ):
+            _serve_key = _v2serve.pipeline_key_for(v2_plan.v2_spec_key)
+            _rev_class = _get_bank_processor(_serve_key) or _get_bank_processor("unknown")
+            if _rev_class is not None:
+                _row_source = _v2serve.row_source_from_routed(v2_plan.routed)
+                if _row_source is not None:
+                    _rev_result = _rev_class(
+                        strict_mode=False, enable_ai=enable_ai,
+                        api_key=api_key if enable_ai else None,
+                        audit_service=audit_service, job_id=job_id,
+                    )._run_pipeline(file_path, user_info, output_dir, row_source=_row_source)
+                    if getattr(_rev_result, "status", "") == "success":
+                        result = _rev_result
+                        v2_block = _v2serve.engine_block(
+                            engine="v2", mode="serve", routed=v2_plan.routed,
+                            verdict="REVIEW", needs_review=True,
+                            codes=_v2serve.review_codes(v2_plan.routed),
+                            detected_bank=v2_block.get("detected_bank"),
+                            advisory=None,
+                        )
+
     except Exception as e:
         logger.error("Bank processor failed: %s", str(e), exc_info=True)
         
@@ -400,11 +503,21 @@ def process_statement(
     # STEP 5: Build Response
     # =================================================================
     total_time_ms = round((time.monotonic() - pipeline_start) * 1000, 1)
-    
+
     response = result.to_dict()
     response["performance"]["total_pipeline_ms"] = total_time_ms
     response["bank_key"] = bank_key
     response["mode"] = mode
+
+    # v2 serving: attach the additive block, audit the decision, and append the
+    # Statement Check sheet when the block calls for it (never at mode off).
+    response["statement_engine"] = v2_block
+    _v2serve.audit_serve_decision(audit_service, job_id, v2_block)
+    if _v2serve.wants_statement_check(v2_block):
+        try:
+            _v2serve.append_statement_check_sheet(result.excel_path, v2_block)
+        except Exception:
+            logger.debug("statement check sheet append failed", exc_info=True)
     
     logger.info(
         "Pipeline complete: bank=%s transactions=%d time=%.1fms",
