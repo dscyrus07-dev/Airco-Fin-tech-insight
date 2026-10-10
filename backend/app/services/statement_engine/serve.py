@@ -41,6 +41,12 @@ def spec_key_for(bank_key: str) -> str:
     return DETECTOR_TO_SPEC_BANK.get((bank_key or "").lower(), (bank_key or "").lower())
 
 
+def pipeline_key_for(spec_key: str) -> str:
+    """Spec bank key -> legacy pipeline processor key (reverse of spec_key_for)."""
+    rev = {v: k for k, v in DETECTOR_TO_SPEC_BANK.items()}
+    return rev.get((spec_key or "").lower(), (spec_key or "").lower())
+
+
 def spec_bank_keys() -> frozenset:
     """Spec bank keys that have at least one registered layout."""
     from .extractors.registry import DEFAULT_REGISTRY
@@ -342,6 +348,8 @@ class V2RowSource:
     closing_balance: Any = None
     total_debits: Any = None
     total_credits: Any = None
+    dr_count: Any = None
+    cr_count: Any = None
     statement_from: Optional[str] = None
     statement_to: Optional[str] = None
     account_number: Optional[str] = None
@@ -379,6 +387,8 @@ def row_source_from_routed(routed) -> Optional[V2RowSource]:
         closing_balance=_dec(closing),
         total_debits=total_debits,
         total_credits=total_credits,
+        dr_count=printed.get("dr_count"),
+        cr_count=printed.get("cr_count"),
         statement_from=getattr(meta, "statement_from", None) or None,
         statement_to=getattr(meta, "statement_to", None) or None,
         account_number=getattr(meta, "account_number", None),

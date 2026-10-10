@@ -36,6 +36,7 @@ from .generic_bank import (
     GenericProcessorError,
     GenericReconciliationError,
     GenericStructureError,
+    GenericStructureMetadata,
     GenericValidationError,
 )
 
@@ -120,10 +121,11 @@ class BaseBankProcessor:
         try:
             if row_source is not None:
                 pdf_result = SimpleNamespace(first_page_text=None, text_content="")
-                structure_result = SimpleNamespace(metadata=_SeededMetadata(
+                structure_result = SimpleNamespace(metadata=GenericStructureMetadata(
                     opening_balance=row_source.opening_balance,
                     closing_balance=row_source.closing_balance,
-                    expected_transaction_count=None,
+                    dr_count=row_source.dr_count,
+                    cr_count=row_source.cr_count,
                     statement_from=row_source.statement_from,
                     statement_to=row_source.statement_to,
                     account_number=row_source.account_number,
@@ -434,7 +436,6 @@ class BaseBankProcessor:
             )
             # Normalise: some banks (unknown) return a plain dict; wrap so getattr() works.
             if isinstance(_agg_raw, dict):
-                from types import SimpleNamespace
                 aggregation = SimpleNamespace(**_agg_raw)
             else:
                 aggregation = _agg_raw
