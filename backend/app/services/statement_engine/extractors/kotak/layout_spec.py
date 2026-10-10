@@ -164,6 +164,7 @@ KOTAK_LAYOUT_5 = LayoutSpec(
     summary_expected=False,
     secondary_date_column="value_date",
     header_repeats=True,
+    header_wraps=True,
     continuation_start="top",
     dates_monotonic_expected=False,
 )
@@ -278,6 +279,7 @@ KOTAK_LAYOUT_8 = LayoutSpec(
     summary_expected=False,
     secondary_date_column="value_date",
     header_repeats=True,
+    header_wraps=True,
     continuation_start="top",
     dates_monotonic_expected=False,
 )
@@ -322,3 +324,4 @@ KOTAK_LAYOUT_9 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 KOTAK_LAYOUT_9.validate()
+

@@ -39,7 +39,11 @@ FEDERAL_LAYOUT_1 = LayoutSpec(
     secondary_date_column="value_date",
     end_markers=("ENDOFSTATEMENT",),
     header_repeats=True,
+    header_wraps=True,
     opening_balance_re=re.compile(r"OpeningBalance(-?[\d,]*\.\d{2})"),
+    totals_line_re=re.compile(r"(?i)grandtotal(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{1,2})"),
+    anchor_full=True,
+    date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_1.validate()
 
@@ -68,8 +72,8 @@ FEDERAL_LAYOUT_2 = LayoutSpec(
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
-    date_re=re.compile(r"^\d{2}-[A-Za-z]{3}-\d{4}$"),
-    date_format="%d-%b-%Y",
+    date_re=re.compile(r"^\d{2}(?:-[A-Za-z]{3}-\d{4}|/\d{2}/\d{4}|-\d{2}-\d{4})$"),
+    date_format="%d-%b-%Y|%d/%m/%Y|%d-%m-%Y",
     amount_re=re.compile(r"^-?[\d,]+(?:\.\d{1,2})?$"),
     period_re=re.compile(r"(?i)period(\d{4}-\d{2}-\d{2})to(\d{4}-\d{2}-\d{2})"),
     period_date_format="%Y-%m-%d",
@@ -79,7 +83,12 @@ FEDERAL_LAYOUT_2 = LayoutSpec(
     secondary_date_column="value_date",
     end_markers=("ENDOFSTATEMENT",),
     header_repeats=True,
+    header_wraps=True,
+    continuation_start="top",
     opening_balance_re=re.compile(r"(?i)openingbalance(-?[\d,]*\.?\d*)"),
+    totals_line_re=re.compile(r"(?i)grandtotal(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{1,2})"),
+    anchor_full=True,
+    date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_2.validate()
 
@@ -102,15 +111,15 @@ FEDERAL_LAYOUT_3 = LayoutSpec(
         "debit": (("withdrawals",),),
         "credit": (("deposits",),),
         "balance": (("balance",),),
-        "side": (("dr",), ("drcr",), ("dr", "cr")),
+        "side": (("dr",), ("drcr",), ("dr", "cr"), ("cr", "dr"), ("crdr",)),
     },
     text_columns=("date", "value_date", "narration", "trantype", "ref", "cheque"),
     band_left_pad={"narration": 85.0},
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
-    date_re=re.compile(r"^\d{2}-[A-Za-z]{3}-\d{4}$"),
-    date_format="%d-%b-%Y",
+    date_re=re.compile(r"^\d{2}(?:-[A-Za-z]{3}-\d{4}|/\d{2}/\d{4}|-\d{2}-\d{4})$"),
+    date_format="%d-%b-%Y|%d/%m/%Y|%d-%m-%Y",
     amount_re=re.compile(r"^-?[\d,]+(?:\.\d{1,2})?$"),
     period_re=re.compile(r"(?i)period(\d{4}-\d{2}-\d{2})to(\d{4}-\d{2}-\d{2})"),
     period_date_format="%Y-%m-%d",
@@ -120,6 +129,11 @@ FEDERAL_LAYOUT_3 = LayoutSpec(
     secondary_date_column="value_date",
     end_markers=("ENDOFSTATEMENT",),
     header_repeats=True,
+    header_wraps=True,
+    continuation_start="top",
     opening_balance_re=re.compile(r"(?i)openingbalance(-?[\d,]*\.?\d*)"),
+    totals_line_re=re.compile(r"(?i)grandtotal(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{1,2})"),
+    anchor_full=True,
+    date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_3.validate()

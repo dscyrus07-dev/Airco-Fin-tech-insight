@@ -34,6 +34,8 @@ class LayoutSpec:
     summary_fields: Tuple[str, ...] = DEFAULT_SUMMARY_FIELDS   # printed order of the summary numbers
     secondary_date_column: Optional[str] = None  # a text column that holds a date (e.g. value date)
     header_repeats: bool = False               # True when every page repeats the table header
+    header_wraps: bool = False                 # True when a column title may wrap onto the next visual line; the
+                                               # pair is matched as one header (row scan starts after both lines)
     ifsc_re: Optional[Pattern[str]] = None
     account_label: str = ""                    # normalised token that precedes the account number value
     end_markers: Tuple[str, ...] = ()          # extra whitespace-free upper-case markers that end the table (footers)
@@ -78,6 +80,8 @@ class LayoutSpec:
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
     clipped_drcr_suffix: bool = False        # page-edge-clipped balance cells print "…C"/"…D" instead of "…Cr"/"…Dr": a lone C/D suffix on the balance is treated as the clipped marker (chain must still prove the values)
+    date_left_pad: float = 3.0               # extra left pad for the date column when data dates sit left of the
+                                             # first anchored date cell (centred "Date" title over a wide column)
     header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
                                             # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
     anchor_full: bool = False                # VERIFIED only when BOTH chain ends carry an independent printed figure:

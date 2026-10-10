@@ -102,7 +102,12 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
 def _has_dated_row(lines: List[List[Word]], anchors: ColumnAnchors, spec: LayoutSpec) -> bool:
     """True when a row-start date appears in the date column: used after the summary block, where it means that the
     file carries another statement (merged PDFs), which a single-statement extraction must not silently drop."""
-    return any(classify_word(w, anchors, spec) == "date" for line in lines for w in line)
+    for line in lines:
+        if spec.period_re and spec.period_re.search(squash(line)):
+            continue   # a repeated period header is not a row
+        if any(classify_word(w, anchors, spec) == "date" for w in line):
+            return True
+    return False
 
 
 def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) -> AssembledTable:

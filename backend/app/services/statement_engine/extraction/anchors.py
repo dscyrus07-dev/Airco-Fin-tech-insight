@@ -34,7 +34,6 @@ class AnchorError(ValueError):
 _BOUNDARY_PAD = 4.0
 _DATE_FALLBACK_LEFT_PAD = 8.0
 _DATE_FALLBACK_RIGHT_PAD = 10.0
-_DATE_DATA_LEFT_PAD = 3.0
 _DATE_DATA_RIGHT_PAD = 3.0
 _TRAILING_COLUMN_GAP = 20.0
 
@@ -61,25 +60,72 @@ def _find_sequence(tokens: Sequence[Tuple[str, float, float]], seq: Tuple[str, .
     return None
 
 
+def _match_spans(line: Sequence[Word], spec: LayoutSpec) -> Dict[str, Tuple[float, float]]:
+    toks = _tokens(line)
+    spans: Dict[str, Tuple[float, float]] = {}
+    for col, alternatives in spec.columns.items():
+        for seq in alternatives:
+            hit = _find_sequence(toks, seq)
+            if hit:
+                spans[col] = hit
+                break
+    return spans
+
+
+def _complete(line: Sequence[Word], spans: Dict[str, Tuple[float, float]], spec: LayoutSpec,
+              center_test: bool = False) -> bool:
+    if len(spans) != len(spec.columns):
+        return False
+    # a header with an extra, unknown column between the known ones is another layout: refuse it
+    lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
+    def covered(w: Word) -> bool:
+        if center_test:
+            # wrapped-header words can protrude past their seq span by font epsilon (the first
+            # title word is wider than the continuation): a word belongs when its centre sits in a span
+            mid = (w.x0 + w.x1) / 2.0
+            return any(a - 0.5 <= mid <= b + 0.5 for a, b in spans.values())
+        return any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values())
+    unknown = [w for w in line if norm_token(w.text) and lo <= w.x0 and w.x1 <= hi and not covered(w)]
+    return not unknown
+
+
+def _merge_header_pair(upper: Sequence[Word], lower: Sequence[Word]) -> List[Word]:
+    """Two visual lines of one wrapped header row as a single matchable stream: words are clustered
+    by x0 (a title and its downward continuation sit at ~the same x, apart by font epsilon), and each
+    cluster emits its upper-line words before the lower line's, preserving title word order."""
+    first = {id(w) for w in upper}
+    words = sorted((*upper, *lower), key=lambda w: w.x0)
+    merged: List[Word] = []
+    cluster: List[Word] = []
+    cluster_x = None
+    for w in words:
+        if cluster_x is None or w.x0 - cluster_x <= 2.5:
+            cluster.append(w)
+            cluster_x = w.x0 if cluster_x is None else cluster_x
+        else:
+            merged.extend(sorted(cluster, key=lambda v: 0 if id(v) in first else 1))
+            cluster = [w]
+            cluster_x = w.x0
+    merged.extend(sorted(cluster, key=lambda v: 0 if id(v) in first else 1))
+    return merged
+
+
 def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[Tuple[int, Dict[str, Tuple[float, float]]]]:
-    """Index of the first line holding every column title, and each title's x-span."""
+    """Index of the header row's last line holding every column title, and each title's x-span.
+
+    When spec.header_wraps is set, a title that wraps onto the next visual line is merged into the
+    candidate line (words re-sorted by x0): the pair is accepted only when the merged view completes
+    the column set with no unknown tokens inside the span. The returned index is the pair's second
+    line, so row scanning starts after both header lines."""
     for idx, line in enumerate(lines):
-        toks = _tokens(line)
-        spans: Dict[str, Tuple[float, float]] = {}
-        for col, alternatives in spec.columns.items():
-            for seq in alternatives:
-                hit = _find_sequence(toks, seq)
-                if hit:
-                    spans[col] = hit
-                    break
-        if len(spans) == len(spec.columns):
-            # a header with an extra, unknown column between the known ones is another layout: refuse it
-            lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
-            unknown = [w for w in line if norm_token(w.text) and lo <= w.x0 and w.x1 <= hi
-                       and not any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values())]
-            if unknown:
-                continue
+        spans = _match_spans(line, spec)
+        if _complete(line, spans, spec):
             return idx, spans
+        if getattr(spec, "header_wraps", False) and idx + 1 < len(lines) and "date" in spans and len(spans) >= 2:
+            merged = _merge_header_pair(line, lines[idx + 1])
+            mspans = _match_spans(merged, spec)
+            if _complete(merged, mspans, spec, center_test=True):
+                return idx + 1, mspans
     return None
 
 
@@ -104,7 +150,7 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
             first_date = min(cands, key=lambda w: abs((w.x0 + w.x1) / 2.0 - header_mid))
             break
     if first_date:
-        date_left = min(first_date.x0, spans["date"][0]) - _DATE_DATA_LEFT_PAD   # date cells may be right-aligned
+        date_left = min(first_date.x0, spans["date"][0]) - spec.date_left_pad    # date cells may be right-aligned
         date_right = min(first_date.x1 + _DATE_DATA_RIGHT_PAD, text_lefts[spec.text_columns[1]])
     else:
         date_left = spans["date"][0] - _DATE_FALLBACK_LEFT_PAD
