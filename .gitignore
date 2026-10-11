@@ -177,3 +177,6 @@ report_test.xlsx
 
 # Old-vs-new comparison captures (customer data; never commit)
 comparison/
+
+# runtime unsupported-format queue (may carry source filenames)
+backend/data/unsupported_formats/

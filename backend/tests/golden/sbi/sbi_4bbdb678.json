@@ -1,0 +1,1886 @@
+{
+  "aggregation": {
+    "closing_balance": null,
+    "opening_balance": null,
+    "total_credits": null,
+    "total_debits": null
+  },
+  "bank_key": "sbi",
+  "categories": [
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Loan Payments",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Cash Deposit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bill Payment",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Insurance",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Cash Deposit",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bill Payment",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bill Payment",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "ATM Withdrawal",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Bank Transfer In",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bill Payment",
+    "Cash Deposit",
+    "Transfer",
+    "Transfer",
+    "Bank Transfer In",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Transfer",
+    "Bill Payment"
+  ],
+  "category_totals": {
+    "ATM Withdrawal": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 9000.0
+    },
+    "Bank Transfer In": {
+      "count": 69,
+      "credit": 86451.0,
+      "debit": 0.0
+    },
+    "Bill Payment": {
+      "count": 5,
+      "credit": 0.0,
+      "debit": 12566.1
+    },
+    "Cash Deposit": {
+      "count": 3,
+      "credit": 36500.0,
+      "debit": 0.0
+    },
+    "Insurance": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 2000.0
+    },
+    "Loan Payments": {
+      "count": 1,
+      "credit": 0.0,
+      "debit": 3113.0
+    },
+    "Transfer": {
+      "count": 59,
+      "credit": 11200.0,
+      "debit": 108209.47
+    }
+  },
+  "data_quality": "high",
+  "metadata": {
+    "account_holder": "CUST1",
+    "account_number": "",
+    "bank_name": "SBI",
+    "statement_from": "",
+    "statement_to": ""
+  },
+  "mode": "free",
+  "monthly_analysis": {
+    "bankCharges": {
+      "Aug-2023": 0
+    },
+    "cashDeposit": {
+      "Aug-2023": 36500.0
+    },
+    "cashWithdrawals": {
+      "Aug-2023": 9000.0
+    },
+    "chequeDeposit": {
+      "Aug-2023": 0
+    },
+    "chequeIssued": {
+      "Aug-2023": 0
+    },
+    "creditCardPayment": {
+      "Aug-2023": 0
+    },
+    "creditCount": {
+      "Aug-2023": 74.0
+    },
+    "creditValue": {
+      "Aug-2023": 134151.0
+    },
+    "debitCount": {
+      "Aug-2023": 65.0
+    },
+    "debitValue": {
+      "Aug-2023": 134888.57
+    },
+    "ecsNach": {
+      "Aug-2023": 3113.0
+    },
+    "inwBounce": {
+      "Aug-2023": 0.0
+    },
+    "loanRepayment": {
+      "Aug-2023": 3113.0
+    },
+    "maxBalance": {
+      "Aug-2023": 19426.78
+    },
+    "minBalance": {
+      "Aug-2023": 1424.96
+    },
+    "monthlyAvgBal": {
+      "Aug-2023": 8345.47
+    },
+    "nonCashCredit": {
+      "Aug-2023": 97651.0
+    },
+    "nonSalaryCredits": {
+      "Aug-2023": 134151.0
+    },
+    "owtBounce": {
+      "Aug-2023": 0.0
+    },
+    "penaltyCharges": {
+      "Aug-2023": 0
+    },
+    "salaryCredits": {
+      "Aug-2023": 0
+    }
+  },
+  "pipeline_stats": {
+    "ai_classified": 0,
+    "classified": 139,
+    "coverage_percent": 100.0,
+    "others": 0,
+    "recurring": 0,
+    "total_transactions": 139
+  },
+  "reconciliation": {
+    "calculated_closing": 13478.66,
+    "closing_balance": 13478.66,
+    "final_difference": 0.0,
+    "is_reconciled": true,
+    "message": null,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "opening_balance": 14216.23,
+    "source": "running_balance",
+    "total_credits": 134151.0,
+    "total_debits": 134888.57,
+    "transaction_count": 139
+  },
+  "reconciliation_status": "passed",
+  "sample_name": "sbi_4bbdb678",
+  "schema_version": 1,
+  "status": "success",
+  "summary_stats": {
+    "Average EOD Balance": {
+      "Aug-2023": 8345.47
+    },
+    "Avg Balance": 9409.28,
+    "Balance on 10th": {
+      "Aug-2023": 10174.23
+    },
+    "Balance on 15th": {
+      "Aug-2023": 3424.96
+    },
+    "Balance on 1st": {
+      "Aug-2023": 10174.23
+    },
+    "Balance on 20th": {
+      "Aug-2023": 4755.96
+    },
+    "Balance on 25th": {
+      "Aug-2023": 6853.96
+    },
+    "Balance on 5th": {
+      "Aug-2023": 10174.23
+    },
+    "Balance on Last Day": {
+      "Aug-2023": 16539.76
+    },
+    "Cnt of Cheque Bounces": 0,
+    "End of Month Balance": {
+      "Aug-2023": 16539.76
+    },
+    "Max Balance": 26853.96,
+    "Max EOD Balance": {
+      "Aug-2023": 19426.78
+    },
+    "Min Balance": 1424.96,
+    "Min EOD Balance": {
+      "Aug-2023": 1424.96
+    },
+    "Start of Month Balance": {
+      "Aug-2023": 10174.23
+    },
+    "Top 5 Credit %": 47.31,
+    "Top 5 Credit Amt": 63466.0,
+    "Top 5 Debit %": 45.53,
+    "Top 5 Debit Amt": 61413.0,
+    "Total Cheque": 0,
+    "Total Credit Amount": 134151.0,
+    "Total Credit Count": 74,
+    "Total Debit Amount": 134888.57,
+    "Total Debit Count": 65,
+    "_per_month": {
+      "Aug-2023": {
+        "avg_eod": 8345.47,
+        "d1": 10174.23,
+        "d10": 10174.23,
+        "d15": 3424.96,
+        "d20": 4755.96,
+        "d25": 6853.96,
+        "d5": 10174.23,
+        "dlast": 16539.76,
+        "end": 16539.76,
+        "max_eod": 19426.78,
+        "min_eod": 1424.96,
+        "start": 10174.23
+      }
+    }
+  },
+  "transaction_count": 139,
+  "transactions": [
+    {
+      "balance": 14356.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900002/BHAV FROM SINGH/PYTM/900003/Pay 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14606.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 250.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900005/MALLA FROM M N/UBIN/mallamnare/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13657.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-10",
+      "debit": 949.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900006/Souther 900007 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10544.23,
+      "category": "Loan Payments",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-10",
+      "debit": 3113.0,
+      "description": "DEBIT-ACHDr NACH00000000001981 NORTHERN ARC C",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 15544.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 5000.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900008/NARSI FROM MHU/SBIN/mandhamall/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5544.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-10",
+      "debit": 10000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900009/PAKAL 900007 A B/APGV/900010/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6544.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1000.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900011/NARSI FROM MHU/SBIN/mandhamall/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6744.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900012/DANDY FROM ALA/APGV/900013/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6964.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 220.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900014/ANIL FROM KUMAR/UBIN/900015/Pay 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6984.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 20.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900016/GOLU/ FROM UTIB/831865736@/Payment- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7299.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 315.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900017/JIDIKA FROM NT/APGV/900018/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10414.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 3115.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900019/GANDH FROM AMA/APGV/900020/Paym 900004 e",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10434.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 20.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900021/NEELA FROM BA/UBIN/neelabalu5/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10174.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-10",
+      "debit": 260.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900022/A 900007 SWETHA/PYTM/paytm 6704/Oid20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10314.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900023/Rajkum FROM ar/FINO/900024/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10464.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 150.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900025/JALES FROM HVA/UTIB/jaleshwars/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10764.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 300.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900026/KARUN FROM AKA/IBKL/900027/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11444.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 680.0,
+      "date": "2023-08-10",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900028/PARUP FROM ELL/SBIN/srikanth.p/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12944.23,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1500.0,
+      "date": "2023-08-11",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900029/SUDHA FROM KAR/SBIN/musthyalas/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22944.23,
+      "category": "Cash Deposit",
+      "confidence": 0.99,
+      "credit": 10000.0,
+      "date": "2023-08-11",
+      "debit": null,
+      "description": "CASH DEPOSIT-CASH Deposited at GCC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 22544.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 400.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900031/SANDE 900032 EP /SBIN/katamshiva/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 21044.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 1500.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900033/GOUS 900032 UDDI/SBIN/900034/Paym e",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17751.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 3293.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900035/Axis/UT 900032 IB/cred.club@/payment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14951.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 2800.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900036/GANDH 900032 AMA/APGV/900020/Paym e",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14651.23,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 300.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900037/SANDE 900032 EP /SBIN/katamshiva/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12368.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-11",
+      "debit": 2282.27,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900038/Axis/UT 900032 IB/cred.club@/payment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8368.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-12",
+      "debit": 4000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900039/KALAK 900040 UNT/UBIN/budidhacha/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8268.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-12",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900041/GOUS 900040 UDDI/SBIN/gousuddinm/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11268.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 3000.0,
+      "date": "2023-08-13",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900042/BUDID FROM HA /SBIN/chandubudi/Payme- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17268.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 6000.0,
+      "date": "2023-08-13",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900044/KALAK FROM UNT/UBIN/budidhacha/Payme- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5268.96,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-13",
+      "debit": 12000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900045/VINAY 900046 J/SBIN/jullavinay/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4754.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-14",
+      "debit": 514.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900047/Souther 900048 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4674.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-14",
+      "debit": 80.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900049/Souther 900048 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3424.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-15",
+      "debit": 1250.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900050/Mr 900051 MOHA/FDRL/BHARATPE.9/Pa y t",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1424.96,
+      "category": "Insurance",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-16",
+      "debit": 2000.0,
+      "description": "DEBIT-CMP SBIMF SIP- 33147231-346G",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1624.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-16",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900052/BATHI FROM NI /SBIN/900053/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1744.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 120.0,
+      "date": "2023-08-16",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900055/AASIF FROM K/SBIN/900056/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1934.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 190.0,
+      "date": "2023-08-16",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900057/BRIJES FROM H/BARB/900058/Paymen- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2124.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 190.0,
+      "date": "2023-08-16",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900059/BRIJES FROM H/BARB/900058/Paymen- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2624.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-16",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900060/MOHA FROM MMAD/APGV/900061/Pay 900054 me",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2329.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 295.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900062/Souther 900007 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1996.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 333.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900063/Souther 900007 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13996.96,
+      "category": "Cash Deposit",
+      "confidence": 0.99,
+      "credit": 12000.0,
+      "date": "2023-08-17",
+      "debit": null,
+      "description": "CASH DEPOSIT-CASH Deposited at GCC",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9479.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 4517.0,
+      "description": "TO TRANSFER-TRANSFER TRANSFER TO TO- 900064",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8479.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 1000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900065/ANANT 900007 HUL/SBIN/900066/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8379.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900067/KARNA 900007 KAR/IBKL/900068/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7379.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 1000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900069/NAYAK 900007 AM /FDRL/BHARATPE.9/Pay t",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7629.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 250.0,
+      "date": "2023-08-17",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900070/Mr FROM ELIKA/CBIN/900071/Paym 900004 e",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7769.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-17",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900072/BRIJES FROM H/BARB/900058/Paymen- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7829.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 60.0,
+      "date": "2023-08-17",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900073/RAJ FROM YADAV/BKID/900074/Pay 900004 m",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7283.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-17",
+      "debit": 546.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900075/Souther 900007 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7423.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-17",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900076/BRIJES FROM H/BARB/900058/Paymen- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7483.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 60.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900077/Rajkum FROM ar/FINO/900024/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7458.96,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-18",
+      "debit": 25.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900078/Jio/PYT 900032 M/8744070@pa/Oid21743",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7758.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 300.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900079/Pakala FROM Sw/FSFB/900080/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7788.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 30.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900081/DANDE FROM M /SBIN/900082/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7838.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 50.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900083/Gandha FROM ma/FSFB/900084/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11338.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 3500.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900085/MANDA FROM NA/UBIN/mandhanars/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9338.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-18",
+      "debit": 2000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900086/SRINIV 900032 AS/SBIN/900087/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12338.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 3000.0,
+      "date": "2023-08-18",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900088/ARAVI FROM ND /SBIN/900089/Payme- 900030",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12238.96,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-18",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900090/Vinny 900032 Fo/UTIB/gpay-11207/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 11359.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-19",
+      "debit": 879.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900091/Souther 900040 n/UTIB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 10427.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-19",
+      "debit": 932.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900092/Souther 900040 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7065.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-19",
+      "debit": 3362.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900093/Souther 900040 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7365.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 300.0,
+      "date": "2023-08-19",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900094/MADDI FROM SA/UBIN/sanjumaddi/Payme- 900095",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7405.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 40.0,
+      "date": "2023-08-19",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900096/MOHA FROM MMAD/SBIN/900097/Pay 900095 me",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7605.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-19",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900098/Gyanen FROM dr/SBIN/900099/Payme- 900095",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7635.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 30.0,
+      "date": "2023-08-19",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900100/Parupal FROM l/AIRP/parupallyb/Payme- 900095",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2355.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-19",
+      "debit": 5280.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900101/Payswif 900040 f/INDB/900102/NA",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3855.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1500.0,
+      "date": "2023-08-19",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900103/ANANT FROM HUL/SBIN/900066/Payme- 900095",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3355.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-19",
+      "debit": 500.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900104/ANANT 900040 HUL/SBIN/900066/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3655.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 300.0,
+      "date": "2023-08-20",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900105/Pakala FROM Sw/FSFB/900080/Payme- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5155.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1500.0,
+      "date": "2023-08-20",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900106/LAXMI FROM NA/BARB/laxmi78781/Payme- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4755.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-20",
+      "debit": 400.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900107/YERRO 900046 LA /BARB/900108/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4945.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 190.0,
+      "date": "2023-08-20",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900109/BRIJES FROM H/BARB/900058/Paymen- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5145.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900110/Rajkum FROM ar/FINO/900024/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5420.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 275.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900112/CHAND FROM RA /SBIN/900113/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5620.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900114/KANDU FROM RI /SBIN/900115/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7520.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 1900.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900116/YERRO FROM LA /BARB/900108/NA- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7590.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 70.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900117/Rajkum FROM ar/FINO/900024/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7090.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-21",
+      "debit": 500.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900118/SHAVA 900048 LLA/UBIN/900119/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5290.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-21",
+      "debit": 1800.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900120/SRI 900048 RENU/APGV/900121/Sent",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5490.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 200.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900122/MANGI FROM LAL/UCBA/900123/Payme 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5510.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 20.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900124/PAKAL FROM A /SBIN/900125/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5650.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-21",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900126/Rajkum FROM ar/FINO/900024/Payme- 900111",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5408.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 242.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900127/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4917.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 491.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900128/Souther 900051 n/UTIB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4259.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 658.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900129/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 3997.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 262.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900130/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4187.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 190.0,
+      "date": "2023-08-22",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900131/Rajkum FROM ar/FINO/900024/Payme- 900132",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 21453.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 17266.0,
+      "date": "2023-08-22",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900133/KONDI FROM U/SBIN/900134/AMC C- 900132",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16453.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 5000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900135/BINGI 900051 S/SBIN/900136/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7453.96,
+      "category": "ATM Withdrawal",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-22",
+      "debit": 9000.0,
+      "description": "ATM WDL-ATM CASH 399 CHERIYAL OFF SITE WARANGAL",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7693.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 240.0,
+      "date": "2023-08-22",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900137/Pakala FROM Sw/FSFB/900080/Payme- 900132",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7763.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 70.0,
+      "date": "2023-08-23",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900138/Rajkum FROM ar/FINO/900024/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8023.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 260.0,
+      "date": "2023-08-23",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900139/BHAGY FROM A /SBIN/900140/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8423.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 400.0,
+      "date": "2023-08-23",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900141/MERG FROM OJU 900054 /BARB/900142/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8493.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 70.0,
+      "date": "2023-08-23",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900143/Rajkum FROM ar/FINO/900024/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6493.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-23",
+      "debit": 2000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900144/MANNE 900145 MA/UBIN/900146/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6633.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 140.0,
+      "date": "2023-08-23",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900147/Rajkum FROM ar/FINO/900024/Payme- 900054",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7133.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900148/Pakala FROM K/APGV/900149/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7633.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900150/KALYA FROM NAM/SBIN/900151/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8133.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900152/KASAR FROM LA /SBIN/900153/UPI- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8633.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900154/CHERU FROM KU /SBIN/900155/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9133.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900156/GUNIG FROM ANT/APGV/900157/Paym 900004 e",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 9633.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 500.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900158/SYAMU FROM LAP/APGV/shyamchary/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7833.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-24",
+      "debit": 1800.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900159/NAVEE 900007 N S/PYTM/paytmqr281/Oid20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 7863.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 30.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900160/MOHA FROM MMAD/SBIN/900097/Pay 900004 me",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 8103.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 240.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900161/ANIL FROM KUMAR/UBIN/900015/Pay 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17803.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 9700.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER NEFT*XXXX0000001*00102093 FROM 7238*ANIL ELECTRICAL AND- 900162",
+      "is_recurring": false,
+      "source": "generic_rule_engine"
+    },
+    {
+      "balance": 18203.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 400.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900163/MUTHY FROM AM /APGV/900164/Payme 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18503.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 300.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900165/ALIKAT FROM TE/UTIB/sudheerbac/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 17853.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-24",
+      "debit": 650.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900166/VANGA 900007 PAL/PYTM/paytm-6704/Oid20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 26853.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 9000.0,
+      "date": "2023-08-24",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900167/SRINIV FROM AS/SBIN/900087/Payme- 900004",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6853.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-25",
+      "debit": 20000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900168/KALAK 900032 UNT/UBIN/budidhacha/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5353.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-26",
+      "debit": 1500.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900169/JANGIT 900040 I /SBIN/900170/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 6853.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": 1500.0,
+      "date": "2023-08-26",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/REV/900169- FROM 900040",
+      "is_recurring": false,
+      "source": "generic_rule_engine"
+    },
+    {
+      "balance": 5853.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-26",
+      "debit": 1000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900171/Santho 900040 sh/UTIB/gpay-11224/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 5753.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-26",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900172/Santho 900040 sh/UTIB/gpay-11224/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14753.96,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 9000.0,
+      "date": "2023-08-27",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900173/KALAK FROM UNT/UBIN/budidhacha/Payme- 900043",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4340.96,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-27",
+      "debit": 10413.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900174/Axis/UT 900046 IB/cred.club@/payment",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 4044.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-27",
+      "debit": 296.18,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900175/Paytm 900046 Re/PYTM/paybil3066/Oid21",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 2924.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-27",
+      "debit": 1120.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900176/PEDDA 900046 GUN/FDRL/BHARATPE.9/Pay t",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1924.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-27",
+      "debit": 1000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900177/BUDID 900046 HA /SBIN/chandubudi/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 1723.78,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-28",
+      "debit": 201.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900178/Bharti 900048 A/YESB/AIRTELPRED/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16223.78,
+      "category": "Cash Deposit",
+      "confidence": 0.99,
+      "credit": 14500.0,
+      "date": "2023-08-28",
+      "debit": null,
+      "description": "CSH DEP (CDM)- CDM4040102ANGADI BAZAR CHERIAL CHERIAL TS IN",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13223.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-28",
+      "debit": 3000.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900179/KALLA 900048 TI /IPOS/900180/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 12649.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-28",
+      "debit": 574.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900181/Souther 900048 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 20649.78,
+      "category": "Bank Transfer In",
+      "confidence": 0.95,
+      "credit": 8000.0,
+      "date": "2023-08-29",
+      "debit": null,
+      "description": "BY TRANSFER- TRANSFER UPI/CR/900182/BUDID FROM HA /SBIN/chandubudi/Payme- 900132",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 20103.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-29",
+      "debit": 546.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900183/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 19699.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-29",
+      "debit": 404.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900184/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 19426.78,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-29",
+      "debit": 273.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900185/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18327.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-29",
+      "debit": 1099.02,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900186/Souther 900051 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18227.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-29",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900187/NARSA 900051 IAH/PYTM/paytm-7132/Oid20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 18127.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-30",
+      "debit": 100.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900188/NARSA 900145 IAH/PYTM/paytm-7132/Oid20",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 16539.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-30",
+      "debit": 1588.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900189/Souther 900145 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 14492.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-30",
+      "debit": 2047.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900190/Souther 900145 n/UTIB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13718.76,
+      "category": "Transfer",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-30",
+      "debit": 774.0,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900191/Souther 900145 n/YESB/TELANAGANA/Payme",
+      "is_recurring": false,
+      "source": "rule_engine"
+    },
+    {
+      "balance": 13478.66,
+      "category": "Bill Payment",
+      "confidence": 0.99,
+      "credit": null,
+      "date": "2023-08-30",
+      "debit": 240.1,
+      "description": "TO TRANSFER- TRANSFER TO UPI/DR/900192/Jio/PYT 900145 M/8744070@pa/Oid21847",
+      "is_recurring": false,
+      "source": "rule_engine"
+    }
+  ]
+}
