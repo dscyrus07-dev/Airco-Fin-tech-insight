@@ -48,6 +48,38 @@ def _nonrow_text(pages: Sequence[Page]) -> str:
     return "".join(out).replace(" ", "").upper()
 
 
+_DATED_LINE = re.compile(r"\s*(?:\d{1,2}\s?[-/.]?\s?(?:\d{1,2}|[A-Za-z]{3,9})\s?[-/.]?\s?\d{2,4}|\d{4}-\d{2}-\d{2})\b")
+
+
+def _outside_body_text(pages: Sequence[Page]) -> str:
+    """Whitespace-free UPPER-CASE text of the amount-free lines that sit OUTSIDE the transaction body of their page:
+    above the first dated line (letterhead) or after the first clear vertical gap below the last dated line (footer).
+    A wrapped narration line (a UPI counterparty, a branch name) lies inside the body span or directly under the last
+    row, so it can never be read as the statement's own bank. Used for bank EVIDENCE (and ranking) only; refusing a
+    foreign bank keeps the broader `_nonrow_text`, so this can only remove routes, never add one."""
+    out = []
+    for pg in pages:
+        lines = group_lines(pg.words)
+        texts = [" ".join(w.text for w in ln) for ln in lines]
+        dated = [i for i, t in enumerate(texts) if _DATED_LINE.match(t)]
+        if not dated:
+            out.extend(t for t in texts if not _AMOUNT.search(t))
+            continue
+        first, last = dated[0], dated[-1]
+        tops = [ln[0].top for ln in lines]
+        gaps = sorted(tops[i + 1] - tops[i] for i in range(first, last) if tops[i + 1] > tops[i])
+        med = gaps[len(gaps) // 2] if gaps else 12.0
+        footer_from = len(lines)
+        for i in range(last + 1, len(lines)):
+            if tops[i] - tops[i - 1] > 1.8 * med:
+                footer_from = i
+                break
+        for i, t in enumerate(texts):
+            if (i < first or i >= footer_from) and not _AMOUNT.search(t):
+                out.append(t)
+    return "".join(out).replace(" ", "").upper()
+
+
 def _header_region_text(pages: Sequence[Page], spec_hits: Sequence[LayoutSpec]) -> str:
     """Whitespace-free UPPER-CASE text of page 1 above the first table header any candidate found there (all of page 1's
     first lines when no header sits on page 1)."""
@@ -136,6 +168,7 @@ class LayoutRegistry:
             return Resolution(None, "no_layout")
         region = _header_region_text(pages, hits)
         furniture = _nonrow_text(pages)
+        evidence_text = _outside_body_text(pages)
         known = {m for sp in self._specs.values() for m in sp.bank_markers} | set(self._foreign)
         accepted: List[LayoutSpec] = []
         rejected: List[str] = []
@@ -144,7 +177,7 @@ class LayoutRegistry:
         for spec in hits:
             own_markers = {m for sp in self._specs.values() if sp.bank_key == spec.bank_key for m in sp.bank_markers}
             own = any(m in region for m in own_markers)
-            doc_own = any(m in furniture for m in own_markers)
+            doc_own = any(m in evidence_text for m in own_markers)
             others = [m for m in known if m not in own_markers]
             foreign = any(m in region for m in others)
             foreign_doc = any(m in furniture for m in others)
