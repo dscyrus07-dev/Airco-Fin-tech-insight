@@ -170,6 +170,12 @@ export default function AnalyzeFlow() {
           </button>
           {busy && <span className="text-sm text-gray-600">{busy}</span>}
         </div>
+        {banks.length > 0 && (
+          <p className="mt-3 text-xs text-gray-500">
+            Supported banks: {banks.map((b) => b.name).join(', ')}. Other banks stay unprocessed — you can still pick a
+            bank manually if one was detected incorrectly.
+          </p>
+        )}
       </div>
 
       {error && (
@@ -271,6 +277,15 @@ export default function AnalyzeFlow() {
                     <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
                       This file cannot be processed (for example a scanned/image-based statement). OCR is not supported, so nothing
                       will be run on it.
+                    </p>
+                  )}
+
+                  {d.state === 'UNKNOWN' && (
+                    <p className="mt-2 rounded bg-gray-50 p-2 text-sm text-gray-800">
+                      We could not tell which bank issued this statement.
+                      {selectable
+                        ? ' If you know it, pick the bank below — otherwise this file stays unprocessed.'
+                        : ' Nothing will be run on it.'}
                     </p>
                   )}
 
