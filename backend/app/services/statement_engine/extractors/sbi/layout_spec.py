@@ -368,3 +368,57 @@ SBI_LAYOUT_8 = LayoutSpec(
     account_label="accountnumber",
 )
 SBI_LAYOUT_8.validate()
+
+
+# ---------------------------------------------------------------------------
+# W10-1: mPassbook / "Account Summary" export — a HEADERLESS table: no column
+# titles print, only a lone "Balance" word above the grid. Column geometry comes
+# from the dated line itself (implicit_header). The txn-type word ("DEP TFR",
+# "WDL TFR", ...) prints in the narration band one line ABOVE the dated line and
+# is attached by the implicit-header prefix rule. Anchors: page-0 "Clear Balance"
+# summary + the trailing "Statement Summary" block (Brought Forward / Dr Count /
+# Cr Count / Total Debits / Total Credits + a bare closing "..CR" line).
+SBI_LAYOUT_10_ID = "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook"
+SBI_LAYOUT_10 = LayoutSpec(
+    layout_id=SBI_LAYOUT_10_ID,
+    bank_key="sbi",
+    bank_markers=("STATEBANKOFINDIA", "SBIN0"),
+    bank_name="State Bank of India",
+    # title spellings never print; entries exist only to satisfy column declarations
+    columns={
+        "date": (("\x00date\x00",),),
+        "value_date": (("\x00valuedate\x00",),),
+        "narration": (("\x00narration\x00",),),
+        "ref": (("\x00ref\x00",),),
+        "debit": (("\x00debit\x00",),),
+        "credit": (("\x00credit\x00",),),
+        "balance": (("\x00balance\x00",),),
+    },
+    text_columns=("date", "value_date", "narration", "ref"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    implicit_header=("date", "value_date", "narration", "ref", "debit", "credit", "balance"),
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
+    date_format="%d/%m/%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    empty_amount_marker="-",
+    period_re=re.compile(r"STATEMENTFROM:(\d{2}-\d{2}-\d{4})TO(\d{2}-\d{2}-\d{4})"),
+    period_date_format="%d-%m-%Y",
+    # last-page "Statement Summary : <from> To <to>" labels across two lines, then
+    # a 5-number line (opening, dr count, cr count, total debits, total credits)
+    # and a separate closing "..CR" line; five printed fields anchor both ends.
+    summary_marker="STATEMENTSUMMARY",
+    summary_label_text="broughtforwarddrcountcrcounttotaldebitstotalcreditsclosingbalance",
+    summary_fields=("opening", "dr_count", "cr_count", "debits", "credits", "closing"),
+    anchor_full=True,
+    end_markers=("PLEASEDONOTSHAREYOURATM", "THISISACOMPUTERGENERATEDSTATEMENT"),
+    page_footer_markers=("PAGENO.",),
+    secondary_date_column="value_date",
+    continuation_start="top",
+    ifsc_re=re.compile(r"SBIN0\d{6}"),
+    account_label="accountnumber",
+    merge_statements=True,
+    row_order="auto",
+)
+SBI_LAYOUT_10.validate()

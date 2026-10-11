@@ -11,7 +11,7 @@ from .icici.layout_spec import ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, I
 from .union.layout_spec import UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_3, UNION_LAYOUT_4, UNION_LAYOUT_5
 from .paytm.layout_spec import PAYTM_LAYOUT_1
 from .sbi.layout_spec import (SBI_LAYOUT_1, SBI_LAYOUT_2, SBI_LAYOUT_3, SBI_LAYOUT_4,
-                            SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9)
+                            SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9, SBI_LAYOUT_10)
 from .scb.layout_spec import SCB_LAYOUT_1, SCB_LAYOUT_2
 from ..extraction.registry import OTHER_BANK_MARKERS
 from .indian_bank.layout_spec import INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2, INDIAN_BANK_LAYOUT_3
@@ -36,7 +36,7 @@ from .au_sfb.layout_spec import AU_LAYOUT_1
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
 
-DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, SBI_LAYOUT_3, SBI_LAYOUT_4, SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9, CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_3, CANARA_LAYOUT_4, AXIS_LAYOUT_1, AXIS_LAYOUT_2, AXIS_LAYOUT_3, AXIS_LAYOUT_4, IDFC_LAYOUT_1,
+DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, SBI_LAYOUT_3, SBI_LAYOUT_4, SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9, SBI_LAYOUT_10, CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_3, CANARA_LAYOUT_4, AXIS_LAYOUT_1, AXIS_LAYOUT_2, AXIS_LAYOUT_3, AXIS_LAYOUT_4, IDFC_LAYOUT_1,
                                    # SBI_LAYOUT_2 retired: dead code (0/12,249 corpus files route to it; 2,497 SBI-related files identical without it; L3 handles them)
                                    KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, KOTAK_LAYOUT_4, KOTAK_LAYOUT_5, KOTAK_LAYOUT_6, KOTAK_LAYOUT_7,
                                    # wave7: KOTAK_LAYOUT_8/9 unparked — original park reason was "no bank evidence" in a
