@@ -64,6 +64,20 @@ const LEGACY_WITH_ADVISORY = {
   advisory: { verdict: 'REVIEW', review_codes: ['NO_INDEPENDENT_ANCHOR'], layout_id: 'kotak_v2' },
 }
 
+// Wrong-bank guard shape: legacy rows served, detector flagged a different
+// supported bank at HIGH confidence (Wave11 T1).
+const LEGACY_BANK_MISMATCH = {
+  engine: 'legacy',
+  mode: 'off',
+  layout_id: null,
+  verdict: null,
+  needs_review: true,
+  review_codes: ['BANK_MISMATCH'],
+  anchored: false,
+  detected_bank: { key: 'hdfc', name: 'HDFC Bank', confidence: 'HIGH', source: 'detector' },
+  advisory: null,
+}
+
 const MODE_OFF = {
   engine: 'legacy',
   mode: 'off',
@@ -155,6 +169,7 @@ describe('helpers', () => {
     expect(engineNeedsAttention(asBlock(V2_REVIEW))).toBe(true)
     expect(engineNeedsAttention(asBlock(V2_FAILED_AS_LEGACY))).toBe(true)
     expect(engineNeedsAttention(asBlock(LEGACY_WITH_ADVISORY))).toBe(true)
+    expect(engineNeedsAttention(asBlock(LEGACY_BANK_MISMATCH))).toBe(true)
     expect(engineNeedsAttention(asBlock(MODE_OFF))).toBe(false)
     expect(engineNeedsAttention(null)).toBe(false)
   })
@@ -199,6 +214,7 @@ describe('VerificationBadge', () => {
     ['v2 REVIEW', V2_REVIEW],
     ['v2 FAILED (served as legacy+advisory)', V2_FAILED_AS_LEGACY],
     ['legacy with advisory', LEGACY_WITH_ADVISORY],
+    ['legacy + BANK_MISMATCH', LEGACY_BANK_MISMATCH],
   ])('renders the %s backend block', (_label, raw) => {
     const { container } = render(
       <>
@@ -250,5 +266,20 @@ describe('EngineDetails', () => {
     const mismatch = { ...V2_REVIEW, review_codes: ['BANK_MISMATCH'] }
     render(<EngineDetails engine={asBlock(mismatch)} />)
     expect(screen.getByText(/looks like a HDFC Bank statement/)).toBeInTheDocument()
+  })
+
+  it('shows the prominent BANK_MISMATCH banner on a legacy block, never Verified', () => {
+    render(
+      <>
+        <VerificationBadge engine={asBlock(LEGACY_BANK_MISMATCH)} />
+        <EngineDetails engine={asBlock(LEGACY_BANK_MISMATCH)} />
+      </>
+    )
+    const banner = screen.getByRole('alert')
+    expect(banner).toHaveTextContent(
+      'The statement looks like it is from a different bank than the one you selected.'
+    )
+    expect(banner).toHaveTextContent(/HDFC Bank statement/)
+    expect(screen.queryByText(/Verified/)).not.toBeInTheDocument()
   })
 })

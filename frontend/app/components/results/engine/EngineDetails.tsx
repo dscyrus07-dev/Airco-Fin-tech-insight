@@ -26,11 +26,28 @@ export default function EngineDetails({ engine }: { engine: StatementEngineBlock
           : 'How this was checked'
 
   return (
-    <details
-      className={`mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left ${
-        attention ? 'border-amber-300 bg-amber-50' : 'border-slate-200 bg-slate-50'
-      }`}
-    >
+    <>
+      {mismatch && (
+        <div
+          role="alert"
+          className="mt-3 w-full max-w-full rounded-xl border border-amber-400 bg-amber-100 px-4 py-3 text-left"
+        >
+          <p className="text-[13px] font-semibold text-amber-900">
+            The statement looks like it is from a different bank than the one you selected.
+          </p>
+          {engine.detected_bank && (
+            <p className="mt-1 text-[11px] text-amber-800">
+              This looks like a {engine.detected_bank.name} statement. The report below used the bank you chose —
+              please re-upload with the correct bank if that was a mistake. Downloads are not blocked.
+            </p>
+          )}
+        </div>
+      )}
+      <details
+        className={`mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left ${
+          attention ? 'border-amber-300 bg-amber-50' : 'border-slate-200 bg-slate-50'
+        }`}
+      >
       <summary
         className={`cursor-pointer list-none text-[11px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 ${
           attention ? 'text-amber-900' : 'text-slate-700'
@@ -41,7 +58,8 @@ export default function EngineDetails({ engine }: { engine: StatementEngineBlock
       <div className={`mt-2 space-y-1.5 text-[11px] ${attention ? 'text-amber-900' : 'text-slate-600'}`}>
         {mismatch && engine.detected_bank && (
           <p className="font-medium text-amber-800">
-            This looks like a {engine.detected_bank.name} statement — please check the bank you selected.
+            The independent check identified this file as a {engine.detected_bank.name} statement — please check
+            the bank you selected.
           </p>
         )}
         <ReviewReasons codes={allCodes} />
@@ -64,6 +82,7 @@ export default function EngineDetails({ engine }: { engine: StatementEngineBlock
           </p>
         )}
       </div>
-    </details>
+      </details>
+    </>
   )
 }
