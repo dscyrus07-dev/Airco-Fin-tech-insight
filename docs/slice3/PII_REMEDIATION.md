@@ -7,12 +7,12 @@ No `filter-repo`, no rebase/amend, no branch/tag deletion, no push.
 
 | scope | before | after |
 |---|---|---|
-| `backend/tests/golden/**` tracked files | 54 (50 JSON + 4 python helpers) | 54 (50 JSON renamed, helpers untouched) |
+| `backend/tests/golden/**` tracked files | 54 (50 JSON + 4 python helpers) | 52 (48 unique JSON renamed, helpers untouched) |
 | golden JSON content | raw values | deterministically anonymised |
 | `backend/data/unsupported_formats/queue.json` | 26 entries | `[]` |
 | `.gitignore` | — | + `backend/data/unsupported_formats/` (runtime queue may carry source filenames) |
 
-Every golden JSON renamed to `<bank>_<sha8-of-anonymised-payload>.json`; `sample_name` mirrors the new stem so the snapshot↔sample pairing invariant is preserved. Code references to old filenames: none existed (tests iterate directories), no code changed.
+Every golden JSON renamed to `<bank>_<sha8-of-anonymised-payload>.json`; `sample_name` mirrors the new stem so the snapshot↔sample pairing invariant is preserved. Code references to old filenames: none existed (tests iterate directories), no code changed. Two pairs of originals (`bank_of_baroda`, `kotak`) were byte-equivalent duplicates once sensitive tokens and filename timestamps were normalised — they collapse to one fixture each (50 → 48 unique files, semantically lossless).
 
 ## Golden anonymisation method (per-file deterministic map)
 
@@ -38,7 +38,7 @@ Per top-level folder (all categories summed): `backend` 18,711 · `scripts` 9 ·
 
 Post-change re-scan of `backend/tests/golden/**`: **0 hits in every category.**
 
-## Proof of test-semantic equivalence (50/50 files)
+## Proof of test-semantic equivalence (all 50 original files checked)
 
 - JSON key structure identical — 0 mismatches
 - List/row counts identical — 0 mismatches
