@@ -16,8 +16,10 @@ import {
   Trash2,
   UserCircle2,
 } from 'lucide-react'
-import { BankStatementFileItem, UserDetails, ProcessingResult, ProcessingMode, Step, JobSubmitted, ProfileHistoryResponse, UserUploadHistoryItem, UserReportHistoryItem, StatementTypeSelection } from '@/types'
+import { BankStatementFileItem, UserDetails, ProcessingResult, ProcessingMode, Step, JobSubmitted, ProfileHistoryResponse, UserUploadHistoryItem, UserReportHistoryItem, StatementTypeSelection, StatementEngineBlock } from '@/types'
 import { SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
+import { engineNeedsAttention, parseStatementEngine } from '@/lib/statementEngine'
+import VerificationBadge from './results/engine/VerificationBadge'
 
 type BatchResultItem = {
   id: string
@@ -129,6 +131,7 @@ export default function Dashboard() {
     retentionDaysLeft?: number | null
     retentionExpiresAt?: string | null
     deletedAt?: string | null
+    statement_engine?: StatementEngineBlock | null
   }>>([])
 
   const [generatedReports, setGeneratedReports] = useState<Array<{
@@ -145,7 +148,10 @@ export default function Dashboard() {
     retentionDaysLeft?: number | null
     retentionExpiresAt?: string | null
     deletedAt?: string | null
+    statement_engine?: StatementEngineBlock | null
   }>>([])
+
+  const [needsReviewOnly, setNeedsReviewOnly] = useState(false)
 
   useEffect(() => {
     const savedData = localStorage.getItem('airco-form-data')
@@ -217,6 +223,7 @@ export default function Dashboard() {
           retentionExpiresAt: item.retention_expires_at || null,
           deletedAt: item.deleted_at || null,
           status: normalizeUploadStatus(item.status),
+          statement_engine: item.statement_engine || null,
         }))
       )
       setGeneratedReports(
@@ -233,6 +240,7 @@ export default function Dashboard() {
           retentionDaysLeft: typeof item.retention_days_left === 'number' ? item.retention_days_left : null,
           retentionExpiresAt: item.retention_expires_at || null,
           deletedAt: item.deleted_at || null,
+          statement_engine: item.statement_engine || null,
         }))
       )
     } catch (fetchError) {
@@ -382,7 +390,7 @@ export default function Dashboard() {
     setResult(data)
     setJobId(null)
     setUploadedStatements((prev) =>
-      prev.map((f) => (f.status === 'Processing' ? { ...f, status: 'Processed' } : f))
+      prev.map((f) => (f.status === 'Processing' ? { ...f, status: 'Processed', statement_engine: data.statement_engine || null } : f))
     )
 
     if (data.excel_url && activeBatchFile) {
@@ -397,6 +405,7 @@ export default function Dashboard() {
         date: uploadDate,
         accountType: activeBatchFile.accountType,
         downloadUrl: data.excel_url,
+        statement_engine: data.statement_engine || null,
       }])
       setBatchResults((prev) => [...prev, {
         id: activeBatchFile.id,
@@ -546,6 +555,9 @@ export default function Dashboard() {
       : generatedReports.map((item) => item.id)
   }, [generatedReports, historyBatches, uploadedStatements])
 
+  const itemNeedsReview = (item: unknown) =>
+    engineNeedsAttention(parseStatementEngine((item as { statement_engine?: unknown })?.statement_engine))
+
   const renderHistoryRow = (
     item: UserUploadHistoryItem | UserReportHistoryItem,
     tab: 'uploaded' | 'reports',
@@ -564,6 +576,7 @@ export default function Dashboard() {
       : null
     const title = item.display_name || item.name
     const bankLabel = item.bank_name || 'Unknown'
+    const itemEngine = parseStatementEngine((item as any).statement_engine)
 
     const statementMetadata = (item as any).statement_metadata
 
@@ -624,6 +637,7 @@ export default function Dashboard() {
                     Api
                   </span>
                 )}
+                <VerificationBadge engine={itemEngine} />
               </div>
               <p className="text-xs text-neutral-500">{createdLabel}</p>
             </div>
@@ -918,21 +932,35 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-semibold text-black">Files</h3>
-                    <div className="inline-flex rounded-full bg-neutral-100 p-0.5 text-xs font-medium text-neutral-500">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
-                        className={`rounded-full px-3 py-1 transition ${filesTab === 'uploaded' ? 'bg-white text-black shadow-sm' : ''}`}
+                        onClick={() => setNeedsReviewOnly((v) => !v)}
+                        aria-pressed={needsReviewOnly}
+                        className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                          needsReviewOnly
+                            ? 'border-amber-300 bg-amber-100 text-amber-800'
+                            : 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300'
+                        }`}
                       >
-                        Uploaded Statements
+                        Needs review
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
-                        className={`rounded-full px-3 py-1 transition ${filesTab === 'reports' ? 'bg-white text-black shadow-sm' : ''}`}
-                      >
-                        Generated Reports
-                      </button>
+                      <div className="inline-flex rounded-full bg-neutral-100 p-0.5 text-xs font-medium text-neutral-500">
+                        <button
+                          type="button"
+                          onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
+                          className={`rounded-full px-3 py-1 transition ${filesTab === 'uploaded' ? 'bg-white text-black shadow-sm' : ''}`}
+                        >
+                          Uploaded Statements
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
+                          className={`rounded-full px-3 py-1 transition ${filesTab === 'reports' ? 'bg-white text-black shadow-sm' : ''}`}
+                        >
+                          Generated Reports
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -1039,7 +1067,8 @@ export default function Dashboard() {
                               </summary>
                               <div className="border-t border-neutral-100 p-3 space-y-3">
                                 {(batch.bank_groups || []).map((bankGroup, bankIndex) => {
-                                  const bankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
+                                  const allBankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
+                                  const bankItems = needsReviewOnly ? allBankItems.filter(itemNeedsReview) : allBankItems
                                   return (
                                     <details
                                       key={bankGroup.bank_name}
@@ -1080,7 +1109,7 @@ export default function Dashboard() {
                       </div>
                     ) : filesTab === 'uploaded' ? (
                       uploadedStatements.length > 0 ? (
-                        uploadedStatements.map((item) => (
+                        uploadedStatements.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
                           <div
                             key={item.id}
                             className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
@@ -1105,7 +1134,10 @@ export default function Dashboard() {
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                  <div className="flex min-w-0 items-center gap-2">
+                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                  </div>
                                   <p className="text-xs text-neutral-500">{item.date}</p>
                                 </div>
                                 <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.status === 'Processed' ? 'border-green-200 bg-green-50 text-green-700' : item.status === 'Processing' ? 'border-amber-200 bg-amber-50 text-amber-700' : item.status === 'Failed' ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>
@@ -1168,7 +1200,7 @@ export default function Dashboard() {
                       )
                     ) : (
                       generatedReports.length > 0 ? (
-                        generatedReports.map((item) => (
+                        generatedReports.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
                           <div
                             key={item.id}
                             className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
@@ -1193,7 +1225,10 @@ export default function Dashboard() {
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                  <div className="flex min-w-0 items-center gap-2">
+                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                  </div>
                                   <p className="text-xs text-neutral-500">{item.date}</p>
                                 </div>
                                 <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.retentionStatus === 'Deleted' || item.deletedAt ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>

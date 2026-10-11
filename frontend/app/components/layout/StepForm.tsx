@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { UserDetails, BankName } from '@/types'
 import { validateUserDetails } from '@/lib/validation'
-import { SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
+import { BankOption, SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
+import { listBanks } from '@/lib/statementsApi'
 
 interface StepFormProps {
   onSubmit: (details: UserDetails) => void
@@ -22,8 +23,22 @@ export default function StepForm({ onSubmit, initialDetails }: StepFormProps) {
   )
   const [bankToAdd, setBankToAdd] = useState<BankName | ''>('')
   const [error, setError] = useState<string | null>(null)
+  const [bankOptions, setBankOptions] = useState<BankOption[]>(SUPPORTED_BANK_OPTIONS)
 
-  const availableBanks = useMemo(() => SUPPORTED_BANK_OPTIONS.filter(({ available }) => available), [])
+  useEffect(() => {
+    let cancelled = false
+    listBanks()
+      .then((banks) => {
+        if (cancelled || !banks?.length) return
+        setBankOptions(banks.map((b) => ({ name: b.name as BankName, available: true })))
+      })
+      .catch(() => undefined) // API down or unauthenticated: keep fallback list
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const availableBanks = useMemo(() => bankOptions.filter(({ available }) => available), [bankOptions])
 
   const syncPrimaryBank = (selectedBanks: BankName[]) => {
     const primaryBank = selectedBanks[0] ?? ''

@@ -14,6 +14,7 @@ import {
   unlockDocument,
   JobStatus,
 } from '../../../lib/statementsApi'
+import { FALLBACK_BANK_LIST } from '../../../lib/banks'
 
 const STATE_STYLE: Record<string, string> = {
   DETECTED: 'bg-green-100 text-green-800',
@@ -41,7 +42,9 @@ export default function AnalyzeFlow() {
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    listBanks().then(setBanks).catch(() => undefined)
+    listBanks()
+      .then((list) => setBanks(list?.length ? list : FALLBACK_BANK_LIST))
+      .catch(() => setBanks(FALLBACK_BANK_LIST))
     return () => {
       if (timer.current) clearInterval(timer.current)
     }

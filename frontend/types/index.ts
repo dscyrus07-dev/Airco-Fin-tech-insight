@@ -178,6 +178,7 @@ export interface UserUploadHistoryItem {
   created_at?: string
   upload_object_key?: string
   total_transactions?: number
+  statement_engine?: StatementEngineBlock | null
   retention_expires_at?: string | null
   retention_days_left?: number | null
   retention_status?: string | null
@@ -200,6 +201,7 @@ export interface UserReportHistoryItem {
   api_key_id?: string | null
   created_at?: string
   report_object_key?: string
+  statement_engine?: StatementEngineBlock | null
   retention_expires_at?: string | null
   retention_days_left?: number | null
   retention_status?: string | null
