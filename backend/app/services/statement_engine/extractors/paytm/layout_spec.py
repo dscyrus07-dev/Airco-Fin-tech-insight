@@ -43,3 +43,43 @@ PAYTM_LAYOUT_1 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 PAYTM_LAYOUT_1.validate()
+
+
+# Second Paytm export family: "Transaction Date | Instrument Id | Narration | Debit | Credit | Balance",
+# "Date" wrapped onto the next line; dates dd-Mmm-yyyy; the empty money side prints "-"; narration cells
+# start ~x190 (left of the Narration title) and wrap below the row. No printed summary or period line —
+# the only anchor is a trailing "Effective available balance ..." note, so REVIEW is the ceiling.
+PAYTM_LAYOUT_2 = LayoutSpec(
+    layout_id="paytm_transactiondate_instrumentid_narration_debit_credit_balance",
+    bank_key="paytm",
+    bank_markers=("PAYTMPAYMENTSBANK",),
+    merge_statements=True,
+    bank_name="Paytm Payments Bank",
+    columns={
+        "date": (("transaction", "date"), ("transaction",)),
+        "ref": (("instrument", "id"), ("instrumentid",)),
+        "narration": (("narration",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "ref", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{1,2}-[A-Za-z]{3}-\d{4}$"),
+    date_format="%d-%b-%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    empty_amount_marker="-",
+    period_re=re.compile(r"^NOPERIOD(\d)(\d)$"),
+    period_date_format="%d-%b-%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    end_markers=("EFFECTIVEAVAILABLEBALANCE",),
+    header_repeats=True,
+    header_wraps=True,
+    continuation_start="top",
+    dates_monotonic_expected=False,
+)
+PAYTM_LAYOUT_2.validate()
