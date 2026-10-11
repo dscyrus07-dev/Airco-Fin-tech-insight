@@ -7,9 +7,9 @@ from .idfc.layout_spec import IDFC_LAYOUT_1
 from .kotak.layout_spec import KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, KOTAK_LAYOUT_4, KOTAK_LAYOUT_5, KOTAK_LAYOUT_6, KOTAK_LAYOUT_7, KOTAK_LAYOUT_8, KOTAK_LAYOUT_9
 from .federal.layout_spec import FEDERAL_LAYOUT_1, FEDERAL_LAYOUT_2, FEDERAL_LAYOUT_3
 from .bob.layout_spec import BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3
-from .icici.layout_spec import ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4
+from .icici.layout_spec import ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4, ICICI_LAYOUT_5
 from .union.layout_spec import UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_3, UNION_LAYOUT_4, UNION_LAYOUT_5
-from .paytm.layout_spec import PAYTM_LAYOUT_1
+from .paytm.layout_spec import PAYTM_LAYOUT_1, PAYTM_LAYOUT_2
 from .sbi.layout_spec import (SBI_LAYOUT_1, SBI_LAYOUT_2, SBI_LAYOUT_3, SBI_LAYOUT_4,
                             SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9, SBI_LAYOUT_10)
 from .scb.layout_spec import SCB_LAYOUT_1, SCB_LAYOUT_2
@@ -48,7 +48,14 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # (park reason "0 VERIFIED" predates anchor_full; honesty preserved by REVIEW cap)
                                    BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3,
                                    # ICICI_LAYOUT_3/4 parked: 38%/41% trusted (stale-balance export prints fail chain honestly)
-                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2, UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, UNION_LAYOUT_5, PAYTM_LAYOUT_1, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2,
+                                   ICICI_LAYOUT_1, ICICI_LAYOUT_2,
+                                   # wave10: L5 two-line-header ICICI export ("amountinr withdrawal" merge order) —
+                                   # chains clean on sample, anchorless family so REVIEW is its ceiling
+                                   ICICI_LAYOUT_5,
+                                   UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_4, UNION_LAYOUT_5, PAYTM_LAYOUT_1,
+                                   # wave10: L2 debit/credit export ("Transaction Date|Instrument Id|Narration|Debit|Credit|
+                                   # Balance", dd-Mmm-yyyy, '-' empties) — anchorless, REVIEW ceiling
+                                   PAYTM_LAYOUT_2, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2,
                                    # INDIAN_BANK_LAYOUT_3 parked: 62%/56% trusted on build/hold-out (Mmm-first sub-variant embeds balances inside narration)
                                    KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, IOB_LAYOUT_1, IOB_LAYOUT_2,
                                    # YES_LAYOUT_2 parked: wrapped 'Running|Balance' header routes 24% trusted (5V/16F chain+side) on fresh 97-file re-measure

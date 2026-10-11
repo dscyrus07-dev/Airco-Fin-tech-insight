@@ -150,3 +150,42 @@ ICICI_LAYOUT_4 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 ICICI_LAYOUT_4.validate()
+
+
+# Same column set as L1 ("S No. | Transaction Date | Cheque Number | Transaction Remarks | Withdrawal Amount (INR) |
+# Deposit Amount (INR) | Balance (INR)") but the header prints the second title line left-shifted: "Date" lands under
+# "Transaction" yet "Amount (INR)" sits ~3pt LEFT of "Withdrawal"/"Deposit", outside the wrap cluster, so the merged
+# stream reads "amountinr withdrawal" (L3's own variant reads "withdrawal amountinr"). Dates dd.mm.yyyy. No printed
+# summary and no B/F opening row: anchorless family, best attainable verdict is REVIEW.
+ICICI_LAYOUT_5 = LayoutSpec(
+    layout_id="icici_sno_transactiondate_chequenumber_remarks_amountinrfirst_wrap",
+    bank_key="icici",
+    bank_markers=("ICICIBANK",),
+    merge_statements=True,
+    bank_name="ICICI Bank",
+    columns={
+        "date": (("transaction", "date"), ("transaction",)),
+        "ref": (("chequenumber",), ("cheque", "number")),
+        "narration": (("transactionremarks",), ("transaction", "remarks")),
+        "debit": (("amountinr", "withdrawal"), ("withdrawal", "amountinr"), ("withdrawal",)),
+        "credit": (("amountinr", "deposit"), ("deposit", "amountinr"), ("deposit",)),
+        "balance": (("balance", "inr"), ("balanceinr",), ("balance",)),
+    },
+    text_columns=("date", "ref", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}\.\d{2}\.\d{4}$"),
+    date_format="%d.%m.%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{1,2}$"),
+    period_re=re.compile(r"fortheperiod([A-Za-z]+\d{1,2},\d{4})-([A-Za-z]+\d{1,2},\d{4})"),
+    period_date_format="%B%d,%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    header_wraps=True,
+    continuation_start="top",
+    dates_monotonic_expected=False,
+)
+ICICI_LAYOUT_5.validate()
