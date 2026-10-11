@@ -26,16 +26,19 @@ UNION_LAYOUT_1 = LayoutSpec(
     credit_column="amount_cr",
     single_amount_column="amount",
     balance_column="balance",
-    row_order="reverse",
+    row_order="auto",
     merge_drcr_suffix=True,
-    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
-    date_format="%d/%m/%Y",
-    amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?: ?\((?:Cr|Dr)\))?$"),
+    date_re=re.compile(r"^(?:\d{2}[/\-]\d{2}[/\-]\d{4}|\d{8})$"),
+    date_format="%d/%m/%Y|%d-%m-%Y|%d%m%Y",
+    amount_re=re.compile(r"(?i)^-?[\d,]+(?:\.\d{1,2})?(?: ?\((?:cr|dr)\)|(?:cr|dr))?$"),
     period_re=re.compile(r"StatementPeriod(\d{2}/\d{2}/\d{4})To(\d{2}/\d{2}/\d{4})"),
     period_date_format="%d/%m/%Y",
     summary_marker="",
     summary_label_text="",
     summary_expected=False,
+    # closing_balance_re intentionally absent: this family prints ONLY a closing balance; with no
+    # independent opening or totals, a corrupted/dropped first row shifts the self-derived opening in
+    # lockstep and would stay VERIFIED -> honest REVIEW, not a partial anchor.
     header_repeats=True,
     continuation_start="top",
 )

@@ -34,7 +34,6 @@ class AnchorError(ValueError):
 _BOUNDARY_PAD = 4.0
 _DATE_FALLBACK_LEFT_PAD = 8.0
 _DATE_FALLBACK_RIGHT_PAD = 10.0
-_DATE_DATA_LEFT_PAD = 3.0
 _DATE_DATA_RIGHT_PAD = 3.0
 _TRAILING_COLUMN_GAP = 20.0
 
@@ -61,30 +60,147 @@ def _find_sequence(tokens: Sequence[Tuple[str, float, float]], seq: Tuple[str, .
     return None
 
 
+def _match_spans(line: Sequence[Word], spec: LayoutSpec) -> Dict[str, Tuple[float, float]]:
+    toks = _tokens(line)
+    spans: Dict[str, Tuple[float, float]] = {}
+    for col, alternatives in spec.columns.items():
+        for seq in alternatives:
+            hit = _find_sequence(toks, seq)
+            if hit:
+                spans[col] = hit
+                break
+    return spans
+
+
+def _complete(line: Sequence[Word], spans: Dict[str, Tuple[float, float]], spec: LayoutSpec,
+              center_test: bool = False) -> bool:
+    if len(spans) != len(spec.columns):
+        return False
+    # a header with an extra, unknown column between the known ones is another layout: refuse it
+    lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
+    def covered(w: Word) -> bool:
+        if center_test:
+            # wrapped-header words can protrude past their seq span by font epsilon (the first
+            # title word is wider than the continuation): a word belongs when its centre sits in a span
+            mid = (w.x0 + w.x1) / 2.0
+            return any(a - 0.5 <= mid <= b + 0.5 for a, b in spans.values())
+        return any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values())
+    unknown = [w for w in line if norm_token(w.text) and lo <= w.x0 and w.x1 <= hi and not covered(w)]
+    return not unknown
+
+
+def _merge_header_pair(upper: Sequence[Word], lower: Sequence[Word]) -> List[Word]:
+    """Two visual lines of one wrapped header row as a single matchable stream: words are clustered
+    by x0 (a title and its downward continuation sit at ~the same x, apart by font epsilon), and each
+    cluster emits its upper-line words before the lower line's, preserving title word order."""
+    first = {id(w) for w in upper}
+    words = sorted((*upper, *lower), key=lambda w: w.x0)
+    merged: List[Word] = []
+    cluster: List[Word] = []
+    cluster_x = None
+    for w in words:
+        if cluster_x is None or w.x0 - cluster_x <= 2.5:
+            cluster.append(w)
+            cluster_x = w.x0 if cluster_x is None else cluster_x
+        else:
+            merged.extend(sorted(cluster, key=lambda v: 0 if id(v) in first else 1))
+            cluster = [w]
+            cluster_x = w.x0
+    merged.extend(sorted(cluster, key=lambda v: 0 if id(v) in first else 1))
+    return merged
+
+
 def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[Tuple[int, Dict[str, Tuple[float, float]]]]:
-    """Index of the first line holding every column title, and each title's x-span."""
+    """Index of the header row's last line holding every column title, and each title's x-span.
+
+    When spec.header_wraps is set, a title that wraps onto the next visual line is merged into the
+    candidate line (words re-sorted by x0): the pair is accepted only when the merged view completes
+    the column set with no unknown tokens inside the span. The returned index is the pair's second
+    line, so row scanning starts after both header lines."""
     for idx, line in enumerate(lines):
-        toks = _tokens(line)
-        spans: Dict[str, Tuple[float, float]] = {}
-        for col, alternatives in spec.columns.items():
-            for seq in alternatives:
-                hit = _find_sequence(toks, seq)
-                if hit:
-                    spans[col] = hit
-                    break
-        if len(spans) == len(spec.columns):
-            # a header with an extra, unknown column between the known ones is another layout: refuse it
-            lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
-            unknown = [w for w in line if norm_token(w.text) and lo <= w.x0 and w.x1 <= hi
-                       and not any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values())]
-            if unknown:
-                continue
+        spans = _match_spans(line, spec)
+        if _complete(line, spans, spec):
             return idx, spans
+        if getattr(spec, "header_wraps", False) and idx + 1 < len(lines) and "date" in spans and len(spans) >= 2:
+            merged = _merge_header_pair(line, lines[idx + 1])
+            mspans = _match_spans(merged, spec)
+            if _complete(merged, mspans, spec, center_test=True):
+                return idx + 1, mspans
+    return None
+
+
+def _implicit_row_match(line: Sequence[Word], spec: LayoutSpec) -> Optional[Dict[str, Tuple[float, float]]]:
+    """Spans synthesized when a dated data line fits spec.implicit_header: every declared role in order, except that
+    "narration" (and only narration) may carry no token on the dated line. Money-role cells must be amounts or the
+    spec's empty marker; the first two roles must hold dates."""
+    roles = spec.implicit_header
+    toks = sorted((w for w in line if norm_token(w.text) or w.text.strip() == spec.empty_amount_marker), key=lambda w: w.x0)
+    if len(toks) == len(roles):
+        seq = roles
+    elif len(toks) == len(roles) - 1:
+        seq = tuple(r for r in roles if r != "narration")
+    else:
+        return None
+    if len(toks) != len(seq):
+        return None
+    spans: Dict[str, Tuple[float, float]] = {}
+    for role, w in zip(seq, toks):
+        text = w.text.strip()
+        if role in spec.amount_columns:
+            if not (spec.amount_re.match(text) or text == spec.empty_amount_marker):
+                return None
+        elif role in ("date", spec.secondary_date_column) and not spec.date_re.match(text):
+            return None
+        spans[role] = (w.x0, w.x1)
+    if "date" not in spans:
+        return None
+    if "narration" in roles and "narration" not in spans:
+        i = roles.index("narration")
+        left = spans[roles[i - 1]][1] + _BOUNDARY_PAD
+        right = spans[roles[i + 1]][0] - _BOUNDARY_PAD
+        if right <= left:
+            return None
+        spans["narration"] = (left, right)
+    return spans if len(spans) == len(roles) else None
+
+
+def find_implicit_row(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[Tuple[int, Dict[str, Tuple[float, float]]]]:
+    """First dated line that fits spec.implicit_header, and the spans its own cells define. A real table repeats the
+    shape: require a second conforming dated line below the first so a coincidental summary line cannot anchor."""
+    for idx, line in enumerate(lines):
+        spans = _implicit_row_match(line, spec)
+        if not spans:
+            continue
+        for nxt in lines[idx + 1:]:
+            if _implicit_row_match(nxt, spec):
+                return idx, spans
+        return None
     return None
 
 
 def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Optional[float] = None) -> ColumnAnchors:
     lines = group_lines(page_words)
+    if spec.implicit_header:
+        found_i = find_implicit_row(lines, spec)
+        if not found_i:
+            raise AnchorError("implicit table start not found")
+        idx, spans = found_i
+        row_line = lines[idx]
+        anchor_top = min(w.top for w in row_line)
+        date_sp = spans["date"]
+        text_lefts = {col: spans[col][0] - spec.band_left_pad.get(col, _BOUNDARY_PAD) for col in spec.text_columns[1:]}
+        return ColumnAnchors(
+            layout_id=spec.layout_id,
+            page_width=page_width,
+            header_top=anchor_top - 12.0,          # admits the txn-type line printed just above the dated line
+            header_bottom=max(w.bottom or w.top for w in row_line),
+            spans=spans,
+            date_left=date_sp[0] - spec.date_left_pad,
+            date_right=min(date_sp[1] + _DATE_DATA_RIGHT_PAD, text_lefts.get(spec.text_columns[1], float("inf"))),
+            text_lefts=text_lefts,
+            amount_edges={c: spans[c][1] for c in spec.amount_columns},
+            amount_lefts={c: spans[c][0] for c in spec.amount_columns},
+        )
     found = find_header(lines, spec)
     if not found:
         raise AnchorError("table header not found")
@@ -104,7 +220,7 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
             first_date = min(cands, key=lambda w: abs((w.x0 + w.x1) / 2.0 - header_mid))
             break
     if first_date:
-        date_left = min(first_date.x0, spans["date"][0]) - _DATE_DATA_LEFT_PAD   # date cells may be right-aligned
+        date_left = min(first_date.x0, spans["date"][0]) - spec.date_left_pad    # date cells may be right-aligned
         date_right = min(first_date.x1 + _DATE_DATA_RIGHT_PAD, text_lefts[spec.text_columns[1]])
     else:
         date_left = spans["date"][0] - _DATE_FALLBACK_LEFT_PAD

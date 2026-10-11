@@ -102,7 +102,12 @@ def _region_start(lines: List[List[Word]], page_no: int, anchors: ColumnAnchors,
 def _has_dated_row(lines: List[List[Word]], anchors: ColumnAnchors, spec: LayoutSpec) -> bool:
     """True when a row-start date appears in the date column: used after the summary block, where it means that the
     file carries another statement (merged PDFs), which a single-statement extraction must not silently drop."""
-    return any(classify_word(w, anchors, spec) == "date" for line in lines for w in line)
+    for line in lines:
+        if spec.period_re and spec.period_re.search(squash(line)):
+            continue   # a repeated period header is not a row
+        if any(classify_word(w, anchors, spec) == "date" for w in line):
+            return True
+    return False
 
 
 def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) -> AssembledTable:
@@ -139,8 +144,17 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                         break
                 continue
             start = first_dated
-            if spec.page_break_re is None:
+            if spec.page_break_re is None and not spec.implicit_header:
                 table.warnings.append(f"no_period_marker:page{pno}")
+        if spec.implicit_header:
+            # the row's first printed line is a narration-band txn-type line ABOVE its dated line: pull it into the scan
+            while start > 0:
+                prev_cols = {classify_word(w, anchors, spec) for w in lines[start - 1]}
+                if prev_cols and prev_cols <= {"narration"}:
+                    start -= 1
+                else:
+                    break
+        pending_prefix: List[str] = []
         in_break = False
         for li in range(start, len(lines)):
             line = lines[li]
@@ -201,12 +215,19 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     cols.setdefault(col, []).append(w.text.strip())
             if not cols:
                 continue
+            if spec.implicit_header and set(cols) == {"narration"} and li + 1 < len(lines) \
+                    and any(classify_word(w, anchors, spec) == "date" for w in lines[li + 1]):
+                pending_prefix.append(" ".join(cols["narration"]))
+                continue
             inherit = (spec.undated_rows_inherit_date and "date" not in cols and current is not None and spec.balance_column in cols
                        and any(c in cols for c in (spec.debit_column, spec.credit_column)))
             if "date" in cols or inherit:
                 prev = current
                 current = RawRow(page=pno, top=min(w.top for w in line), date=cols["date"][0] if "date" in cols else prev.date)
                 table.rows.append(current)
+                if pending_prefix:
+                    current.narration_lines.extend(pending_prefix)
+                    pending_prefix = []
                 current.narration_lines.append(" ".join(cols.get("narration", [])))
                 current.ref = "".join(cols.get("ref", []))
                 if spec.secondary_date_column:

@@ -12,6 +12,9 @@ from ...extraction.layout_spec import LayoutSpec
 
 BOM_LAYOUT_1 = LayoutSpec(
     layout_id="bom_srno_date_particulars_chequereferenceno_debit_credit_balance_channel",
+    opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]+\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]+\.\d{2})"),
+    anchor_full=True,
     bank_key="bank_of_maharashtra",
     bank_name="Bank of Maharashtra",
     bank_markers=("BANKOFMAHARASHTRA",),

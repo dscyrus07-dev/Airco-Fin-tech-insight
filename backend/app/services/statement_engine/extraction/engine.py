@@ -197,11 +197,20 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
             if mc:
                 table.printed_closing = mc.group(1)
                 break
+        if not table.printed_closing:
+            for pt in (page1_text,) if len(pages) == 1 else (page1_text, "".join(squash(ln) for ln in group_lines(pages[-1].words))):
+                mc = spec.closing_balance_re.search(pt)
+                if mc:
+                    table.printed_closing = mc.group(1)
+                    break
     if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re or row_opening is not None):
         # printed opening / closing balance lines are still references to verify the derived values against
         opening = closing = debits = credits = None
         try:
             mo = spec.opening_balance_re.search(page1_text) if spec.opening_balance_re else None
+            if mo is None and spec.opening_balance_re and len(pages) > 1:
+                page_last_text = "".join(squash(ln) for ln in group_lines(pages[-1].words))
+                mo = spec.opening_balance_re.search(page_last_text)
             if mo:
                 opening = Decimal(mo.group(1).replace(",", ""))
             elif row_opening is not None:
@@ -213,7 +222,10 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         except ArithmeticError:
             opening = closing = debits = credits = None
         if any(v is not None for v in (opening, closing, debits, credits)):
-            out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits)
+            if spec.anchor_full and not (opening is not None and (closing is not None or debits is not None or credits is not None)):
+                pass  # single-ended anchor: far end of the chain stays self-derived -> treat as no summary (REVIEW cap)
+            else:
+                out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits)
     rows, errors = normalize_rows(table.rows, spec)
     if spec.row_order == "reverse":
         rows.reverse()

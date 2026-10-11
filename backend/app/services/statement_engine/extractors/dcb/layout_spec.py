@@ -38,7 +38,9 @@ DCB_LAYOUT_1 = LayoutSpec(
     left_aligned_amounts=True,
     amount_sign_gap=True,
     continuation_start="top",
-    opening_balance_re=re.compile(r"openingbalance([\d,]+\.\d{2})"),
+    opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]+(?:\.\d{1,2})?)"),
+    closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]+(?:\.\d{1,2})?)"),
+    anchor_full=True,
     opening_row_balance_only=True,
     row_order="auto",
 )

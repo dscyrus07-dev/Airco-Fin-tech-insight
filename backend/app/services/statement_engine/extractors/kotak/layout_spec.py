@@ -120,6 +120,9 @@ KOTAK_LAYOUT_4 = LayoutSpec(
     summary_marker="",
     summary_label_text="",
     summary_expected=False,
+    opening_balance_re=re.compile(r"(?i)OpeningBalance:(-?[\d,]+\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)ClosingBalance:(-?[\d,]+\.\d{2})"),
+    anchor_full=True,
     header_repeats=True,
     continuation_start="top",
     dates_monotonic_expected=False,
@@ -161,6 +164,7 @@ KOTAK_LAYOUT_5 = LayoutSpec(
     summary_expected=False,
     secondary_date_column="value_date",
     header_repeats=True,
+    header_wraps=True,
     continuation_start="top",
     dates_monotonic_expected=False,
 )
@@ -275,6 +279,7 @@ KOTAK_LAYOUT_8 = LayoutSpec(
     summary_expected=False,
     secondary_date_column="value_date",
     header_repeats=True,
+    header_wraps=True,
     continuation_start="top",
     dates_monotonic_expected=False,
 )
@@ -319,3 +324,4 @@ KOTAK_LAYOUT_9 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 KOTAK_LAYOUT_9.validate()
+

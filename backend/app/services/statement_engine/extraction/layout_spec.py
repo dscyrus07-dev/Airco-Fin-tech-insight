@@ -34,6 +34,8 @@ class LayoutSpec:
     summary_fields: Tuple[str, ...] = DEFAULT_SUMMARY_FIELDS   # printed order of the summary numbers
     secondary_date_column: Optional[str] = None  # a text column that holds a date (e.g. value date)
     header_repeats: bool = False               # True when every page repeats the table header
+    header_wraps: bool = False                 # True when a column title may wrap onto the next visual line; the
+                                               # pair is matched as one header (row scan starts after both lines)
     ifsc_re: Optional[Pattern[str]] = None
     account_label: str = ""                    # normalised token that precedes the account number value
     end_markers: Tuple[str, ...] = ()          # extra whitespace-free upper-case markers that end the table (footers)
@@ -78,8 +80,20 @@ class LayoutSpec:
     continuation_start: str = "marker"         # pages >= 2 without header: "marker" (after period line) or "top" (whole page)
     ignore_line_res: Tuple[Pattern[str], ...] = ()     # whitespace-free lines to drop (page numbers, running headers)
     clipped_drcr_suffix: bool = False        # page-edge-clipped balance cells print "…C"/"…D" instead of "…Cr"/"…Dr": a lone C/D suffix on the balance is treated as the clipped marker (chain must still prove the values)
+    date_left_pad: float = 3.0               # extra left pad for the date column when data dates sit left of the
+                                             # first anchored date cell (centred "Date" title over a wide column)
     header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
                                             # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
+    anchor_full: bool = False                # VERIFIED only when BOTH chain ends carry an independent printed figure:
+                                             # opening AND (closing or printed debit/credit totals). A single anchor leaves the
+                                             # far end of the chain self-derived -> first/last-row corruption survives as VERIFIED.
+    implicit_header: Tuple[str, ...] = ()     # headerless table: no column titles print; the first
+                                            # dated line defines the geometry. Lists column roles left-to-right as the
+                                            # dated line prints them; "narration" carries no token on that line (its
+                                            # band is the gap between the flanking roles). Anchors are still measured
+                                            # from the document (the dated line's own cell positions), never hard-coded.
+                                            # A narration-only line immediately above a dated line belongs to that row
+                                            # (the printed txn-type prefix), not to the previous one.
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
@@ -110,3 +124,11 @@ class LayoutSpec:
                 raise ValueError("side_marker_column requires single_amount_column")
             if self.side_marker_column not in self.columns or self.side_marker_column not in self.text_columns:
                 raise ValueError("side_marker_column must be a declared text column")
+        if self.implicit_header:
+            if "narration" not in self.implicit_header or self.implicit_header[0] != "date":
+                raise ValueError("implicit_header must start with 'date' and include 'narration'")
+            for col in self.implicit_header:
+                if col not in self.columns:
+                    raise ValueError(f"implicit_header role {col!r} is not a declared column")
+            if not all(c in self.implicit_header for c in (*self.text_columns, *self.amount_columns)):
+                raise ValueError("implicit_header must cover every text and amount column")
