@@ -9,27 +9,27 @@ Branch `devin/wave5`. One row per bank. States:
   `other_bank:*` / `foreign_bank` / `no_layout` rather than mis-accepting.
 - **INSUFFICIENT-DATA** — too few readable samples to build/validate a layout.
 
-## Onboarded (65 layouts / 33 bank keys — wave 5)
+## Onboarded (75 registered layouts — wave 10)
 
 | Bank | Layouts | Verified (in-scope) | Evidence |
 |------|---------|---------------------|----------|
 | HDFC | 1 | slice3 baseline | region |
-| SBI | 8 | +483 VERIFIED corpus (wave 4) | detector/region |
-| ICICI | 2 | wave 3 (L3/L4 parked post-corpus: 38–41% trusted) | region |
+| SBI | 10 | +483 VERIFIED corpus (wave 4); wave-10 L10 mPassbook implicit-header family +109 VERIFIED (122/209 routed) | detector/region |
+| ICICI | 3 | wave 3 (L3/L4 parked post-corpus: 38–41% trusted); wave-10 L5 two-line-header export 31 REVIEW anchorless + 35 honest FAILED (stale-balance) | region |
 | Axis | 2 | +46 VERIFIED corpus (wave 4) | region |
 | Canara | 4 | +59 VERIFIED corpus (wave 4) | region |
 | Kotak Mahindra | 7 | +173 VERIFIED corpus (wave 4) | region |
 | Bank of Baroda | 3 | slice3 baseline | document |
-| Federal Bank | 1 | wave 3 (L2/L3 parked post-corpus: 0 VERIFIED) | region |
+| Federal Bank | 1 | wave 3 (L2/L3 parked post-corpus: 0 VERIFIED); wave-10: 111 residual = Jupiter export (date-on-subline) + doubled-glyph export — both need new engine modes, documented in WAVE10_RESULTS | region |
 | Indian Bank | 2 | L2 `indianbank_postdate_remitter_*_yearless` 42/45 cluster forced VERIFIED (wave 5); L3 parked (embedded balances) | region |
 | Karnataka Bank | 1 | slice3 baseline | region |
 | IDFC First | 1 | slice3 baseline | region |
-| Paytm Payments Bank | 1 | slice3 baseline | region |
+| Paytm Payments Bank | 2 | slice3 baseline; wave-10 L2 registered but gated — exports never print issuer name, detector UNKNOWN → bank_unconfirmed | region |
 | Union Bank of India | 4 | wave-5 routed 525 VERIFIED (+130 via L5 `union_trandate_tranid_*`); L3 one-decimal parked | region/detector |
 | Standard Chartered | 2 | slice3 baseline | region |
 | DBS | 1 | 38/46 hold-out | region |
 | Citibank | 1 | 23/24 hold-out | region/document |
-| Karur Vysya | 1 | 1/29 hold-out (PARTIAL); wave 5: body text = CID glyph dumps, NO-GO w/o glyph decoder (`KVB_DESIGN_NOTE.md`) | document |
+| Karur Vysya | 1 | 1/29 hold-out (PARTIAL); wave 5: body text = CID glyph dumps, NO-GO w/o glyph decoder (`KVB_DESIGN_NOTE.md`); wave-10 `KVB_FEASIBILITY.md`: empty /ToUnicode + no font cmap — NO-GO confirmed | document |
 | HSBC | 1 | 8/10 hold-out | region |
 | IndusInd | 1 | 34/34 hold-out | region/document |
 | Punjab National Bank | 1 | 23/23 hold-out | detector |
