@@ -891,6 +891,9 @@ class GenericReconciliation:
         if opening is None or closing is None:
             return {"passed": not self.strict_mode, "message": "Insufficient balance data", "opening_balance": opening, "closing_balance": closing}
 
+        # v2-served rows carry Decimal balances; coerce once before arithmetic
+        opening = float(opening)
+        closing = float(closing)
         computed = opening
         for txn in transactions:
             computed += float(txn.get("credit") or 0) - float(txn.get("debit") or 0)
