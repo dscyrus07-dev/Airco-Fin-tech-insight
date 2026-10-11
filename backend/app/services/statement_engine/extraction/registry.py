@@ -142,9 +142,10 @@ class LayoutRegistry:
         own_hit: Dict[str, bool] = {}
         doc_hit: Dict[str, bool] = {}
         for spec in hits:
-            own = any(m in region for m in spec.bank_markers)
-            doc_own = any(m in furniture for m in spec.bank_markers)
-            others = [m for m in known if m not in spec.bank_markers]
+            own_markers = {m for sp in self._specs.values() if sp.bank_key == spec.bank_key for m in sp.bank_markers}
+            own = any(m in region for m in own_markers)
+            doc_own = any(m in furniture for m in own_markers)
+            others = [m for m in known if m not in own_markers]
             foreign = any(m in region for m in others)
             foreign_doc = any(m in furniture for m in others)
             own_hit[spec.layout_id], doc_hit[spec.layout_id] = own, doc_own
