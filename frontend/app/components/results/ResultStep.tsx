@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { ProcessingResult, SheetPreview } from '@/types'
 import CollapsiblePreview from './CollapsiblePreview'
 import DownloadButtons from './DownloadButtons'
-import { CheckCircle2, Eye, FileSpreadsheet, Download, Archive } from 'lucide-react'
+import { CheckCircle2, Eye, FileSpreadsheet, Download, Archive, ShieldCheck, AlertTriangle } from 'lucide-react'
 import SpreadsheetEditor from '../spreadsheet/SpreadsheetEditor'
 import { SpreadsheetProvider } from '../spreadsheet/SpreadsheetContext'
 
@@ -91,6 +91,23 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
   ]
 
   const modeLabel = activeResult.mode === 'hybrid' ? 'Hybrid (System + AI)' : 'Free (System Only)'
+
+  const engine = activeResult.statement_engine || null
+  const REVIEW_LABELS: Record<string, string> = {
+    NO_INDEPENDENT_ANCHOR: 'No printed opening/closing summary to verify against',
+    REFERENCE_MISMATCH: 'Extracted totals differ from the printed summary',
+    CHAIN_BREAK: 'Running-balance chain does not reconcile',
+    SIDE_MISMATCH: 'Debit/credit side mismatch',
+    TOTALS_MISMATCH: 'Computed totals differ from printed totals',
+    DATE_ORDER: 'Transactions out of date order',
+    DATE_OUTLIER: 'Transaction date outside the statement period',
+    OUTSIDE_PERIOD: 'Data outside the statement period',
+    SCHEMA_ERRORS: 'Row schema errors',
+    EXTRACTION_WARNINGS: 'Extraction warnings were raised',
+    BANK_MISMATCH: 'Detected bank differs from the selected bank',
+  }
+  const reviewReasons = (engine?.review_codes || []).map((c) => REVIEW_LABELS[c] || c.replace(/_/g, ' ').toLowerCase())
+  const advisoryReasons = (engine?.advisory?.review_codes || []).map((c) => REVIEW_LABELS[c] || c.replace(/_/g, ' ').toLowerCase())
 
   const toggleSheetExpansion = (index: number) => {
     const newExpanded = new Set(expandedSheets)
@@ -202,6 +219,17 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
           <span className="text-xs font-medium text-neutral-600 bg-neutral-100 border border-neutral-200 px-3 py-1.5 rounded-full">
             {modeLabel}
           </span>
+          {engine && engine.engine === 'v2' && (
+            <span className="text-xs font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Verified engine{engine.anchored ? ' · independently checked' : ''}
+            </span>
+          )}
+          {engine && engine.engine === 'v2' && engine.verdict && engine.verdict !== 'VERIFIED' && (
+            <span className="text-xs font-medium text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
+              Verdict: {engine.verdict}
+            </span>
+          )}
           {activeResult.stats && (
             <>
               <span className="text-xs text-neutral-500 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-full">
@@ -249,6 +277,43 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
           )}
         </div>
       </div>
+
+      {engine && (engine.needs_review || (engine.advisory && engine.advisory.verdict)) && (
+        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-3">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <div className="text-sm">
+              {engine.needs_review ? (
+                <>
+                  <p className="font-medium text-amber-900">
+                    This statement was processed by the verified engine but needs review.
+                  </p>
+                  {reviewReasons.length > 0 && (
+                    <ul className="mt-1 list-disc pl-5 text-amber-800">
+                      {reviewReasons.map((r, i) => <li key={i}>{r}</li>)}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="font-medium text-amber-900">
+                    Processed by the classic engine. The verified engine reviewed this file:{' '}
+                    {engine.advisory?.verdict}.
+                  </p>
+                  {advisoryReasons.length > 0 && (
+                    <ul className="mt-1 list-disc pl-5 text-amber-800">
+                      {advisoryReasons.map((r, i) => <li key={i}>{r}</li>)}
+                    </ul>
+                  )}
+                </>
+              )}
+              <p className="mt-1 text-xs text-amber-700">
+                See the &quot;Statement Check&quot; sheet in the Excel report for details.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {viewMode === 'preview' && (
         <div className="space-y-3">

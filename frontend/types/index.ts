@@ -88,11 +88,40 @@ export interface CostEstimate {
   rule_engine_unclassified: number
 }
 
+export type StatementEngineVerdict = 'VERIFIED' | 'REVIEW' | 'FAILED'
+
+export interface StatementEngineDetectedBank {
+  key: string | null
+  name: string | null
+  confidence: string | null
+  source: 'detector' | 'user' | string
+}
+
+export interface StatementEngineAdvisory {
+  verdict: StatementEngineVerdict | null
+  review_codes: string[]
+  layout_id: string | null
+}
+
+/** Additive contract block (docs/slice3/V2_API_CONTRACT.md §3). */
+export interface StatementEngineBlock {
+  engine: 'legacy' | 'v2' | string
+  mode: 'off' | 'shadow' | 'serve' | string
+  layout_id: string | null
+  verdict: StatementEngineVerdict | null
+  needs_review: boolean
+  review_codes: string[]
+  anchored: boolean
+  detected_bank: StatementEngineDetectedBank | null
+  advisory: StatementEngineAdvisory | null
+}
+
 export interface ProcessingResult {
   status: 'success' | 'error'
   mode: ProcessingMode
   excel_url: string
   pdf_url: string
+  statement_engine?: StatementEngineBlock | null
   statement_profile?: StatementProfile
   financial_profile?: Record<string, unknown>
   // Lite 9-sheet order — Credit Card Payments before Transactions (last)

@@ -22,6 +22,7 @@ import re
 import time
 import uuid
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional
 
 from .data_quality import compute_data_quality
@@ -35,6 +36,7 @@ from .generic_bank import (
     GenericProcessorError,
     GenericReconciliationError,
     GenericStructureError,
+    GenericStructureMetadata,
     GenericValidationError,
 )
 
@@ -101,60 +103,94 @@ class BaseBankProcessor:
         file_path: str,
         user_info: Dict[str, Any],
         output_dir: Optional[str] = None,
+        *,
+        row_source: Any = None,
     ) -> BasePipelineResult:
-        """Execute the 10-step bank statement processing pipeline."""
+        """Execute the 10-step bank statement processing pipeline.
+
+        row_source (engine-hook, default None): when given, steps 1-4
+        (pdf/structure validation, parsing, transaction validation) are skipped
+        and the supplied rows + metadata seed the identical downstream steps
+        (reconcile, classify, recurring, aggregate, integrity, dates, Excel).
+        Used only by the v2 serve path; legacy callers never pass it.
+        """
         pipeline_start = time.monotonic()
         metrics = GenericProcessingMetrics()
         cfg = self.CONFIG
 
         try:
-            # ── STEP 1: PDF Integrity Validation ─────────────────────────────
-            pdf_result = self._time_step(
-                "pdf_validation",
-                lambda: self.pdf_validator.validate(file_path),
-                metrics,
-            )
-
-            # ── STEP 2: Bank Structure Validation ────────────────────────────
-            structure_result = self._time_step(
-                "structure_validation",
-                lambda: self.structure_validator.validate(
-                    pdf_result.text_content, pdf_result.first_page_text
-                ),
-                metrics,
-            )
-
-            # ── STEP 3: Transaction Parsing ───────────────────────────────────
-            parse_result = self._time_step(
-                "parsing",
-                lambda: self.parser.parse(file_path, pdf_result.text_content),
-                metrics,
-            )
-            if parse_result.total_count <= 0:
-                raise GenericParseError(
-                    f"Could not extract transactions from this {cfg.bank_name} PDF.",
-                    error_code="NO_TRANSACTIONS",
+            if row_source is not None:
+                pdf_result = SimpleNamespace(first_page_text=None, text_content="")
+                structure_result = SimpleNamespace(metadata=GenericStructureMetadata(
+                    opening_balance=row_source.opening_balance,
+                    closing_balance=row_source.closing_balance,
+                    dr_count=row_source.dr_count,
+                    cr_count=row_source.cr_count,
+                    statement_from=row_source.statement_from,
+                    statement_to=row_source.statement_to,
+                    account_number=row_source.account_number,
+                    ifsc=row_source.ifsc,
+                    account_holder=None, email=None, mobile=None, pan=None,
+                    address=None, account_type=None, joint_holders=None,
+                    account_open_date=None,
+                ))
+                parse_result = SimpleNamespace(
+                    transactions=[],
+                    opening_balance=row_source.opening_balance,
+                    closing_balance=row_source.closing_balance,
+                    total_credits=row_source.total_credits,
+                    total_debits=row_source.total_debits,
+                )
+                validated = list(row_source.transactions)
+                metrics.transaction_count = len(validated)
+            else:
+                # ── STEP 1: PDF Integrity Validation ─────────────────────────────
+                pdf_result = self._time_step(
+                    "pdf_validation",
+                    lambda: self.pdf_validator.validate(file_path),
+                    metrics,
                 )
 
-            # ── STEP 4: Transaction Validation ───────────────────────────────
-            # Validators have two return shapes:
-            #   a) Tuple[List[dict], XxxValidationResult]  (Canara, Union, IDFC, …)
-            #   b) XxxValidationResult with .validated_transactions  (HDFC, SBI, Kotak, …)
-            _val_raw = self._time_step(
-                "transaction_validation",
-                lambda: self.transaction_validator.validate(
-                    [txn.to_dict() if hasattr(txn, "to_dict") else txn
-                     for txn in parse_result.transactions]
-                ),
-                metrics,
-            )
-            if isinstance(_val_raw, tuple):
-                validated = _val_raw[0]
-            elif hasattr(_val_raw, "validated_transactions"):
-                validated = _val_raw.validated_transactions
-            else:
-                validated = list(_val_raw)
-            metrics.transaction_count = len(validated)
+                # ── STEP 2: Bank Structure Validation ────────────────────────────
+                structure_result = self._time_step(
+                    "structure_validation",
+                    lambda: self.structure_validator.validate(
+                        pdf_result.text_content, pdf_result.first_page_text
+                    ),
+                    metrics,
+                )
+
+                # ── STEP 3: Transaction Parsing ───────────────────────────────────
+                parse_result = self._time_step(
+                    "parsing",
+                    lambda: self.parser.parse(file_path, pdf_result.text_content),
+                    metrics,
+                )
+                if parse_result.total_count <= 0:
+                    raise GenericParseError(
+                        f"Could not extract transactions from this {cfg.bank_name} PDF.",
+                        error_code="NO_TRANSACTIONS",
+                    )
+
+                # ── STEP 4: Transaction Validation ───────────────────────────────
+                # Validators have two return shapes:
+                #   a) Tuple[List[dict], XxxValidationResult]  (Canara, Union, IDFC, …)
+                #   b) XxxValidationResult with .validated_transactions  (HDFC, SBI, Kotak, …)
+                _val_raw = self._time_step(
+                    "transaction_validation",
+                    lambda: self.transaction_validator.validate(
+                        [txn.to_dict() if hasattr(txn, "to_dict") else txn
+                         for txn in parse_result.transactions]
+                    ),
+                    metrics,
+                )
+                if isinstance(_val_raw, tuple):
+                    validated = _val_raw[0]
+                elif hasattr(_val_raw, "validated_transactions"):
+                    validated = _val_raw.validated_transactions
+                else:
+                    validated = list(_val_raw)
+                metrics.transaction_count = len(validated)
 
             # ── STEP 5: Balance Reconciliation ───────────────────────────────
             # Repair debit/credit sides from running balance when parse sides
@@ -400,7 +436,6 @@ class BaseBankProcessor:
             )
             # Normalise: some banks (unknown) return a plain dict; wrap so getattr() works.
             if isinstance(_agg_raw, dict):
-                from types import SimpleNamespace
                 aggregation = SimpleNamespace(**_agg_raw)
             else:
                 aggregation = _agg_raw

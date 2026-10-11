@@ -289,7 +289,7 @@ export default function AnalyzeFlow() {
                         {!d.bank && <option value="">Select bank…</option>}
                         {banks.map((b) => (
                           <option key={b.id} value={b.id}>
-                            {b.name}
+                            {b.name}{b.v2_served ? ' · verified engine' : ''}
                           </option>
                         ))}
                       </select>

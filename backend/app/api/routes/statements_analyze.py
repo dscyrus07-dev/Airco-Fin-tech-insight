@@ -72,13 +72,49 @@ async def analyze_statements(
 
 @router.get("/banks")
 async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
+    """Contract §7: existing fields/order + additive `engines` and `v2_served`.
+
+    v2-only banks (a spec bank with no legacy pipeline processor) are appended
+    only when that bank is actually servable (mode serve + allowlisted), so the
+    response never lists a bank that cannot be processed."""
+    from ...services.statement_engine import serve as _v2serve
+
     reg = default_registry()
-    return {
-        "banks": [
-            {"id": bid, "name": reg.get(bid).display_name if reg.get(bid) else name, "pipeline_name": name}
-            for bid, name in PIPELINE_BANK_NAME.items()
-        ]
-    }
+    try:
+        _mode = _v2serve.v2_mode()
+    except Exception:
+        _mode = "off"
+    _allow = _v2serve.serve_banks()
+    _spec_keys = _v2serve.spec_bank_keys()
+
+    banks = []
+    mapped_spec_keys = set()
+    for bid, name in PIPELINE_BANK_NAME.items():
+        spec_key = _v2serve.spec_key_for(bid)
+        mapped_spec_keys.add(spec_key)
+        engines = ["legacy"] + (["v2"] if spec_key in _spec_keys else [])
+        banks.append({
+            "id": bid,
+            "name": reg.get(bid).display_name if reg.get(bid) else name,
+            "pipeline_name": name,
+            "engines": engines,
+            "v2_served": _mode == "serve" and spec_key in _allow,
+        })
+
+    if _mode == "serve":
+        from ...services.statement_engine.extractors.registry import DEFAULT_REGISTRY as _LREG
+        names_by_key = {s.bank_key: s.bank_name for s in _LREG._specs.values()}
+        for spec_key in sorted(_spec_keys - mapped_spec_keys):
+            if spec_key in _allow:
+                banks.append({
+                    "id": spec_key,
+                    "name": names_by_key.get(spec_key, spec_key),
+                    "pipeline_name": None,
+                    "engines": ["v2"],
+                    "v2_served": True,
+                })
+
+    return {"banks": banks}
 
 
 @router.get("/{analysis_id}")

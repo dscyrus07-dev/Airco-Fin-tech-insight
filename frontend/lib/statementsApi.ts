@@ -53,6 +53,9 @@ export interface AnalysisView {
 export interface BankOption {
   id: string
   name: string
+  pipeline_name?: string | null
+  engines?: string[]
+  v2_served?: boolean
 }
 export interface Decision {
   document_id: string
