@@ -30,7 +30,7 @@ Columns:
 | axis | 857 | 830 | 11 | 16 | 98.1 | 98.7 | 1.9 | 0 | 0 | document 709, detector 144, region 4 | ok | **YES** |
 | idfc | 275 | 258 | 6 | 11 | 97.5 | 96.3 | 4.0 | 0 | n/a | document 265, region 9, detector 1 | ok | **YES\*** |
 | paytm | 142 | 139 | 0 | 3 | 98.6 | 99.3 | 2.1 | 0 | 0 (of 866) | detector 141, document 1 | ok | **YES** (detector-only class — sweep gate met: 0 foreign VERIFIED) |
-| indusind | 85 | 81 | 2 | 2 | 100.0 | 95.3 | 2.4 | 0 | n/a | region 50, document 35 | none | **YES\*** |
+| indusind | 85 | 81 | 2 | 2 | 100.0 | 95.3 | 2.4 | 0 | n/a | region 50, document 35 | none | **BLOCKED** — E3 mutation probe: first-row amount +1 stayed VERIFIED (row 0 unconstrained: pairwise chain has no predecessor, reference check derives from balances only, totals not printed). Rows 1/5 mutations correctly FAILED. Fix belongs to checks layer (NOT-ALLOWED) → owner: Claude |
 | citibank | 61 | 60 | 0 | 1 | 100.0 | 98.4 | 1.6 | 0 | n/a | region 61 | none | **YES\*** |
 | city_union | 37 | 6 | 31 | 0 | 16.2 | 100.0 | 0.0 | 0 | n/a | region 37 | none | **YES\*** (all 6 anchored files VERIFIED; most files land REVIEW — honest product state) |
 | icici | 849 | 480 | 173 | 196 | 74.1 | 76.3 | 23.1 | 0 | 0 | region 703, document 146 | ok | NO — trusted 76.3 < 94, fail 23.1 > 5 |
@@ -62,14 +62,18 @@ Columns:
 
 ```
 STATEMENT_ENGINE_V2_MODE=serve
-STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,indusind,citibank,city_union
+STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
 ```
 
-`*` idfc, indusind, citibank, city_union were not covered by the c5 forced
+**indusind is excluded**: it passed every E1 threshold but failed the E3
+mutation gate — see its row above. Do not allowlist it until the checks-layer
+fix lands and the mutation probe is re-run.
+
+`*` idfc, citibank, city_union were not covered by the c5 forced
 cross-bank sweep — their `xb` is `n/a`, not measured-zero. Eligibility rests on
 0 wrong-bank VERIFIED across the full 14,445-file corpus (the detector never
-contradicted the routed spec on a VERIFIED file). The wave-11 E3 wrong-bank
-probes (foreign file submitted under each bank) are the direct per-bank test.
+contradicted the routed spec on a VERIFIED file) plus the wave-11 E3 wrong-bank
+probes (foreign file submitted under each bank), which all ended FAILED.
 
 Wrong-bank accounting note: the earlier draft counted folder-label mismatches
 and flagged SBI (1), ICICI (45), Kotak (43) etc. All of those are *detector-

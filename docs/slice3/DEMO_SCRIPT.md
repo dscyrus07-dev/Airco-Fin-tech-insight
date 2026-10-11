@@ -1,61 +1,78 @@
-# Demo Script — 15 minutes
+# Demo Script — 15 minutes (Wave 11)
 
-Prep: stack up per `comparison/demo/RUNBOOK.md`, flags `MODE=serve`, `SERVE_BANKS=hdfc`.
+Prep: stack up per `RUNBOOK.md`, flags
+
+```
+STATEMENT_ENGINE_V2_MODE=serve
+STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
+```
+
 Browser: `http://localhost:3000` — sign in with the dev-realm account (see RUNBOOK).
-Candidate statements (user picks which may be shown; sha8 + folder only):
+All flows run on the **Analyze statements** page (`/analyze`).
+
+Candidate statements (sha8 + folder only — no PII):
 
 | sha8 | folder | role in demo |
 |---|---|---|
-| `0000d106` | HDFC Bank | the verified-engine hero |
-| `0034814d` | SBI | legacy, everyday path |
-| `00c09764` | ICICI Bank | legacy |
-| `000df35f` | Axis Bank | largest statement (1,147 rows) |
-| `00196b23` | Bank of Baroda | the deliberate "needs review" moment |
+| `0000d106` | HDFC Bank | VERIFIED hero — v2 engine |
+| `0f28d0b0` | City Union Bank | the deliberate "Needs review" moment |
+| `00ae22c1` | Citibank | previously "not supported" — now works via v2 |
+| `00d70d3a` | IndusInd Bank | the honest unsupported message |
 
 ## 1. Landing + login (1 min)
 
-Home → sign in → dashboard. Say: "The product analyzes statements only after
-detecting the bank and layout — nothing is processed on a guess."
+Home → sign in → Analyze statements. Say: "The product detects the bank and
+layout before anything is processed — nothing runs on a guess."
 
-## 2. HDFC — the verified engine (4 min)
+## 2. HDFC — verified end to end (4 min)
 
-Analyze → upload the HDFC file → click **Analyze**.
-Say: "It detected HDFC Bank with high confidence — look at the evidence chips:
-IFSC in the header, bank domain. This is the 'why' we can show customers."
-Confirm → Process → when it completes, download the Excel and open the
-**Statement Check** sheet: `Engine: v2`, `Verdict: VERIFIED`,
-`Independently verified: yes`. Say: "Verified means the numbers were checked
-independently of the parser — not just extracted."
+Upload the HDFC file → **Analyze** → DETECTED with evidence chips (IFSC in the
+header, bank domain) → Confirm → Process.
+When it completes, download the Excel and open the **Statement Check** sheet:
+`Engine: v2`, `Verdict: VERIFIED`, `Independently verified: yes`. The badge
+reads "Verified · independently checked".
+Say: "Verified means the numbers were checked independently of the parser —
+a tampered amount would fail this check; we tested that on seven banks."
 
-## 3. SBI + ICICI — the everyday path (4 min)
+## 3. Citibank — a bank that used to fail (4 min)
 
-Upload both, analyze, confirm, process. Say: "These run the current production
-engine today — byte-identical to what customers already get. The new engine is
-switched on bank-by-bank, only after proof." Download one Excel; show Summary +
-Transactions sheets.
+Upload the Citibank file → it lands in **REVIEW** ("This looks like a Citibank
+statement. Please confirm to continue.") — the picker already shows
+"Citibank · verified engine". Confirm → Process → VERIFIED.
+Say: "Before this wave this bank had no parser at all — it was refused at the
+gate. The new engine covers it, the evidence gate passed, so it is served.
+Bank by bank, only after proof."
 
-## 4. Axis — scale (2 min)
+## 4. City Union — the deliberate "Needs review" (3 min)
 
-Process the 1,147-row Axis file. Say: "Same flow at a thousand rows — no
-different code path."
+Upload the City Union file → confirm → process → it completes with a
+**Needs review** badge, reason: *"No printed opening/closing summary to
+verify against"* (`NO_INDEPENDENT_ANCHOR`).
+Say: "This is a completed report, not a failure — the engine extracted the rows
+but this statement prints no closing-balance chain to anchor against, so the
+product says so instead of pretending. Review means 'a person should look',
+and the Excel still downloads."
 
-## 5. Bank of Baroda — deliberate "needs review" (3 min)
+## 5. IndusInd — the honest "not supported yet" (2 min)
 
-Upload the BoB file → it lands in **REVIEW** (low-confidence detection).
-Say: "This is the safe path working: when the detector isn't sure, the product
-asks instead of guessing. If you override and process anyway, the bank's own
-validation still refuses a file it can't prove — no silent wrong answers."
+Upload the IndusInd file → "This looks like an IndusInd Bank statement. That
+bank is not supported yet."
+Say: "The engine covers this bank in testing, but one of our safety probes
+found a case its checks don't catch — so it stays off until that's fixed.
+We'd rather show 'not supported' than a number we can't stand behind."
 
 ## 6. Dashboard (1 min)
 
-Show the job list; note the engine badges where data exists.
+Show history: Verified and Needs-review badges persist on past jobs
+(`statement_engine` is stored with each job).
 
 ## What NOT to show
 
-- Other-bank overrides succeeding silently (legacy gap — under review, see report).
+- Bank-of-X-as-bank-Y overrides — the job fails by design; a failure is not a
+  demo moment.
 - Locked/passworded PDFs (out of scope).
-- The ~30 unsupported folders — if asked: "unsupported files are refused
-  cleanly at the document gate; they never reach the parser."
+- Bank of Baroda / Indian Bank / Canara / Union — the legacy parser fails
+  honestly; they are not eligible for v2 serving yet (see `V2_ENABLEMENT.md`).
 
 ## Reset procedure
 
@@ -66,9 +83,10 @@ python comparison/demo/reset_demo.py   # clears the demo user's history
 ## Fallback if a service dies
 
 ```bash
-docker compose -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.local.yml --env-file local.env up -d backend   # or frontend / keycloak
+docker compose -f infra/docker/docker-compose.yml --env-file local.env up -d backend   # or frontend / keycloak
 ```
 
-If Keycloak dies: restart `keycloak` + `keycloak-postgres`, re-login.
-If everything is down: the screenshots under `comparison/demo/private/shots/`
-cover every step of this script.
+If the v2 path misbehaves: flip `STATEMENT_ENGINE_V2_MODE=off` in `local.env`,
+`up -d backend`, and every bank is back to legacy — the HDFC flow then shows
+the normal "everyday" path instead of a verified badge. Last resort: roll back
+to the tagged images — see RUNBOOK "Rollback".
