@@ -1,0 +1,276 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VerificationBadge > renders the legacy with advisory backend block 1`] = `
+<div>
+  <span
+    aria-label="Checked with your bank's usual parser — the independent check raised points to review"
+    class="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600"
+    role="status"
+  >
+    <svg
+      aria-hidden="true"
+      class="shrink-0"
+      focusable="false"
+      height="12"
+      viewBox="0 0 12 12"
+      width="12"
+    >
+      <path
+        d="M6 1.2 11 10H1Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-linejoin="round"
+        stroke-width="1.4"
+      />
+      <path
+        d="M6 4.4v2.8"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="1.4"
+      />
+      <circle
+        cx="6"
+        cy="8.6"
+        fill="currentColor"
+        r=".75"
+      />
+    </svg>
+    Checked with your bank's usual parser — the independent check raised points to review
+  </span>
+  <details
+    class="mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left border-amber-300 bg-amber-50"
+  >
+    <summary
+      class="cursor-pointer list-none text-[11px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 text-amber-900"
+    >
+      The independent check raised points to review
+    </summary>
+    <div
+      class="mt-2 space-y-1.5 text-[11px] text-amber-900"
+    >
+      <ul
+        class="mt-1.5 list-inside list-disc space-y-0.5 break-words text-[11px] text-amber-800"
+      >
+        <li>
+          No printed opening/closing summary to verify against
+        </li>
+      </ul>
+      <p>
+        This file is marked 
+        <span
+          class="font-medium"
+        >
+          needs review
+        </span>
+         — totals are served but should be checked against the PDF. A 
+        <span
+          class="font-medium"
+        >
+          Statement Check
+        </span>
+         sheet is appended to the workbook.
+      </p>
+    </div>
+  </details>
+</div>
+`;
+
+exports[`VerificationBadge > renders the v2 FAILED (served as legacy+advisory) backend block 1`] = `
+<div>
+  <span
+    aria-label="Checked with your bank's usual parser — the independent check could not verify the extraction"
+    class="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600"
+    role="status"
+  >
+    <svg
+      aria-hidden="true"
+      class="shrink-0"
+      focusable="false"
+      height="12"
+      viewBox="0 0 12 12"
+      width="12"
+    >
+      <path
+        d="M6 1.2 11 10H1Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-linejoin="round"
+        stroke-width="1.4"
+      />
+      <path
+        d="M6 4.4v2.8"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="1.4"
+      />
+      <circle
+        cx="6"
+        cy="8.6"
+        fill="currentColor"
+        r=".75"
+      />
+    </svg>
+    Checked with your bank's usual parser — the independent check could not verify the extraction
+  </span>
+  <details
+    class="mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left border-amber-300 bg-amber-50"
+  >
+    <summary
+      class="cursor-pointer list-none text-[11px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 text-amber-900"
+    >
+      The independent check could not verify the extraction
+    </summary>
+    <div
+      class="mt-2 space-y-1.5 text-[11px] text-amber-900"
+    >
+      <ul
+        class="mt-1.5 list-inside list-disc space-y-0.5 break-words text-[11px] text-amber-800"
+      >
+        <li>
+          Running-balance chain does not reconcile
+        </li>
+      </ul>
+      <p>
+        The independent check failed safely; your existing parser results are shown.
+      </p>
+    </div>
+  </details>
+</div>
+`;
+
+exports[`VerificationBadge > renders the v2 REVIEW backend block 1`] = `
+<div>
+  <span
+    aria-label="Needs review"
+    class="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-medium text-amber-800"
+    role="status"
+  >
+    <svg
+      aria-hidden="true"
+      class="shrink-0"
+      focusable="false"
+      height="12"
+      viewBox="0 0 12 12"
+      width="12"
+    >
+      <path
+        d="M6 1.2 11 10H1Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-linejoin="round"
+        stroke-width="1.4"
+      />
+      <path
+        d="M6 4.4v2.8"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="1.4"
+      />
+      <circle
+        cx="6"
+        cy="8.6"
+        fill="currentColor"
+        r=".75"
+      />
+    </svg>
+    Needs review
+  </span>
+  <details
+    class="mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left border-amber-300 bg-amber-50"
+  >
+    <summary
+      class="cursor-pointer list-none text-[11px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 text-amber-900"
+    >
+      The independent check flagged points to review
+    </summary>
+    <div
+      class="mt-2 space-y-1.5 text-[11px] text-amber-900"
+    >
+      <ul
+        class="mt-1.5 list-inside list-disc space-y-0.5 break-words text-[11px] text-amber-800"
+      >
+        <li>
+          No printed opening/closing summary to verify against
+        </li>
+      </ul>
+      <p>
+        This file is marked 
+        <span
+          class="font-medium"
+        >
+          needs review
+        </span>
+         — totals are served but should be checked against the PDF. A 
+        <span
+          class="font-medium"
+        >
+          Statement Check
+        </span>
+         sheet is appended to the workbook.
+      </p>
+      <p
+        class="text-amber-700"
+      >
+        Layout: 
+        <span
+          class="font-mono"
+        >
+          hdfc_v1
+        </span>
+      </p>
+    </div>
+  </details>
+</div>
+`;
+
+exports[`VerificationBadge > renders the v2 VERIFIED backend block 1`] = `
+<div>
+  <span
+    aria-label="Verified · independently checked"
+    class="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-800"
+    role="status"
+  >
+    <svg
+      aria-hidden="true"
+      class="shrink-0"
+      focusable="false"
+      height="12"
+      viewBox="0 0 12 12"
+      width="12"
+    >
+      <path
+        d="M2 6l3 3 5-6"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+    Verified · independently checked
+  </span>
+  <details
+    class="mt-3 w-full max-w-full rounded-xl border px-4 py-3 text-left border-slate-200 bg-slate-50"
+  >
+    <summary
+      class="cursor-pointer list-none text-[11px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 text-slate-700"
+    >
+      How this was checked
+    </summary>
+    <div
+      class="mt-2 space-y-1.5 text-[11px] text-slate-600"
+    >
+      <p
+        class="text-slate-500"
+      >
+        Layout: 
+        <span
+          class="font-mono"
+        >
+          hdfc_v1
+        </span>
+      </p>
+    </div>
+  </details>
+</div>
+`;
