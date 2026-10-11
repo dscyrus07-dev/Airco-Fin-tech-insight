@@ -87,6 +87,13 @@ class LayoutSpec:
     anchor_full: bool = False                # VERIFIED only when BOTH chain ends carry an independent printed figure:
                                              # opening AND (closing or printed debit/credit totals). A single anchor leaves the
                                              # far end of the chain self-derived -> first/last-row corruption survives as VERIFIED.
+    implicit_header: Tuple[str, ...] = ()     # headerless table: no column titles print; the first
+                                            # dated line defines the geometry. Lists column roles left-to-right as the
+                                            # dated line prints them; "narration" carries no token on that line (its
+                                            # band is the gap between the flanking roles). Anchors are still measured
+                                            # from the document (the dated line's own cell positions), never hard-coded.
+                                            # A narration-only line immediately above a dated line belongs to that row
+                                            # (the printed txn-type prefix), not to the previous one.
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
@@ -117,3 +124,11 @@ class LayoutSpec:
                 raise ValueError("side_marker_column requires single_amount_column")
             if self.side_marker_column not in self.columns or self.side_marker_column not in self.text_columns:
                 raise ValueError("side_marker_column must be a declared text column")
+        if self.implicit_header:
+            if "narration" not in self.implicit_header or self.implicit_header[0] != "date":
+                raise ValueError("implicit_header must start with 'date' and include 'narration'")
+            for col in self.implicit_header:
+                if col not in self.columns:
+                    raise ValueError(f"implicit_header role {col!r} is not a declared column")
+            if not all(c in self.implicit_header for c in (*self.text_columns, *self.amount_columns)):
+                raise ValueError("implicit_header must cover every text and amount column")

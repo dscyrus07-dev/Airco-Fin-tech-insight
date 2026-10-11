@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
 
-from .anchors import _find_sequence, _tokens, find_header
+from .anchors import _find_sequence, _tokens, find_header, find_implicit_row
 from .layout_spec import LayoutSpec
 from .rows import Page
 from .words import group_lines
@@ -56,6 +56,11 @@ def _header_region_text(pages: Sequence[Page], spec_hits: Sequence[LayoutSpec]) 
     lines = group_lines(pages[0].words)
     cut = len(lines)
     for spec in spec_hits:
+        if spec.implicit_header:
+            found_i = find_implicit_row(lines, spec)
+            if found_i:
+                cut = min(cut, found_i[0])
+            continue
         found = find_header(lines, spec)
         if found:
             cut = min(cut, found[0])
@@ -112,7 +117,8 @@ class LayoutRegistry:
         hits: List[LayoutSpec] = []
         for spec in candidates:
             for page in pages[:_DETECT_PAGES]:
-                if find_header(group_lines(page.words), spec):
+                lines = group_lines(page.words)
+                if find_implicit_row(lines, spec) if spec.implicit_header else find_header(lines, spec):
                     hits.append(spec)
                     break
         return hits

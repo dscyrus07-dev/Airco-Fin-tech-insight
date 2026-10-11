@@ -33,6 +33,7 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "closing_balance_re": spec.closing_balance_re.pattern if spec.closing_balance_re else None,
         "anchor_full": spec.anchor_full, "date_left_pad": spec.date_left_pad, "header_wraps": spec.header_wraps,
         "ignore_line_res": [r.pattern for r in spec.ignore_line_res],
+        "implicit_header": list(spec.implicit_header),
     }
 
 
@@ -69,6 +70,7 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             closing_balance_re=re.compile(data["closing_balance_re"]) if data.get("closing_balance_re") else None,
             anchor_full=bool(data.get("anchor_full", False)), date_left_pad=float(data.get("date_left_pad", 3.0)), header_wraps=bool(data.get("header_wraps", False)),
             ignore_line_res=tuple(re.compile(x) for x in data.get("ignore_line_res") or ()),
+            implicit_header=tuple(data.get("implicit_header") or ()),
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc
