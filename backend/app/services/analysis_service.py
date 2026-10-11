@@ -50,6 +50,36 @@ PIPELINE_BANK_NAME: Dict[str, str] = {
     "indian_bank": "Indian Bank",
 }
 
+def _v2_servable(bank_id: Optional[str]) -> bool:
+    """True when the statement engine can serve this bank right now
+    (mode=serve and its spec key is allowlisted). Banks with no legacy
+    processor are only "supported" while they are servable."""
+    if not bank_id:
+        return False
+    try:
+        from .statement_engine import serve as _v2serve
+        return _v2serve.v2_mode() == "serve" and _v2serve.spec_key_for(bank_id) in _v2serve.serve_banks()
+    except Exception:
+        return False
+
+
+def _registry_cfg_for(bank_or_spec_id: Optional[str]):
+    """BankConfig for a detector id, or for a v2-only SPEC key
+    (/api/statements/banks emits spec keys for banks with no legacy id)."""
+    reg = default_registry()
+    cfg = reg.get(bank_or_spec_id)
+    if cfg is not None:
+        return cfg
+    try:
+        from .statement_engine import serve as _v2serve
+        for c in reg.banks.values():
+            if _v2serve.spec_key_for(c.id) == bank_or_spec_id:
+                return c
+    except Exception:
+        pass
+    return None
+
+
 # coarse, user-facing state (the engine's finer state is kept as detail_state)
 _COARSE = {
     DocumentState.DETECTED: "DETECTED",
@@ -379,7 +409,9 @@ class AnalysisService:
             if det.bank_id and det.confidence not in (Confidence.UNKNOWN, Confidence.LOW):
                 bank = {
                     "id": det.bank_id, "name": det.bank_name, "confidence": det.confidence.value,
-                    "score": det.score, "supported": bool(det.supported and det.bank_id in PIPELINE_BANK_NAME),
+                    "score": det.score, "supported": bool(
+                        (det.supported and det.bank_id in PIPELINE_BANK_NAME) or _v2_servable(det.bank_id)
+                    ),
                 }
             for e in det.evidence:
                 t, label = _EVIDENCE_TYPE.get(e.kind.value, (e.kind.value, e.kind.value))
@@ -392,11 +424,15 @@ class AnalysisService:
         if det is not None and det.bank_id and bank is None:
             suggestion = {"id": det.bank_id, "name": det.bank_name, "confidence": det.confidence.value}
         needs_password = analysis.state == DocumentState.PASSWORD_REQUIRED
-        requires_confirmation = state in ("REVIEW", "UNKNOWN")
         workflow = "AWAITING_CONFIRMATION" if state in ("DETECTED", "REVIEW", "UNKNOWN") else "BLOCKED"
         if analysis.state == DocumentState.UNSUPPORTED_BANK or (state == "DETECTED" and bank and not bank["supported"]):
-            state = "UNSUPPORTED"
+            # a v2-servable bank is not "unsupported": keep it confirmable
+            if bank and _v2_servable(bank["id"]):
+                state = "REVIEW" if state != "DETECTED" else state
+            else:
+                state = "UNSUPPORTED"
             workflow = "AWAITING_CONFIRMATION"  # the user may still pick a supported bank if the detection is wrong
+        requires_confirmation = state in ("REVIEW", "UNKNOWN")
         return {
             "document_id": doc_id,
             "filename": name,
@@ -510,8 +546,8 @@ class AnalysisService:
             doc["selection"] = {"action": "CONFIRM", "bank_id": bank["id"], "by": actor, "at": _now()}
             doc["events"].append({"event": "USER_CONFIRM", "at": _now(), "by": actor, "bank_id": bank["id"]})
         elif action == "OVERRIDE":
-            cfg = default_registry().get(bank_id) if bank_id else None
-            if not cfg or cfg.id not in PIPELINE_BANK_NAME:
+            cfg = _registry_cfg_for(bank_id) if bank_id else None
+            if not cfg or (cfg.id not in PIPELINE_BANK_NAME and not _v2_servable(cfg.id)):
                 return fail("BANK_NOT_SUPPORTED", "Choose one of the supported banks.")
             det_bank = doc.get("bank") or doc.get("suggestion")
             doc["effective_bank"] = {"id": cfg.id, "name": cfg.display_name}
@@ -565,7 +601,9 @@ class AnalysisService:
         local = await asyncio.to_thread(self.storage.get, doc["storage_key"])
         if not local or not os.path.isfile(local):
             raise RuntimeError("stored file unavailable")
-        bank_name = PIPELINE_BANK_NAME[doc["effective_bank"]["id"]]
+        _eff_id = doc["effective_bank"]["id"]
+        _eff_cfg = _registry_cfg_for(_eff_id)
+        bank_name = PIPELINE_BANK_NAME.get(_eff_id) or (_eff_cfg.display_name if _eff_cfg else _eff_id)
         user_id, email = rec["owner_id"], rec.get("owner_email")
         full_name = (user or {}).get("name") or rec.get("owner_name") or "anonymous"
         output_dir = get_temp_dir()

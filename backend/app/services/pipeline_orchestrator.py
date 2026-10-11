@@ -142,6 +142,14 @@ SUPPORTED_BANK_PROCESSORS = {
     "indian bank": "indian_bank",
     "indianbank": "indian_bank",
     "indian_bank": "indian_bank",
+    # v2-served banks with no legacy processor: display names -> spec keys.
+    # The bank key reaches the v2 serving plan; processor lookup returns None.
+    "indusind": "indusind",
+    "indusind bank": "indusind",
+    "citibank": "citibank",
+    "citi bank": "citibank",
+    "city union": "city_union",
+    "city union bank": "city_union",
     "unknown": "unknown",
     "unknown bank": "unknown",
 }
