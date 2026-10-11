@@ -191,7 +191,7 @@ export default function Dashboard() {
     localStorage.setItem('airco-form-data', JSON.stringify(dataToSave))
   }, [userDetails, mode, apiKey, step])
 
-  const loadProfileHistory = useCallback(async () => {
+  const loadProfileHistory = useCallback(async (isRetried = false) => {
     const token = await getValidSessionAccessToken()
     if (!token) return
 
@@ -244,7 +244,11 @@ export default function Dashboard() {
         }))
       )
     } catch (fetchError) {
-      console.error('Failed to load profile history:', fetchError)
+      if (isRetried || !(fetchError instanceof TypeError)) {
+        console.warn('Failed to load profile history:', fetchError)
+        return
+      }
+      window.setTimeout(() => loadProfileHistory(true), 1000)
     }
   }, [])
 
