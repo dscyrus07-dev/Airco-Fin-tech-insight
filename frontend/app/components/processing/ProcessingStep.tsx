@@ -82,7 +82,6 @@ export default function ProcessingStep({
   const [pollError, setPollError] = useState('')
   const [progress, setProgress] = useState<JobProgress | null>(null)
   const [pendingResult, setPendingResult] = useState<ProcessingResult | null>(null)
-  const [uiPhase, setUiPhase] = useState<UiPhase>('uploading')
   const [successAnimDone, setSuccessAnimDone] = useState(false)
   const [elapsedSec, setElapsedSec] = useState(0)
 
@@ -92,34 +91,15 @@ export default function ProcessingStep({
   const pageCount = hygiene?.page_count ?? 0
   const isLargePdf = pageCount >= 8
 
-  // Reset on new job
-  useEffect(() => {
-    setProgress(null)
-    setPendingResult(null)
-    setPollError('')
-    setSuccessAnimDone(false)
-    setElapsedSec(0)
-    setMessageIndex(0)
-    setScanIndex(0)
-    setUiPhase(jobId ? 'hygiene' : 'uploading')
-  }, [jobId])
-
-  // Phase machine: uploading → hygiene → success (~1s) → processing
-  useEffect(() => {
-    if (!jobId) {
-      setUiPhase('uploading')
-      return
-    }
-    if (!hygieneReady) {
-      setUiPhase('hygiene')
-      return
-    }
-    if (!successAnimDone) {
-      setUiPhase('success')
-      return
-    }
-    setUiPhase('processing')
-  }, [jobId, hygieneReady, successAnimDone])
+  // Phase machine derived from props/state: uploading → hygiene → success (~1s) → processing.
+  // Per-job reset is handled by the parent remounting this component via key={jobId}.
+  const uiPhase: UiPhase = !jobId
+    ? 'uploading'
+    : !hygieneReady
+      ? 'hygiene'
+      : !successAnimDone
+        ? 'success'
+        : 'processing'
 
   // Hold green-tick briefly, then move to PDF processing
   useEffect(() => {

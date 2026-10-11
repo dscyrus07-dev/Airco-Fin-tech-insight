@@ -72,17 +72,42 @@ const getUploadErrorCode = (error: unknown): string | undefined => {
 
 const APP_API_BASE = '/api'
 
+type SavedFormState = {
+  userDetails?: Partial<UserDetails>
+  mode?: ProcessingMode
+  apiKey?: string
+  step?: number
+}
+
+function readSavedFormState(): SavedFormState | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem('airco-form-data')
+    return raw ? (JSON.parse(raw) as SavedFormState) : null
+  } catch (e) {
+    console.error('Failed to load saved form data:', e)
+    return null
+  }
+}
+
 export default function Dashboard() {
   const { user, logout } = useAuth()
-  const [step, setStep] = useState<Step>(1)
+  const [savedForm] = useState<SavedFormState | null>(readSavedFormState)
+  const savedDetails = savedForm?.userDetails || {}
+  const savedStep = savedForm?.step || 1
+  const [step, setStep] = useState<Step>((savedStep === 4 ? 3 : savedStep) as Step)
   const [filesTab, setFilesTab] = useState<'uploaded' | 'reports'>('uploaded')
   const [isProfilePanelOpen, setIsProfilePanelOpen] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set())
   const [userDetails, setUserDetails] = useState<UserDetails>({
-    fullName: '',
-    accountType: '',
-    bankName: '',
-    selectedBanks: [],
+    fullName: savedDetails.fullName || '',
+    accountType: savedDetails.accountType || '',
+    bankName: savedDetails.bankName || '',
+    selectedBanks: Array.isArray(savedDetails.selectedBanks)
+      ? savedDetails.selectedBanks
+      : savedDetails.bankName
+        ? [savedDetails.bankName]
+        : [],
   })
   const [filesByBank, setFilesByBank] = useState<Record<string, BankStatementFileItem[]>>({})
   const [batchId, setBatchId] = useState<string>(createBatchId())
@@ -90,8 +115,8 @@ export default function Dashboard() {
   const [batchResults, setBatchResults] = useState<BatchResultItem[]>([])
   const [currentBatchIndex, setCurrentBatchIndex] = useState(0)
   const [activeBatchFile, setActiveBatchFile] = useState<BankStatementFileItem | null>(null)
-  const [mode, setMode] = useState<ProcessingMode>('free')
-  const [apiKey, setApiKey] = useState('')
+  const [mode, setMode] = useState<ProcessingMode>(savedForm?.mode || 'free')
+  const [apiKey, setApiKey] = useState(savedForm?.apiKey || '')
   const [jobId, setJobId] = useState<string | null>(null)
   const [result, setResult] = useState<ProcessingResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -153,32 +178,8 @@ export default function Dashboard() {
 
   const [needsReviewOnly, setNeedsReviewOnly] = useState(false)
 
-  useEffect(() => {
-    const savedData = localStorage.getItem('airco-form-data')
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData)
-        const restoredDetails = parsed.userDetails || {}
-        setUserDetails({
-          fullName: restoredDetails.fullName || '',
-          accountType: restoredDetails.accountType || '',
-          bankName: restoredDetails.bankName || '',
-          selectedBanks: Array.isArray(restoredDetails.selectedBanks)
-            ? restoredDetails.selectedBanks
-            : restoredDetails.bankName
-              ? [restoredDetails.bankName]
-              : [],
-        })
-        setFilesByBank({})
-        setMode(parsed.mode || 'free')
-        setApiKey(parsed.apiKey || '')
-        const restoredStep = parsed.step || 1
-        setStep(restoredStep === 4 ? 3 : restoredStep)
-      } catch (e) {
-        console.error('Failed to load saved form data:', e)
-      }
-    }
-  }, [])
+  // Form state restores from localStorage via lazy useState initializers
+  // (readSavedFormState above) — no mount effect needed.
 
   useEffect(() => {
     const dataToSave = {
@@ -191,7 +192,8 @@ export default function Dashboard() {
     localStorage.setItem('airco-form-data', JSON.stringify(dataToSave))
   }, [userDetails, mode, apiKey, step])
 
-  const loadProfileHistory = useCallback(async (isRetried = false) => {
+  // Named function expression so the retry path can safely reference itself.
+  const loadProfileHistory = useCallback(async function loadProfileHistory(isRetried = false) {
     const token = await getValidSessionAccessToken()
     if (!token) return
 
@@ -248,7 +250,7 @@ export default function Dashboard() {
         console.warn('Failed to load profile history:', fetchError)
         return
       }
-      window.setTimeout(() => loadProfileHistory(true), 1000)
+      window.setTimeout(() => void loadProfileHistory(true), 1000)
     }
   }, [])
 
@@ -522,11 +524,11 @@ export default function Dashboard() {
     }
   }, [isProfilePanelOpen])
 
-  useEffect(() => {
-    if (step === 4 && !jobId && !isProcessing) {
-      setStep(3)
-    }
-  }, [step, jobId, isProcessing])
+  // Render-time correction (React-documented "adjusting state" pattern):
+  // step 4 requires an in-flight job; converge by stepping back to 3.
+  if (step === 4 && !jobId && !isProcessing) {
+    setStep(3)
+  }
 
   const stepLabels = ['Details', 'Upload', 'Mode', 'Processing', 'Report']
   const effectiveUser = historyUser || user
@@ -788,6 +790,7 @@ export default function Dashboard() {
                     </div>
                   )}
                   <ProcessingStep
+                    key={jobId ?? 'no-job'}
                     jobId={jobId}
                     mode={mode}
                     fileName={activeBatchFile?.file?.name || null}

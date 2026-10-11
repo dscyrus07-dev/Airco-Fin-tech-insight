@@ -1,14 +1,12 @@
 import { ProcessingResult, ProcessingMode, StatementTypeSelection, UserDetails } from '@/types'
+import { getValidSessionAccessToken } from './sessionToken'
 
 const API_URL = '/api'
 
 // Helper function to get auth token
 async function getAuthToken(): Promise<string | null> {
   try {
-    // Get token from Keycloak context
-    const { useAuth } = await import('../contexts/AuthContext')
-    const auth = useAuth()
-    return await auth.getAccessToken()
+    return await getValidSessionAccessToken()
   } catch (error) {
     console.error('Failed to get auth token:', error)
     return null

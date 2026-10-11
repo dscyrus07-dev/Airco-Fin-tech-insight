@@ -37,24 +37,22 @@ const PLACEHOLDER_SHEETS: SheetPreview[] = [
 export default function ResultStep({ result, batchResults = [] }: ResultStepProps) {
   const [viewMode, setViewMode] = useState<'preview' | 'review'>('preview')
   const [expandedSheets, setExpandedSheets] = useState<Set<number>>(new Set())
-  const [isDesktop, setIsDesktop] = useState(false)
-  const [selectedBatchResultId, setSelectedBatchResultId] = useState<string>(batchResults[0]?.id || 'current')
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 1024
+  )
+  const [pickedBatchResultId, setPickedBatchResultId] = useState<string | null>(null)
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 1024)
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024)
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  useEffect(() => {
-    if (batchResults.length === 0) return
-
-    setSelectedBatchResultId((current) => {
-      const hasCurrent = batchResults.some((item) => item.id === current)
-      return hasCurrent ? current : batchResults[0].id
-    })
-  }, [batchResults])
+  // Derived selection: the picked id if still present, else the first result.
+  const selectedBatchResultId =
+    pickedBatchResultId && batchResults.some((item) => item.id === pickedBatchResultId)
+      ? pickedBatchResultId
+      : batchResults[0]?.id || 'current'
 
   const activeResult = batchResults.find((item) => item.id === selectedBatchResultId)?.result || result
   const batchOverview = batchResults.length > 1 ? {
@@ -169,7 +167,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
                 {group.items.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setSelectedBatchResultId(item.id)}
+                    onClick={() => setPickedBatchResultId(item.id)}
                     className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left transition ${selectedBatchResultId === item.id
                       ? 'bg-black text-white'
                       : 'bg-neutral-50 text-black hover:bg-neutral-100'
@@ -199,7 +197,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
           </label>
           <select
             value={selectedBatchResultId}
-            onChange={(e) => setSelectedBatchResultId(e.target.value)}
+            onChange={(e) => setPickedBatchResultId(e.target.value)}
             className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
           >
             {batchResults.map((item) => (
@@ -327,7 +325,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
           </div>
           {batchResults.some(r => r.result.status === 'error') && (
             <p className="text-xs text-amber-600 mt-2">
-              Note: {batchResults.filter(r => r.result.status === 'error').length} file(s) failed and won't be downloaded.
+              Note: {batchResults.filter(r => r.result.status === 'error').length} file(s) failed and won&apos;t be downloaded.
             </p>
           )}
         </div>
