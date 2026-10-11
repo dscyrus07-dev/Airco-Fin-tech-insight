@@ -24,7 +24,7 @@ consumer) call it, so every entry behaves identically.
 `route_for_serve()` reads pages once, calls `detect_spec_bank(pages)` for the
 detector outcome, then `route_pages(pages, DEFAULT_REGISTRY, spec_key)` — the
 same production router, detector evidence and gates as shadow. Hard timeout via
-a single-worker pool (env `STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S`, default 45s).
+a single-worker pool (env `STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S`, default 30s).
 Any read/route error or timeout degrades to "v2 unavailable" → legacy unchanged.
 
 Pipeline `bank_key` → spec key via `DETECTOR_TO_SPEC_BANK` (bob/union/etc.).
