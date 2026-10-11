@@ -425,10 +425,13 @@ class AnalysisService:
             suggestion = {"id": det.bank_id, "name": det.bank_name, "confidence": det.confidence.value}
         needs_password = analysis.state == DocumentState.PASSWORD_REQUIRED
         workflow = "AWAITING_CONFIRMATION" if state in ("DETECTED", "REVIEW", "UNKNOWN") else "BLOCKED"
+        message = analysis.message
         if analysis.state == DocumentState.UNSUPPORTED_BANK or (state == "DETECTED" and bank and not bank["supported"]):
             # a v2-servable bank is not "unsupported": keep it confirmable
             if bank and _v2_servable(bank["id"]):
-                state = "REVIEW" if state != "DETECTED" else state
+                if state != "DETECTED":
+                    state = "REVIEW"
+                message = f"This looks like a {bank['name']} statement. Please confirm to continue."
             else:
                 state = "UNSUPPORTED"
             workflow = "AWAITING_CONFIRMATION"  # the user may still pick a supported bank if the detection is wrong
@@ -440,7 +443,7 @@ class AnalysisService:
             "capability": analysis.capability.to_dict(),
             "state": state,
             "detail_state": analysis.state.value,
-            "message": analysis.message,
+            "message": message,
             "requires_password": needs_password,
             "requires_confirmation": requires_confirmation,
             "bank": bank,
