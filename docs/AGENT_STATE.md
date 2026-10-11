@@ -29,3 +29,5 @@ NEXT CLAUDE ACTION (ranked):
 2. D4 issuer-validation false negatives: BoB 00196b23 + Indian Bank 00b7c2e3 (v2 VERIFIED, legacy rejects).
 3. D5 legacy parser gaps: Canara 01739d7a, Union 05794921.
 4. PII history purge decision — still blocks any push.
+
+[W11] B START 2026-10-12 02:13 head 5445f90
