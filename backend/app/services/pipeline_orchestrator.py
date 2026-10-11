@@ -151,6 +151,68 @@ SUPPORTED_BANK_PROCESSORS = {
 # Input Validation
 # ---------------------------------------------------------------------------
 
+# legacy wrong-bank guard: cheap detector re-check after a legacy success.
+# env-gated; "0" disables completely (no behaviour change at all).
+_MISMATCH_GUARD_ENV = "STATEMENT_ENGINE_MISMATCH_GUARD"
+
+
+def _mismatch_guard_enabled() -> bool:
+    return os.getenv(_MISMATCH_GUARD_ENV, "1").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _mismatch_detect(file_path: str):
+    """Cheap detector probe: first-3-page text only, no extraction. Returns
+    the DetectionResult or None on any failure."""
+    try:
+        import pdfplumber
+        from app.services.statement_engine import detect_bank
+        texts = []
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages[:3]:
+                texts.append(page.extract_text() or "")
+        return detect_bank(texts)
+    except Exception as exc:
+        logger.warning("mismatch guard skipped (%s)", type(exc).__name__)
+        return None
+
+
+def _apply_mismatch_flag(det, bank_key: str, v2_block: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """If det is HIGH/VERY_HIGH confidence for a *different* supported bank,
+    return the block flagged needs_review + BANK_MISMATCH; else the block
+    unchanged. Pure — never raises, never blocks, never switches banks."""
+    if det is None:
+        return v2_block
+    try:
+        from app.services.statement_engine import Confidence
+        confident = det.confidence in (Confidence.HIGH, Confidence.VERY_HIGH)
+    except Exception:
+        confident = False
+    if not (confident and det.supported and det.processor_key and det.processor_key != bank_key):
+        return v2_block
+    block = dict(v2_block or {})
+    codes = list(block.get("review_codes") or [])
+    if "BANK_MISMATCH" not in codes:
+        codes.append("BANK_MISMATCH")
+    block["needs_review"] = True
+    block["review_codes"] = codes
+    block["detected_bank"] = {
+        "key": det.bank_id, "name": det.bank_name,
+        "confidence": det.confidence.name, "source": "detector",
+    }
+    logger.warning(
+        "mismatch guard: file processed as %s but detector is %s for %s",
+        bank_key, det.confidence.name, det.bank_id,
+    )
+    return block
+
+
+def _maybe_flag_bank_mismatch(file_path: str, bank_key: str, v2_block: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Flag-gated wrapper around the mismatch detector + flagger."""
+    if not _mismatch_guard_enabled():
+        return v2_block
+    return _apply_mismatch_flag(_mismatch_detect(file_path), bank_key, v2_block)
+
+
 def _validate_input(
     file_path: str,
     user_info: dict,
@@ -522,6 +584,11 @@ def process_statement(
     response["performance"]["total_pipeline_ms"] = total_time_ms
     response["bank_key"] = bank_key
     response["mode"] = mode
+
+    # wrong-bank guard on the successful result: flag BANK_MISMATCH when the
+    # detector is HIGH-confidence for a different supported bank (flag-gated).
+    if getattr(result, "status", "") == "success":
+        v2_block = _maybe_flag_bank_mismatch(file_path, bank_key, v2_block)
 
     # v2 serving: attach the additive block, audit the decision, and append the
     # Statement Check sheet when the block calls for it (never at mode off).
