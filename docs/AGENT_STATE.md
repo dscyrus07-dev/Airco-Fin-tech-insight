@@ -125,3 +125,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK dhanlaxmi SHADOW_ONLY 89274a7
 [OB] DONE db53415 - 30 banks: 0 READY / 22 SHADOW_ONLY / 2 REVIEW_ONLY / 6 NOT_POSSIBLE; regression 0-diff 400-file compare; suite 639p/8f (all pre-existing); SERVE_BANKS unchanged
 [OW] START e63bcdb - wiring onboarded banks into backend, UI, docker (base devin/onboard-all @ e63bcdb)
+[OW] BACKEND-WIRED 9ecd2e6 - 22 v2-only banks, apgv blocked
