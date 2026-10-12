@@ -1,0 +1,1399 @@
+{
+"entries": [
+"app/main.py",
+"app/api/routes/audit_admin.py",
+"app/api/routes/auth.py",
+"app/api/routes/download.py",
+"app/api/routes/feedback.py",
+"app/api/routes/jobs.py",
+"app/api/routes/profile.py",
+"app/api/routes/statements_analyze.py",
+"app/api/routes/sync.py",
+"app/api/routes/upload.py",
+"app/api/routes/upload_async.py",
+"app/api/routes/v1_api_keys.py",
+"app/api/routes/v1_statements.py",
+"tests/test_api_key_service.py",
+"tests/test_async_upload.py",
+"tests/test_auth_integration.py",
+"tests/test_bank_name_routing.py",
+"tests/test_history_statement_engine.py",
+"tests/test_mismatch_guard.py",
+"tests/test_persistence_service.py",
+"tests/test_pipeline_orchestrator.py",
+"tests/test_serve_api.py",
+"tests/test_statements_analyze_api.py",
+"tests/test_v2_only_banks.py",
+"tests/test_workflow_fields.py",
+"tests/banks/test_axis_parser.py",
+"tests/banks/test_canara_parser.py",
+"tests/banks/test_finbit_analytics.py",
+"tests/banks/test_icici_parser.py",
+"tests/banks/test_lite_excel_export.py",
+"tests/golden/test_regression.py",
+"tests/migration/test_comparator.py",
+"tests/migration/test_old_result.py",
+"tests/mypaisaa/test_api_client.py",
+"tests/mypaisaa/test_downloader.py",
+"tests/mypaisaa/test_input_loader.py",
+"tests/mypaisaa/test_parser.py",
+"tests/mypaisaa/test_pipeline.py",
+"tests/mypaisaa/test_report.py",
+"tests/pipeline/test_json_rule_engine.py",
+"tests/pipeline/test_lite_excel_export.py",
+"tests/pipeline/test_models.py",
+"tests/pipeline/test_shared_reconciliation.py",
+"tests/statement_engine/test_analysis_service.py",
+"tests/statement_engine/test_capability_and_states.py",
+"tests/statement_engine/test_detector.py",
+"tests/statement_engine/test_layouts_hdfc.py",
+"tests/statement_engine/test_real_pdfs.py",
+"tests/statement_engine/test_serve.py",
+"tests/statement_engine/test_shadow_wiring.py",
+"tests/statement_engine/test_universal.py",
+"tests/statement_engine/extraction/test_bank_evidence_narration.py",
+"tests/statement_engine/extraction/test_completeness_guard.py",
+"tests/statement_engine/extraction/test_generic_engine.py",
+"tests/statement_engine/extraction/test_registry_store_and_router.py",
+"tests/statement_engine/extraction/test_shadow_readiness_fixes.py",
+"tests/statement_engine/extraction/test_spec_codec.py",
+"tests/statement_engine/extractors/test_hdfc_v2_synthetic.py",
+"tests/verification/test_contract.py",
+"tests/verification/test_engine.py"
+],
+"reachable": [
+"app/api/routes/audit_admin.py",
+"app/api/routes/auth.py",
+"app/api/routes/download.py",
+"app/api/routes/feedback.py",
+"app/api/routes/jobs.py",
+"app/api/routes/profile.py",
+"app/api/routes/statements_analyze.py",
+"app/api/routes/sync.py",
+"app/api/routes/upload.py",
+"app/api/routes/upload_async.py",
+"app/api/routes/v1_api_keys.py",
+"app/api/routes/v1_statements.py",
+"app/core/config.py",
+"app/database/__init__.py",
+"app/database/audit_models.py",
+"app/database/models.py",
+"app/database/session.py",
+"app/dependencies/auth.py",
+"app/main.py",
+"app/middleware/audit_context.py",
+"app/middleware/auth_middleware.py",
+"app/middleware/correlation.py",
+"app/middleware/request_logger.py",
+"app/models/job.py",
+"app/services/__init__.py",
+"app/services/analysis_service.py",
+"app/services/api_key_service.py",
+"app/services/audit/__init__.py",
+"app/services/audit/audit_context.py",
+"app/services/audit/audit_service.py",
+"app/services/auth_client.py",
+"app/services/banks/_shared/base_parser.py",
+"app/services/banks/_shared/base_processor.py",
+"app/services/banks/_shared/category_registry.py",
+"app/services/banks/_shared/data_quality.py",
+"app/services/banks/_shared/date_normalizer.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/finbit_analytics.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/rich_metadata.py",
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/axis/parser.py",
+"app/services/banks/axis/reconciliation.py",
+"app/services/banks/bank_of_baroda/parser.py",
+"app/services/banks/bank_of_india/parser.py",
+"app/services/banks/bank_of_india/structure_validator.py",
+"app/services/banks/canara/aggregation_engine.py",
+"app/services/banks/canara/ai_fallback.py",
+"app/services/banks/canara/parser.py",
+"app/services/banks/canara/processor.py",
+"app/services/banks/canara/reconciliation.py",
+"app/services/banks/canara/recurring_engine.py",
+"app/services/banks/canara/rule_engine.py",
+"app/services/banks/canara/structure_validator.py",
+"app/services/banks/canara/transaction_validator.py",
+"app/services/banks/hdfc/parser.py",
+"app/services/banks/hdfc/reconciliation.py",
+"app/services/banks/icici/aggregation_engine.py",
+"app/services/banks/icici/ai_fallback.py",
+"app/services/banks/icici/parser.py",
+"app/services/banks/icici/processor.py",
+"app/services/banks/icici/reconciliation.py",
+"app/services/banks/icici/recurring_engine.py",
+"app/services/banks/icici/rule_engine.py",
+"app/services/banks/icici/structure_validator.py",
+"app/services/banks/icici/transaction_validator.py",
+"app/services/banks/idfc/parser.py",
+"app/services/banks/karnataka/parser.py",
+"app/services/banks/kotak/parser.py",
+"app/services/banks/paytm/parser.py",
+"app/services/banks/sbi/parser.py",
+"app/services/banks/union/parser.py",
+"app/services/banks/unknown/parser.py",
+"app/services/core/data_integrity_guard.py",
+"app/services/core/pdf_integrity_validator.py",
+"app/services/event_consumer.py",
+"app/services/event_publisher.py",
+"app/services/file_history_service.py",
+"app/services/frontend_result_builder.py",
+"app/services/intelligence/__init__.py",
+"app/services/intelligence/claude_intelligence.py",
+"app/services/intelligence/groq_intelligence.py",
+"app/services/intelligence/learning_store.py",
+"app/services/job_progress.py",
+"app/services/job_store.py",
+"app/services/jwt_verifier.py",
+"app/services/message_queue.py",
+"app/services/metadata_extractor.py",
+"app/services/migration/__init__.py",
+"app/services/migration/comparator.py",
+"app/services/migration/contract.py",
+"app/services/migration/old_result.py",
+"app/services/monitoring/__init__.py",
+"app/services/monitoring/health_monitor.py",
+"app/services/pdf_processor.py",
+"app/services/persistence_service.py",
+"app/services/pipeline/__init__.py",
+"app/services/pipeline/aggregation/engine.py",
+"app/services/pipeline/classification/rule_engine.py",
+"app/services/pipeline/models.py",
+"app/services/pipeline/normalize.py",
+"app/services/pipeline/reconciliation/__init__.py",
+"app/services/pipeline/reconciliation/engine.py",
+"app/services/pipeline/recurring/engine.py",
+"app/services/pipeline/reporting/__init__.py",
+"app/services/pipeline/reporting/lite_excel_generator.py",
+"app/services/pipeline/reporting/lite_metrics.py",
+"app/services/pipeline_orchestrator.py",
+"app/services/redis_job_store.py",
+"app/services/retention_service.py",
+"app/services/statement_engine/__init__.py",
+"app/services/statement_engine/analyzer.py",
+"app/services/statement_engine/capability.py",
+"app/services/statement_engine/contracts.py",
+"app/services/statement_engine/detector.py",
+"app/services/statement_engine/extraction/__init__.py",
+"app/services/statement_engine/extraction/anchors.py",
+"app/services/statement_engine/extraction/checks.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extraction/pdf_extractor.py",
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/extraction/registry_store.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction/spec_codec.py",
+"app/services/statement_engine/extraction/summary.py",
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extractors/apgv/layout_spec.py",
+"app/services/statement_engine/extractors/au_sfb/layout_spec.py",
+"app/services/statement_engine/extractors/axis/layout_spec.py",
+"app/services/statement_engine/extractors/bandhan/layout_spec.py",
+"app/services/statement_engine/extractors/bob/layout_spec.py",
+"app/services/statement_engine/extractors/bom/layout_spec.py",
+"app/services/statement_engine/extractors/canara/layout_spec.py",
+"app/services/statement_engine/extractors/central_bank/layout_spec.py",
+"app/services/statement_engine/extractors/citibank/layout_spec.py",
+"app/services/statement_engine/extractors/city_union/layout_spec.py",
+"app/services/statement_engine/extractors/dbs/layout_spec.py",
+"app/services/statement_engine/extractors/dcb/layout_spec.py",
+"app/services/statement_engine/extractors/equitas/layout_spec.py",
+"app/services/statement_engine/extractors/federal/layout_spec.py",
+"app/services/statement_engine/extractors/hdfc/anchors.py",
+"app/services/statement_engine/extractors/hdfc/engine.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py",
+"app/services/statement_engine/extractors/hdfc/normalize.py",
+"app/services/statement_engine/extractors/hdfc/rows.py",
+"app/services/statement_engine/extractors/hdfc/summary.py",
+"app/services/statement_engine/extractors/hdfc/words.py",
+"app/services/statement_engine/extractors/hsbc/layout_spec.py",
+"app/services/statement_engine/extractors/icici/layout_spec.py",
+"app/services/statement_engine/extractors/idbi/layout_spec.py",
+"app/services/statement_engine/extractors/idfc/layout_spec.py",
+"app/services/statement_engine/extractors/indian_bank/layout_spec.py",
+"app/services/statement_engine/extractors/indusind/layout_spec.py",
+"app/services/statement_engine/extractors/iob/layout_spec.py",
+"app/services/statement_engine/extractors/karnataka/layout_spec.py",
+"app/services/statement_engine/extractors/kotak/layout_spec.py",
+"app/services/statement_engine/extractors/kvb/layout_spec.py",
+"app/services/statement_engine/extractors/paytm/layout_spec.py",
+"app/services/statement_engine/extractors/pnb/layout_spec.py",
+"app/services/statement_engine/extractors/registry.py",
+"app/services/statement_engine/extractors/sbi/layout_spec.py",
+"app/services/statement_engine/extractors/scb/layout_spec.py",
+"app/services/statement_engine/extractors/south_indian/layout_spec.py",
+"app/services/statement_engine/extractors/ujjivan/layout_spec.py",
+"app/services/statement_engine/extractors/union/layout_spec.py",
+"app/services/statement_engine/extractors/yes/layout_spec.py",
+"app/services/statement_engine/layouts.py",
+"app/services/statement_engine/registry.py",
+"app/services/statement_engine/serve.py",
+"app/services/statement_engine/shadow.py",
+"app/services/statement_engine/universal/__init__.py",
+"app/services/statement_engine/universal/isolated.py",
+"app/services/statement_engine/universal/lexicon.py",
+"app/services/statement_engine/universal/reader.py",
+"app/services/statement_engine/universal/serve.py",
+"app/services/statement_engine/v2_router.py",
+"app/services/task_processor.py",
+"app/services/verification/__init__.py",
+"app/services/verification/engine.py",
+"app/services/verification/models.py",
+"app/utils/correlation.py",
+"app/utils/file_handler.py",
+"app/utils/logging.py",
+"tests/banks/test_axis_parser.py",
+"tests/banks/test_canara_parser.py",
+"tests/banks/test_finbit_analytics.py",
+"tests/banks/test_icici_parser.py",
+"tests/banks/test_lite_excel_export.py",
+"tests/golden/test_regression.py",
+"tests/migration/test_comparator.py",
+"tests/migration/test_old_result.py",
+"tests/mypaisaa/test_api_client.py",
+"tests/mypaisaa/test_downloader.py",
+"tests/mypaisaa/test_input_loader.py",
+"tests/mypaisaa/test_parser.py",
+"tests/mypaisaa/test_pipeline.py",
+"tests/mypaisaa/test_report.py",
+"tests/pipeline/test_json_rule_engine.py",
+"tests/pipeline/test_lite_excel_export.py",
+"tests/pipeline/test_models.py",
+"tests/pipeline/test_shared_reconciliation.py",
+"tests/statement_engine/extraction/test_bank_evidence_narration.py",
+"tests/statement_engine/extraction/test_completeness_guard.py",
+"tests/statement_engine/extraction/test_generic_engine.py",
+"tests/statement_engine/extraction/test_registry_store_and_router.py",
+"tests/statement_engine/extraction/test_shadow_readiness_fixes.py",
+"tests/statement_engine/extraction/test_spec_codec.py",
+"tests/statement_engine/extractors/test_hdfc_v2_synthetic.py",
+"tests/statement_engine/test_analysis_service.py",
+"tests/statement_engine/test_capability_and_states.py",
+"tests/statement_engine/test_detector.py",
+"tests/statement_engine/test_layouts_hdfc.py",
+"tests/statement_engine/test_real_pdfs.py",
+"tests/statement_engine/test_serve.py",
+"tests/statement_engine/test_shadow_wiring.py",
+"tests/statement_engine/test_universal.py",
+"tests/test_api_key_service.py",
+"tests/test_async_upload.py",
+"tests/test_auth_integration.py",
+"tests/test_bank_name_routing.py",
+"tests/test_history_statement_engine.py",
+"tests/test_mismatch_guard.py",
+"tests/test_persistence_service.py",
+"tests/test_pipeline_orchestrator.py",
+"tests/test_serve_api.py",
+"tests/test_statements_analyze_api.py",
+"tests/test_v2_only_banks.py",
+"tests/test_workflow_fields.py",
+"tests/verification/test_contract.py",
+"tests/verification/test_engine.py"
+],
+"edges": {
+"tests/verification/test_engine.py": [
+"app/services/verification.py",
+"app/services/verification/__init__.py",
+"app/services/pipeline/reconciliation.py",
+"app/services/pipeline/reconciliation/__init__.py"
+],
+"app/services/verification/__init__.py": [
+"app/services/verification/models.py",
+"app/services/verification/engine.py"
+],
+"app/services/verification/engine.py": [
+"app/services/verification/models.py"
+],
+"tests/verification/test_contract.py": [
+"app/services/verification.py",
+"app/services/verification/__init__.py"
+],
+"tests/statement_engine/extractors/test_hdfc_v2_synthetic.py": [
+"app/services/statement_engine/extractors/hdfc/rows.py",
+"app/services/statement_engine/extractors/hdfc/engine.py",
+"app/services/statement_engine/extractors/hdfc/words.py",
+"app/services/statement_engine/extractors/hdfc/anchors.py",
+"app/services/statement_engine/extraction/pdf_extractor.py",
+"app/services/statement_engine/extractors/hdfc/normalize.py",
+"app/services/statement_engine/extractors/hdfc/summary.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py"
+],
+"app/services/statement_engine/extractors/hdfc/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/hdfc/summary.py": [
+"app/services/statement_engine/extraction/summary.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py"
+],
+"app/services/statement_engine/extraction/summary.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/hdfc/normalize.py": [
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py"
+],
+"app/services/statement_engine/extraction/normalize.py": [
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/pipeline/models.py"
+],
+"app/services/statement_engine/extraction/rows.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/anchors.py"
+],
+"app/services/statement_engine/extraction/anchors.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extraction/pdf_extractor.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/migration/contract.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/pipeline/models.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/rows.py"
+],
+"app/services/statement_engine/extraction/engine.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/checks.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/summary.py",
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction/anchors.py"
+],
+"app/services/statement_engine/extraction/checks.py": [
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extraction/summary.py"
+],
+"app/services/migration/contract.py": [
+"app/services/pipeline/models.py"
+],
+"app/services/statement_engine/extractors/hdfc/anchors.py": [
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py",
+"app/services/statement_engine/extraction/anchors.py"
+],
+"app/services/statement_engine/extractors/hdfc/words.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py"
+],
+"app/services/statement_engine/extractors/hdfc/engine.py": [
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py"
+],
+"app/services/statement_engine/extractors/hdfc/rows.py": [
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py"
+],
+"tests/statement_engine/extraction/test_spec_codec.py": [
+"app/services/statement_engine/extraction/spec_codec.py",
+"app/services/statement_engine/extractors/city_union/layout_spec.py",
+"app/services/statement_engine/extractors/indian_bank/layout_spec.py",
+"app/services/statement_engine/extractors/equitas/layout_spec.py",
+"app/services/statement_engine/extractors/axis/layout_spec.py",
+"app/services/statement_engine/extractors/south_indian/layout_spec.py",
+"app/services/statement_engine/extractors/sbi/layout_spec.py",
+"app/services/statement_engine/extractors/dcb/layout_spec.py",
+"app/services/statement_engine/extractors/paytm/layout_spec.py",
+"app/services/statement_engine/extractors/scb/layout_spec.py",
+"app/services/statement_engine/extractors/pnb/layout_spec.py",
+"app/services/statement_engine/extractors/bandhan/layout_spec.py",
+"app/services/statement_engine/extractors/kotak/layout_spec.py",
+"app/services/statement_engine/extractors/apgv/layout_spec.py",
+"app/services/statement_engine/extractors/au_sfb/layout_spec.py",
+"app/services/statement_engine/extractors/idfc/layout_spec.py",
+"app/services/statement_engine/extractors/karnataka/layout_spec.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extractors/yes/layout_spec.py",
+"app/services/statement_engine/extractors/canara/layout_spec.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py",
+"app/services/statement_engine/extractors/bom/layout_spec.py",
+"app/services/statement_engine/extractors/ujjivan/layout_spec.py",
+"app/services/statement_engine/extractors/central_bank/layout_spec.py",
+"app/services/statement_engine/extractors/iob/layout_spec.py",
+"app/services/statement_engine/extractors/union/layout_spec.py",
+"app/services/statement_engine/extractors/icici/layout_spec.py",
+"app/services/statement_engine/extractors/bob/layout_spec.py",
+"app/services/statement_engine/extractors/federal/layout_spec.py",
+"app/services/statement_engine/extractors/idbi/layout_spec.py"
+],
+"app/services/statement_engine/extractors/idbi/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/federal/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/bob/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/icici/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/union/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/iob/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/central_bank/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/ujjivan/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/bom/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/canara/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/yes/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/karnataka/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/idfc/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/au_sfb/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/apgv/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/kotak/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/bandhan/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/pnb/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/scb/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/paytm/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/dcb/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/sbi/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/south_indian/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/axis/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/equitas/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/indian_bank/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/city_union/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extraction/spec_codec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"tests/statement_engine/extraction/test_shadow_readiness_fixes.py": [
+"app/services.py",
+"app/services/__init__.py",
+"app/services/statement_engine/extraction/checks.py",
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/statement_engine/extraction/summary.py",
+"app/services/pipeline/models.py",
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"app/services/statement_engine/extractors/registry.py": [
+"app/services/statement_engine/extractors/citibank/layout_spec.py",
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/extractors/city_union/layout_spec.py",
+"app/services/statement_engine/extractors/indian_bank/layout_spec.py",
+"app/services/statement_engine/extractors/equitas/layout_spec.py",
+"app/services/statement_engine/extractors/axis/layout_spec.py",
+"app/services/statement_engine/extractors/kvb/layout_spec.py",
+"app/services/statement_engine/extractors/south_indian/layout_spec.py",
+"app/services/statement_engine/extractors/sbi/layout_spec.py",
+"app/services/statement_engine/extractors/dcb/layout_spec.py",
+"app/services/statement_engine/extractors/paytm/layout_spec.py",
+"app/services/statement_engine/extractors/scb/layout_spec.py",
+"app/services/statement_engine/extractors/hsbc/layout_spec.py",
+"app/services/statement_engine/extractors/pnb/layout_spec.py",
+"app/services/statement_engine/extractors/bandhan/layout_spec.py",
+"app/services/statement_engine/extractors/kotak/layout_spec.py",
+"app/services/statement_engine/extractors/apgv/layout_spec.py",
+"app/services/statement_engine/extractors/au_sfb/layout_spec.py",
+"app/services/statement_engine/extractors/idfc/layout_spec.py",
+"app/services/statement_engine/extractors/karnataka/layout_spec.py",
+"app/services/statement_engine/extractors/yes/layout_spec.py",
+"app/services/statement_engine/extractors/canara/layout_spec.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py",
+"app/services/statement_engine/extractors/bom/layout_spec.py",
+"app/services/statement_engine/extractors/indusind/layout_spec.py",
+"app/services/statement_engine/extractors/ujjivan/layout_spec.py",
+"app/services/statement_engine/extractors/dbs/layout_spec.py",
+"app/services/statement_engine/extractors/central_bank/layout_spec.py",
+"app/services/statement_engine/extractors/iob/layout_spec.py",
+"app/services/statement_engine/extractors/union/layout_spec.py",
+"app/services/statement_engine/extractors/icici/layout_spec.py",
+"app/services/statement_engine/extractors/bob/layout_spec.py",
+"app/services/statement_engine/extractors/federal/layout_spec.py",
+"app/services/statement_engine/extractors/idbi/layout_spec.py"
+],
+"app/services/statement_engine/extractors/dbs/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/indusind/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/hsbc/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extractors/kvb/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/extraction/registry.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/anchors.py"
+],
+"app/services/statement_engine/extractors/citibank/layout_spec.py": [
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/__init__.py": [
+"app/services/statement_engine/registry.py",
+"app/services/statement_engine/contracts.py",
+"app/services/statement_engine/detector.py",
+"app/services/statement_engine/layouts.py",
+"app/services/statement_engine/capability.py",
+"app/services/statement_engine/analyzer.py"
+],
+"app/services/statement_engine/analyzer.py": [
+"app/services/statement_engine/detector.py",
+"app/services/statement_engine/contracts.py",
+"app/services/statement_engine/capability.py"
+],
+"app/services/statement_engine/capability.py": [
+"app/services/statement_engine/contracts.py"
+],
+"app/services/statement_engine/detector.py": [
+"app/services/statement_engine/registry.py",
+"app/services/statement_engine/contracts.py"
+],
+"app/services/statement_engine/layouts.py": [
+"app/services/statement_engine/registry.py",
+"app/services/statement_engine/contracts.py"
+],
+"tests/statement_engine/extraction/test_registry_store_and_router.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/contracts.py",
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/v2_router.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction/registry_store.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"app/services/statement_engine/extraction/registry_store.py": [
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/extraction/spec_codec.py",
+"app/services/statement_engine/extraction/layout_spec.py"
+],
+"app/services/statement_engine/v2_router.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/migration/contract.py",
+"app/services/statement_engine/contracts.py",
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/detector.py",
+"app/services/statement_engine/extraction/pdf_extractor.py"
+],
+"tests/statement_engine/extraction/test_generic_engine.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/checks.py",
+"app/services/statement_engine/extraction/layout_spec.py",
+"app/services/statement_engine/extraction/registry.py",
+"app/services/statement_engine/extraction/anchors.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/normalize.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py",
+"app/services/statement_engine/extractors/registry.py",
+"app/services/statement_engine/extractors/hdfc/layout_spec.py"
+],
+"tests/statement_engine/extraction/test_completeness_guard.py": [
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"tests/statement_engine/extraction/test_bank_evidence_narration.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/extraction/rows.py",
+"app/services/statement_engine/extraction.py",
+"app/services/statement_engine/extraction/__init__.py"
+],
+"tests/statement_engine/test_universal.py": [
+"app/services/statement_engine/universal.py",
+"app/services/statement_engine/universal/__init__.py"
+],
+"app/services/statement_engine/universal/__init__.py": [
+"app/services/statement_engine/universal/reader.py"
+],
+"app/services/statement_engine/universal/reader.py": [
+"app/services/statement_engine/extraction/words.py",
+"app/services/statement_engine/universal/lexicon.py",
+"app/services/statement_engine/extraction/engine.py",
+"app/services/statement_engine/extraction/pdf_extractor.py",
+"app/services/statement_engine/universal.py",
+"app/services/statement_engine/universal/__init__.py"
+],
+"tests/statement_engine/test_shadow_wiring.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py"
+],
+"tests/statement_engine/test_serve.py": [
+"app/services/banks/_shared/generic_bank.py",
+"app/services/statement_engine/contracts.py",
+"app/services/banks/_shared/base_processor.py",
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/pipeline_orchestrator.py",
+"app/services/statement_engine/v2_router.py",
+"app/services/pipeline/reporting/lite_excel_generator.py"
+],
+"app/services/pipeline/reporting/lite_excel_generator.py": [
+"app/services/pipeline/reporting/lite_metrics.py"
+],
+"app/services/pipeline/reporting/lite_metrics.py": [
+"app/services/banks/_shared/date_normalizer.py",
+"app/services/banks/_shared/category_registry.py"
+],
+"app/services/pipeline_orchestrator.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/statement_engine/universal.py",
+"app/services/statement_engine/universal/__init__.py",
+"app/utils/file_handler.py",
+"app/services/statement_engine/shadow.py"
+],
+"app/services/statement_engine/shadow.py": [
+"app/services/migration/contract.py",
+"app/services/statement_engine/v2_router.py",
+"app/services/pipeline/models.py",
+"app/services/migration/comparator.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"app/services/migration/comparator.py": [
+"app/services/migration/contract.py",
+"app/services/pipeline/models.py"
+],
+"app/services/banks/_shared/base_processor.py": [
+"app/services/pipeline/reporting.py",
+"app/services/pipeline/reporting/__init__.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/date_normalizer.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/pipeline/reconciliation.py",
+"app/services/pipeline/reconciliation/__init__.py",
+"app/services/core/data_integrity_guard.py",
+"app/services/core/pdf_integrity_validator.py",
+"app/services/verification.py",
+"app/services/verification/__init__.py",
+"app/services/banks/_shared/data_quality.py"
+],
+"app/services/banks/_shared/hygiene_check.py": [
+"app/services/audit.py",
+"app/services/audit/__init__.py"
+],
+"app/services/audit/__init__.py": [
+"app/services/audit/audit_context.py",
+"app/services/audit/audit_service.py"
+],
+"app/services/audit/audit_service.py": [
+"app/services/banks/_shared/finbit_analytics.py",
+"app/database/audit_models.py",
+"app/services/metadata_extractor.py"
+],
+"app/services/metadata_extractor.py": [
+"app/services/banks/_shared/date_normalizer.py"
+],
+"app/database/audit_models.py": [
+"app/database/session.py"
+],
+"app/database/session.py": [
+"app/utils/logging.py"
+],
+"app/utils/logging.py": [
+"app/utils/correlation.py"
+],
+"app/services/banks/_shared/finbit_analytics.py": [
+"app/services/banks/_shared/category_registry.py"
+],
+"app/services/banks/_shared/generic_bank.py": [
+"app/services/banks/_shared/rich_metadata.py",
+"app/services/banks/_shared/category_registry.py"
+],
+"tests/statement_engine/test_real_pdfs.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py"
+],
+"tests/statement_engine/test_layouts_hdfc.py": [
+"app/services/statement_engine/layouts.py"
+],
+"tests/statement_engine/test_detector.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/pipeline_orchestrator.py"
+],
+"tests/statement_engine/test_capability_and_states.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/statement_engine/capability.py"
+],
+"tests/statement_engine/test_analysis_service.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/analysis_service.py"
+],
+"app/services/analysis_service.py": [
+"app/services/statement_engine/universal/serve.py",
+"app/utils/file_handler.py",
+"app/models/job.py",
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/redis_job_store.py",
+"app/services/file_history_service.py",
+"app/core/config.py",
+"app/services/task_processor.py",
+"app/services/event_publisher.py",
+"app/utils/logging.py",
+"app/utils/correlation.py"
+],
+"app/services/event_publisher.py": [
+"app/utils/logging.py",
+"app/services/message_queue.py",
+"app/utils/correlation.py"
+],
+"app/services/message_queue.py": [
+"app/utils/logging.py",
+"app/core/config.py"
+],
+"app/services/task_processor.py": [
+"app/models/job.py",
+"app/services/redis_job_store.py",
+"app/services/file_history_service.py",
+"app/utils/logging.py",
+"app/utils/correlation.py"
+],
+"app/services/file_history_service.py": [
+"app/utils/file_handler.py",
+"app/database/audit_models.py",
+"app/database/session.py",
+"app/core/config.py",
+"app/database/models.py"
+],
+"app/database/models.py": [
+"app/database/session.py"
+],
+"app/services/redis_job_store.py": [
+"app/utils/logging.py",
+"app/services/job_store.py",
+"app/models/job.py",
+"app/core/config.py"
+],
+"app/services/job_store.py": [
+"app/utils/logging.py",
+"app/models/job.py"
+],
+"app/services/statement_engine/universal/serve.py": [
+"app/services/statement_engine/universal.py",
+"app/services/statement_engine/universal/__init__.py",
+"app/services/statement_engine/universal/reader.py",
+"app/services/statement_engine/serve.py",
+"app/services/statement_engine/universal/isolated.py"
+],
+"app/services/statement_engine/universal/isolated.py": [
+"app/services/statement_engine/universal.py",
+"app/services/statement_engine/universal/__init__.py",
+"app/services/statement_engine/universal/reader.py",
+"app/services/statement_engine/serve.py"
+],
+"app/services/statement_engine/serve.py": [
+"app/services/statement_engine/registry.py",
+"app/services/statement_engine/v2_router.py",
+"app/services/statement_engine/shadow.py",
+"app/services/statement_engine/extraction/pdf_extractor.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"tests/pipeline/test_shared_reconciliation.py": [
+"app/services/banks/hdfc/reconciliation.py",
+"app/services/pipeline/reconciliation.py",
+"app/services/pipeline/reconciliation/__init__.py"
+],
+"tests/pipeline/test_models.py": [
+"app/services/pipeline.py",
+"app/services/pipeline/__init__.py"
+],
+"tests/migration/test_old_result.py": [
+"app/services/migration.py",
+"app/services/migration/__init__.py"
+],
+"app/services/migration/__init__.py": [
+"app/services/migration/contract.py",
+"app/services/migration/old_result.py",
+"app/services/migration/comparator.py"
+],
+"app/services/migration/old_result.py": [
+"app/services/migration/contract.py",
+"app/services/pipeline/models.py"
+],
+"tests/migration/test_comparator.py": [
+"app/services/migration.py",
+"app/services/migration/__init__.py",
+"app/services/pipeline/models.py",
+"app/services/migration/comparator.py"
+],
+"tests/golden/test_regression.py": [
+"app/services/pipeline_orchestrator.py",
+"app/services/pipeline/normalize.py",
+"app/services/pipeline/models.py"
+],
+"app/services/pipeline/normalize.py": [
+"app/services/banks/_shared/date_normalizer.py",
+"app/services/pipeline/models.py"
+],
+"tests/banks/test_icici_parser.py": [
+"app/services/banks/icici/processor.py"
+],
+"app/services/banks/icici/processor.py": [
+"app/services/banks/icici/rule_engine.py",
+"app/services/banks/icici/aggregation_engine.py",
+"app/services/banks/icici/reconciliation.py",
+"app/services/banks/icici/ai_fallback.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/base_processor.py",
+"app/services/banks/icici/parser.py",
+"app/services/banks/icici/recurring_engine.py",
+"app/services/banks/icici/transaction_validator.py",
+"app/services/core/data_integrity_guard.py",
+"app/services/banks/icici/structure_validator.py",
+"app/services/core/pdf_integrity_validator.py"
+],
+"app/services/banks/icici/structure_validator.py": [
+"app/services/banks/_shared/date_normalizer.py",
+"app/services/banks/_shared/rich_metadata.py"
+],
+"app/services/banks/icici/recurring_engine.py": [
+"app/services/pipeline/recurring/engine.py"
+],
+"app/services/banks/icici/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/_shared/base_parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/job_progress.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py"
+],
+"app/services/job_progress.py": [
+"app/services/redis_job_store.py",
+"app/utils/logging.py",
+"app/models/job.py",
+"app/core/config.py"
+],
+"app/services/banks/icici/ai_fallback.py": [
+"app/services/banks/_shared/category_registry.py",
+"app/services/intelligence.py",
+"app/services/intelligence/__init__.py"
+],
+"app/services/intelligence/__init__.py": [
+"app/services/intelligence/learning_store.py",
+"app/services/intelligence/claude_intelligence.py",
+"app/services/intelligence/groq_intelligence.py"
+],
+"app/services/intelligence/groq_intelligence.py": [
+"app/services/intelligence/learning_store.py",
+"app/services/banks/_shared/category_registry.py"
+],
+"app/services/intelligence/claude_intelligence.py": [
+"app/services/banks/_shared/category_registry.py",
+"app/services/intelligence/groq_intelligence.py"
+],
+"app/services/banks/icici/reconciliation.py": [
+"app/services/pipeline/reconciliation/engine.py"
+],
+"app/services/banks/icici/aggregation_engine.py": [
+"app/services/pipeline/aggregation/engine.py"
+],
+"app/services/banks/icici/rule_engine.py": [
+"app/services/pipeline/classification/rule_engine.py"
+],
+"tests/banks/test_finbit_analytics.py": [
+"app/services/banks/_shared/finbit_analytics.py"
+],
+"tests/banks/test_canara_parser.py": [
+"app/services/banks/canara/processor.py"
+],
+"app/services/banks/canara/processor.py": [
+"app/services/banks/canara/rule_engine.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/base_processor.py",
+"app/services/banks/canara/recurring_engine.py",
+"app/services/banks/canara/aggregation_engine.py",
+"app/services/banks/canara/ai_fallback.py",
+"app/services/core/data_integrity_guard.py",
+"app/services/banks/canara/parser.py",
+"app/services/core/pdf_integrity_validator.py",
+"app/services/banks/canara/transaction_validator.py",
+"app/services/banks/canara/structure_validator.py",
+"app/services/banks/canara/reconciliation.py"
+],
+"app/services/banks/canara/reconciliation.py": [
+"app/services/pipeline/reconciliation/engine.py"
+],
+"app/services/banks/canara/structure_validator.py": [
+"app/services/banks/_shared/rich_metadata.py",
+"app/services/banks/_shared/generic_bank.py"
+],
+"app/services/banks/canara/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/canara/ai_fallback.py": [
+"app/services/banks/_shared/category_registry.py",
+"app/services/intelligence.py",
+"app/services/intelligence/__init__.py"
+],
+"app/services/banks/canara/aggregation_engine.py": [
+"app/services/pipeline/aggregation/engine.py"
+],
+"app/services/banks/canara/recurring_engine.py": [
+"app/services/pipeline/recurring/engine.py"
+],
+"app/services/banks/canara/rule_engine.py": [
+"app/services/pipeline/classification/rule_engine.py",
+"app/services/banks/_shared/generic_bank.py"
+],
+"tests/banks/test_axis_parser.py": [
+"app/services/banks/axis/parser.py",
+"app/services/banks/axis/reconciliation.py"
+],
+"app/services/banks/axis/reconciliation.py": [
+"app/services/pipeline/reconciliation/engine.py"
+],
+"app/services/banks/axis/parser.py": [
+"app/services/banks/axis/reconciliation.py",
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"tests/test_workflow_fields.py": [
+"app/services.py",
+"app/services/__init__.py",
+"app/services/analysis_service.py",
+"app/dependencies/auth.py",
+"app/api/routes.py"
+],
+"app/dependencies/auth.py": [
+"app/utils/logging.py",
+"app/services/auth_client.py",
+"app/services/jwt_verifier.py",
+"app/core/config.py"
+],
+"app/services/jwt_verifier.py": [
+"app/utils/logging.py",
+"app/core/config.py"
+],
+"app/services/auth_client.py": [
+"app/utils/logging.py",
+"app/services/jwt_verifier.py",
+"app/core/config.py"
+],
+"tests/test_v2_only_banks.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/pipeline_orchestrator.py",
+"app/services/analysis_service.py"
+],
+"tests/test_statements_analyze_api.py": [
+"app/services/analysis_service.py",
+"app/dependencies/auth.py",
+"app/api/routes.py"
+],
+"tests/test_serve_api.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/dependencies/auth.py",
+"app/api/routes.py",
+"app/services/frontend_result_builder.py"
+],
+"tests/test_pipeline_orchestrator.py": [
+"app/services/pipeline_orchestrator.py",
+"app/services/pdf_converter.py",
+"app/services/pdf_detector.py",
+"app/services/normalizer.py",
+"app/services/bank_detector.py"
+],
+"tests/test_persistence_service.py": [
+"app/services/persistence_service.py"
+],
+"app/services/persistence_service.py": [
+"app/database/models.py"
+],
+"tests/test_mismatch_guard.py": [
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/pipeline_orchestrator.py"
+],
+"tests/test_history_statement_engine.py": [
+"app/services/file_history_service.py"
+],
+"tests/test_bank_name_routing.py": [
+"app/services/pipeline_orchestrator.py",
+"app/services/analysis_service.py"
+],
+"tests/test_auth_integration.py": [
+"app/dependencies/auth.py",
+"app/services/auth_client.py",
+"app/main.py"
+],
+"app/main.py": [
+"app/middleware/audit_context.py",
+"app/utils/logging.py",
+"app/services/event_consumer.py",
+"app/database/session.py",
+"app/middleware/auth_middleware.py",
+"app/api/routes.py",
+"app/services/monitoring.py",
+"app/services/monitoring/__init__.py",
+"app/core/config.py",
+"app/services/pdf_processor.py",
+"app/services/task_processor.py",
+"app/database.py",
+"app/database/__init__.py",
+"app/middleware/correlation.py",
+"app/services/retention_service.py",
+"app/services/message_queue.py",
+"app/middleware/request_logger.py"
+],
+"app/middleware/request_logger.py": [
+"app/database/session.py",
+"app/utils/logging.py",
+"app/database/audit_models.py"
+],
+"app/services/retention_service.py": [
+"app/services/file_history_service.py",
+"app/utils/logging.py",
+"app/services/analysis_service.py",
+"app/core/config.py"
+],
+"app/middleware/correlation.py": [
+"app/utils/correlation.py"
+],
+"app/database/__init__.py": [
+"app/database/session.py",
+"app/database/models.py"
+],
+"app/services/pdf_processor.py": [
+"app/utils/file_handler.py",
+"app/models/job.py",
+"app/database/session.py",
+"app/services/pipeline_orchestrator.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/api_key_service.py",
+"app/services/job_progress.py",
+"app/services/audit/audit_service.py",
+"app/services/frontend_result_builder.py",
+"app/services/task_processor.py",
+"app/utils/logging.py"
+],
+"app/services/api_key_service.py": [
+"app/utils/logging.py",
+"app/database/models.py",
+"app/core/config.py"
+],
+"app/services/monitoring/__init__.py": [
+"app/services/monitoring/health_monitor.py"
+],
+"app/services/monitoring/health_monitor.py": [
+"app/database/session.py",
+"app/utils/logging.py",
+"app/database/audit_models.py",
+"app/core/config.py"
+],
+"app/middleware/auth_middleware.py": [
+"app/database/session.py",
+"app/services/api_key_service.py",
+"app/services/auth_client.py",
+"app/core/config.py",
+"app/utils/logging.py",
+"app/services/jwt_verifier.py"
+],
+"app/services/event_consumer.py": [
+"app/utils/file_handler.py",
+"app/models/job.py",
+"app/database/audit_models.py",
+"app/services/redis_job_store.py",
+"app/services/pipeline_orchestrator.py",
+"app/services/file_history_service.py",
+"app/database/session.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/audit/audit_service.py",
+"app/services/frontend_result_builder.py",
+"app/core/config.py",
+"app/services/job_progress.py",
+"app/services/api_key_service.py",
+"app/utils/logging.py",
+"app/services/message_queue.py",
+"app/utils/correlation.py"
+],
+"app/middleware/audit_context.py": [
+"app/services/audit/audit_context.py"
+],
+"tests/test_async_upload.py": [
+"app/models/job.py",
+"app/main.py",
+"app/dependencies/auth.py",
+"app/services/job_store.py",
+"app/utils/correlation.py"
+],
+"tests/test_api_key_service.py": [
+"app/database/session.py",
+"app/services.py",
+"app/services/__init__.py",
+"app/database/models.py"
+],
+"app/api/routes/v1_statements.py": [
+"app/utils/file_handler.py",
+"app/api/routes/upload_async.py",
+"app/models/job.py",
+"app/utils/logging.py",
+"app/services/file_history_service.py",
+"app/services/redis_job_store.py",
+"app/dependencies/auth.py",
+"app/core/config.py",
+"app/api/routes/jobs.py",
+"app/services/event_publisher.py",
+"app/services/task_processor.py",
+"app/utils/correlation.py"
+],
+"app/api/routes/jobs.py": [
+"app/utils/file_handler.py",
+"app/models/job.py",
+"app/services/file_history_service.py",
+"app/services/redis_job_store.py",
+"app/dependencies/auth.py",
+"app/core/config.py",
+"app/utils/logging.py",
+"app/utils/correlation.py"
+],
+"app/api/routes/upload_async.py": [
+"app/utils/file_handler.py",
+"app/models/job.py",
+"app/utils/logging.py",
+"app/services/redis_job_store.py",
+"app/services/file_history_service.py",
+"app/dependencies/auth.py",
+"app/services/jwt_verifier.py",
+"app/core/config.py",
+"app/services/event_publisher.py",
+"app/services/task_processor.py",
+"app/utils/correlation.py"
+],
+"app/api/routes/v1_api_keys.py": [
+"app/database/session.py",
+"app/utils/logging.py",
+"app/dependencies/auth.py",
+"app/services/api_key_service.py"
+],
+"app/api/routes/upload.py": [
+"app/services/banks/kotak/parser.py",
+"app/services/banks/hdfc/report_generator.py",
+"app/services/banks/sbi/report_generator.py",
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/services/banks/axis/parser.py",
+"app/services/banks/canara/report_generator.py",
+"app/dependencies/auth.py",
+"app/services/banks/axis/report_generator.py",
+"app/services/banks/icici/parser.py",
+"app/services/banks/bank_of_baroda/report_generator.py",
+"app/services/banks/karnataka/parser.py",
+"app/services/banks/unknown/report_generator.py",
+"app/services/banks/hdfc/parser.py",
+"app/services/banks/unknown/parser.py",
+"app/services/banks/idfc/parser.py",
+"app/services/banks/idfc/report_generator.py",
+"app/services/banks/kotak/report_generator.py",
+"app/services/analysis_service.py",
+"app/services/banks/paytm/report_generator.py",
+"app/services/banks/bank_of_baroda/parser.py",
+"app/services/banks/karnataka/report_generator.py",
+"app/services/banks/union/report_generator.py",
+"app/services/banks/bank_of_india/report_generator.py",
+"app/utils/logging.py",
+"app/services/banks/bank_of_india/parser.py",
+"app/services/banks/canara/parser.py",
+"app/services/banks/icici/report_generator.py",
+"app/services/banks/union/parser.py",
+"app/services/banks/sbi/parser.py",
+"app/services/banks/paytm/parser.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"app/services/banks/paytm/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/sbi/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/union/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/bank_of_india/parser.py": [
+"app/services/banks/bank_of_india/structure_validator.py",
+"app/services/banks/_shared/generic_bank.py"
+],
+"app/services/banks/bank_of_india/structure_validator.py": [
+"app/services/banks/_shared/rich_metadata.py",
+"app/services/banks/_shared/generic_bank.py"
+],
+"app/services/banks/bank_of_baroda/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/idfc/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/unknown/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/hdfc/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/karnataka/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/generic_bank.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/services/banks/kotak/parser.py": [
+"app/services/banks/_shared/unsupported_format_queue.py",
+"app/services/banks/_shared/hygiene_check.py",
+"app/services/banks/_shared/parser_metrics.py",
+"app/services/banks/_shared/dynamic_column_detector.py",
+"app/services/banks/_shared/base_parser.py"
+],
+"app/api/routes/sync.py": [
+"app/services/intelligence.py",
+"app/services/intelligence/__init__.py"
+],
+"app/api/routes/statements_analyze.py": [
+"app/services/statement_engine/universal/serve.py",
+"app/services/analysis_service.py",
+"app/services/statement_engine.py",
+"app/services/statement_engine/__init__.py",
+"app/dependencies/auth.py",
+"app/core/config.py",
+"app/services/statement_engine/extractors/registry.py"
+],
+"app/api/routes/profile.py": [
+"app/services/file_history_service.py",
+"app/dependencies/auth.py"
+],
+"app/api/routes/feedback.py": [
+"app/utils/logging.py",
+"app/dependencies/auth.py"
+],
+"app/api/routes/download.py": [
+"app/services/audit.py",
+"app/services/audit/__init__.py",
+"app/utils/file_handler.py",
+"app/database/session.py",
+"app/database/audit_models.py"
+],
+"app/api/routes/auth.py": [
+"app/services/audit/audit_context.py",
+"app/database/session.py",
+"app/dependencies/auth.py",
+"app/services/audit/audit_service.py",
+"app/utils/logging.py"
+],
+"app/api/routes/audit_admin.py": [
+"app/database/audit_models.py",
+"app/database/session.py",
+"app/dependencies/auth.py",
+"app/services/audit/audit_service.py",
+"app/utils/logging.py"
+]
+}
+}

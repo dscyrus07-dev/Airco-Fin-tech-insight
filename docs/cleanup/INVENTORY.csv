@@ -1,0 +1,869 @@
+path,area,size_bytes,last_commit,owner_group
+.env.example,misc,1347,2026-10-06 11:55:34 +0000,general
+.gitattributes,misc,358,2026-10-06 11:55:34 +0000,general
+.gitignore,misc,2590,2026-10-12 08:28:16 +0530,general
+README.md,misc,2515,2026-10-12 08:28:16 +0530,general
+START.bat,misc,11012,2026-07-16 00:15:51 +0530,general
+auth/auth-service/Dockerfile,infra-misc,747,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/config.py,infra-misc,2138,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/dependencies/auth.py,infra-misc,3656,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/main.py,infra-misc,1425,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/middleware/correlation.py,infra-misc,845,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/models/user.py,infra-misc,3292,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/routes/auth.py,infra-misc,6530,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/services/auth_service.py,infra-misc,5376,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/services/keycloak_validator.py,infra-misc,5756,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/utils/jwt_utils.py,infra-misc,2865,2026-07-15 22:45:57 +0530,general
+auth/auth-service/app/utils/logging.py,infra-misc,1890,2026-07-15 22:45:57 +0530,general
+auth/auth-service/requirements.txt,infra-misc,222,2026-07-15 22:45:57 +0530,general
+backend/Dockerfile,backend-misc,644,2026-07-15 22:45:57 +0530,general
+backend/README.md,backend-misc,9178,2026-07-15 22:45:57 +0530,general
+backend/_probe_audit.py,backend-misc,3747,2026-07-15 22:45:57 +0530,general
+backend/alembic.ini,backend-misc,158,2026-10-12 08:28:16 +0530,general
+backend/app/__init__.py,backend-api,0,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/audit_admin.py,backend-api,30749,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/auth.py,backend-api,8209,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/download.py,backend-api,3803,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/feedback.py,backend-api,6370,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/jobs.py,backend-api,8044,2026-07-16 00:15:51 +0530,general
+backend/app/api/routes/profile.py,backend-api,2657,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/statements_analyze.py,backend-api,9910,2026-10-12 14:31:09 +0530,general
+backend/app/api/routes/sync.py,backend-api,5709,2026-07-15 22:45:57 +0530,general
+backend/app/api/routes/upload.py,backend-api,16994,2026-10-12 07:03:47 +0530,general
+backend/app/api/routes/upload_async.py,backend-api,13164,2026-07-17 14:00:09 +0530,general
+backend/app/api/routes/v1_api_keys.py,backend-api,3996,2026-07-20 15:23:25 +0530,general
+backend/app/api/routes/v1_statements.py,backend-api,9622,2026-07-20 13:59:32 +0530,general
+backend/app/core/__init__.py,backend-api,0,2026-07-15 22:45:57 +0530,general
+backend/app/core/config.py,backend-api,4914,2026-07-18 18:13:09 +0530,general
+backend/app/core/security.py,backend-api,1219,2026-07-15 22:45:57 +0530,general
+backend/app/database/__init__.py,backend-api,106,2026-07-18 18:13:09 +0530,general
+backend/app/database/audit_models.py,backend-api,32491,2026-07-18 18:13:09 +0530,general
+backend/app/database/models.py,backend-api,5259,2026-10-12 02:11:58 +0530,general
+backend/app/database/session.py,backend-api,12698,2026-10-12 02:11:58 +0530,general
+backend/app/dependencies/auth.py,backend-api,7844,2026-07-18 18:13:09 +0530,general
+backend/app/main.py,backend-api,4432,2026-10-06 11:55:34 +0000,general
+backend/app/middleware/audit_context.py,backend-api,4582,2026-07-15 22:45:57 +0530,general
+backend/app/middleware/auth_middleware.py,backend-api,7321,2026-07-20 15:23:25 +0530,general
+backend/app/middleware/correlation.py,backend-api,882,2026-07-15 22:45:57 +0530,general
+backend/app/middleware/request_logger.py,backend-api,3675,2026-07-18 18:13:09 +0530,general
+backend/app/models/job.py,backend-api,1733,2026-07-15 22:45:57 +0530,general
+backend/app/services/__init__.py,backend-service,0,2026-07-15 22:45:57 +0530,general
+backend/app/services/analysis_service.py,backend-service,34548,2026-10-12 14:31:09 +0530,general
+backend/app/services/api_key_service.py,backend-service,9153,2026-07-20 15:23:25 +0530,general
+backend/app/services/audit/__init__.py,backend-service,309,2026-07-15 22:45:57 +0530,general
+backend/app/services/audit/audit_context.py,backend-service,9146,2026-07-15 22:45:57 +0530,general
+backend/app/services/audit/audit_service.py,backend-service,42595,2026-07-21 16:14:18 +0530,general
+backend/app/services/auth_client.py,backend-service,4153,2026-07-20 16:18:41 +0530,general
+backend/app/services/banks/README.md,backend-parser,7925,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/__init__.py,backend-parser,1277,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/__init__.py,backend-parser,781,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/base_parser.py,backend-parser,16472,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/_shared/base_processor.py,backend-parser,35888,2026-10-10 21:34:59 +0530,claude-owned
+backend/app/services/banks/_shared/category_registry.py,backend-parser,6020,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/_shared/data_quality.py,backend-parser,1008,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/date_normalizer.py,backend-parser,13722,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/dynamic_column_detector.py,backend-parser,13768,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/finbit_analytics.py,backend-parser,44851,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/_shared/generic_bank.py,backend-parser,50039,2026-10-12 04:36:05 +0530,claude-owned
+backend/app/services/banks/_shared/hygiene_check.py,backend-parser,37553,2026-07-20 12:13:56 +0530,claude-owned
+backend/app/services/banks/_shared/lite_metrics.py,backend-parser,997,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/parser_metrics.py,backend-parser,17151,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/rich_metadata.py,backend-parser,19018,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/source_analysis.py,backend-parser,11946,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/_shared/unsupported_format_queue.py,backend-parser,11540,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/__init__.py,backend-parser,1750,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/aggregation_engine.py,backend-parser,4201,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/ai_fallback.py,backend-parser,2233,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/axis_classifier.py,backend-parser,17276,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/parser.py,backend-parser,35429,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/axis/processor.py,backend-parser,2562,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/reconciliation.py,backend-parser,4315,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/recurring_engine.py,backend-parser,661,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/rule_engine.py,backend-parser,9316,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/rules.json,backend-parser,11107,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/axis/structure_validator.py,backend-parser,8749,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/axis/transaction_validator.py,backend-parser,5452,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/__init__.py,backend-parser,1328,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/aggregation_engine.py,backend-parser,4251,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/ai_fallback.py,backend-parser,7529,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/bank_of_baroda_classifier.py,backend-parser,8652,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/parser.py,backend-parser,20445,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/processor.py,backend-parser,2785,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/reconciliation.py,backend-parser,4394,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/recurring_engine.py,backend-parser,679,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/rule_engine.py,backend-parser,6599,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/rules.json,backend-parser,7423,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/structure_validator.py,backend-parser,6004,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_baroda/transaction_validator.py,backend-parser,7420,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/__init__.py,backend-parser,1428,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/aggregation_engine.py,backend-parser,501,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/ai_fallback.py,backend-parser,627,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/bank_of_india_classifier.py,backend-parser,7988,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/parser.py,backend-parser,22434,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/processor.py,backend-parser,2531,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/reconciliation.py,backend-parser,1001,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/recurring_engine.py,backend-parser,423,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/rule_engine.py,backend-parser,604,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/structure_validator.py,backend-parser,3948,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/bank_of_india/transaction_validator.py,backend-parser,594,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/__init__.py,backend-parser,1113,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/aggregation_engine.py,backend-parser,5424,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/ai_fallback.py,backend-parser,6833,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/canara_classifier.py,backend-parser,10509,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/parser.py,backend-parser,20643,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/canara/processor.py,backend-parser,2635,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/reconciliation.py,backend-parser,5253,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/recurring_engine.py,backend-parser,665,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/rule_engine.py,backend-parser,6960,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/rules.json,backend-parser,10342,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/canara/structure_validator.py,backend-parser,4521,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/canara/transaction_validator.py,backend-parser,7648,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/__init__.py,backend-parser,1827,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/aggregation_engine.py,backend-parser,4201,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/ai_fallback.py,backend-parser,8174,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/hdfc_classifier.py,backend-parser,22388,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/parser.py,backend-parser,37776,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/hdfc/processor.py,backend-parser,2593,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/reconciliation.py,backend-parser,6331,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/recurring_engine.py,backend-parser,661,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/rule_engine.py,backend-parser,16844,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/rules.json,backend-parser,16682,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/hdfc/structure_validator.py,backend-parser,19373,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/hdfc/transaction_validator.py,backend-parser,11314,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/__init__.py,backend-parser,1142,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/aggregation_engine.py,backend-parser,4207,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/ai_fallback.py,backend-parser,2470,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/icici_classifier.py,backend-parser,13717,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/parser.py,backend-parser,59526,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/icici/processor.py,backend-parser,2590,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/reconciliation.py,backend-parser,4325,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/recurring_engine.py,backend-parser,663,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/rule_engine.py,backend-parser,5929,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/rules.json,backend-parser,8828,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/icici/structure_validator.py,backend-parser,10262,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/icici/transaction_validator.py,backend-parser,4877,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/__init__.py,backend-parser,1041,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/aggregation_engine.py,backend-parser,4201,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/ai_fallback.py,backend-parser,6567,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/idfc_classifier.py,backend-parser,6465,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/parser.py,backend-parser,20889,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/idfc/processor.py,backend-parser,2617,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/reconciliation.py,backend-parser,4315,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/recurring_engine.py,backend-parser,661,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/rule_engine.py,backend-parser,3150,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/idfc/rules.json,backend-parser,7361,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/idfc/structure_validator.py,backend-parser,4834,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/idfc/transaction_validator.py,backend-parser,6025,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/__init__.py,backend-parser,1390,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/aggregation_engine.py,backend-parser,498,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/ai_fallback.py,backend-parser,620,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/indian_bank_classifier.py,backend-parser,4235,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/parser.py,backend-parser,10165,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/processor.py,backend-parser,2503,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/reconciliation.py,backend-parser,997,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/recurring_engine.py,backend-parser,420,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/rule_engine.py,backend-parser,987,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/indian_bank/rules.json,backend-parser,7348,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/indian_bank/structure_validator.py,backend-parser,3750,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/indian_bank/transaction_validator.py,backend-parser,590,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/__init__.py,backend-parser,1221,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/aggregation_engine.py,backend-parser,4231,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/ai_fallback.py,backend-parser,4651,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/karnataka_classifier.py,backend-parser,104,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/parser.py,backend-parser,18340,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/karnataka/processor.py,backend-parser,2702,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/reconciliation.py,backend-parser,4365,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/recurring_engine.py,backend-parser,671,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/rule_engine.py,backend-parser,5151,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/karnataka/rules.json,backend-parser,7722,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/karnataka/structure_validator.py,backend-parser,3984,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/karnataka/transaction_validator.py,backend-parser,5874,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/__init__.py,backend-parser,1151,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/aggregation_engine.py,backend-parser,4207,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/ai_fallback.py,backend-parser,2316,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/kotak_classifier.py,backend-parser,13723,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/parser.py,backend-parser,31973,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/kotak/processor.py,backend-parser,2653,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/reconciliation.py,backend-parser,4325,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/recurring_engine.py,backend-parser,663,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/rule_engine.py,backend-parser,5913,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/rules.json,backend-parser,8947,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/kotak/structure_validator.py,backend-parser,7486,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/kotak/transaction_validator.py,backend-parser,4825,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/__init__.py,backend-parser,1077,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/aggregation_engine.py,backend-parser,4207,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/ai_fallback.py,backend-parser,4638,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/parser.py,backend-parser,18396,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/paytm/paytm_classifier.py,backend-parser,397,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/processor.py,backend-parser,2628,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/reconciliation.py,backend-parser,4325,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/recurring_engine.py,backend-parser,663,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/rule_engine.py,backend-parser,6820,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/paytm/rules.json,backend-parser,7033,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/paytm/structure_validator.py,backend-parser,4775,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/paytm/transaction_validator.py,backend-parser,5833,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/__init__.py,backend-parser,236,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/aggregation_engine.py,backend-parser,4195,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/ai_fallback.py,backend-parser,2306,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/parser.py,backend-parser,44673,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/sbi/processor.py,backend-parser,2592,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/reconciliation.py,backend-parser,4300,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/recurring_engine.py,backend-parser,659,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/rule_engine.py,backend-parser,6559,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/rules.json,backend-parser,10318,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/sbi/sbi_classifier.py,backend-parser,4734,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/structure_validator.py,backend-parser,8736,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/sbi/transaction_validator.py,backend-parser,4803,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/__init__.py,backend-parser,1086,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/aggregation_engine.py,backend-parser,4207,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/ai_fallback.py,backend-parser,4648,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/parser.py,backend-parser,21427,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/union/processor.py,backend-parser,2650,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/reconciliation.py,backend-parser,4325,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/recurring_engine.py,backend-parser,663,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/rule_engine.py,backend-parser,6878,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/union/rules.json,backend-parser,6986,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/union/structure_validator.py,backend-parser,4119,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/transaction_validator.py,backend-parser,5839,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/union/union_classifier.py,backend-parser,100,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/__init__.py,backend-parser,1144,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/aggregation_engine.py,backend-parser,2434,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/ai_fallback.py,backend-parser,1107,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/parser.py,backend-parser,18891,2026-07-16 11:44:22 +0530,claude-owned
+backend/app/services/banks/unknown/processor.py,backend-parser,2593,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/reconciliation.py,backend-parser,374,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/recurring_engine.py,backend-parser,1342,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/rule_engine.py,backend-parser,1956,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/unknown/rules.json,backend-parser,6772,2026-07-21 00:56:59 +0530,claude-owned
+backend/app/services/banks/unknown/structure_validator.py,backend-parser,4097,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/transaction_validator.py,backend-parser,394,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/banks/unknown/unknown_classifier.py,backend-parser,403,2026-07-15 22:45:57 +0530,claude-owned
+backend/app/services/core/__init__.py,backend-service,502,2026-07-15 22:45:57 +0530,general
+backend/app/services/core/data_integrity_guard.py,backend-service,18760,2026-07-15 22:45:57 +0530,general
+backend/app/services/core/pdf_integrity_validator.py,backend-service,7260,2026-07-15 22:45:57 +0530,general
+backend/app/services/event_consumer.py,backend-service,16183,2026-07-21 16:14:18 +0530,general
+backend/app/services/event_publisher.py,backend-service,2184,2026-07-20 12:06:57 +0530,general
+backend/app/services/file_history_service.py,backend-service,39255,2026-10-12 02:11:58 +0530,general
+backend/app/services/frontend_result_builder.py,backend-service,4819,2026-10-12 08:28:16 +0530,general
+backend/app/services/intelligence/__init__.py,backend-service,419,2026-07-15 22:45:57 +0530,general
+backend/app/services/intelligence/claude_intelligence.py,backend-service,9136,2026-07-15 22:45:57 +0530,general
+backend/app/services/intelligence/groq_intelligence.py,backend-service,13725,2026-07-15 22:45:57 +0530,general
+backend/app/services/intelligence/learning_store.py,backend-service,9168,2026-07-15 22:45:57 +0530,general
+backend/app/services/job_progress.py,backend-service,5724,2026-07-15 23:51:01 +0530,general
+backend/app/services/job_store.py,backend-service,2573,2026-07-15 22:45:57 +0530,general
+backend/app/services/jwt_verifier.py,backend-service,4893,2026-07-15 22:45:57 +0530,general
+backend/app/services/message_queue.py,backend-service,15065,2026-07-15 22:45:57 +0530,general
+backend/app/services/metadata_extractor.py,backend-service,19708,2026-07-15 22:45:57 +0530,general
+backend/app/services/migration/__init__.py,backend-service,455,2026-10-06 16:23:04 +0000,general
+backend/app/services/migration/comparator.py,backend-service,14863,2026-10-07 08:19:06 +0000,general
+backend/app/services/migration/contract.py,backend-service,2787,2026-10-07 08:19:06 +0000,general
+backend/app/services/migration/old_result.py,backend-service,3330,2026-10-06 16:23:04 +0000,general
+backend/app/services/monitoring/__init__.py,backend-service,127,2026-07-15 22:45:57 +0530,general
+backend/app/services/monitoring/error_logger.py,backend-service,3793,2026-07-15 22:45:57 +0530,general
+backend/app/services/monitoring/health_monitor.py,backend-service,8352,2026-07-20 16:18:41 +0530,general
+backend/app/services/pdf_processor.py,backend-service,9887,2026-07-21 16:14:18 +0530,general
+backend/app/services/persistence_service.py,backend-service,4918,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/__init__.py,backend-service,1500,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/aggregation/__init__.py,backend-service,281,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/aggregation/engine.py,backend-service,13229,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/classification/__init__.py,backend-service,286,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/classification/rule_engine.py,backend-service,18567,2026-07-21 00:56:59 +0530,general
+backend/app/services/pipeline/models.py,backend-service,8128,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/normalize.py,backend-service,7177,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reconciliation/__init__.py,backend-service,480,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reconciliation/engine.py,backend-service,8964,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/recurring/__init__.py,backend-service,161,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/recurring/engine.py,backend-service,10596,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reporting/__init__.py,backend-service,621,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reporting/formula_excel_engine.py,backend-service,1795,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reporting/lite_excel_generator.py,backend-service,14752,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline/reporting/lite_metrics.py,backend-service,31784,2026-07-15 22:45:57 +0530,general
+backend/app/services/pipeline_orchestrator.py,backend-service,26164,2026-10-12 07:03:47 +0530,general
+backend/app/services/redis_job_store.py,backend-service,9282,2026-07-15 22:45:57 +0530,general
+backend/app/services/retention_service.py,backend-service,2840,2026-10-06 11:55:34 +0000,general
+backend/app/services/statement_engine/__init__.py,engine,1115,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/analyzer.py,engine,3037,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/_masks.json,engine,376,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/airtel_pb.json,engine,305,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/au_sfb.json,engine,300,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/axis.json,engine,390,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/bandhan.json,engine,280,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/bank_of_baroda.json,engine,345,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/bank_of_india.json,engine,330,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/bank_of_maharashtra.json,engine,318,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/canara.json,engine,295,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/central_bank.json,engine,321,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/citibank.json,engine,285,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/city_union.json,engine,353,2026-10-09 12:24:17 +0530,claude-owned
+backend/app/services/statement_engine/banks/csb.json,engine,258,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/dbs.json,engine,278,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/dcb.json,engine,260,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/deutsche.json,engine,275,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/equitas_sfb.json,engine,326,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/federal.json,engine,282,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/fino_pb.json,engine,295,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/hdfc.json,engine,306,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/hsbc.json,engine,301,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/icici.json,engine,364,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/idbi.json,engine,264,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/idfc.json,engine,370,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/indian_bank.json,engine,339,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/indusind.json,engine,281,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/iob.json,engine,291,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/ippb.json,engine,312,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/karnataka.json,engine,327,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/kotak.json,engine,464,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/kvb.json,engine,282,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/paytm.json,engine,419,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/pnb.json,engine,296,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/rbl.json,engine,260,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/sbi.json,engine,331,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/sbm.json,engine,278,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/south_indian.json,engine,304,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/standard_chartered.json,engine,341,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/tmb.json,engine,303,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/uco.json,engine,260,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/ujjivan_sfb.json,engine,324,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/union.json,engine,327,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/banks/yes.json,engine,259,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/capability.py,engine,5769,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/contracts.py,engine,6256,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/detector.py,engine,20274,2026-10-09 12:24:17 +0530,claude-owned
+backend/app/services/statement_engine/extraction/__init__.py,engine,0,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extraction/anchors.py,engine,13604,2026-10-11 05:33:26 +0530,claude-owned
+backend/app/services/statement_engine/extraction/checks.py,engine,12718,2026-10-09 16:00:40 +0000,claude-owned
+backend/app/services/statement_engine/extraction/engine.py,engine,20950,2026-10-12 06:27:45 +0000,claude-owned
+backend/app/services/statement_engine/extraction/layout_spec.py,engine,13276,2026-10-12 08:28:16 +0530,claude-owned
+backend/app/services/statement_engine/extraction/normalize.py,engine,5997,2026-10-09 13:48:14 +0530,claude-owned
+backend/app/services/statement_engine/extraction/pdf_extractor.py,engine,5307,2026-10-07 08:19:06 +0000,claude-owned
+backend/app/services/statement_engine/extraction/registry.py,engine,10284,2026-10-11 12:29:50 +0000,claude-owned
+backend/app/services/statement_engine/extraction/registry_store.py,engine,4637,2026-10-08 06:54:24 +0000,claude-owned
+backend/app/services/statement_engine/extraction/rows.py,engine,14842,2026-10-11 05:33:26 +0530,claude-owned
+backend/app/services/statement_engine/extraction/spec_codec.py,engine,8644,2026-10-11 05:33:26 +0530,claude-owned
+backend/app/services/statement_engine/extraction/summary.py,engine,2594,2026-10-07 09:33:50 +0000,claude-owned
+backend/app/services/statement_engine/extraction/words.py,engine,1577,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/__init__.py,engine,0,2026-10-07 06:03:30 +0000,claude-owned
+backend/app/services/statement_engine/extractors/apgv/__init__.py,engine,39,2026-10-08 23:06:40 +0530,claude-owned
+backend/app/services/statement_engine/extractors/apgv/extractor.py,engine,228,2026-10-08 23:06:40 +0530,claude-owned
+backend/app/services/statement_engine/extractors/apgv/layout_spec.py,engine,1944,2026-10-08 23:06:40 +0530,claude-owned
+backend/app/services/statement_engine/extractors/au_sfb/__init__.py,engine,40,2026-10-08 22:22:47 +0530,claude-owned
+backend/app/services/statement_engine/extractors/au_sfb/extractor.py,engine,227,2026-10-08 22:22:47 +0530,claude-owned
+backend/app/services/statement_engine/extractors/au_sfb/layout_spec.py,engine,1864,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/axis/__init__.py,engine,0,2026-10-07 09:20:17 +0000,claude-owned
+backend/app/services/statement_engine/extractors/axis/extractor.py,engine,228,2026-10-07 09:20:17 +0000,claude-owned
+backend/app/services/statement_engine/extractors/axis/layout_spec.py,engine,6481,2026-10-10 18:19:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bandhan/__init__.py,engine,42,2026-10-08 22:22:30 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bandhan/extractor.py,engine,240,2026-10-08 22:22:30 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bandhan/layout_spec.py,engine,3011,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bob/__init__.py,engine,0,2026-10-07 10:00:40 +0000,claude-owned
+backend/app/services/statement_engine/extractors/bob/extractor.py,engine,536,2026-10-07 13:47:40 +0000,claude-owned
+backend/app/services/statement_engine/extractors/bob/layout_spec.py,engine,4009,2026-10-07 14:17:25 +0000,claude-owned
+backend/app/services/statement_engine/extractors/bom/__init__.py,engine,52,2026-10-08 21:58:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bom/extractor.py,engine,238,2026-10-08 21:58:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/bom/layout_spec.py,engine,3114,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/canara/__init__.py,engine,0,2026-10-07 09:01:12 +0000,claude-owned
+backend/app/services/statement_engine/extractors/canara/extractor.py,engine,236,2026-10-07 14:17:25 +0000,claude-owned
+backend/app/services/statement_engine/extractors/canara/layout_spec.py,engine,6009,2026-10-09 07:24:14 +0530,claude-owned
+backend/app/services/statement_engine/extractors/central_bank/__init__.py,engine,46,2026-10-08 20:33:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/central_bank/extractor.py,engine,255,2026-10-08 20:33:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/central_bank/layout_spec.py,engine,3700,2026-10-08 20:33:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/citibank/__init__.py,engine,0,2026-10-08 15:35:22 +0530,claude-owned
+backend/app/services/statement_engine/extractors/citibank/extractor.py,engine,244,2026-10-08 15:35:22 +0530,claude-owned
+backend/app/services/statement_engine/extractors/citibank/layout_spec.py,engine,1559,2026-10-08 15:35:22 +0530,claude-owned
+backend/app/services/statement_engine/extractors/city_union/__init__.py,engine,44,2026-10-08 21:57:40 +0530,claude-owned
+backend/app/services/statement_engine/extractors/city_union/extractor.py,engine,251,2026-10-08 21:57:40 +0530,claude-owned
+backend/app/services/statement_engine/extractors/city_union/layout_spec.py,engine,2805,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dbs/__init__.py,engine,0,2026-10-08 15:13:21 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dbs/extractor.py,engine,224,2026-10-08 15:13:21 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dbs/layout_spec.py,engine,1803,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dcb/__init__.py,engine,38,2026-10-08 22:28:13 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dcb/extractor.py,engine,224,2026-10-08 22:28:13 +0530,claude-owned
+backend/app/services/statement_engine/extractors/dcb/layout_spec.py,engine,1781,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/equitas/__init__.py,engine,42,2026-10-08 21:57:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/equitas/extractor.py,engine,240,2026-10-08 21:57:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/equitas/layout_spec.py,engine,1743,2026-10-08 21:57:12 +0530,claude-owned
+backend/app/services/statement_engine/extractors/federal/__init__.py,engine,0,2026-10-07 09:53:15 +0000,claude-owned
+backend/app/services/statement_engine/extractors/federal/extractor.py,engine,240,2026-10-07 09:53:15 +0000,claude-owned
+backend/app/services/statement_engine/extractors/federal/layout_spec.py,engine,5724,2026-10-10 18:19:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/__init__.py,engine,878,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/anchors.py,engine,295,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/checks.py,engine,292,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/engine.py,engine,323,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/extractor.py,engine,627,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/layout_spec.py,engine,3417,2026-10-10 18:19:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/normalize.py,engine,301,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/rows.py,engine,286,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/summary.py,engine,308,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hdfc/words.py,engine,289,2026-10-07 06:59:26 +0000,claude-owned
+backend/app/services/statement_engine/extractors/hsbc/__init__.py,engine,0,2026-10-08 15:50:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/hsbc/extractor.py,engine,228,2026-10-08 15:50:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/hsbc/layout_spec.py,engine,1250,2026-10-08 15:50:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/icici/__init__.py,engine,0,2026-10-07 10:11:20 +0000,claude-owned
+backend/app/services/statement_engine/extractors/icici/extractor.py,engine,396,2026-10-07 14:17:25 +0000,claude-owned
+backend/app/services/statement_engine/extractors/icici/layout_spec.py,engine,8217,2026-10-11 07:51:09 +0530,claude-owned
+backend/app/services/statement_engine/extractors/idbi/__init__.py,engine,0,2026-10-08 17:48:09 +0530,claude-owned
+backend/app/services/statement_engine/extractors/idbi/extractor.py,engine,228,2026-10-08 17:48:09 +0530,claude-owned
+backend/app/services/statement_engine/extractors/idbi/layout_spec.py,engine,2899,2026-10-08 17:48:09 +0530,claude-owned
+backend/app/services/statement_engine/extractors/idfc/__init__.py,engine,0,2026-10-07 09:33:50 +0000,claude-owned
+backend/app/services/statement_engine/extractors/idfc/extractor.py,engine,228,2026-10-07 09:33:50 +0000,claude-owned
+backend/app/services/statement_engine/extractors/idfc/layout_spec.py,engine,1698,2026-10-07 14:17:25 +0000,claude-owned
+backend/app/services/statement_engine/extractors/indian_bank/__init__.py,engine,0,2026-10-07 17:18:00 +0000,claude-owned
+backend/app/services/statement_engine/extractors/indian_bank/extractor.py,engine,255,2026-10-07 17:18:00 +0000,claude-owned
+backend/app/services/statement_engine/extractors/indian_bank/layout_spec.py,engine,5460,2026-10-09 14:26:26 +0530,claude-owned
+backend/app/services/statement_engine/extractors/indusind/__init__.py,engine,0,2026-10-08 16:44:02 +0530,claude-owned
+backend/app/services/statement_engine/extractors/indusind/extractor.py,engine,244,2026-10-08 16:44:02 +0530,claude-owned
+backend/app/services/statement_engine/extractors/indusind/layout_spec.py,engine,1612,2026-10-08 16:44:02 +0530,claude-owned
+backend/app/services/statement_engine/extractors/iob/__init__.py,engine,38,2026-10-08 19:16:52 +0530,claude-owned
+backend/app/services/statement_engine/extractors/iob/extractor.py,engine,224,2026-10-08 19:16:52 +0530,claude-owned
+backend/app/services/statement_engine/extractors/iob/layout_spec.py,engine,2792,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/karnataka/__init__.py,engine,0,2026-10-07 17:25:57 +0000,claude-owned
+backend/app/services/statement_engine/extractors/karnataka/extractor.py,engine,248,2026-10-07 17:25:57 +0000,claude-owned
+backend/app/services/statement_engine/extractors/karnataka/layout_spec.py,engine,1487,2026-10-07 17:25:57 +0000,claude-owned
+backend/app/services/statement_engine/extractors/kotak/__init__.py,engine,0,2026-10-07 09:49:21 +0000,claude-owned
+backend/app/services/statement_engine/extractors/kotak/extractor.py,engine,496,2026-10-07 09:49:21 +0000,claude-owned
+backend/app/services/statement_engine/extractors/kotak/layout_spec.py,engine,12845,2026-10-10 18:19:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/kvb/__init__.py,engine,0,2026-10-08 15:50:43 +0530,claude-owned
+backend/app/services/statement_engine/extractors/kvb/extractor.py,engine,224,2026-10-08 15:50:43 +0530,claude-owned
+backend/app/services/statement_engine/extractors/kvb/layout_spec.py,engine,1568,2026-10-08 15:50:43 +0530,claude-owned
+backend/app/services/statement_engine/extractors/paytm/__init__.py,engine,0,2026-10-07 10:22:59 +0000,claude-owned
+backend/app/services/statement_engine/extractors/paytm/extractor.py,engine,232,2026-10-07 10:22:59 +0000,claude-owned
+backend/app/services/statement_engine/extractors/paytm/layout_spec.py,engine,3464,2026-10-11 07:51:13 +0530,claude-owned
+backend/app/services/statement_engine/extractors/pnb/__init__.py,engine,0,2026-10-08 18:12:34 +0530,claude-owned
+backend/app/services/statement_engine/extractors/pnb/extractor.py,engine,224,2026-10-08 18:12:34 +0530,claude-owned
+backend/app/services/statement_engine/extractors/pnb/layout_spec.py,engine,1475,2026-10-08 18:12:34 +0530,claude-owned
+backend/app/services/statement_engine/extractors/registry.py,engine,5759,2026-10-11 07:51:09 +0530,claude-owned
+backend/app/services/statement_engine/extractors/sbi/__init__.py,engine,0,2026-10-07 08:34:47 +0000,claude-owned
+backend/app/services/statement_engine/extractors/sbi/extractor.py,engine,224,2026-10-07 08:34:47 +0000,claude-owned
+backend/app/services/statement_engine/extractors/sbi/layout_spec.py,engine,18038,2026-10-11 06:51:58 +0530,claude-owned
+backend/app/services/statement_engine/extractors/scb/__init__.py,engine,0,2026-10-07 17:09:28 +0000,claude-owned
+backend/app/services/statement_engine/extractors/scb/extractor.py,engine,238,2026-10-07 17:09:28 +0000,claude-owned
+backend/app/services/statement_engine/extractors/scb/layout_spec.py,engine,2558,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/extractors/south_indian/__init__.py,engine,46,2026-10-08 19:32:31 +0530,claude-owned
+backend/app/services/statement_engine/extractors/south_indian/extractor.py,engine,241,2026-10-08 19:32:31 +0530,claude-owned
+backend/app/services/statement_engine/extractors/south_indian/layout_spec.py,engine,1647,2026-10-08 19:32:31 +0530,claude-owned
+backend/app/services/statement_engine/extractors/ujjivan/__init__.py,engine,42,2026-10-08 21:57:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/ujjivan/extractor.py,engine,240,2026-10-08 21:57:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/ujjivan/layout_spec.py,engine,1480,2026-10-08 21:57:57 +0530,claude-owned
+backend/app/services/statement_engine/extractors/union/__init__.py,engine,0,2026-10-07 10:11:20 +0000,claude-owned
+backend/app/services/statement_engine/extractors/union/extractor.py,engine,232,2026-10-07 10:11:20 +0000,claude-owned
+backend/app/services/statement_engine/extractors/union/layout_spec.py,engine,8216,2026-10-10 18:19:07 +0530,claude-owned
+backend/app/services/statement_engine/extractors/yes/__init__.py,engine,38,2026-10-08 18:38:10 +0530,claude-owned
+backend/app/services/statement_engine/extractors/yes/extractor.py,engine,224,2026-10-08 18:38:10 +0530,claude-owned
+backend/app/services/statement_engine/extractors/yes/layout_spec.py,engine,4695,2026-10-10 15:08:35 +0530,claude-owned
+backend/app/services/statement_engine/layouts.py,engine,8798,2026-10-06 16:27:45 +0000,claude-owned
+backend/app/services/statement_engine/registry.py,engine,4232,2026-10-06 11:55:34 +0000,claude-owned
+backend/app/services/statement_engine/serve.py,engine,18346,2026-10-12 08:28:16 +0530,claude-owned
+backend/app/services/statement_engine/shadow.py,engine,7471,2026-10-10 21:05:15 +0530,claude-owned
+backend/app/services/statement_engine/universal/__init__.py,engine,413,2026-10-12 06:19:30 +0530,claude-owned
+backend/app/services/statement_engine/universal/infer.py,engine,31446,2026-10-12 07:11:02 +0530,claude-owned
+backend/app/services/statement_engine/universal/isolated.py,engine,4945,2026-10-12 06:36:36 +0530,claude-owned
+backend/app/services/statement_engine/universal/lexicon.py,engine,8591,2026-10-12 07:04:49 +0530,claude-owned
+backend/app/services/statement_engine/universal/reader.py,engine,4934,2026-10-12 07:04:49 +0530,claude-owned
+backend/app/services/statement_engine/universal/serve.py,engine,5303,2026-10-12 06:36:36 +0530,claude-owned
+backend/app/services/statement_engine/v2_router.py,engine,8297,2026-10-09 12:53:20 +0530,claude-owned
+backend/app/services/task_processor.py,backend-service,5247,2026-07-15 22:45:57 +0530,general
+backend/app/services/verification/__init__.py,backend-service,425,2026-10-06 11:55:34 +0000,general
+backend/app/services/verification/engine.py,backend-service,20772,2026-10-06 11:55:34 +0000,general
+backend/app/services/verification/models.py,backend-service,4749,2026-10-06 11:55:34 +0000,general
+backend/app/utils/__init__.py,backend-api,0,2026-07-15 22:45:57 +0530,general
+backend/app/utils/correlation.py,backend-api,901,2026-07-15 22:45:57 +0530,general
+backend/app/utils/file_handler.py,backend-api,7024,2026-07-17 14:00:09 +0530,general
+backend/app/utils/logging.py,backend-api,1395,2026-07-15 22:45:57 +0530,general
+backend/data/parser_metrics.json,backend-misc,32586,2026-10-07 14:17:25 +0000,general
+backend/data/unsupported_formats/queue.json,backend-misc,3,2026-10-11 07:58:41 +0530,general
+backend/requirements.txt,backend-misc,479,2026-07-15 22:45:57 +0530,general
+backend/scripts/__init__.py,backend-misc,4,2026-07-15 22:45:57 +0530,general
+backend/scripts/baseline_run.py,backend-misc,15968,2026-10-06 11:55:34 +0000,general
+backend/scripts/capture_old_output.py,backend-misc,23940,2026-10-06 16:23:04 +0000,general
+backend/scripts/detection_benchmark.py,backend-misc,12608,2026-10-06 11:55:34 +0000,general
+backend/scripts/dev/__init__.py,backend-misc,4,2026-07-15 22:45:57 +0530,general
+backend/scripts/dev/extract_bank_rules.py,backend-misc,9985,2026-07-15 22:45:57 +0530,general
+backend/scripts/e2e_smoke.py,backend-misc,7936,2026-10-06 11:55:34 +0000,general
+backend/scripts/mypaisaa_fetch/README.md,backend-misc,11253,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/__init__.py,backend-misc,332,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/__main__.py,backend-misc,3315,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/api_client.py,backend-misc,4908,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/bank_validator.py,backend-misc,35420,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/config.py,backend-misc,3422,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/downloader.py,backend-misc,12288,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/input_loader.py,backend-misc,5296,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/logging_utils.py,backend-misc,2485,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/lookup.py,backend-misc,2080,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/manifest.py,backend-misc,10902,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/models.py,backend-misc,3235,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/parser.py,backend-misc,8439,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/pipeline.py,backend-misc,16793,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/ratelimit.py,backend-misc,788,2026-10-06 11:56:09 +0000,general
+backend/scripts/mypaisaa_fetch/report.py,backend-misc,5485,2026-10-06 11:56:09 +0000,general
+backend/tests/__init__.py,tests,0,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/__init__.py,tests,0,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/test_axis_parser.py,tests,1519,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/test_canara_parser.py,tests,2064,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/test_finbit_analytics.py,tests,4658,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/test_icici_parser.py,tests,2059,2026-07-15 22:45:57 +0530,general
+backend/tests/banks/test_lite_excel_export.py,tests,394,2026-07-15 22:45:57 +0530,general
+backend/tests/golden/__init__.py,tests,75,2026-07-15 22:45:57 +0530,general
+backend/tests/golden/axis/axis_03a834e1.json,tests,29699,?,general
+backend/tests/golden/axis/axis_0adaa93c.json,tests,20020,?,general
+backend/tests/golden/axis/axis_6ba8a853.json,tests,22153,?,general
+backend/tests/golden/axis/axis_9404a9d9.json,tests,110338,?,general
+backend/tests/golden/axis/axis_daf18fb5.json,tests,105029,?,general
+backend/tests/golden/bank_of_baroda/bank_of_baroda_2f9ac798.json,tests,431840,?,general
+backend/tests/golden/bank_of_india/bank_of_india_6c6cd53f.json,tests,43504,?,general
+backend/tests/golden/bank_of_india/bank_of_india_8cf0def2.json,tests,43504,?,general
+backend/tests/golden/bank_of_india/bank_of_india_d6c4d93a.json,tests,25103,?,general
+backend/tests/golden/canara/canara_007f4779.json,tests,139106,?,general
+backend/tests/golden/canara/canara_1b72efaa.json,tests,139106,?,general
+backend/tests/golden/canara/canara_3df16815.json,tests,83636,?,general
+backend/tests/golden/canara/canara_737ad81b.json,tests,15461,?,general
+backend/tests/golden/canara/canara_9be513d2.json,tests,83636,?,general
+backend/tests/golden/capture_snapshots.py,tests,7601,2026-07-15 22:45:57 +0530,general
+backend/tests/golden/hdfc/hdfc_0f95bddd.json,tests,132504,?,general
+backend/tests/golden/hdfc/hdfc_18fbdd59.json,tests,14367,?,general
+backend/tests/golden/hdfc/hdfc_b6f49ced.json,tests,204976,?,general
+backend/tests/golden/hdfc/hdfc_d00bee46.json,tests,2240,?,general
+backend/tests/golden/hdfc/hdfc_ffc9b72c.json,tests,141479,?,general
+backend/tests/golden/icici/icici_073fc1e5.json,tests,24335,?,general
+backend/tests/golden/icici/icici_61222e88.json,tests,76441,?,general
+backend/tests/golden/icici/icici_6cd1e8fa.json,tests,337512,?,general
+backend/tests/golden/icici/icici_8938d1f5.json,tests,145592,?,general
+backend/tests/golden/icici/icici_9e083fc3.json,tests,337512,?,general
+backend/tests/golden/idfc/idfc_3c64c19b.json,tests,35646,?,general
+backend/tests/golden/idfc/idfc_77ef5fcc.json,tests,44383,?,general
+backend/tests/golden/idfc/idfc_c73b0d2c.json,tests,49582,?,general
+backend/tests/golden/indian_bank/indian_bank_32239b01.json,tests,140218,?,general
+backend/tests/golden/indian_bank/indian_bank_cfe757a3.json,tests,45351,?,general
+backend/tests/golden/karnataka/karnataka_46dbbee4.json,tests,49503,?,general
+backend/tests/golden/karnataka/karnataka_ad28b719.json,tests,72760,?,general
+backend/tests/golden/karnataka/karnataka_f16e5a01.json,tests,190535,?,general
+backend/tests/golden/kotak/kotak_2417ade6.json,tests,2243,?,general
+backend/tests/golden/kotak/kotak_3e3dba96.json,tests,300338,?,general
+backend/tests/golden/kotak/kotak_619aa8ae.json,tests,300338,?,general
+backend/tests/golden/kotak/kotak_fb3906cc.json,tests,300338,?,general
+backend/tests/golden/paytm/paytm_a1bdcd39.json,tests,141653,?,general
+backend/tests/golden/sbi/sbi_1245ca45.json,tests,111113,?,general
+backend/tests/golden/sbi/sbi_229e8f8b.json,tests,111499,?,general
+backend/tests/golden/sbi/sbi_4bbdb678.json,tests,53138,?,general
+backend/tests/golden/sbi/sbi_941fa3a8.json,tests,106310,?,general
+backend/tests/golden/sbi/sbi_ac7c2e43.json,tests,108499,?,general
+backend/tests/golden/snapshot_utils.py,tests,23496,2026-07-15 22:45:57 +0530,general
+backend/tests/golden/test_regression.py,tests,10305,2026-07-15 22:45:57 +0530,general
+backend/tests/golden/union/union_0555811b.json,tests,243774,?,general
+backend/tests/golden/union/union_18e9272d.json,tests,138814,?,general
+backend/tests/golden/union/union_7a5d8b50.json,tests,659474,?,general
+backend/tests/golden/union/union_a69aa39e.json,tests,164985,?,general
+backend/tests/golden/union/union_e7d1d0d3.json,tests,2252,?,general
+backend/tests/golden/unknown/unknown_d0d58565.json,tests,2244,?,general
+backend/tests/migration/__init__.py,tests,0,2026-10-06 11:55:49 +0000,general
+backend/tests/migration/test_comparator.py,tests,7938,2026-10-07 08:19:06 +0000,general
+backend/tests/migration/test_old_result.py,tests,2886,2026-10-06 16:23:04 +0000,general
+backend/tests/mypaisaa/__init__.py,tests,0,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/conftest.py,tests,3240,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_api_client.py,tests,4895,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_downloader.py,tests,7626,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_input_loader.py,tests,3463,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_parser.py,tests,4928,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_pipeline.py,tests,12863,2026-10-06 11:56:09 +0000,general
+backend/tests/mypaisaa/test_report.py,tests,2715,2026-10-06 11:56:09 +0000,general
+backend/tests/pipeline/__init__.py,tests,41,2026-07-15 22:45:57 +0530,general
+backend/tests/pipeline/test_json_rule_engine.py,tests,3542,2026-07-15 22:45:57 +0530,general
+backend/tests/pipeline/test_lite_excel_export.py,tests,8810,2026-07-15 22:45:57 +0530,general
+backend/tests/pipeline/test_models.py,tests,1598,2026-07-15 22:45:57 +0530,general
+backend/tests/pipeline/test_shared_reconciliation.py,tests,2950,2026-07-15 22:45:57 +0530,general
+backend/tests/regression_manifest.json,tests,2570,2026-10-12 07:11:02 +0530,general
+backend/tests/statement_engine/__init__.py,tests,0,2026-10-06 11:55:34 +0000,general
+backend/tests/statement_engine/extraction/__init__.py,tests,0,2026-10-07 06:59:26 +0000,general
+backend/tests/statement_engine/extraction/test_bank_evidence_narration.py,tests,1676,2026-10-11 12:29:50 +0000,general
+backend/tests/statement_engine/extraction/test_completeness_guard.py,tests,1755,2026-10-12 06:27:45 +0000,general
+backend/tests/statement_engine/extraction/test_generic_engine.py,tests,56574,2026-10-09 16:00:40 +0000,general
+backend/tests/statement_engine/extraction/test_registry_store_and_router.py,tests,12405,2026-10-09 12:53:20 +0530,general
+backend/tests/statement_engine/extraction/test_shadow_readiness_fixes.py,tests,5755,2026-10-10 21:10:41 +0530,general
+backend/tests/statement_engine/extraction/test_spec_codec.py,tests,4914,2026-10-09 16:12:58 +0530,general
+backend/tests/statement_engine/extractors/__init__.py,tests,0,2026-10-07 06:03:30 +0000,general
+backend/tests/statement_engine/extractors/test_hdfc_v2_synthetic.py,tests,12024,2026-10-07 08:19:06 +0000,general
+backend/tests/statement_engine/test_analysis_service.py,tests,15749,2026-10-12 16:04:40 +0530,general
+backend/tests/statement_engine/test_capability_and_states.py,tests,2978,2026-10-06 11:55:34 +0000,general
+backend/tests/statement_engine/test_detector.py,tests,12508,2026-10-09 12:24:17 +0530,general
+backend/tests/statement_engine/test_layouts_hdfc.py,tests,2011,2026-10-06 16:27:45 +0000,general
+backend/tests/statement_engine/test_real_pdfs.py,tests,3007,2026-10-06 11:55:34 +0000,general
+backend/tests/statement_engine/test_serve.py,tests,19588,2026-10-10 21:10:41 +0530,general
+backend/tests/statement_engine/test_shadow_wiring.py,tests,3532,2026-10-10 21:10:41 +0530,general
+backend/tests/statement_engine/test_universal.py,tests,4428,2026-10-12 07:04:49 +0530,general
+backend/tests/test_api_key_service.py,tests,7121,2026-07-18 18:13:09 +0530,general
+backend/tests/test_async_upload.py,tests,3571,2026-07-15 22:45:57 +0530,general
+backend/tests/test_auth_integration.py,tests,1808,2026-07-15 22:45:57 +0530,general
+backend/tests/test_bank_name_routing.py,tests,1039,2026-10-12 00:07:39 +0530,general
+backend/tests/test_history_statement_engine.py,tests,4049,2026-10-12 02:11:58 +0530,general
+backend/tests/test_mismatch_guard.py,tests,4023,2026-10-12 02:11:52 +0530,general
+backend/tests/test_persistence_service.py,tests,9536,2026-07-15 22:45:57 +0530,general
+backend/tests/test_pipeline_orchestrator.py,tests,25688,2026-10-12 00:07:39 +0530,general
+backend/tests/test_serve_api.py,tests,4986,2026-10-10 21:10:41 +0530,general
+backend/tests/test_statements_analyze_api.py,tests,6818,2026-10-12 14:31:09 +0530,general
+backend/tests/test_v2_only_banks.py,tests,3482,2026-10-12 08:28:29 +0530,general
+backend/tests/test_workflow_fields.py,tests,6187,2026-10-12 14:31:09 +0530,general
+backend/tests/verification/__init__.py,tests,0,2026-10-06 11:55:34 +0000,general
+backend/tests/verification/test_contract.py,tests,2183,2026-10-06 11:55:34 +0000,general
+backend/tests/verification/test_engine.py,tests,9177,2026-10-06 11:55:34 +0000,general
+backend/tools/propose_layouts.py,backend-misc,6181,2026-10-12 07:25:18 +0530,general
+backend/tools/regression_gate.py,backend-misc,3677,2026-10-12 07:03:47 +0530,general
+backend/tools/u3_measure.py,backend-misc,8549,2026-10-12 07:25:18 +0530,general
+backend/tools/u3_remeasure.py,backend-misc,2795,2026-10-12 07:25:18 +0530,general
+backend/tools/u3c_crosscheck.py,backend-misc,5919,2026-10-12 07:25:18 +0530,general
+backend/words.json,backend-misc,163521,2026-07-21 00:56:59 +0530,general
+comparison/wave11/REPORT.md,misc,6382,2026-10-12 04:52:54 +0530,general
+comparison/wave11/e1_candidates.py,misc,6741,2026-10-12 02:24:58 +0530,general
+comparison/wave11/e3_accept.py,misc,5578,2026-10-12 04:52:54 +0530,general
+comparison/wave11/e3_picks.py,misc,2845,2026-10-12 04:52:54 +0530,general
+comparison/wave11/e3_probes.py,misc,5161,2026-10-12 04:52:54 +0530,general
+comparison/wave11/e3_ui.py,misc,7575,2026-10-12 04:52:54 +0530,general
+database/migrations/migrate_metadata_to_extra_data.sql,infra-misc,4081,2026-07-15 22:45:57 +0530,general
+database/migrations/version_001_init.sql,infra-misc,161,2026-07-15 22:45:57 +0530,general
+database/migrations/version_002_statement_metadata.sql,infra-misc,4698,2026-07-15 22:45:57 +0530,general
+database/migrations/version_003_layout_registry.sql,infra-misc,2053,2026-10-07 08:19:08 +0000,general
+database/schemas/E2E_VALIDATION_CHECKLIST.md,infra-misc,9268,2026-07-15 22:45:57 +0530,general
+database/schemas/audit_validation_queries.sql,infra-misc,10929,2026-07-15 22:45:57 +0530,general
+database/schemas/audit_views.sql,infra-misc,7886,2026-07-15 22:45:57 +0530,general
+database/schemas/production_monitoring_schema.sql,infra-misc,7983,2026-07-15 22:45:57 +0530,general
+database/schemas/supabase_audit_schema.sql,infra-misc,43960,2026-07-15 22:45:57 +0530,general
+database/seeds/init.sql,infra-misc,912,2026-07-15 22:45:57 +0530,general
+database/seeds/postgres.conf,infra-misc,125,2026-07-15 22:45:57 +0530,general
+database/seeds/setup_supabase.py,infra-misc,1974,2026-10-12 08:28:16 +0530,general
+docs/AGENT_STATE.md,docs,8067,2026-10-12 17:21:42 +0530,general
+docs/PRODUCT_STATUS.md,docs,5088,2026-10-12 16:03:38 +0530,general
+docs/REPO_INVENTORY.md,docs,4879,2026-10-12 08:28:16 +0530,general
+docs/UNIFIED_ENTRY_PLAN.md,docs,8716,2026-10-12 13:43:59 +0530,general
+docs/architecture/ARCHITECTURE.md,docs,5093,2026-10-12 08:28:16 +0530,general
+docs/architecture/SECURE_INSIGHTS_SYSTEM_OVERVIEW.md,docs,41782,?,general
+docs/archive/ARCHITECTURE_PREV.md,docs,25745,?,general
+docs/archive/HANDOFF.md,docs,15120,?,general
+docs/archive/RUN_SLICE1.bat,docs,183,?,general
+docs/archive/RUN_SLICE1.md,docs,2881,?,general
+docs/archive/RUN_SLICE2B.bat,docs,175,?,general
+docs/archive/RUN_SLICE2B_TESTS_ONLY.bat,docs,183,?,general
+docs/archive/RUN_TESTS_ONLY.bat,docs,194,?,general
+docs/archive/baseline_branch.txt,docs,6,?,general
+docs/archive/baseline_git_diff_stat.txt,docs,17659,?,general
+docs/archive/baseline_git_status.txt,docs,15286,?,general
+docs/archive/known_failures.txt,docs,1745,?,general
+docs/archive/run_all_slice1.ps1,docs,10921,?,general
+docs/archive/run_slice2b.ps1,docs,6334,?,general
+docs/archive/tickets/CLEANUP_LITE_ONLY_EXCEL.md,docs,1411,?,general
+docs/archive/tickets/PHASE2B_CLASSIFICATION_STATUS.md,docs,2454,?,general
+docs/archive/tickets/PHASE5_REPORTING_STATUS.md,docs,1459,?,general
+docs/archive/tickets/PHASE6_CLEANUP_STATUS.md,docs,1158,?,general
+docs/archive/tickets/RECON_BASELINE_AND_PARITY.md,docs,1994,?,general
+docs/banks/BANK_COMPARISON_MATRIX.md,docs,10986,?,general
+docs/banks/BANK_INTEGRATION_GUIDE.md,docs,23396,?,general
+docs/banks/BANK_STATUS.md,docs,6205,?,general
+docs/banks/INDIAN_BANK_IMPLEMENTATION_SUMMARY.md,docs,10120,?,general
+docs/banks/KVB_DESIGN_NOTE.md,docs,2917,?,general
+docs/banks/KVB_FEASIBILITY.md,docs,2652,?,general
+docs/banks/ONBOARDING_3C_RESULTS.md,docs,4661,?,general
+docs/banks/PNB_DESIGN_NOTE.md,docs,1636,?,general
+docs/banks/WAVE10_RESULTS.md,docs,4998,?,general
+docs/banks/WAVE11A_NOTES.md,docs,4033,?,general
+docs/banks/WAVE1_RESULTS.md,docs,5708,?,general
+docs/banks/WAVE2_RESULTS.md,docs,6763,?,general
+docs/banks/WAVE3_RESULTS.md,docs,7964,?,general
+docs/banks/WAVE4_RESULTS.md,docs,4196,?,general
+docs/banks/WAVE5_RESULTS.md,docs,11099,?,general
+docs/banks/WAVE6_RESULTS.md,docs,5006,?,general
+docs/banks/WAVE7_RESULTS.md,docs,8435,?,general
+docs/engine/Date Validations.md,docs,2918,?,general
+docs/engine/HDFC_V2_DESIGN.md,docs,19217,?,general
+docs/engine/HEADERLESS_VARIANTS_DESIGN.md,docs,2659,?,general
+docs/engine/HEADER_ONLY_CANDIDATES.md,docs,5143,?,general
+docs/engine/ICICI_STALE_BALANCE_DESIGN_NOTE.md,docs,2452,?,general
+docs/engine/SHARED_ENGINE_3B.md,docs,1843,?,general
+docs/engine/UNIVERSAL_PROPOSALS.md,docs,2349,?,general
+docs/engine/UNIVERSAL_READER_DESIGN.md,docs,5075,?,general
+docs/engine/UNIVERSAL_RESULTS.md,docs,4620,?,general
+docs/engine/V2_API_CONTRACT.md,docs,4387,?,general
+docs/engine/V2_API_CONTRACT_CHANGES.md,docs,3035,?,general
+docs/engine/V2_SERVE_DESIGN.md,docs,5698,?,general
+docs/engine/V2_SERVE_PARITY.md,docs,3325,?,general
+docs/engine/V2_UI_NOTES.md,docs,7701,2026-10-12 16:03:38 +0530,general
+docs/operations/DEMO_READINESS.md,docs,4283,?,general
+docs/operations/DEMO_SCRIPT.md,docs,4485,2026-10-12 16:03:38 +0530,general
+docs/operations/ENGINE_OBSERVABILITY.md,docs,2355,?,general
+docs/operations/FEATURE_FLAGS.md,docs,4195,2026-10-12 16:03:38 +0530,general
+docs/operations/PII_REMEDIATION.md,docs,6942,?,general
+docs/operations/ROLLOUT_MATRIX.md,docs,3504,?,general
+docs/operations/RUNBOOK.md,docs,5599,2026-10-12 16:03:38 +0530,general
+docs/operations/SHADOW_READINESS.md,docs,2792,?,general
+docs/operations/V2_ENABLEMENT.md,docs,7336,?,general
+docs/operations/security_audit.md,docs,10716,?,general
+docs/verification/ARCHITECTURE_INVENTORY.md,docs,6598,?,general
+docs/verification/CODE_HYGIENE.md,docs,3562,2026-10-12 08:28:16 +0530,general
+docs/verification/COMPARATOR_FOUNDATION_REPORT.md,docs,4651,?,general
+docs/verification/DETECTION_FINDINGS.md,docs,1281,?,general
+docs/verification/FINDINGS_RUN1.md,docs,8209,?,general
+docs/verification/FREEZE_PROPOSAL.md,docs,8806,?,general
+docs/verification/HDFC_CORPUS_BASELINE.md,docs,7804,?,general
+docs/verification/ISSUE_hdfc_legacy_closing_balance.md,docs,2439,?,general
+docs/verification/KNOWN_FAILURES.md,docs,1445,?,general
+docs/verification/OLD_CAPTURE_PILOT_REPORT.md,docs,7040,?,general
+docs/verification/PHASE8_VERIFY.md,docs,5523,?,general
+docs/verification/SLICE2B_FINAL_REPORT.md,docs,7263,?,general
+docs/verification/SLICE2C_FINAL_REPORT.md,docs,6537,?,general
+e2e/ue_e2e.mjs,e2e,11929,2026-10-12 16:07:08 +0530,general
+e2e/uicheck.mjs,e2e,1312,2026-10-12 16:07:08 +0530,general
+e2e_pdfs/hdfc_locked.pdf,e2e,1495,2026-10-12 16:07:08 +0530,general
+e2e_pdfs/hdfc_ok.pdf,e2e,822,2026-10-12 16:07:08 +0530,general
+e2e_pdfs/kotak_override.pdf,e2e,810,2026-10-12 16:07:08 +0530,general
+e2e_pdfs/scanned.pdf,e2e,814,2026-10-12 16:07:08 +0530,general
+e2e_pdfs/unsupported.pdf,e2e,826,2026-10-12 16:07:08 +0530,general
+frontend/Dockerfile,frontend,1184,2026-07-15 22:45:57 +0530,general
+frontend/app/analyze/page.tsx,frontend,1240,2026-10-12 14:39:58 +0530,general
+frontend/app/api/api-keys/[id]/route.ts,frontend-api-routes,1257,2026-07-18 18:13:09 +0530,general
+frontend/app/api/api-keys/route.ts,frontend-api-routes,1699,2026-07-18 18:13:09 +0530,general
+frontend/app/api/auth/callback/route.ts,frontend-api-routes,961,2026-07-15 22:45:57 +0530,general
+frontend/app/api/auth/login/route.ts,frontend-api-routes,280,2026-07-15 22:45:57 +0530,general
+frontend/app/api/auth/refresh/route.ts,frontend-api-routes,946,2026-07-15 22:45:57 +0530,general
+frontend/app/api/check-pdf/route.ts,frontend-api-routes,726,2026-07-15 22:45:57 +0530,general
+frontend/app/api/download/[filename]/route.ts,frontend-api-routes,1291,2026-07-15 22:45:57 +0530,general
+frontend/app/api/jobs/[jobId]/download/route.ts,frontend-api-routes,1510,2026-07-15 22:45:57 +0530,general
+frontend/app/api/jobs/[jobId]/route.ts,frontend-api-routes,1318,2026-07-15 22:45:57 +0530,general
+frontend/app/api/profile/files/[fileId]/route.ts,frontend-api-routes,2522,2026-07-17 14:25:27 +0530,general
+frontend/app/api/profile/history/route.ts,frontend-api-routes,1818,2026-07-15 22:45:57 +0530,general
+frontend/app/api/statements/[analysisId]/confirm/route.ts,frontend-api-routes,418,2026-10-06 11:55:34 +0000,general
+frontend/app/api/statements/[analysisId]/documents/[documentId]/unlock/route.ts,frontend-api-routes,515,2026-10-06 11:55:34 +0000,general
+frontend/app/api/statements/[analysisId]/process/route.ts,frontend-api-routes,432,2026-10-06 11:55:34 +0000,general
+frontend/app/api/statements/[analysisId]/route.ts,frontend-api-routes,335,2026-10-06 11:55:34 +0000,general
+frontend/app/api/statements/analyze/route.ts,frontend-api-routes,740,2026-10-06 11:55:34 +0000,general
+frontend/app/api/statements/banks/route.ts,frontend-api-routes,212,2026-10-06 11:55:34 +0000,general
+frontend/app/api/sync/route.ts,frontend-api-routes,3160,2026-07-15 22:45:57 +0530,general
+frontend/app/api/unlock-pdf/route.ts,frontend-api-routes,727,2026-07-15 22:45:57 +0530,general
+frontend/app/api/upload/route.ts,frontend-api-routes,3429,2026-07-15 22:45:57 +0530,general
+frontend/app/api/upload/supported-banks/route.ts,frontend-api-routes,218,2026-10-12 07:03:51 +0530,general
+frontend/app/auth/callback/page.tsx,frontend,3208,2026-07-17 14:00:09 +0530,general
+frontend/app/components/Dashboard.tsx,frontend,64553,2026-10-12 14:39:58 +0530,general
+frontend/app/components/analyze/AnalyzeFlow.tsx,frontend,14467,2026-10-12 07:03:51 +0530,general
+frontend/app/components/api-keys/ApiKeyList.tsx,frontend,8637,2026-10-12 02:12:06 +0530,general
+frontend/app/components/api-keys/CreateKeyModal.tsx,frontend,8176,2026-07-18 18:13:09 +0530,general
+frontend/app/components/api-keys/QuickStartGuide.tsx,frontend,24900,2026-07-21 15:43:58 +0530,general
+frontend/app/components/layout/Header.tsx,frontend,2318,2026-10-12 14:39:58 +0530,general
+frontend/app/components/layout/StepForm.tsx,frontend,6287,2026-10-11 23:32:38 +0530,general
+frontend/app/components/layout/__tests__/StepForm.test.tsx,frontend,1481,2026-10-11 23:32:45 +0530,general
+frontend/app/components/processing/ProcessingStep.tsx,frontend,20280,2026-10-12 02:12:06 +0530,general
+frontend/app/components/results/CollapsiblePreview.tsx,frontend,2241,2026-07-15 22:45:57 +0530,general
+frontend/app/components/results/DownloadButtons.tsx,frontend,3842,2026-07-15 22:45:57 +0530,general
+frontend/app/components/results/ResultStep.tsx,frontend,16188,2026-10-12 02:12:06 +0530,general
+frontend/app/components/results/engine/EngineDetails.tsx,frontend,3849,2026-10-12 02:11:58 +0530,general
+frontend/app/components/results/engine/ReviewReasons.tsx,frontend,534,2026-10-11 23:32:33 +0530,general
+frontend/app/components/results/engine/VerificationBadge.tsx,frontend,4633,2026-10-12 07:03:51 +0530,general
+frontend/app/components/results/engine/__tests__/__snapshots__/statementEngine.test.tsx.snap,frontend,9792,2026-10-12 02:11:58 +0530,general
+frontend/app/components/results/engine/__tests__/statementEngine.test.tsx,frontend,11039,2026-10-12 08:28:16 +0530,general
+frontend/app/components/spreadsheet/SpreadsheetContext.tsx,frontend,24267,2026-07-15 22:45:57 +0530,general
+frontend/app/components/spreadsheet/SpreadsheetEditor.tsx,frontend,10044,2026-10-12 02:12:06 +0530,general
+frontend/app/components/spreadsheet/SpreadsheetGrid.tsx,frontend,37614,2026-07-15 22:45:57 +0530,general
+frontend/app/components/spreadsheet/SpreadsheetHistory.tsx,frontend,2814,2026-07-15 22:45:57 +0530,general
+frontend/app/components/spreadsheet/SpreadsheetToolbar.tsx,frontend,23177,2026-07-15 22:45:57 +0530,general
+frontend/app/components/spreadsheet/types.ts,frontend,1855,2026-07-15 22:45:57 +0530,general
+frontend/app/components/upload/ModeSelection.tsx,frontend,11282,2026-07-15 22:45:57 +0530,general
+frontend/app/components/upload/UploadStep.tsx,frontend,9678,2026-07-15 22:45:57 +0530,general
+frontend/app/components/workflow/ProcessingList.tsx,frontend,1258,2026-10-12 14:39:58 +0530,general
+frontend/app/components/workflow/ReportList.tsx,frontend,2670,2026-10-12 16:02:56 +0530,general
+frontend/app/components/workflow/ReviewTable.tsx,frontend,10099,2026-10-12 14:39:58 +0530,general
+frontend/app/components/workflow/StatementWorkflow.tsx,frontend,3812,2026-10-12 14:39:58 +0530,general
+frontend/app/components/workflow/UploadDropzone.tsx,frontend,4704,2026-10-12 14:39:58 +0530,general
+frontend/app/components/workflow/__tests__/flagOffEquivalence.test.tsx,frontend,2034,2026-10-12 16:07:08 +0530,general
+frontend/app/dashboard/api-keys/page.tsx,frontend,1837,2026-07-18 18:13:09 +0530,general
+frontend/app/dashboard/page.tsx,frontend,1567,2026-07-15 22:45:57 +0530,general
+frontend/app/globals.css,frontend,1143,2026-07-15 22:45:57 +0530,general
+frontend/app/hooks/__tests__/useStatementWorkflow.test.ts,frontend,5666,2026-10-12 14:39:58 +0530,general
+frontend/app/hooks/useStatementWorkflow.ts,frontend,8937,2026-10-12 14:39:58 +0530,general
+frontend/app/layout.tsx,frontend,645,2026-07-15 22:45:57 +0530,general
+frontend/app/page.tsx,frontend,9479,2026-10-12 07:03:51 +0530,general
+frontend/contexts/AuthContext.tsx,frontend,4870,2026-07-15 22:45:57 +0530,general
+frontend/eslint.config.mjs,frontend,499,2026-10-12 02:12:06 +0530,general
+frontend/lib/api.ts,frontend,3755,2026-10-12 02:12:06 +0530,general
+frontend/lib/banks.ts,frontend,1863,2026-10-11 23:32:38 +0530,general
+frontend/lib/flags.ts,frontend,227,2026-10-12 14:39:58 +0530,general
+frontend/lib/keycloak.ts,frontend,4692,2026-07-15 22:45:57 +0530,general
+frontend/lib/sessionToken.ts,frontend,4235,2026-07-15 22:45:57 +0530,general
+frontend/lib/statementEngine.ts,frontend,3948,2026-10-12 07:03:51 +0530,general
+frontend/lib/statementsApi.ts,frontend,5852,2026-10-12 14:39:58 +0530,general
+frontend/lib/statementsProxy.ts,frontend,1666,2026-10-06 11:55:34 +0000,general
+frontend/lib/validation.ts,frontend,668,2026-07-15 22:45:57 +0530,general
+frontend/next-env.d.ts,frontend,247,2026-07-15 22:45:57 +0530,general
+frontend/next.config.js,frontend,157,2026-07-18 18:13:09 +0530,general
+frontend/package-lock.json,frontend,351100,2026-10-12 16:07:08 +0530,general
+frontend/package.json,frontend,1098,2026-10-12 16:07:08 +0530,general
+frontend/postcss.config.js,frontend,82,2026-07-15 22:45:57 +0530,general
+frontend/public/android-chrome-192x192.png,frontend,21572,2026-07-15 22:45:57 +0530,general
+frontend/public/android-chrome-512x512.png,frontend,75980,2026-07-15 22:45:57 +0530,general
+frontend/public/apple-touch-icon.png,frontend,19437,2026-07-15 22:45:57 +0530,general
+frontend/public/favicon-16x16.png,frontend,674,2026-07-15 22:45:57 +0530,general
+frontend/public/favicon-32x32.png,frontend,1727,2026-07-15 22:45:57 +0530,general
+frontend/public/favicon.ico,frontend,15406,2026-07-15 22:45:57 +0530,general
+frontend/public/logo.png,frontend,151063,2026-07-15 22:45:57 +0530,general
+frontend/public/silent-check-sso.html,frontend,1198,2026-07-15 22:45:57 +0530,general
+frontend/public/site.webmanifest,frontend,263,2026-07-15 22:45:57 +0530,general
+frontend/tailwind.config.ts,frontend,558,2026-07-15 22:45:57 +0530,general
+frontend/tsconfig.json,frontend,698,2026-07-15 22:45:57 +0530,general
+frontend/types/index.ts,frontend,8484,2026-10-12 08:28:16 +0530,general
+frontend/vitest.config.ts,frontend,333,2026-10-11 23:32:45 +0530,general
+frontend/vitest.setup.ts,frontend,42,2026-10-11 23:32:45 +0530,general
+infra/docker/docker-compose.ec2.yml,infra-docker,7798,2026-07-16 00:15:51 +0530,general
+infra/docker/docker-compose.finrc.yml,infra-docker,3062,2026-10-12 08:28:16 +0530,general
+infra/docker/docker-compose.local.yml,infra-docker,3714,2026-10-12 00:07:39 +0530,general
+infra/docker/docker-compose.w11.yml,infra-docker,1971,2026-10-12 04:36:05 +0530,general
+infra/docker/docker-compose.yml,infra-docker,8121,2026-10-12 00:07:39 +0530,general
+infra/nginx/Dockerfile,infra-docker,239,2026-07-15 22:45:57 +0530,general
+infra/nginx/entrypoint.sh,infra-docker,445,2026-07-16 00:15:51 +0530,general
+infra/nginx/nginx.conf,infra-docker,3048,2026-07-15 22:45:57 +0530,general
+infra/nginx/nginx.ec2.conf.template,infra-docker,5024,2026-07-16 00:15:51 +0530,general
+infra/nginx/nginx.local.conf,infra-docker,3706,2026-07-15 22:45:57 +0530,general
+scripts/audit/_audit_verify.py,misc,2879,2026-07-15 22:45:57 +0530,general
+scripts/audit/_col_check.py,misc,823,2026-07-15 22:45:57 +0530,general
+scripts/audit/_col_check2.py,misc,334,2026-07-15 22:45:57 +0530,general
+scripts/audit/_deep_verify_parity.py,misc,10272,2026-07-15 22:45:57 +0530,general
+scripts/audit/_hygiene_verify.py,misc,1504,2026-07-15 22:45:57 +0530,general
+scripts/audit/_migrate_hygiene.py,misc,755,2026-07-15 22:45:57 +0530,general
+scripts/audit/_supabase_check.py,misc,3508,2026-07-15 22:45:57 +0530,general
+scripts/audit/_table_counts.py,misc,1179,2026-07-15 22:45:57 +0530,general
+scripts/audit/_verify_all_banks.py,misc,4296,2026-07-15 22:45:57 +0530,general
+scripts/audit/_verify_parity.py,misc,4411,2026-07-15 22:45:57 +0530,general
+scripts/deploy/bootstrap-ec2-ubuntu.sh,misc,2742,2026-07-15 22:45:57 +0530,general
+scripts/deploy/deploy-ec2.sh,misc,3420,2026-07-15 22:45:57 +0530,general
+scripts/deploy/deploy-fintech.ps1,misc,4856,2026-07-15 22:45:57 +0530,general
+scripts/deploy/deploy-simple.ps1,misc,466,2026-07-15 22:45:57 +0530,general
+scripts/deploy/deploy-to-aws.ps1,misc,10727,2026-07-15 22:45:57 +0530,general
+scripts/deploy/deploy-to-ec2.sh,misc,8173,2026-07-15 22:45:57 +0530,general
+scripts/deploy/diagnose-infrastructure.ps1,misc,4602,2026-07-15 22:45:57 +0530,general
+scripts/deploy/pull-and-rebuild.ps1,misc,2538,2026-07-15 22:45:57 +0530,general
+scripts/deploy/update-from-github.sh,misc,1276,2026-07-15 22:45:57 +0530,general
+scripts/dev/generate_bank_tracker.py,misc,21610,2026-07-15 22:45:57 +0530,general
+scripts/dev/run_api_key_gates.py,misc,18208,2026-07-18 18:13:09 +0530,general
+scripts/dev/test_all_banks.ps1,misc,5966,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_banks.py,misc,4247,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_end_to_end_parsing.py,misc,7535,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_fallback_functionality.py,misc,7505,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_hygiene_integration.py,misc,4655,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_hygiene_nonblocking.py,misc,3709,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_hygiene_standalone.py,misc,6962,2026-07-15 22:45:57 +0530,general
+scripts/dev/test_parsers_locally.py,misc,4702,2026-07-15 22:45:57 +0530,general
+scripts/frontend-app-client.json,misc,830,2026-07-15 22:45:57 +0530,general
+scripts/pkce-clear.json,misc,49,2026-07-15 22:45:57 +0530,general
+scripts/setup/fix-keycloak-client.sh,misc,2095,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-aws-local.bat,misc,193,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-aws-local.ps1,misc,5212,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-aws-server.sh,misc,6200,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-keycloak-realm.sh,misc,7423,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-keycloak.sh,misc,6848,2026-07-15 22:45:57 +0530,general
+scripts/setup/setup-local-keycloak.ps1,misc,16346,2026-07-15 22:45:57 +0530,general
+scripts/setup/test-login.sh,misc,2283,2026-07-15 22:45:57 +0530,general
+tools/cleanup_audit/inventory.py [untracked],untracked,2660,n/a,general
+"Unified All Statements/ [untracked, main checkout]",corpus-data,-2,n/a,"data — junction to corpus; 15,614 files"
+"docs/AGENT_STATE.md [untracked, main checkout]",docs,-1,n/a,general
+"docs/CLAUDE_PROJECT_CONTEXT.md [untracked, main checkout]",docs,-1,n/a,general
+"docs/MANUAL_TEST_CHECKLIST.md [untracked, main checkout]",docs,-1,n/a,general
+"docs/SYSTEM_MAP.md [untracked, main checkout]",docs,-1,n/a,general
+wt-audit/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-demo/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-p8c/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-univ/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-w11/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-w11clean/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
+wt-wave9b/ [nested worktree in main checkout],worktree-copy,-2,n/a,general
