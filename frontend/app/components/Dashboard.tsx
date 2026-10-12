@@ -9,6 +9,8 @@ import UploadStep from './upload/UploadStep'
 import ModeSelection from './upload/ModeSelection'
 import ProcessingStep from './processing/ProcessingStep'
 import ResultStep from './results/ResultStep'
+import StatementWorkflow from './workflow/StatementWorkflow'
+import { unifiedEntry } from '@/lib/flags'
 import {
   FileText,
   FileSpreadsheet,
@@ -133,6 +135,7 @@ export default function Dashboard() {
   const [result, setResult] = useState<ProcessingResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [historyReloadKey, setHistoryReloadKey] = useState(0)
   const [historySummary, setHistorySummary] = useState<ProfileHistoryResponse['summary']>({
     total_uploads: 0,
     processed_files: 0,
@@ -268,7 +271,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadProfileHistory()
-  }, [loadProfileHistory])
+  }, [loadProfileHistory, historyReloadKey])
 
   const handleUserDetails = (details: UserDetails) => {
     setUserDetails(details)
@@ -749,6 +752,12 @@ export default function Dashboard() {
         <Header onProfileClick={() => setIsProfilePanelOpen(true)} />
 
         <div className="max-w-3xl mx-auto">
+          {unifiedEntry() ? (
+            <StatementWorkflow
+              profileName={profileName}
+              onJobsSettled={() => setHistoryReloadKey((k) => k + 1)}
+            />
+          ) : (
           <section>
             <div className="mb-8 flex items-center justify-center gap-1.5">
               {[1, 2, 3, 4, 5].map((s) => (
@@ -872,6 +881,7 @@ export default function Dashboard() {
               </p>
             </footer>
           </section>
+          )}
         </div>
       </div>
 
