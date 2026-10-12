@@ -1,51 +1,65 @@
-# Demo Readiness — Demo Release Candidate
+# Demo Readiness — Wave 11 (v2 enablement)
 
-Pin: `demo/rc` (local only). Stack: Docker Compose, all 8 services healthy.
-Flags for the demo: `STATEMENT_ENGINE_V2_MODE=serve`, `STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc`.
+Branch: `devin/wave11` (local only). Demo stack: `..\wt-demo` compose project.
+Recommended flags:
 
-This build is honest: every bank shows exactly what is true today — v2 VERIFIED,
-legacy processed, needs review, or not supported. Nothing unverified is presented
-as verified.
+```
+STATEMENT_ENGINE_V2_MODE=serve
+STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
+STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S=30
+```
 
-## Per-bank table (one tested file each; A=off, C=serve-hdfc)
+Every bank shows exactly what is true today — v2 VERIFIED, v2 needs review,
+legacy processed, or not supported. Nothing unverified is presented as verified.
+IndusInd is deliberately **not** allowlisted: it passed every corpus gate but
+failed the live mutation probe (see `V2_ENABLEMENT.md`), so it stays off until
+the checks-layer fix lands.
 
-| Bank | Engine used | Expected verdict | What the demo shows | Known limitation | Result |
-|---|---|---|---|---|---|
-| HDFC Bank | v2 (serve) | VERIFIED | Upload → DETECTED → verified badge + Statement Check sheet | — | **PASS** |
-| SBI | legacy | — | 299-txn statement processes end-to-end | not v2-served yet | **PASS** |
-| ICICI Bank | legacy | — | 378-txn statement processes end-to-end | not v2-served; see probe note | **PASS** |
-| Axis Bank | legacy | — | 1,147-txn statement (largest) | not v2-served | **PASS** |
-| Kotak Mahindra | legacy | — | 506-txn statement | not v2-served | **PASS** |
-| Kotak Bank | legacy | — | 453-txn statement | not v2-served | **PASS** |
-| IDFC First | legacy | — | 798-txn statement | not v2-served | **PASS** |
-| Karnataka | legacy | — | 231-txn statement | not v2-served | **PASS** |
-| Paytm / Paytm Payments | legacy | — | 396 / 414-txn statements | not v2-served | **PASS** |
-| Bank of India | legacy | — | completes after routing fix (150 txn) | fix landed this run | **PASS-WITH-NOTES** |
-| Bank of Baroda | legacy | — | REVIEW → issuer validation rejects this app-format file | legacy check false-negative; v2 VERIFIED in shadow | **PASS-WITH-NOTES** |
-| Indian Bank | legacy | — | routes now; issuer validation rejects app-format file | same class as BoB | **PASS-WITH-NOTES** |
-| Canara Bank | legacy | — | DETECTED then honest failure message | legacy parser can't find txn table (e-passbook) | **PASS-WITH-NOTES** |
-| Union Bank | legacy | — | DETECTED then honest failure message | legacy parser can't extract rows | **PASS-WITH-NOTES** |
-| Other ~30 folders | — | — | detector UNKNOWN or document UNSUPPORTED | not in the 13-bank product set | **NOT-SUPPORTED** |
+## Per-bank table (recommended config)
 
-## What is verified vs claimed
+| Bank | Serving | What the demo shows | Evidence |
+|---|---|---|---|
+| HDFC Bank | **v2** | VERIFIED badge + `Statement Check` sheet | 3/3 VERIFIED E3 picks; mutation caught → FAILED |
+| State Bank of India | **v2** | VERIFIED; REVIEW files defer to legacy | 3/3 VERIFIED E3 picks |
+| Axis Bank | **v2** | VERIFIED | 3/3 VERIFIED E3 picks |
+| IDFC First | **v2** | VERIFIED; REVIEW files defer to legacy | 3/3 VERIFIED E3 picks |
+| Paytm Payments | **v2** | VERIFIED (detector-only evidence class — sweep gate met) | 5/5 VERIFIED E3 picks |
+| Citibank | **v2** | VERIFIED — was "not supported" before this wave (no legacy processor) | 5/5 VERIFIED E3 picks; UI leg PASS incl. Excel download |
+| City Union | **v2** | VERIFIED, or honest "Needs review" (`NO_INDEPENDENT_ANCHOR`) | 3 VERIFIED + 2 REVIEW E3 picks; UI leg PASS |
+| ICICI Bank | legacy | Processes as today | v2 not eligible (trusted 76.3 < 94) |
+| Kotak / Kotak Mahindra | legacy | Processes as today | v2 not eligible (trusted 88.3 < 94) |
+| Karnataka Bank | legacy | Processes as today | v2 not eligible (fail 5.4 > 5) |
+| Bank of India | legacy | Processes as today | not in v2 spec set |
+| Bank of Baroda | legacy | Fails honestly ("PDF does not appear to be a Bank of Baroda statement") | v2 not eligible (trusted 93.3 < 94, fail 22.2) — **not a demo "review" moment, it is a failure** |
+| Indian Bank | legacy | Fails honestly (issuer validation) | v2 not eligible (trusted 93.3, fail 6.9, anchored 34.6%) |
+| Canara Bank | legacy | Fails honestly (no transaction table) | v2 not eligible (trusted 92.1, fail 8.1) |
+| Union Bank | legacy | Fails honestly (row extraction) | v2 not eligible (fail 5.8, anchored 3.5%) |
+| IndusInd Bank | **off** | "This looks like an IndusInd Bank statement. That bank is not supported yet." | BLOCKED — first-row amount mutation stayed VERIFIED; removed from eligibility |
+| ~29 other folders | — | Detector UNKNOWN / unsupported — refused cleanly | not in the product set |
 
-- **Verified live**: analyze→confirm→process→Excel download for every completed
-  bank through the HTTP API; the same flow through a real browser for HDFC
-  (desktop + 360 px), console clean.
-- **Serve safety**: HDFC-only allowlist verified — all non-HDFC banks produce
-  byte-path-identical legacy results in serve mode; a mutated HDFC statement is
-  caught (verdict FAILED, falls back) instead of staying VERIFIED.
-- **Kill switch**: mode flipped serve→off at runtime (env + `up -d backend`),
-  next upload immediately legacy. Verified live.
-- **Excel**: 17 workbooks recalculated headless in LibreOffice — 0 real formula
-  errors (one false positive: an address literal starting with `#`).
-- **Numbers**: engine txn counts match the independent parser within layout
-  tolerance (exact on Axis/SBI/Karnataka/Kotak/Citibank-class rows; HDFC counts
-  date+value-date lines so it reads ~2× — a counter artifact, not data loss).
+## What E3 verified (live API + browser, w11 stack :8005/:3001)
 
-## Public-URL options (user decision — NOT enabled)
+- **V2-only banks end-to-end**: Citibank and City Union have no legacy processor —
+  analyze → confirm → process → Excel works through the generic downstream path.
+- **Counts**: API txn counts equal the v2 corpus result for every v2-served file.
+- **Excel**: 48 workbooks recalculated headless in LibreOffice — 0 formula
+  errors; `Statement Check` sheet present in all 48.
+- **UI legs** (5 banks through a real browser): HDFC, SBI, Axis → DETECTED →
+  confirm → process → completed → Excel download; Citibank + City Union →
+  REVIEW chip → per-doc confirm → completed → download. Console clean.
+- **Mutation probes** (first-row amount +1 through the v2 checks): HDFC, SBI,
+  Axis, IDFC, Paytm, Citibank, City Union all **fail** verification — tampered
+  numbers never stay VERIFIED. **IndusInd fails this test** → blocked.
+- **Wrong-bank probes** (file of bank X explicitly submitted as bank Y via
+  OVERRIDE): all 8 tested banks → job FAILED, never VERIFIED.
+- **Kill switch**: `STATEMENT_ENGINE_V2_MODE=off` produces byte-identical output
+  to the `880b5e2` baseline (3-file check, sheet names + numeric hash).
 
-- Keep it local (recommended): `http://localhost:3000` on the demo machine.
-- Tunneling (ngrok/cloudflared): quick but sends real statement data through a
-  third-party endpoint — risk flagged, not done.
-- Opening firewall/ports on this machine: not done.
+## Honest claims only
+
+- Say "verified by an independent check" for v2 VERIFIED banks only.
+- Do **not** say "counts match independent parsing" — the evidence is the
+  corpus comparison in `V2_ENABLEMENT.md`, phrased as trusted rate over
+  anchored files.
+- A "Needs review" result is a completed, downloadable report with review
+  reasons — never a failure and never a verified badge.

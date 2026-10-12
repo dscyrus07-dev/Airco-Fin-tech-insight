@@ -207,7 +207,7 @@ export default function SpreadsheetEditor({ initialResult, onExit, apiKey }: Spr
               </div>
               <h3 className="text-lg font-bold text-neutral-900">Unsaved Changes</h3>
             </div>
-            <p className="text-sm text-neutral-600 mb-6">You have edits that haven't been downloaded yet.</p>
+            <p className="text-sm text-neutral-600 mb-6">You have edits that haven&apos;t been downloaded yet.</p>
             <div className="flex flex-col gap-2">
               <button 
                 onClick={() => { setShowUnsavedModal(false); }}

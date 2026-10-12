@@ -71,6 +71,10 @@ def _ensure_user_file_record_batch_columns() -> None:
         statements.append(
             "ALTER TABLE user_file_records ADD COLUMN backup_purge_status VARCHAR(50)"
         )
+    if 'statement_engine' not in columns:
+        statements.append(
+            "ALTER TABLE user_file_records ADD COLUMN statement_engine JSONB"
+        )
 
     if not statements:
         return
@@ -114,6 +118,9 @@ def initialize_database() -> None:
                     )
                     connection.execute(
                         text("ALTER TABLE user_file_records ADD COLUMN IF NOT EXISTS backup_purge_status VARCHAR(50)")
+                    )
+                    connection.execute(
+                        text("ALTER TABLE user_file_records ADD COLUMN IF NOT EXISTS statement_engine JSONB")
                     )
                     connection.execute(
                         text(

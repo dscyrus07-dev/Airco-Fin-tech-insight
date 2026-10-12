@@ -20,4 +20,23 @@ NEXT CLAUDE ACTION (ranked):
 4. Persist statement_engine into /api/profile/history so dashboard badges work on old rows.
 5. Replace dead `next lint` (Next 16) with a real eslint config.
 6. PII history purge decision — still blocks any push.
+[W11] A START 2026-10-12 01:55 head c022630
+[W11] A DONE 2026-10-12 02:12 head 6e38f95 — T1 wrong-bank guard (0/300 false alarms), T2 history statement_engine, T3 eslint flat config (11e/1w -> 0/0), T4 friendly UNKNOWN + supported-banks note, T5 all checks green. Notes: docs/slice3/WAVE11A_NOTES.md
+
+NEXT CLAUDE ACTION (ranked):
+1. D3 wrong-bank still open at the parser level: guard now flags BANK_MISMATCH (needs_review) but legacy ICICI still silently accepts HDFC input — issuer validation belongs in the legacy/v2 gap work, not here.
+2. D4 issuer-validation false negatives: BoB 00196b23 + Indian Bank 00b7c2e3 (v2 VERIFIED, legacy rejects).
+3. D5 legacy parser gaps: Canara 01739d7a, Union 05794921.
+4. PII history purge decision — still blocks any push.
+
+[W11] B START 2026-10-12 02:13 head 5445f90
+[W11] B DONE 2026-10-12 05:05 head bd4cf0c — E1 table (V2_ENABLEMENT.md): 8 corpus-eligible → E3 acceptance: 7 served, indusind BLOCKED (first-row mutation stays VERIFIED, checks layer → Claude). E2: v2-only banks end-to-end (Decimal crash fixed bd4cf0c, message fix 1506e12). E3: 40 API picks, 48 workbooks 0 formula errors, 5 UI legs, mutation+wrong-bank probes all safe except indusind. E4: DEMO_READINESS/DEMO_SCRIPT/RUNBOOK refreshed (real city_union NO_INDEPENDENT_ANCHOR replaces the invalid BoB review moment). E5: clean-checkout gates all green; demo stack rebuilt from devin/wave11 (demo-rc-stable tags kept, rollback in RUNBOOK). Report: comparison/wave11/REPORT.md
+
+NEXT CLAUDE ACTION (ranked):
+1. BLOCKER indusind row-0 unconstrained: first-txn amount mutation stays VERIFIED (sha 00d70d3a; rows 1/5 correctly fail). Pairwise chain has no predecessor for row 0, reference check derives from balances only, no printed totals. Fix in checks layer, then re-run the mutation probe before re-allowlisting.
+2. D3 wrong-bank at parser level: legacy ICICI still silently accepts an HDFC file; guard only flags needs_review.
+3. D4 issuer-validation false negatives: BoB + Indian Bank app-format files v2-VERIFIED but legacy rejects.
+4. D5 legacy parser gaps: Canara (no txn table), Union (no rows) — also keeps them below E1 eligibility.
+5. Unswept specs (idfc, citibank, city_union, indusind) have no forced cross-bank sweep coverage — run the c5 sweep on them to firm up xb evidence.
+6. PII history purge decision — still blocks any push.
 [UNI] START 2026-10-12 05:53 — universal reader wave, part1 engine on devin/universal

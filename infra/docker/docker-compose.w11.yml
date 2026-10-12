@@ -1,0 +1,47 @@
+# Wave 11 acceptance stack — SEPARATE from the running demo.
+# Run: docker compose -p w11 -f docker-compose.yml -f docker-compose.w11.yml --env-file <demo>/local.env up -d backend redis rabbitmq
+# Distinct container names, host ports and network; never `down` the demo project.
+services:
+  backend:
+    container_name: w11_backend
+    ports: !override
+      - "8005:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SERVICE_URL: http://host.docker.internal:8001
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
+      S3_ADDRESSING_STYLE: ${S3_ADDRESSING_STYLE:-path}
+      S3_SKIP_CREATE_BUCKET: ${S3_SKIP_CREATE_BUCKET:-true}
+      S3_BUCKET: ${S3_BUCKET:-airco-files}
+      S3_BUCKET_REPORTS: ${S3_BUCKET_REPORTS:-airco-reports}
+      STORAGE_TYPE: ${STORAGE_TYPE:-supabase-s3}
+      SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL}
+      KEYCLOAK_URL: http://localhost:8080
+      KEYCLOAK_INTERNAL_URL: http://host.docker.internal:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
+      KEYCLOAK_ALLOWED_AZP: ${KEYCLOAK_ALLOWED_AZP:-frontend-app}
+      API_KEY_ENVIRONMENT: ${API_KEY_ENVIRONMENT:-test}
+      API_KEY_RATE_LIMIT_DEFAULT: ${API_KEY_RATE_LIMIT_DEFAULT:-60}
+      DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
+      RETENTION_ENABLED: ${RETENTION_ENABLED:-false}
+      STATEMENT_ENGINE_V2_MODE: ${STATEMENT_ENGINE_V2_MODE:-off}
+      STATEMENT_ENGINE_V2_SERVE_BANKS: ${STATEMENT_ENGINE_V2_SERVE_BANKS:-}
+      STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
+      TEMP_DIR: /app/tmp
+      PYTHONUNBUFFERED: "1"
+
+  redis:
+    container_name: w11_redis
+    ports: !override
+      - "6380:6379"
+
+  rabbitmq:
+    container_name: w11_rabbitmq
+    ports: !override
+      - "5673:5672"
+      - "15673:15672"
