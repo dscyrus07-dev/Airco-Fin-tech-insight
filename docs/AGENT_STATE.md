@@ -112,3 +112,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK hsbc SHADOW_ONLY 8b34812
 [OB] BANK south_indian REVIEW_ONLY 82658af
 [OB] BANK apgv SHADOW_ONLY 2411712
+[OB] BANK tmb NOT_POSSIBLE 3065b2c
