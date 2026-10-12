@@ -544,7 +544,8 @@ class AnalysisService:
             if not doc:
                 results.append({"document_id": did, "ok": False, "code": "DOCUMENT_NOT_FOUND", "message": "Document not found"})
                 continue
-            results.append(self._apply_decision(doc, action, dec.get("bank_id"), actor))
+            results.append(self._apply_decision(doc, action, dec.get("bank_id"), actor,
+                                                account_type=dec.get("account_type")))
         if confirm_all_detected:
             for doc in rec["documents"]:
                 if doc["document_id"] not in seen and doc["state"] == "DETECTED" and doc["workflow_status"] == "AWAITING_CONFIRMATION":
@@ -554,8 +555,11 @@ class AnalysisService:
         view["results"] = results
         return view
 
-    def _apply_decision(self, doc: Dict[str, Any], action: str, bank_id: Optional[str], actor: str) -> Dict[str, Any]:
+    def _apply_decision(self, doc: Dict[str, Any], action: str, bank_id: Optional[str], actor: str,
+                        account_type: Optional[str] = None) -> Dict[str, Any]:
         did = doc["document_id"]
+        if account_type is not None and str(account_type).strip() != "":
+            doc["account_type"] = str(account_type).strip().lower()
 
         def fail(code: str, msg: str) -> Dict[str, Any]:
             return {"document_id": did, "ok": False, "code": code, "message": msg}
@@ -599,19 +603,26 @@ class AnalysisService:
         return {"document_id": did, "ok": True, "workflow_status": "CONFIRMED", "bank_id": doc["effective_bank"]["id"]}
 
     # ---- process confirmed documents with the EXISTING pipeline
-    async def process_confirmed(self, analysis_id: str, user: Dict[str, Any], document_ids: Optional[Sequence[str]] = None) -> Dict[str, Any]:
+    async def process_confirmed(self, analysis_id: str, user: Dict[str, Any], document_ids: Optional[Sequence[str]] = None,
+                                *, full_name: Optional[str] = None,
+                                doc_fields: Optional[Dict[str, Dict[str, Any]]] = None) -> Dict[str, Any]:
         rec = await self._load(analysis_id, user)
         submit = self._submit_job or self._submit_existing_pipeline
         started: List[Dict[str, Any]] = []
         skipped: List[Dict[str, Any]] = []
+        fields = doc_fields or {}
         for doc in rec["documents"]:
             if document_ids is not None and doc["document_id"] not in document_ids:
                 continue
             if doc["workflow_status"] != "CONFIRMED":
                 skipped.append({"document_id": doc["document_id"], "reason": "NOT_CONFIRMED" if doc["workflow_status"] == "AWAITING_CONFIRMATION" else "NOT_PROCESSABLE"})
                 continue
+            extra = fields.get(doc["document_id"]) or {}
             try:
-                job_id = await submit(rec, doc, user)
+                job_id = await submit(rec, doc, user,
+                                      full_name=full_name,
+                                      account_type=extra.get("account_type") or doc.get("account_type"),
+                                      statement_label=extra.get("statement_label"))
             except Exception as exc:
                 logger.error("Could not start processing", error=type(exc).__name__)
                 skipped.append({"document_id": doc["document_id"], "reason": "START_FAILED"})
@@ -623,7 +634,10 @@ class AnalysisService:
         await self.store.save(rec)
         return {"analysis_id": analysis_id, "started": started, "skipped": skipped}
 
-    async def _submit_existing_pipeline(self, rec: Dict[str, Any], doc: Dict[str, Any], user: Dict[str, Any]) -> str:
+    async def _submit_existing_pipeline(self, rec: Dict[str, Any], doc: Dict[str, Any], user: Dict[str, Any],
+                                       *, full_name: Optional[str] = None,
+                                       account_type: Optional[str] = None,
+                                       statement_label: Optional[str] = None) -> str:
         """Same job/queue path as /upload/bank-statement-async, fed from the stored (unlocked) copy."""
         from ..models.job import Job, JobType
         from ..utils.correlation import generate_job_id, get_correlation_id
@@ -640,15 +654,16 @@ class AnalysisService:
         _eff_cfg = _registry_cfg_for(_eff_id)
         bank_name = PIPELINE_BANK_NAME.get(_eff_id) or (_eff_cfg.display_name if _eff_cfg else _eff_id)
         user_id, email = rec["owner_id"], rec.get("owner_email")
-        full_name = (user or {}).get("name") or rec.get("owner_name") or "anonymous"
+        full_name = full_name or (user or {}).get("name") or rec.get("owner_name") or "anonymous"
+        account_type = account_type or ""
         output_dir = get_temp_dir()
-        user_info = {"full_name": full_name, "account_type": "", "bank_name": bank_name, "batch_id": rec["analysis_id"], "statement_label": None}
+        user_info = {"full_name": full_name, "account_type": account_type, "bank_name": bank_name, "batch_id": rec["analysis_id"], "statement_label": statement_label}
         job = Job(
             id=generate_job_id(), type=JobType.PDF_PROCESSING, correlation_id=get_correlation_id(), user_id=user_id, bank_name=bank_name,
             input_data={
                 "file_path": local, "user_info": user_info, "mode": "free", "api_key": None, "output_dir": output_dir,
                 "original_filename": doc["filename"], "upload_object_key": doc["storage_key"], "batch_id": rec["analysis_id"],
-                "statement_label": None, "pdf_password": None,
+                "statement_label": statement_label, "pdf_password": None,
                 "analysis": {"analysis_id": rec["analysis_id"], "document_id": doc["document_id"],
                              "detected_bank": (doc.get("bank") or doc.get("suggestion") or {}).get("id"),
                              "selected_bank": doc["effective_bank"]["id"], "layout_id": doc["layout"]["id"]},
@@ -657,7 +672,7 @@ class AnalysisService:
         job = await redis_job_store.create_job(job)
         file_history_service.upsert_upload(
             job_id=job.id, user_id=user_id, user_email=email, user_name=rec.get("owner_name"), full_name=full_name,
-            account_type=None, bank_name=bank_name, batch_id=rec["analysis_id"], statement_label=None, mode="free",
+            account_type=account_type or None, bank_name=bank_name, batch_id=rec["analysis_id"], statement_label=statement_label, mode="free",
             original_filename=doc["filename"], upload_object_key=doc["storage_key"],
         )
         published = await event_publisher.publish_file_processing_request(

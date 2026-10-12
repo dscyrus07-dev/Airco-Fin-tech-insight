@@ -27,7 +27,7 @@ BOB = {"id": "bob-2", "email": "bob@example.com", "name": "Bob"}
 def env(monkeypatch):
     started = []
 
-    async def fake_submit(rec, doc, user):
+    async def fake_submit(rec, doc, user, **kw):
         started.append(doc["effective_bank"]["id"])
         return "job-1"
 
