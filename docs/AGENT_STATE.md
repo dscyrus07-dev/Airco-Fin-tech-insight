@@ -42,7 +42,7 @@ NEXT CLAUDE ACTION (ranked):
 [UNI] START 2026-10-12 05:53 — universal reader wave, part1 engine on devin/universal
 
 [UNI] PART1 DONE 2026-10-12 head ddf14de — T3 universal reader: lexicon+infer+reader, REVIEW cap, budgets, isolation. U3a done: 6361 base-VERIFIED, 67.8% row-exact, false-clean 0.00% post-fixes.
-[UNI] DONE 2026-10-12 head <HASH> — part2 product+UI wired behind STATEMENT_ENGINE_UNIVERSAL_MODE (off default, byte-identical off vs serve on 20 files). Reports: comparison/universal/REPORT.md, docs/slice3/UNIVERSAL_RESULTS.md.
+[UNI] DONE 2026-10-12 head a52e951 — part2 product+UI wired behind STATEMENT_ENGINE_UNIVERSAL_MODE (off default, byte-identical off vs serve on 20 files). Reports: comparison/universal/REPORT.md, docs/slice3/UNIVERSAL_RESULTS.md.
 
 NEXT CLAUDE ACTION (ranked):
 1. Registered-spec truncation class (UNIVERSAL_PROPOSALS #1): axis spec drops dated rows above period-marker footers — `000df35f` 1141 vs true 1147 VERIFIED, ~50 axis + ~19 kotak files. Shared `_region_start` fix or per-spec workaround.
