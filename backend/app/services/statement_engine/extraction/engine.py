@@ -132,8 +132,9 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
-def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
-    out = V2Outcome()
+def _prepare_pages(pages: Sequence[Page], spec: LayoutSpec) -> List[Page]:
+    """The layout's word preparation (monospace split, amount prefixes, merged dates, Dr/Cr suffixes), shared by the
+    extractor and the completeness guard so both see the same words."""
     if spec.monospace_text:
         pages = [Page(_split_monospace(p.words), p.width) for p in pages]
     if spec.amount_prefix or spec.merge_sign_prefix or spec.amount_sign_gap:
@@ -141,6 +142,12 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     pages = [Page(_split_merged_dates(p.words, spec), p.width) for p in pages]
     if spec.merge_drcr_suffix:
         pages = [Page(_merge_drcr_suffix(p.words, spec), p.width) for p in pages]
+    return list(pages)
+
+
+def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
+    out = V2Outcome()
+    pages = _prepare_pages(pages, spec)
     if not pages:
         out.failure, out.failure_detail = NO_TABLE_HEADER, "no pages"
         return out
@@ -324,7 +331,70 @@ def _add_years(rows, period, spec) -> None:
         r.value_date = fix(r.value_date)
 
 
+_TXN_AMOUNT = re.compile(r"\d[\d,]*\.\d{2}")
+_CARRY_LINE = re.compile(r"FORWARD|BROUGHT|CARRIED|OPENING|CLOSING|TOTAL|B/F|C/F|BALB/F|BALANCEB/F|BALANCE(?:AS|ON)")
+
+
+def _amount_key(text: str) -> Optional[Decimal]:
+    m = _TXN_AMOUNT.search(text)
+    if not m:
+        return None
+    try:
+        return abs(Decimal(m.group(0).replace(",", "")))
+    except Exception:
+        return None
+
+
+def _unread_transaction_lines(pages: Sequence[Page], spec: LayoutSpec, rows: Sequence[NormalizedRow]) -> int:
+    """Transaction-looking lines BEFORE the first or AFTER the last row that was read (document order).
+
+    A row dropped from the middle of the table breaks the balance chain, which the chain check already fails. Rows
+    dropped at the start or the end (a mid-statement summary or footer taken as the end of the table, rows after it on
+    the same page) leave the chain intact, and a printed closing that matches the truncated end hides them from the
+    reference check too. This guard finds them: lines that start with a date in this layout's shape, carry an amount,
+    are not an opening/brought-forward/total line, and whose balance (last amount on the line) is not a balance of any
+    row read, lying outside the span of lines that match the rows read. Conservative by construction: a date split over
+    several tokens, or a line whose last amount happens to equal some balance, is not counted."""
+    bals = {abs(r.txn.balance) for r in rows if r.txn.balance is not None}
+    pages = _prepare_pages(pages, spec)
+    if not bals:
+        return 0
+    keys: List[Optional[Decimal]] = []
+    for pg in pages:
+        for ln in group_lines(pg.words):
+            if not ln:
+                continue
+            first = ln[0].text.strip()
+            head3 = " ".join(w.text for w in ln[:3]).strip()
+            if not (spec.date_re.fullmatch(first) or spec.date_re.fullmatch(head3)):
+                continue
+            text = "".join(w.text for w in ln).upper()
+            if _CARRY_LINE.search(text) or "%" in text:
+                continue                        # opening / brought-forward / totals / rate lines are not transactions
+            amounts = [k for k in (_amount_key(w.text) for w in ln[1:]) if k is not None]
+            if amounts:
+                keys.append(amounts[-1])
+    hit = [i for i, k in enumerate(keys) if k in bals]
+    if not hit:
+        return 0
+    lo, hi = min(hit), max(hit)
+    return sum(1 for i, k in enumerate(keys) if (i < lo or i > hi) and k not in bals)
+
+
 def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
+    out = _extract_pages_core(pages, spec)
+    if out.failure or not out.rows:
+        return out
+    unread = _unread_transaction_lines(pages, spec, out.rows)
+    if unread:
+        out.warnings.append(f"unread_transaction_lines:{unread}")
+        out.notes.append(f"completeness:unread_transaction_lines={unread}")
+        out.checks = run_checks(out.rows, out.period, out.summary, out.schema_errors, out.warnings, spec.period_date_format,
+                                spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+    return out
+
+
+def _extract_pages_core(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = _extract_one(pages, spec)
     if not spec.merge_statements:
         return out
