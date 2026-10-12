@@ -29,9 +29,9 @@ from tests.statement_engine.extraction.onboarded_kit import W, header, row, rt, 
 
 def _rows():
     return [
-        row(SPEC, 220, "UPI REF 1234", debit="100.00", balance="900.00"),
-        row(SPEC, 236, "NEFT SALARY 5678", credit="1,000.00", balance="1,900.00"),
-        row(SPEC, 252, "ATM CASH", debit="400.00", balance="1,500.00"),
+        row(SPEC, 220, "UPIREF1234", debit="100.00", balance="900.00"),
+        row(SPEC, 236, "NEFTSALARY5678", credit="1,000.00", balance="1,900.00"),
+        row(SPEC, 252, "ATMCASH", debit="400.00", balance="1,500.00"),
     ]
 
 
@@ -68,9 +68,9 @@ def test_{bid}_foreign_marker_refused():
 
 
 def test_{bid}_narration_with_other_bank_still_{bid}():
-    rows = [row(SPEC, 220, "NEFT TO HDFC BANK LTD", debit="100.00", balance="900.00"),
-            row(SPEC, 236, "IMPS ICICI PAYOUT", credit="1,000.00", balance="1,900.00"),
-            row(SPEC, 252, "AXIS BANK REFUND", debit="400.00", balance="1,500.00")]
+    rows = [row(SPEC, 220, "NEFTTOHDFCBANKLTD", debit="100.00", balance="900.00"),
+            row(SPEC, 236, "IMPSICICIPAYOUT", credit="1,000.00", balance="1,900.00"),
+            row(SPEC, 252, "AXISBANKREFUND", debit="400.00", balance="1,500.00")]
     r = route_pages(_page(rows), DEFAULT_REGISTRY)
     assert r.status == "v2" and r.layout_id == SPEC.layout_id
 

@@ -41,23 +41,30 @@ def sample_date(spec: LayoutSpec) -> str:
 
 
 def geometry(spec: LayoutSpec):
-    """x0 for text columns, right-edge for money columns."""
+    """x0 for text columns, right-edge for money columns. Column start never
+    precedes the previous column's title end."""
     money = [c for c in (spec.columns or {}) if c not in spec.text_columns]
     text_x = {}
     x = 30.0
     for c in spec.text_columns:
         text_x[c] = x
-        x += 60.0 if c in ("date", "value_date", "secondary_date") else 90.0
+        toks = spec.columns[c][0]
+        title_w = sum(5.5 * len(t) + 3 for t in toks)
+        min_w = 60.0 if c in ("date", "value_date", "secondary_date") else 90.0
+        x += max(min_w, title_w + 8)
     edge = W - 30.0
     money_edge = {}
+    money_left = {}
     for c in reversed(money):
         money_edge[c] = edge
-        edge -= 75.0
-    return text_x, money_edge
+        toks = spec.columns[c][0]
+        edge -= max(75.0, sum(5.5 * len(t) + 3 for t in toks) + 8)
+        money_left[c] = edge
+    return text_x, money_edge, money_left
 
 
 def header(spec: LayoutSpec, top=200.0):
-    text_x, money_edge = geometry(spec)
+    text_x, money_edge, _ = geometry(spec)
     ws = []
     for col in spec.text_columns:
         toks = spec.columns[col][0]
@@ -83,9 +90,17 @@ def amount_text(spec: LayoutSpec, value: str, side: str) -> str:
     return value
 
 
+def _place_amount(spec: LayoutSpec, text, col, money_edge, money_left, top):
+    if getattr(spec, "left_aligned_amounts", False):
+        toks = spec.columns[col][0]
+        title_w = sum(5.5 * len(t) + 3 for t in toks)
+        return w(text, money_edge[col] - title_w + 2, top)
+    return rt(text, money_edge[col], top)
+
+
 def row(spec: LayoutSpec, top, narration="UPI REF 1234", debit=None, credit=None,
         balance="1,000.00", date=None):
-    text_x, money_edge = geometry(spec)
+    text_x, money_edge, money_left = geometry(spec)
     ws = [w(date or sample_date(spec), text_x[spec.text_columns[0]], top)]
     narr_col = next((c for c in spec.text_columns if "narr" in c or "desc" in c
                      or "partic" in c or "detail" in c), spec.text_columns[1])
@@ -101,14 +116,15 @@ def row(spec: LayoutSpec, top, narration="UPI REF 1234", debit=None, credit=None
             ws.append(w("REF1", text_x[col], top))
     if spec.single_amount_column:
         if debit or credit:
-            ws.append(rt(amount_text(spec, debit or credit, "debit" if debit else "credit"),
-                         money_edge[spec.single_amount_column], top))
+            ws.append(_place_amount(spec, amount_text(spec, debit or credit,
+                                    "debit" if debit else "credit"),
+                                    spec.single_amount_column, money_edge, money_left, top))
     else:
         if debit is not None:
-            ws.append(rt(debit, money_edge[spec.debit_column], top))
+            ws.append(_place_amount(spec, debit, spec.debit_column, money_edge, money_left, top))
         if credit is not None:
-            ws.append(rt(credit, money_edge[spec.credit_column], top))
-    ws.append(rt(balance, money_edge[spec.balance_column], top))
+            ws.append(_place_amount(spec, credit, spec.credit_column, money_edge, money_left, top))
+    ws.append(_place_amount(spec, balance, spec.balance_column, money_edge, money_left, top))
     return ws
 
 
