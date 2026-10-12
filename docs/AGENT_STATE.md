@@ -109,3 +109,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK equitas_sfb SHADOW_ONLY 5b21e0b
 [OB] BANK bank_of_maharashtra SHADOW_ONLY 1dae342
 [OB] BANK bandhan SHADOW_ONLY 20a04c1
+[OB] BANK hsbc SHADOW_ONLY 8b34812
