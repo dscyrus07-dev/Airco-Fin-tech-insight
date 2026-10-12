@@ -81,3 +81,30 @@ None breaking; tolerated by the parser:
 - True pixel screenshots / real-browser render at 360px: no browser automation in this env; DOM snapshots + flex-wrap classes cover structure. Manual checklist `docs/MANUAL_TEST_CHECKLIST.md` §D covers the visual pass.
 - Live `GET /api/statements/banks` response against a running backend (tests mock it with the documented shape).
 - Dashboard badges on historical rows until the backend persists `statement_engine` in history payloads.
+
+## Unified entry (devin/unified-entry, 2026-10-12)
+
+`NEXT_PUBLIC_UNIFIED_ENTRY=on` merges the two front doors into one workflow on
+`/dashboard`: Upload → Review → Processing → Report.
+
+- New components (`app/components/workflow/`): `StatementWorkflow` (shell +
+  stepper), `UploadDropzone`, `ReviewTable` (per-file bank override, statement
+  type, inline unlock, evidence), `ProcessingList` (parallel jobs, one
+  `ProcessingStep` per file), `ReportList` (the existing `ResultStep` per
+  finished job, with retry for history-backed result_data).
+- New hook `app/hooks/useStatementWorkflow.ts`: state machine + 2.5 s polling
+  with cleanup; expired analyses (404/410) return to Upload with a message.
+- Backend additive fields: `confirm` accepts per-document `account_type`;
+  `process` accepts `full_name` + per-document `account_type`/`statement_label`;
+  threaded into `_submit_existing_pipeline` (`user_info`, `upsert_upload`).
+  Absent fields produce exactly the previous payload (asserted in tests).
+- Flag off: `/dashboard` and `/analyze` are byte-identical to before
+  (asserted by `flagOffEquivalence.test.tsx`).
+- 360 px horizontal scroll fixed on the new screens (E2E: scrollWidth −
+  clientWidth = 0 at 360/768/1280).
+- E2E (Playwright, synthetic PDFs, flag on): detection, override (+ honest
+  mismatch failure), inline unlock, unsupported/scanned honest messages and
+  no process button, parallel processing with per-file reports, history
+  refresh, `/analyze` redirect, header without Analyze link, zero console
+  errors. Legacy-engine jobs show no verification badge (correct — the badge
+  needs engine metadata).

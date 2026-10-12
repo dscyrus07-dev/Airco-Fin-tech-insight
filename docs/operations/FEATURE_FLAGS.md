@@ -23,6 +23,15 @@ them).
 | `STATEMENT_ENGINE_UNIVERSAL_TIMEOUT` | `45` | `universal/isolated.py:19` | T3 subprocess hard timeout |
 | `STATEMENT_ENGINE_UNIVERSAL_MEM_MB` | `1536` | `universal/isolated.py:20` | T3 subprocess memory cap (rlimit; skipped on Windows) |
 
+## Frontend flags
+
+| Flag | Default | Values | Read at | Purpose | Safe default? |
+|---|---|---|---|---|---|
+| `NEXT_PUBLIC_UNIFIED_ENTRY` | off (unset) | `on`/`1`/`true` vs anything else | `lib/flags.ts` (`unifiedEntry()`) | `Dashboard.tsx`, `layout/Header.tsx`, `app/analyze/page.tsx` | YES — off = both entry pages behave exactly as before; on = `/dashboard` renders the unified Upload→Review→Processing→Report workflow, `/analyze` redirects to `/dashboard`, the header drops the Analyze link, the Mode step is skipped (free mode) |
+
+Rollback: unset the flag (or rebuild without it) — the legacy `/dashboard`
+stepper and `/analyze` flow return unchanged. See `docs/UNIFIED_ENTRY_PLAN.md`.
+
 ## Compose declarations
 
 `docker-compose.local.yml:29-31` and `docker-compose.w11.yml:32-34` declare the

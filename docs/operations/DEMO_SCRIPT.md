@@ -90,3 +90,15 @@ If the v2 path misbehaves: flip `STATEMENT_ENGINE_V2_MODE=off` in `local.env`,
 `up -d backend`, and every bank is back to legacy — the HDFC flow then shows
 the normal "everyday" path instead of a verified badge. Last resort: roll back
 to the tagged images — see RUNBOOK "Rollback".
+
+## 9. Unified entry (flag-gated — do not enable for the standard demo)
+
+When `NEXT_PUBLIC_UNIFIED_ENTRY=on` is set on the frontend build, `/dashboard`
+becomes the single entry: Upload (drag up to 20 PDFs, optional holder name +
+"I already know the bank" hint) → Review (per-file detected bank, evidence,
+override dropdown, statement type, inline password unlock) → Processing
+(parallel jobs, one progress card per file) → Report (the existing report
+view with the verification badge and downloads, per file). `/analyze`
+redirects to `/dashboard` and the header loses the Analyze link. The Mode
+step is skipped (free mode). With the flag off, everything in sections 1–8
+applies unchanged.
