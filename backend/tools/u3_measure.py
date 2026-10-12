@@ -134,7 +134,8 @@ def _process(args) -> dict:
                        "rows": u.meta.get("rows", 0),
                        "elapsed": round(u.elapsed_s, 2),
                        "infer": {k: u.meta.get(k) for k in
-                                 ("header", "money", "date_shape", "amount_form", "confidence", "margin")
+                                 ("header", "header_tokens", "money", "date_shape", "amount_form",
+                                  "confidence", "margin")
                                  if u.meta.get(k) is not None},
                        "detail": u.detail[:200]}
         if u.outcome is not None:
