@@ -28,6 +28,7 @@ DETECTOR_TO_SPEC_BANK = {
     "city_union": "city_union",
     "csb": "csb",
     "uco": "uco",
+    "airtel_pb": "airtel_pb",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 
