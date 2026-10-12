@@ -68,3 +68,5 @@ BLOCKERS in comparison/final/REPORT.md: axis audit-WRONG reproduced VERIFIED
 on truncated 1,141/1,147 rows — recommend dropping axis from serve allowlist
 until the registered-spec fix; creds still in git history (rotation needed).
 NEXT CLAUDE ACTION #1: review and merge devin/final-rc.
+
+[UE] START 5744400 (devin/unified-entry from integration/v2-waves tip, worktree wt-ue)
