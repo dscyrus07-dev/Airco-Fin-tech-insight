@@ -93,3 +93,4 @@ Report: docs/cleanup/CLEANUP_AUDIT.md + VERDICTS.csv + INVENTORY.csv + ENDPOINTS
 All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build, backend 271 tests, fresh-venv install + import smoke, 400-file corpus compare 0 diffs, docker builds OK. passlib kept in auth-service (live use).
 
 [OB] START 8b57e0d - overnight all-banks onboarding (base 8b57e0d)
+[OB] BANK standard_chartered SHADOW_ONLY 3236b09
