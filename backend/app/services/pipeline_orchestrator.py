@@ -575,7 +575,11 @@ def process_statement(
         # T3 universal reader: only when T1/T2 produced nothing usable (flag-gated;
         # shadow records the block only; serve feeds REVIEW rows downstream or
         # fails honestly — FAILED carries no data).
-        _served = result is not None and getattr(result, "status", "") == "success"
+        _served = (
+            result is not None
+            and getattr(result, "status", "") == "success"
+            and getattr(getattr(result, "metrics", None), "transaction_count", 0) or 0
+        ) > 0
         if _u_mode != "off" and not _served:
             _u_res, _u_rs = _userv.attempt(file_path, bank_hint=v2_block.get("detected_bank") and
                                            v2_block["detected_bank"].get("name") or bank_name or "Unknown bank")
