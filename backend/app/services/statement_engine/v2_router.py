@@ -29,6 +29,7 @@ DETECTOR_TO_SPEC_BANK = {
     "csb": "csb",
     "uco": "uco",
     "airtel_pb": "airtel_pb",
+    "ippb": "ippb",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 
