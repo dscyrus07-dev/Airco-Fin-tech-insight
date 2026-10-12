@@ -56,7 +56,7 @@ class FakeStorage:
 def make_service():
     started = []
 
-    async def fake_submit(rec, doc, user):
+    async def fake_submit(rec, doc, user, **kw):
         started.append((rec["analysis_id"], doc["document_id"], doc["effective_bank"]["id"]))
         return "job-" + doc["document_id"][:6]
 
