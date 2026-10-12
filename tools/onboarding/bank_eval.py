@@ -72,8 +72,14 @@ def evaluate(bid):
     fb = Counter((p or {}).get("fb") for p in pr if (p or {}).get("fb"))
     rows_tot = sum((p or {}).get("rows", 0) for p in pr)
     # cross-bank: files from OTHER folders attributed to me
+    # false accept = file from another BANK folder attributed to me. Non-bank
+    # folders (e.g. Human Verification) hold real bank statements and are
+    # reported separately, not counted as false accepts.
     fa = [x for x in xcheck if canon(x.get("layout_bank") or x.get("detected") or "") == bid
+          and folders.get(x["folder"], {}).get("class") in ("bank", "alias")
           and folders.get(x["folder"], {}).get("bank_id") != bid]
+    fa_nb = [x for x in xcheck if canon(x.get("layout_bank") or x.get("detected") or "") == bid
+             and folders.get(x["folder"], {}).get("class") not in ("bank", "alias")]
     # spec coverage = share of text files that routed v2
     v2_n = tier.get("v2", 0)
     return {
@@ -90,6 +96,7 @@ def evaluate(bid):
         "xcheck_false_accepts": [{"sha8": x["sha8"], "folder": x["folder"],
                                   "via": "layout" if canon(x.get("layout_bank") or "") == bid else "detector"}
                                  for x in fa],
+        "xcheck_nonbank_hits": [{"sha8": x["sha8"], "folder": x["folder"]} for x in fa_nb],
         "xcheck_false_accept_n": len(fa),
     }
 
