@@ -1,0 +1,400 @@
+{"sha": "68fb5ce2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 41, "verdict": "VERIFIED"}
+{"sha": "10093f3f", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "d611522b", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "a0223625", "folder": "Non_Bank_Documents", "status": "v2", "layout": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance", "fb": "", "rows": 1185, "verdict": "REVIEW"}
+{"sha": "19e61ca7", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook", "fb": "", "rows": 38, "verdict": "VERIFIED"}
+{"sha": "96bd80d2", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "7f03a50e", "folder": "UCO Bank", "status": "fallback", "layout": null, "fb": "other_bank:uco", "rows": 0, "verdict": null}
+{"sha": "f6955d7c", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "de3467af", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook", "fb": "", "rows": 122, "verdict": "VERIFIED"}
+{"sha": "254b5b50", "folder": "Axis Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "67862dd6", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "f79b9794", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "034b06b1", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "VERIFIED"}
+{"sha": "4c82f69b", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 669, "verdict": "REVIEW"}
+{"sha": "0476c63a", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 279, "verdict": "VERIFIED"}
+{"sha": "75b762e5", "folder": "Locked PDFs", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "3ebd5d7f", "folder": "Federal Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "1f94fad1", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 720, "verdict": "FAILED"}
+{"sha": "134ef589", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance", "fb": "", "rows": 339, "verdict": "REVIEW"}
+{"sha": "ab2d9239", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 317, "verdict": "VERIFIED"}
+{"sha": "e3a7859f", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 1393, "verdict": "REVIEW"}
+{"sha": "ce86c811", "folder": "Federal Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "25f6754b", "folder": "Indian Bank", "status": "v2", "layout": "indianbank_transactiondate_particulars_withdrawals_deposit_balance", "fb": "", "rows": 147, "verdict": "REVIEW"}
+{"sha": "d6b22fdd", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "78242257", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_transactiondate_chequenumber_remarks_amountinrfirst_wrap", "fb": "", "rows": 376, "verdict": "FAILED"}
+{"sha": "452120bc", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 75, "verdict": "REVIEW"}
+{"sha": "7a7d80e7", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 15, "verdict": "VERIFIED"}
+{"sha": "5f025201", "folder": "Standard Chartered Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "faa3956d", "folder": "Union Bank of India", "status": "v2", "layout": "union_trandate_tranid_remarks_amount_balance", "fb": "", "rows": 40, "verdict": "REVIEW"}
+{"sha": "6cae7b95", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 947, "verdict": "VERIFIED"}
+{"sha": "2f48f805", "folder": "Union Bank of India", "status": "v2", "layout": "union_date_remarks_tranid_utrnumber_instrid_withdrawals_deposits_balance", "fb": "", "rows": 493, "verdict": "REVIEW"}
+{"sha": "19bbd69a", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "8ba83ff7", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 123, "verdict": "VERIFIED"}
+{"sha": "4cfdcc24", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 18, "verdict": "VERIFIED"}
+{"sha": "a0cfc4c3", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "dffc7fff", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 153, "verdict": "VERIFIED"}
+{"sha": "92ef5087", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 622, "verdict": "VERIFIED"}
+{"sha": "656a55a5", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 115, "verdict": "VERIFIED"}
+{"sha": "40764d97", "folder": "Union Bank of India", "status": "v2", "layout": "union_trandate_tranid_remarks_amount_balance", "fb": "", "rows": 2210, "verdict": "REVIEW"}
+{"sha": "7453dde3", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 297, "verdict": "VERIFIED"}
+{"sha": "8c6f3a3a", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "12546c87", "folder": "Indian Bank", "status": "v2", "layout": "indianbank_transactiondate_particulars_withdrawals_deposit_balance", "fb": "", "rows": 322, "verdict": "REVIEW"}
+{"sha": "2ab4d99b", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "4239d0c2", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 246, "verdict": "VERIFIED"}
+{"sha": "7d7d6ca4", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 286, "verdict": "VERIFIED"}
+{"sha": "db37b8e9", "folder": "Karur Vysya Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "c1d4fee2", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_tranid_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 1213, "verdict": "VERIFIED"}
+{"sha": "9f11e0d2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 620, "verdict": "VERIFIED"}
+{"sha": "eb5e000c", "folder": "Human Verification", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "a459c553", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 112, "verdict": "VERIFIED"}
+{"sha": "1b999b5c", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "5509ed8d", "folder": "Canara Bank", "status": "v2", "layout": "canara_txndate_valuedate_chequeno_description_branch_debit_credit_balance", "fb": "", "rows": 731, "verdict": "VERIFIED"}
+{"sha": "a6cd3014", "folder": "SBI", "status": "v2", "layout": "sbi_postdate_valuedate_description_cheque_debit_credit_balance", "fb": "", "rows": 54, "verdict": "REVIEW"}
+{"sha": "f2f0d97a", "folder": "Other_Unknown", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "42d5e5c2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 1000, "verdict": "VERIFIED"}
+{"sha": "a18187ef", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "559538d7", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 179, "verdict": "VERIFIED"}
+{"sha": "f518ae52", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "27db92ac", "folder": "Union Bank of India", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "89867ba3", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "bc09c0c9", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "2126766b", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 69, "verdict": "VERIFIED"}
+{"sha": "1e6c8ad9", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_narration_chqrefno_withdrawaldr_depositcr_balance_ddmmmyy", "fb": "", "rows": 147, "verdict": "VERIFIED"}
+{"sha": "3852558c", "folder": "APGV Bank", "status": "v2", "layout": "apgv_postdate_valuedate_narration_chequedetails_debit_credit_balance", "fb": "", "rows": 500, "verdict": "REVIEW"}
+{"sha": "1cdc5365", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "ab876364", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 16, "verdict": "VERIFIED"}
+{"sha": "93bac851", "folder": "Punjab National Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "cae8f2f4", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_narration_chqrefno_amountdrcr_balancecr", "fb": "", "rows": 228, "verdict": "VERIFIED"}
+{"sha": "7117a6b9", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 125, "verdict": "VERIFIED"}
+{"sha": "c936b46d", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 994, "verdict": "VERIFIED"}
+{"sha": "a6aebcf5", "folder": "Paytm Payments Bank", "status": "v2", "layout": "paytm_datetime_transactiondetails_amount_availablebalance", "fb": "", "rows": 1069, "verdict": "VERIFIED"}
+{"sha": "ba0ee776", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 298, "verdict": "VERIFIED"}
+{"sha": "5c259f30", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "a27211b2", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "3a47b693", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 450, "verdict": "VERIFIED"}
+{"sha": "e0302eb1", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "e96c0554", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "a179999e", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "1ebd3a1c", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 102, "verdict": "VERIFIED"}
+{"sha": "7dd67f11", "folder": "Human Verification", "status": "v2", "layout": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance", "fb": "", "rows": 28, "verdict": "FAILED"}
+{"sha": "09e160df", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "1a4c63b8", "folder": "Other_Unknown", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "48c44937", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 145, "verdict": "VERIFIED"}
+{"sha": "eb78dcfc", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 680, "verdict": "VERIFIED"}
+{"sha": "0327bbf1", "folder": "DBS Bank", "status": "v2", "layout": "dbs_transactiondate_valuedate_detailsoftransaction_debit_credit_balance", "fb": "", "rows": 190, "verdict": "REVIEW"}
+{"sha": "884ba803", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 637, "verdict": "REVIEW"}
+{"sha": "9931b86b", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 10, "verdict": "REVIEW"}
+{"sha": "b2c748d9", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 294, "verdict": "VERIFIED"}
+{"sha": "ef928bd7", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "ddef52ac", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "3640c017", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "657f1829", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 176, "verdict": "VERIFIED"}
+{"sha": "b4b3b6b4", "folder": "Ujjivan Small Finance Bank", "status": "v2", "layout": "ujjivan_date_particular_chqrefno_withdrawal_deposit_balanceamount", "fb": "", "rows": 460, "verdict": "REVIEW"}
+{"sha": "63378fda", "folder": "OCR", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "cdb112f9", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 331, "verdict": "REVIEW"}
+{"sha": "2afd8fc8", "folder": "Human Verification", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "189eee75", "folder": "Axis Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "5165fc01", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "05283771", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "1764bcdf", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 36, "verdict": "VERIFIED"}
+{"sha": "35d5a4f2", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "10c413ac", "folder": "SBI", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "389cf46a", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 618, "verdict": "VERIFIED"}
+{"sha": "c0277c2e", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "035ae441", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook", "fb": "", "rows": 1503, "verdict": "VERIFIED"}
+{"sha": "80c12639", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 178, "verdict": "VERIFIED"}
+{"sha": "2bfe0460", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 125, "verdict": "VERIFIED"}
+{"sha": "d1beea6a", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "a8fef53e", "folder": "Standard Chartered Bank", "status": "v2", "layout": "scb_date_valuedate_description_cheque_deposit_withdrawal_balance_yearless", "fb": "", "rows": 207, "verdict": "VERIFIED"}
+{"sha": "7dff8bb9", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 103, "verdict": "VERIFIED"}
+{"sha": "05c9a1e8", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "7e51ed9b", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_hash_date_description_chqrefno_withdrawaldr_depositcr_balance", "fb": "", "rows": 163, "verdict": "REVIEW"}
+{"sha": "4d4c25b4", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 827, "verdict": "VERIFIED"}
+{"sha": "44a876ea", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "84b8c000", "folder": "Paytm Payments Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "5b75443c", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 239, "verdict": "VERIFIED"}
+{"sha": "6da0638d", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 140, "verdict": "VERIFIED"}
+{"sha": "4306581d", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 148, "verdict": "VERIFIED"}
+{"sha": "989aea4f", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "3c996eba", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 60, "verdict": "VERIFIED"}
+{"sha": "07dc73a5", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 472, "verdict": "REVIEW"}
+{"sha": "4a1c44f5", "folder": "Bank of Baroda", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "0c931353", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 525, "verdict": "VERIFIED"}
+{"sha": "3cd9b158", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 1324, "verdict": "VERIFIED"}
+{"sha": "aebce34a", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "ad944313", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_branch_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "08057a42", "folder": "Human Verification", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "a4543cc8", "folder": "Bank of India", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "cefc63de", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 129, "verdict": "REVIEW"}
+{"sha": "9adafe12", "folder": "Union Bank of India", "status": "v2", "layout": "union_trandate_tranid_remarks_amount_balance", "fb": "", "rows": 413, "verdict": "REVIEW"}
+{"sha": "25cbfb6b", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 209, "verdict": "VERIFIED"}
+{"sha": "bc8fb940", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 104, "verdict": "VERIFIED"}
+{"sha": "e2eb6aff", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 216, "verdict": "VERIFIED"}
+{"sha": "155c065a", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "2441f7d3", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "64dead52", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 228, "verdict": "VERIFIED"}
+{"sha": "0241566a", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 44, "verdict": "VERIFIED"}
+{"sha": "f941319c", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "b72012dc", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 117, "verdict": "VERIFIED"}
+{"sha": "78667ee8", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 455, "verdict": "VERIFIED"}
+{"sha": "26430835", "folder": "Citibank", "status": "v2", "layout": "citibank_date_transactiondetails_withdrawals_deposits_balance", "fb": "", "rows": 398, "verdict": "VERIFIED"}
+{"sha": "2b9ea270", "folder": "SBI", "status": "fallback", "layout": null, "fb": "other_bank:rbl", "rows": 0, "verdict": null}
+{"sha": "a0d4f3c2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 414, "verdict": "VERIFIED"}
+{"sha": "764b7232", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "ee0e83dc", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 321, "verdict": "VERIFIED"}
+{"sha": "26076b52", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 593, "verdict": "VERIFIED"}
+{"sha": "39d3fd78", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 879, "verdict": "REVIEW"}
+{"sha": "1453fa7b", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 131, "verdict": "VERIFIED"}
+{"sha": "18a71613", "folder": "Union Bank of India", "status": "v2", "layout": "union_date_remarks_tranid_utrnumber_instrid_withdrawals_deposits_balance", "fb": "", "rows": 134, "verdict": "REVIEW"}
+{"sha": "879066b2", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 53, "verdict": "VERIFIED"}
+{"sha": "f10398e2", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 605, "verdict": "VERIFIED"}
+{"sha": "1f1ebcd8", "folder": "Non_Bank_Documents", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "3263e15d", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 510, "verdict": "VERIFIED"}
+{"sha": "1057fa2a", "folder": "Punjab National Bank", "status": "v2", "layout": "pnb_date_instrumentid_amount_type_balance_remarks", "fb": "", "rows": 1029, "verdict": "REVIEW"}
+{"sha": "e24d6792", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "69676583", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 1194, "verdict": "VERIFIED"}
+{"sha": "5a3cbcc1", "folder": "Federal Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "d9c77078", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 671, "verdict": "VERIFIED"}
+{"sha": "862b76a7", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 676, "verdict": "FAILED"}
+{"sha": "3657ac01", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 161, "verdict": "REVIEW"}
+{"sha": "4464247f", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 140, "verdict": "VERIFIED"}
+{"sha": "5c82ec19", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "d0fe1093", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance", "fb": "", "rows": 340, "verdict": "REVIEW"}
+{"sha": "a55c398f", "folder": "Yes Bank", "status": "v2", "layout": "yes_transaction_valuedate_chequenoreferenceno_description_withdrawals_deposits_runningbalance", "fb": "", "rows": 243, "verdict": "VERIFIED"}
+{"sha": "3179ec74", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 577, "verdict": "VERIFIED"}
+{"sha": "86bc64c6", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 158, "verdict": "VERIFIED"}
+{"sha": "06b81e92", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "1edf015e", "folder": "IDBI Bank", "status": "v2", "layout": "idbi_sno_txndate_valuedate_description_chequeno_withdrawals_deposits_balance", "fb": "", "rows": 96, "verdict": "REVIEW"}
+{"sha": "b17a60dd", "folder": "SBI", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "959e62c8", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "0c52621c", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_hash_transaction_transactiondetails_chqrefno_debit_credit_balance_signed", "fb": "", "rows": 268, "verdict": "REVIEW"}
+{"sha": "13465f89", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "6c24bd40", "folder": "Non_Bank_Documents", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "f4ca16d2", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "VERIFIED"}
+{"sha": "6fe9ccce", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 205, "verdict": "VERIFIED"}
+{"sha": "fbb2622b", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 54, "verdict": "VERIFIED"}
+{"sha": "8c8fe367", "folder": "Axis Bank", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "c58b9607", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 1139, "verdict": "VERIFIED"}
+{"sha": "b6886ef1", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_transactiondate_chequenumber_remarks_amountinrfirst_wrap", "fb": "", "rows": 697, "verdict": "FAILED"}
+{"sha": "52b839a5", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 28, "verdict": "VERIFIED"}
+{"sha": "d041174f", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "VERIFIED"}
+{"sha": "ad440095", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance", "fb": "", "rows": 282, "verdict": "REVIEW"}
+{"sha": "52d79a0e", "folder": "DBS Bank", "status": "v2", "layout": "dbs_transactiondate_valuedate_detailsoftransaction_debit_credit_balance", "fb": "", "rows": 31, "verdict": "REVIEW"}
+{"sha": "a1aaf526", "folder": "SBI", "status": "v2", "layout": "sbi_postdate_valuedate_description_cheque_debit_credit_balance", "fb": "", "rows": 715, "verdict": "VERIFIED"}
+{"sha": "37b5f688", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 344, "verdict": "VERIFIED"}
+{"sha": "ac2d6218", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 240, "verdict": "VERIFIED"}
+{"sha": "28e153f0", "folder": "Paytm Payments Bank", "status": "v2", "layout": "paytm_datetime_transactiondetails_amount_availablebalance", "fb": "", "rows": 226, "verdict": "VERIFIED"}
+{"sha": "1d65f903", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 102, "verdict": "VERIFIED"}
+{"sha": "31667ba5", "folder": "Punjab National Bank", "status": "v2", "layout": "pnb_date_instrumentid_amount_type_balance_remarks", "fb": "", "rows": 56, "verdict": "REVIEW"}
+{"sha": "6ef1f151", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance", "fb": "", "rows": 589, "verdict": "FAILED"}
+{"sha": "7e2cdf13", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "39c4c8d6", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 395, "verdict": "VERIFIED"}
+{"sha": "a2131dd1", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 896, "verdict": "VERIFIED"}
+{"sha": "cf33bd81", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook", "fb": "", "rows": 287, "verdict": "VERIFIED"}
+{"sha": "a28fddca", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 331, "verdict": "VERIFIED"}
+{"sha": "c172aee8", "folder": "India Post Payments Bank", "status": "fallback", "layout": null, "fb": "other_bank:ippb", "rows": 0, "verdict": null}
+{"sha": "25f6ce31", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "f59f9f87", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 853, "verdict": "VERIFIED"}
+{"sha": "7afbcda0", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 51, "verdict": "VERIFIED"}
+{"sha": "5fb5e704", "folder": "IndusInd Bank", "status": "v2", "layout": "indusind_date_particulars_chqrefno_withdrawl_deposit_balance", "fb": "", "rows": 627, "verdict": "VERIFIED"}
+{"sha": "4b25002e", "folder": "Bank of Baroda", "status": "v2", "layout": "bob_serial_transactiondate_valuedate_description_cheque_debit_credit_balance", "fb": "", "rows": 481, "verdict": "VERIFIED"}
+{"sha": "e8fcccb0", "folder": "Union Bank of India", "status": "v2", "layout": "union_date_remarks_tranid_utrnumber_instrid_withdrawals_deposits_balance", "fb": "", "rows": 9, "verdict": "REVIEW"}
+{"sha": "cf06b912", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 15, "verdict": "VERIFIED"}
+{"sha": "a2371aaf", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "67507586", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_ref_debit_credit_balance_mpassbook", "fb": "", "rows": 24, "verdict": "FAILED"}
+{"sha": "30c880c1", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 400, "verdict": "VERIFIED"}
+{"sha": "69ed26f3", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "REVIEW"}
+{"sha": "bd9bdfba", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 78, "verdict": "VERIFIED"}
+{"sha": "e1df5676", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 934, "verdict": "VERIFIED"}
+{"sha": "dffad53c", "folder": "IDBI Bank", "status": "v2", "layout": "idbi_date_particulars_chqno_withdrawals_deposits_balance", "fb": "", "rows": 48, "verdict": "VERIFIED"}
+{"sha": "8bce2f48", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "b7214fea", "folder": "Bank of Baroda", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "5807963e", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 234, "verdict": "REVIEW"}
+{"sha": "c6f19fef", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "aabb9375", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "8b8256fa", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 65, "verdict": "VERIFIED"}
+{"sha": "8cfc3cd2", "folder": "SBI", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "6c77d353", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "c001a4d2", "folder": "Union Bank of India", "status": "v2", "layout": "union_trandate_tranid_remarks_amount_balance", "fb": "", "rows": 97, "verdict": "REVIEW"}
+{"sha": "97339d7e", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 89, "verdict": "VERIFIED"}
+{"sha": "ea76c21b", "folder": "Standard Chartered Bank", "status": "v2", "layout": "scb_date_valuedate_description_cheque_deposit_withdrawal_balance", "fb": "", "rows": 102, "verdict": "VERIFIED"}
+{"sha": "2c21d7d6", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 73, "verdict": "VERIFIED"}
+{"sha": "d49b60bc", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 263, "verdict": "VERIFIED"}
+{"sha": "1797b328", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 391, "verdict": "REVIEW"}
+{"sha": "4f0f4c0a", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "64ef8dd9", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "eb7819ae", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 284, "verdict": "VERIFIED"}
+{"sha": "8630489d", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "e1362e6b", "folder": "Union Bank of India", "status": "v2", "layout": "union_date_remarks_tranid_utrnumber_instrid_withdrawals_deposits_balance", "fb": "", "rows": 72, "verdict": "REVIEW"}
+{"sha": "75a3efd1", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 119, "verdict": "VERIFIED"}
+{"sha": "b1bac088", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 90, "verdict": "VERIFIED"}
+{"sha": "f5e12499", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 227, "verdict": "VERIFIED"}
+{"sha": "3bc810ff", "folder": "Non_Bank_Documents", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "4b1a1094", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "2b5a5e47", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 555, "verdict": "VERIFIED"}
+{"sha": "7d90695f", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_branch_debit_credit_balance", "fb": "", "rows": 86, "verdict": "VERIFIED"}
+{"sha": "c0a8a862", "folder": "Human Verification", "status": "v2", "layout": "union_si_date_particulars_chqnum_withdrawal_deposit_balance", "fb": "", "rows": 27, "verdict": "VERIFIED"}
+{"sha": "7057114e", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 263, "verdict": "REVIEW"}
+{"sha": "85859966", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 988, "verdict": "VERIFIED"}
+{"sha": "27e8cc8a", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance_ddmmyy", "fb": "", "rows": 277, "verdict": "REVIEW"}
+{"sha": "5a4ffb7d", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "faa8e93e", "folder": "Standard Chartered Bank", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "149c37da", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "35e5b10d", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 270, "verdict": "VERIFIED"}
+{"sha": "d9705045", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "bd0f0009", "folder": "Axis Bank", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "871f6bde", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 340, "verdict": "VERIFIED"}
+{"sha": "d78e55b6", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 231, "verdict": "VERIFIED"}
+{"sha": "e19a9488", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 111, "verdict": "VERIFIED"}
+{"sha": "42a10ad4", "folder": "Karnataka Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "2ce630b2", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_valuedate_transactionparticulars_chqno_amountinr_drcr_balanceinr_branchname", "fb": "", "rows": 311, "verdict": "VERIFIED"}
+{"sha": "2fae0724", "folder": "Dhanlaxmi Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "95821ec3", "folder": "Punjab National Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "728531a8", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "02e81a41", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "6af396af", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "51312b61", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "d0940516", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 30, "verdict": "VERIFIED"}
+{"sha": "ddae4b91", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "44e3f1d7", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "77071ebb", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance_ddmmyy", "fb": "", "rows": 1517, "verdict": "REVIEW"}
+{"sha": "adc4cf50", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 184, "verdict": "VERIFIED"}
+{"sha": "91baf5d8", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "6667e5ea", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 606, "verdict": "REVIEW"}
+{"sha": "2aee6449", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 999, "verdict": "FAILED"}
+{"sha": "cae4128b", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 455, "verdict": "VERIFIED"}
+{"sha": "82a4d6bc", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "23e309d8", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "bb9b8f69", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 312, "verdict": "VERIFIED"}
+{"sha": "09dfa00b", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "ce0cadb0", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 288, "verdict": "VERIFIED"}
+{"sha": "c17bd4e3", "folder": "Paytm Payments Bank", "status": "v2", "layout": "paytm_datetime_transactiondetails_amount_availablebalance", "fb": "", "rows": 158, "verdict": "VERIFIED"}
+{"sha": "44f1df89", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 226, "verdict": "VERIFIED"}
+{"sha": "4f2a50dc", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "328039d5", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 237, "verdict": "VERIFIED"}
+{"sha": "c07f3406", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 968, "verdict": "VERIFIED"}
+{"sha": "9902d898", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 900, "verdict": "VERIFIED"}
+{"sha": "86ff097f", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 183, "verdict": "VERIFIED"}
+{"sha": "631dad0f", "folder": "Bank of Baroda", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "e81b3f45", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 96, "verdict": "VERIFIED"}
+{"sha": "542e5d79", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 143, "verdict": "FAILED"}
+{"sha": "0d827cba", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "8b22f18a", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 50, "verdict": "VERIFIED"}
+{"sha": "9db9ef98", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "9f7667e8", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 992, "verdict": "VERIFIED"}
+{"sha": "d39a6dd6", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_narration_chqrefno_amountdrcr_balancecr", "fb": "", "rows": 1231, "verdict": "VERIFIED"}
+{"sha": "8007ecba", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 69, "verdict": "VERIFIED"}
+{"sha": "824055aa", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance", "fb": "", "rows": 173, "verdict": "REVIEW"}
+{"sha": "5c12af4f", "folder": "Yes Bank", "status": "v2", "layout": "yes_transaction_valuedate_chequenoreferenceno_description_withdrawals_deposits_runningbalance", "fb": "", "rows": 0, "verdict": "FAILED"}
+{"sha": "3805226c", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 626, "verdict": "VERIFIED"}
+{"sha": "cfe4331e", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 226, "verdict": "VERIFIED"}
+{"sha": "135a6a00", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 27, "verdict": "VERIFIED"}
+{"sha": "3bb84f95", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "a7479364", "folder": "Non_Bank_Documents", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "86e1b0fb", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 68, "verdict": "VERIFIED"}
+{"sha": "a1f62af6", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 300, "verdict": "REVIEW"}
+{"sha": "e107ab43", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 108, "verdict": "VERIFIED"}
+{"sha": "8b88b21b", "folder": "Standard Chartered Bank", "status": "v2", "layout": "scb_date_valuedate_description_cheque_deposit_withdrawal_balance", "fb": "", "rows": 10, "verdict": "FAILED"}
+{"sha": "11a1e54c", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "7e3f8021", "folder": "Indian Bank", "status": "v2", "layout": "indianbank_transactiondate_particulars_withdrawals_deposit_balance", "fb": "", "rows": 168, "verdict": "REVIEW"}
+{"sha": "63e8b9f9", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "25209ce5", "folder": "Yes Bank", "status": "v2", "layout": "yes_transaction_valuedate_referencenumber_description_withdrawals_deposits_runningbalance", "fb": "", "rows": 237, "verdict": "FAILED"}
+{"sha": "e2ff2fad", "folder": "Union Bank of India", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "9a8f1914", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "63cdeef4", "folder": "Punjab National Bank", "status": "v2", "layout": "pnb_date_instrumentid_amount_type_balance_remarks", "fb": "", "rows": 325, "verdict": "REVIEW"}
+{"sha": "e77c77e5", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 360, "verdict": "VERIFIED"}
+{"sha": "d4b8a9ad", "folder": "Karnataka Bank", "status": "v2", "layout": "karnataka_date_particulars_instrumentno_withdrawals_deposits_balance", "fb": "", "rows": 2058, "verdict": "VERIFIED"}
+{"sha": "2d1fa19f", "folder": "DBS Bank", "status": "v2", "layout": "dbs_transactiondate_valuedate_detailsoftransaction_debit_credit_balance", "fb": "", "rows": 169, "verdict": "REVIEW"}
+{"sha": "60ed2e4f", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 171, "verdict": "REVIEW"}
+{"sha": "95b5de2b", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 293, "verdict": "VERIFIED"}
+{"sha": "bfc04d6b", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "c4b643d3", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 1125, "verdict": "VERIFIED"}
+{"sha": "49df46bb", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "37bcc161", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 110, "verdict": "VERIFIED"}
+{"sha": "3e308910", "folder": "Karnataka Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "84407e85", "folder": "Kotak Mahindra Bank", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "48db87ab", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 39, "verdict": "VERIFIED"}
+{"sha": "880f3344", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 411, "verdict": "VERIFIED"}
+{"sha": "0d51fcfd", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 211, "verdict": "VERIFIED"}
+{"sha": "422be47e", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "76c17ddb", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "c02e011f", "folder": "Other_Unknown", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "4fda3bac", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 28, "verdict": "REVIEW"}
+{"sha": "2eee5004", "folder": "Canara Bank", "status": "v2", "layout": "canara_txndate_valuedate_chequeno_description_branch_debit_credit_balance", "fb": "", "rows": 156, "verdict": "VERIFIED"}
+{"sha": "9752a3e4", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 53, "verdict": "VERIFIED"}
+{"sha": "c3275f2f", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 514, "verdict": "VERIFIED"}
+{"sha": "8cd56ea7", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 2, "verdict": "VERIFIED"}
+{"sha": "bce2123d", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 577, "verdict": "VERIFIED"}
+{"sha": "e09e4cb8", "folder": "SBI", "status": "v2", "layout": "sbi_txn_value_description_ref_branch_debit_credit_balance", "fb": "", "rows": 1937, "verdict": "VERIFIED"}
+{"sha": "bfb8cb2c", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "78e7bbe4", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "e4a0c82e", "folder": "Human Verification", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "46f7a5e6", "folder": "Indian Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "bd0154ee", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "87e75730", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "0e76a1ff", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_tranid_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 636, "verdict": "VERIFIED"}
+{"sha": "39e8d519", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "f2f64b11", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 279, "verdict": "VERIFIED"}
+{"sha": "1eaccb2a", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 176, "verdict": "VERIFIED"}
+{"sha": "af51d0ce", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 148, "verdict": "FAILED"}
+{"sha": "7e6254d4", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "a35a262b", "folder": "Bank of Baroda", "status": "fallback", "layout": null, "fb": "bank_unconfirmed", "rows": 0, "verdict": null}
+{"sha": "f17aca1b", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 90, "verdict": "VERIFIED"}
+{"sha": "a1db14b2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 110, "verdict": "VERIFIED"}
+{"sha": "e281bf91", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 21, "verdict": "VERIFIED"}
+{"sha": "8b2d3bfe", "folder": "OCR", "status": "unsupported", "layout": null, "fb": "scanned_no_text", "rows": 0, "verdict": null}
+{"sha": "d6919d1c", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 1705, "verdict": "VERIFIED"}
+{"sha": "25559d30", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "fda671ea", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 227, "verdict": "VERIFIED"}
+{"sha": "8d8caf1f", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 175, "verdict": "VERIFIED"}
+{"sha": "55d0ed5d", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 811, "verdict": "VERIFIED"}
+{"sha": "b4d59071", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 259, "verdict": "FAILED"}
+{"sha": "dadc59d9", "folder": "Canara Bank", "status": "v2", "layout": "canara_date_particulars_deposits_withdrawals_balance", "fb": "", "rows": 66, "verdict": "VERIFIED"}
+{"sha": "f751d278", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 297, "verdict": "VERIFIED"}
+{"sha": "4f819ba0", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "1f253d04", "folder": "Human Verification", "status": "fallback", "layout": null, "fb": "foreign_bank", "rows": 0, "verdict": null}
+{"sha": "162135f2", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 455, "verdict": "VERIFIED"}
+{"sha": "e15cdb70", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 333, "verdict": "VERIFIED"}
+{"sha": "e8da8cd2", "folder": "Non_Bank_Documents", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "5ce818b1", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 128, "verdict": "VERIFIED"}
+{"sha": "19245953", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 705, "verdict": "VERIFIED"}
+{"sha": "b86fc37f", "folder": "Union Bank of India", "status": "v2", "layout": "union_date_remarks_tranid_utrnumber_instrid_withdrawals_deposits_balance", "fb": "", "rows": 215, "verdict": "REVIEW"}
+{"sha": "187b86b5", "folder": "IDBI Bank", "status": "v2", "layout": "idbi_date_particulars_chqno_withdrawals_deposits_balance", "fb": "", "rows": 375, "verdict": "VERIFIED"}
+{"sha": "726ece06", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "3f06bba2", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 177, "verdict": "VERIFIED"}
+{"sha": "ecd02278", "folder": "Axis Bank", "status": "v2", "layout": "axis_trandate_chqno_particulars_debit_credit_balance_initbr", "fb": "", "rows": 952, "verdict": "VERIFIED"}
+{"sha": "1de354e4", "folder": "Federal Bank", "status": "v2", "layout": "federal_date_valuedate_particulars_trantype_chequedetails_withdrawals_deposits_balance_drcr", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "31348229", "folder": "Citibank", "status": "v2", "layout": "citibank_date_transactiondetails_withdrawals_deposits_balance", "fb": "", "rows": 617, "verdict": "VERIFIED"}
+{"sha": "5814f022", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 109, "verdict": "VERIFIED"}
+{"sha": "64d8324e", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 85, "verdict": "VERIFIED"}
+{"sha": "a1d1dbad", "folder": "Union Bank of India", "status": "v2", "layout": "union_trandate_tranid_remarks_amount_balance", "fb": "", "rows": 227, "verdict": "REVIEW"}
+{"sha": "152690b2", "folder": "Bandhan Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "c306ae29", "folder": "Bank of Baroda", "status": "v2", "layout": "bob_date_narration_chqno_withdrawaldr_depositcr_balance", "fb": "", "rows": 121, "verdict": "FAILED"}
+{"sha": "9b31f432", "folder": "ICICI Bank", "status": "v2", "layout": "icici_sno_transactiondate_chequenumber_remarks_amountinrfirst_wrap", "fb": "", "rows": 334, "verdict": "REVIEW"}
+{"sha": "912da85a", "folder": "Punjab National Bank", "status": "v2", "layout": "pnb_date_instrumentid_amount_type_balance_remarks", "fb": "", "rows": 543, "verdict": "REVIEW"}
+{"sha": "82f8e3d0", "folder": "SBI", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "7270b3e8", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 25, "verdict": "VERIFIED"}
+{"sha": "b80054b2", "folder": "Standard Chartered Bank", "status": "v2", "layout": "scb_date_valuedate_description_cheque_deposit_withdrawal_balance", "fb": "", "rows": 227, "verdict": "VERIFIED"}
+{"sha": "20f2901a", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 149, "verdict": "REVIEW"}
+{"sha": "dc8b7cb7", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 126, "verdict": "VERIFIED"}
+{"sha": "4798cde7", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "3af66319", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 191, "verdict": "VERIFIED"}
+{"sha": "c9fca1b3", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 87, "verdict": "VERIFIED"}
+{"sha": "8f605338", "folder": "Bank of India", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "70825d0e", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 318, "verdict": "VERIFIED"}
+{"sha": "b8a9c06e", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "4fe31321", "folder": "AU Small Finance Bank", "status": "v2", "layout": "au_date_descriptionnarration_valuedate_chqrefno_debitdr_creditcr_balance", "fb": "", "rows": 1, "verdict": "VERIFIED"}
+{"sha": "97c5a5dd", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 57, "verdict": "VERIFIED"}
+{"sha": "ef458e9e", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 299, "verdict": "VERIFIED"}
+{"sha": "02d82b25", "folder": "HDFC Bank", "status": "v2", "layout": "hdfc_date_narration_ref_valuedt_withdrawal_deposit_closing", "fb": "", "rows": 1622, "verdict": "VERIFIED"}
+{"sha": "4b51a85a", "folder": "SBI", "status": "v2", "layout": "sbi_date_details_refnocheque_debit_credit_balance", "fb": "", "rows": 128, "verdict": "REVIEW"}
+{"sha": "53f0ea28", "folder": "SBI", "status": "v2", "layout": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance", "fb": "", "rows": 110, "verdict": "VERIFIED"}
+{"sha": "f422e37d", "folder": "Locked PDFs", "status": "unsupported", "layout": null, "fb": "locked", "rows": 0, "verdict": null}
+{"sha": "b6f06af3", "folder": "Union Bank of India", "status": "v2", "layout": "union_sno_date_transactionid_remarks_amount_balance", "fb": "", "rows": 605, "verdict": "REVIEW"}
+{"sha": "0bfe5a86", "folder": "ICICI Bank", "status": "fallback", "layout": null, "fb": "no_layout", "rows": 0, "verdict": null}
+{"sha": "ed3873a2", "folder": "Bank of Baroda", "status": "v2", "layout": "bob_date_narration_chqno_withdrawaldr_depositcr_balance", "fb": "", "rows": 40, "verdict": "VERIFIED"}
+{"sha": "a7dbd57b", "folder": "SBI", "status": "v2", "layout": "sbi_postdate_valuedate_description_cheque_debit_credit_balance", "fb": "", "rows": 884, "verdict": "VERIFIED"}
+{"sha": "691742d5", "folder": "IDFC First Bank", "status": "v2", "layout": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance", "fb": "", "rows": 122, "verdict": "VERIFIED"}
+{"sha": "1203ecf7", "folder": "ICICI Bank", "status": "v2", "layout": "icici_date_mode_particulars_deposits_withdrawals_balance", "fb": "", "rows": 1970, "verdict": "FAILED"}
+{"sha": "89b8fcca", "folder": "Kotak Mahindra Bank", "status": "v2", "layout": "kotak_date_transactiondetails_chequereference_debit_credit_balance", "fb": "", "rows": 140, "verdict": "VERIFIED"}

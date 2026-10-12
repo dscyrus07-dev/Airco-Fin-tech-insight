@@ -1,0 +1,856 @@
+path,verdict,evidence,notes
+.env.example,KEEP-CORE,D,repo root file
+.gitattributes,KEEP-CORE,D,repo root file
+.gitignore,KEEP-CORE,D,repo root file
+README.md,KEEP-CORE,D,repo root file
+START.bat,KEEP-CORE,D,repo root file
+auth/auth-service/Dockerfile,KEEP-CORE,D,auth service
+auth/auth-service/app/config.py,KEEP-CORE,D,auth service
+auth/auth-service/app/dependencies/auth.py,KEEP-CORE,D,auth service
+auth/auth-service/app/main.py,KEEP-CORE,D,auth service
+auth/auth-service/app/middleware/correlation.py,KEEP-CORE,D,auth service
+auth/auth-service/app/models/user.py,KEEP-CORE,D,auth service
+auth/auth-service/app/routes/auth.py,KEEP-CORE,D,auth service
+auth/auth-service/app/services/auth_service.py,KEEP-CORE,D,auth service
+auth/auth-service/app/services/keycloak_validator.py,KEEP-CORE,D,auth service
+auth/auth-service/app/utils/jwt_utils.py,KEEP-CORE,D,auth service
+auth/auth-service/app/utils/logging.py,KEEP-CORE,D,auth service
+auth/auth-service/requirements.txt,KEEP-CORE,D,auth service
+backend/Dockerfile,KEEP-CORE,D,image build
+backend/README.md,KEEP-CORE,F,backend docs
+backend/_probe_audit.py,UNSURE,BF,referenced by PII_REMEDIATION/ARCH_INVENTORY/CODE_HYGIENE docs; one-off audit script
+backend/alembic.ini,KEEP-CORE,D,migrations config
+backend/app/__init__.py,KEEP-CORE,A,package root
+backend/app/api/routes/audit_admin.py,KEEP-CORE,AD,
+backend/app/api/routes/auth.py,KEEP-CORE,AD,
+backend/app/api/routes/download.py,KEEP-CORE,AD,
+backend/app/api/routes/feedback.py,KEEP-CORE,AD,
+backend/app/api/routes/jobs.py,KEEP-CORE,AD,
+backend/app/api/routes/profile.py,KEEP-CORE,AD,
+backend/app/api/routes/statements_analyze.py,KEEP-CORE,ACD,
+backend/app/api/routes/sync.py,KEEP-CORE,AD,
+backend/app/api/routes/upload.py,KEEP-CORE,AD,
+backend/app/api/routes/upload_async.py,KEEP-CORE,AD,
+backend/app/api/routes/v1_api_keys.py,KEEP-CORE,AD,
+backend/app/api/routes/v1_statements.py,KEEP-CORE,AD,
+backend/app/core/__init__.py,KEEP-CORE,A,package init for core.config
+backend/app/core/config.py,KEEP-CORE,AC,
+backend/app/core/security.py,SAFE-DELETE,ABCEF,0 importers; auth is Keycloak; 0% cov; no doc/test refs
+backend/app/database/__init__.py,KEEP-CORE,AC,
+backend/app/database/audit_models.py,KEEP-CORE,A,
+backend/app/database/models.py,KEEP-CORE,AC,
+backend/app/database/session.py,KEEP-CORE,AC,
+backend/app/dependencies/auth.py,KEEP-CORE,AC,
+backend/app/main.py,KEEP-CORE,A,
+backend/app/middleware/audit_context.py,KEEP-CORE,A,
+backend/app/middleware/auth_middleware.py,KEEP-CORE,A,
+backend/app/middleware/correlation.py,KEEP-CORE,A,
+backend/app/middleware/request_logger.py,KEEP-CORE,A,
+backend/app/models/job.py,KEEP-CORE,AC,
+backend/app/services/__init__.py,KEEP-CORE,A,
+backend/app/services/analysis_service.py,KEEP-CORE,AC,
+backend/app/services/api_key_service.py,KEEP-CORE,A,
+backend/app/services/audit/__init__.py,KEEP-CORE,A,
+backend/app/services/audit/audit_context.py,KEEP-CORE,A,
+backend/app/services/audit/audit_service.py,KEEP-CORE,A,
+backend/app/services/auth_client.py,KEEP-CORE,AC,
+backend/app/services/banks/README.md,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/__init__.py,KEEP-FALLBACK,C,engine/parser cohort
+backend/app/services/banks/_shared/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/_shared/base_parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/base_processor.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/category_registry.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/data_quality.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/date_normalizer.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/dynamic_column_detector.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/finbit_analytics.py,KEEP-FALLBACK,AB,engine/parser cohort
+backend/app/services/banks/_shared/generic_bank.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/hygiene_check.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/lite_metrics.py,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/_shared/parser_metrics.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/_shared/rich_metadata.py,KEEP-FALLBACK,AB,engine/parser cohort
+backend/app/services/banks/_shared/source_analysis.py,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/_shared/unsupported_format_queue.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/axis/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/axis_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/axis/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/reconciliation.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/axis/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/axis/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/axis/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/bank_of_baroda_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_baroda/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/bank_of_india_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/bank_of_india/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/bank_of_india/structure_validator.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/bank_of_india/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/canara/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/canara/aggregation_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/ai_fallback.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/canara_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/canara/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/processor.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/reconciliation.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/recurring_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/rule_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/canara/structure_validator.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/canara/transaction_validator.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/hdfc/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/hdfc_classifier.py,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/hdfc/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/hdfc/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/reconciliation.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/hdfc/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/hdfc/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/hdfc/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/icici/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/icici/aggregation_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/ai_fallback.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/icici_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/icici/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/processor.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/reconciliation.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/recurring_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/rule_engine.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/icici/structure_validator.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/icici/transaction_validator.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/idfc/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/idfc_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/idfc/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/idfc/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/idfc/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/indian_bank_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/parser.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/indian_bank/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/indian_bank/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/karnataka_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/karnataka/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/karnataka/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/karnataka/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/kotak_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/kotak/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/kotak/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/kotak/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/paytm/paytm_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/paytm/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/paytm/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/sbi/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/sbi/sbi_classifier.py,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/sbi/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/sbi/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/union/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/union/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/union/union_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/__init__.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/aggregation_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/ai_fallback.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/parser.py,KEEP-FALLBACK,ABC,engine/parser cohort
+backend/app/services/banks/unknown/processor.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/reconciliation.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/recurring_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/rule_engine.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/rules.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/banks/unknown/structure_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/transaction_validator.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/banks/unknown/unknown_classifier.py,KEEP-FALLBACK,BC,engine/parser cohort
+backend/app/services/core/__init__.py,KEEP-CORE,C,
+backend/app/services/core/data_integrity_guard.py,KEEP-CORE,AC,
+backend/app/services/core/pdf_integrity_validator.py,KEEP-CORE,AC,
+backend/app/services/event_consumer.py,KEEP-CORE,A,
+backend/app/services/event_publisher.py,KEEP-CORE,AC,
+backend/app/services/file_history_service.py,KEEP-CORE,AC,
+backend/app/services/frontend_result_builder.py,KEEP-CORE,A,
+backend/app/services/intelligence/__init__.py,KEEP-CORE,A,
+backend/app/services/intelligence/claude_intelligence.py,KEEP-CORE,A,
+backend/app/services/intelligence/groq_intelligence.py,KEEP-CORE,A,
+backend/app/services/intelligence/learning_store.py,KEEP-CORE,A,
+backend/app/services/job_progress.py,KEEP-CORE,A,
+backend/app/services/job_store.py,KEEP-CORE,AC,
+backend/app/services/jwt_verifier.py,KEEP-CORE,AC,
+backend/app/services/message_queue.py,KEEP-CORE,AC,
+backend/app/services/metadata_extractor.py,KEEP-CORE,A,
+backend/app/services/migration/__init__.py,KEEP-CORE,AC,
+backend/app/services/migration/comparator.py,KEEP-CORE,AC,
+backend/app/services/migration/contract.py,KEEP-CORE,AC,
+backend/app/services/migration/old_result.py,KEEP-CORE,AC,
+backend/app/services/monitoring/__init__.py,KEEP-CORE,A,
+backend/app/services/monitoring/error_logger.py,SAFE-DELETE,ABCEF,0 importers (init imports health_monitor only); 0% cov; no refs
+backend/app/services/monitoring/health_monitor.py,KEEP-CORE,A,
+backend/app/services/pdf_processor.py,KEEP-CORE,A,
+backend/app/services/persistence_service.py,KEEP-CORE,A,
+backend/app/services/pipeline/__init__.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/aggregation/__init__.py,KEEP-CORE,BC,
+backend/app/services/pipeline/aggregation/engine.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/classification/__init__.py,KEEP-CORE,B,
+backend/app/services/pipeline/classification/rule_engine.py,KEEP-CORE,AB,
+backend/app/services/pipeline/models.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/normalize.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/reconciliation/__init__.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/reconciliation/engine.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/recurring/__init__.py,KEEP-CORE,BC,
+backend/app/services/pipeline/recurring/engine.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/reporting/__init__.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/reporting/formula_excel_engine.py,KEEP-CORE,BC,
+backend/app/services/pipeline/reporting/lite_excel_generator.py,KEEP-CORE,ABC,
+backend/app/services/pipeline/reporting/lite_metrics.py,KEEP-CORE,ABC,
+backend/app/services/pipeline_orchestrator.py,KEEP-CORE,AC,
+backend/app/services/redis_job_store.py,KEEP-CORE,AC,
+backend/app/services/retention_service.py,KEEP-CORE,A,
+backend/app/services/statement_engine/__init__.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/analyzer.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/banks/_masks.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/airtel_pb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/au_sfb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/axis.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/bandhan.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/bank_of_baroda.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/bank_of_india.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/bank_of_maharashtra.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/canara.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/central_bank.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/citibank.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/city_union.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/csb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/dbs.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/dcb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/deutsche.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/equitas_sfb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/federal.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/fino_pb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/hdfc.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/hsbc.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/icici.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/idbi.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/idfc.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/indian_bank.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/indusind.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/iob.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/ippb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/karnataka.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/kotak.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/kvb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/paytm.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/pnb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/rbl.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/sbi.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/sbm.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/south_indian.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/standard_chartered.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/tmb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/uco.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/ujjivan_sfb.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/union.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/banks/yes.json,KEEP-FALLBACK,B,engine/parser cohort
+backend/app/services/statement_engine/capability.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/contracts.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/detector.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/__init__.py,KEEP-CORE,A,engine/parser cohort
+backend/app/services/statement_engine/extraction/anchors.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/checks.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/engine.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/normalize.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/pdf_extractor.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/registry.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/registry_store.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/rows.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/spec_codec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/summary.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extraction/words.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/apgv/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/apgv/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/apgv/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/au_sfb/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/au_sfb/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/au_sfb/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/axis/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/axis/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/axis/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/bandhan/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/bandhan/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/bandhan/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/bob/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/bob/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/bob/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/bom/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/bom/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/bom/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/canara/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/canara/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/canara/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/central_bank/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/central_bank/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/central_bank/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/citibank/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/citibank/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/citibank/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/city_union/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/city_union/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/city_union/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/dbs/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/dbs/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/dbs/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/dcb/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/dcb/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/dcb/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/equitas/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/equitas/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/equitas/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/federal/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/federal/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/federal/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/anchors.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/checks.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/engine.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/normalize.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/rows.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/summary.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hdfc/words.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/hsbc/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/hsbc/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/hsbc/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/icici/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/icici/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/icici/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/idbi/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/idbi/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/idbi/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/idfc/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/idfc/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/idfc/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/indian_bank/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/indian_bank/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/indian_bank/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/indusind/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/indusind/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/indusind/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/iob/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/iob/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/iob/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/karnataka/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/karnataka/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/karnataka/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/kotak/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/kotak/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/kotak/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/kvb/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/kvb/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/kvb/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/paytm/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/paytm/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/paytm/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/pnb/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/pnb/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/pnb/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/registry.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/sbi/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/sbi/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/sbi/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/scb/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/scb/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/scb/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/south_indian/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/south_indian/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/south_indian/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/ujjivan/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/ujjivan/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/ujjivan/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/union/__init__.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/union/extractor.py,KEEP-CORE,B,engine/parser cohort
+backend/app/services/statement_engine/extractors/union/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/extractors/yes/__init__.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/extractors/yes/extractor.py,KEEP-CORE,BC,engine/parser cohort
+backend/app/services/statement_engine/extractors/yes/layout_spec.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/layouts.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/registry.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/serve.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/shadow.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/universal/__init__.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/universal/infer.py,KEEP-CORE,C,engine/parser cohort
+backend/app/services/statement_engine/universal/isolated.py,KEEP-CORE,A,engine/parser cohort
+backend/app/services/statement_engine/universal/lexicon.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/universal/reader.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/universal/serve.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/statement_engine/v2_router.py,KEEP-CORE,AC,engine/parser cohort
+backend/app/services/task_processor.py,KEEP-CORE,AC,
+backend/app/services/verification/__init__.py,KEEP-CORE,A,
+backend/app/services/verification/engine.py,KEEP-CORE,A,
+backend/app/services/verification/models.py,KEEP-CORE,A,
+backend/app/utils/__init__.py,KEEP-CORE,A,package init
+backend/app/utils/correlation.py,KEEP-CORE,AC,
+backend/app/utils/file_handler.py,KEEP-CORE,AC,
+backend/app/utils/logging.py,KEEP-CORE,AC,
+backend/data/parser_metrics.json,KEEP-CORE,C,runtime metrics store path
+backend/data/unsupported_formats/queue.json,KEEP-CORE,C,runtime queue store
+backend/requirements.txt,KEEP-CORE,D,deps manifest
+backend/scripts/__init__.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/baseline_run.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/capture_old_output.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/detection_benchmark.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/dev/__init__.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/dev/extract_bank_rules.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/e2e_smoke.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/README.md,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/__init__.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/__main__.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/api_client.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/bank_validator.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/config.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/downloader.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/input_loader.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/logging_utils.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/lookup.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/manifest.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/models.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/parser.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/pipeline.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/ratelimit.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/scripts/mypaisaa_fetch/report.py,UNSURE,-,no static/dynamic/runtime/contract/test evidence
+backend/tests/__init__.py,KEEP-CORE,E,
+backend/tests/banks/__init__.py,KEEP-CORE,E,
+backend/tests/banks/test_axis_parser.py,KEEP-CORE,AE,
+backend/tests/banks/test_canara_parser.py,KEEP-CORE,AE,
+backend/tests/banks/test_finbit_analytics.py,KEEP-CORE,AE,
+backend/tests/banks/test_icici_parser.py,KEEP-CORE,AE,
+backend/tests/banks/test_lite_excel_export.py,KEEP-CORE,AE,
+backend/tests/golden/__init__.py,KEEP-CORE,E,
+backend/tests/golden/axis/axis_03a834e1.json,KEEP-CORE,E,
+backend/tests/golden/axis/axis_0adaa93c.json,KEEP-CORE,E,
+backend/tests/golden/axis/axis_6ba8a853.json,KEEP-CORE,E,
+backend/tests/golden/axis/axis_9404a9d9.json,KEEP-CORE,E,
+backend/tests/golden/axis/axis_daf18fb5.json,KEEP-CORE,E,
+backend/tests/golden/bank_of_baroda/bank_of_baroda_2f9ac798.json,KEEP-CORE,E,
+backend/tests/golden/bank_of_india/bank_of_india_6c6cd53f.json,KEEP-CORE,E,
+backend/tests/golden/bank_of_india/bank_of_india_8cf0def2.json,KEEP-CORE,E,
+backend/tests/golden/bank_of_india/bank_of_india_d6c4d93a.json,KEEP-CORE,E,
+backend/tests/golden/canara/canara_007f4779.json,KEEP-CORE,E,
+backend/tests/golden/canara/canara_1b72efaa.json,KEEP-CORE,E,
+backend/tests/golden/canara/canara_3df16815.json,KEEP-CORE,E,
+backend/tests/golden/canara/canara_737ad81b.json,KEEP-CORE,E,
+backend/tests/golden/canara/canara_9be513d2.json,KEEP-CORE,E,
+backend/tests/golden/capture_snapshots.py,KEEP-CORE,E,
+backend/tests/golden/hdfc/hdfc_0f95bddd.json,KEEP-CORE,E,
+backend/tests/golden/hdfc/hdfc_18fbdd59.json,KEEP-CORE,E,
+backend/tests/golden/hdfc/hdfc_b6f49ced.json,KEEP-CORE,E,
+backend/tests/golden/hdfc/hdfc_d00bee46.json,KEEP-CORE,E,
+backend/tests/golden/hdfc/hdfc_ffc9b72c.json,KEEP-CORE,E,
+backend/tests/golden/icici/icici_073fc1e5.json,KEEP-CORE,E,
+backend/tests/golden/icici/icici_61222e88.json,KEEP-CORE,E,
+backend/tests/golden/icici/icici_6cd1e8fa.json,KEEP-CORE,E,
+backend/tests/golden/icici/icici_8938d1f5.json,KEEP-CORE,E,
+backend/tests/golden/icici/icici_9e083fc3.json,KEEP-CORE,E,
+backend/tests/golden/idfc/idfc_3c64c19b.json,KEEP-CORE,E,
+backend/tests/golden/idfc/idfc_77ef5fcc.json,KEEP-CORE,E,
+backend/tests/golden/idfc/idfc_c73b0d2c.json,KEEP-CORE,E,
+backend/tests/golden/indian_bank/indian_bank_32239b01.json,KEEP-CORE,E,
+backend/tests/golden/indian_bank/indian_bank_cfe757a3.json,KEEP-CORE,E,
+backend/tests/golden/karnataka/karnataka_46dbbee4.json,KEEP-CORE,E,
+backend/tests/golden/karnataka/karnataka_ad28b719.json,KEEP-CORE,E,
+backend/tests/golden/karnataka/karnataka_f16e5a01.json,KEEP-CORE,E,
+backend/tests/golden/kotak/kotak_2417ade6.json,KEEP-CORE,E,
+backend/tests/golden/kotak/kotak_3e3dba96.json,KEEP-CORE,E,
+backend/tests/golden/kotak/kotak_619aa8ae.json,KEEP-CORE,E,
+backend/tests/golden/kotak/kotak_fb3906cc.json,KEEP-CORE,E,
+backend/tests/golden/paytm/paytm_a1bdcd39.json,KEEP-CORE,E,
+backend/tests/golden/sbi/sbi_1245ca45.json,KEEP-CORE,E,
+backend/tests/golden/sbi/sbi_229e8f8b.json,KEEP-CORE,E,
+backend/tests/golden/sbi/sbi_4bbdb678.json,KEEP-CORE,E,
+backend/tests/golden/sbi/sbi_941fa3a8.json,KEEP-CORE,E,
+backend/tests/golden/sbi/sbi_ac7c2e43.json,KEEP-CORE,E,
+backend/tests/golden/snapshot_utils.py,KEEP-CORE,E,
+backend/tests/golden/test_regression.py,KEEP-CORE,AE,
+backend/tests/golden/union/union_0555811b.json,KEEP-CORE,E,
+backend/tests/golden/union/union_18e9272d.json,KEEP-CORE,E,
+backend/tests/golden/union/union_7a5d8b50.json,KEEP-CORE,E,
+backend/tests/golden/union/union_a69aa39e.json,KEEP-CORE,E,
+backend/tests/golden/union/union_e7d1d0d3.json,KEEP-CORE,E,
+backend/tests/golden/unknown/unknown_d0d58565.json,KEEP-CORE,E,
+backend/tests/migration/__init__.py,KEEP-CORE,E,
+backend/tests/migration/test_comparator.py,KEEP-CORE,AE,
+backend/tests/migration/test_old_result.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/__init__.py,KEEP-CORE,E,
+backend/tests/mypaisaa/conftest.py,KEEP-CORE,E,
+backend/tests/mypaisaa/test_api_client.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/test_downloader.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/test_input_loader.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/test_parser.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/test_pipeline.py,KEEP-CORE,AE,
+backend/tests/mypaisaa/test_report.py,KEEP-CORE,AE,
+backend/tests/pipeline/__init__.py,KEEP-CORE,E,
+backend/tests/pipeline/test_json_rule_engine.py,KEEP-CORE,AE,
+backend/tests/pipeline/test_lite_excel_export.py,KEEP-CORE,AE,
+backend/tests/pipeline/test_models.py,KEEP-CORE,AE,
+backend/tests/pipeline/test_shared_reconciliation.py,KEEP-CORE,AE,
+backend/tests/regression_manifest.json,KEEP-CORE,E,
+backend/tests/statement_engine/__init__.py,KEEP-CORE,E,
+backend/tests/statement_engine/extraction/__init__.py,KEEP-CORE,E,
+backend/tests/statement_engine/extraction/test_bank_evidence_narration.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extraction/test_completeness_guard.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extraction/test_generic_engine.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extraction/test_registry_store_and_router.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extraction/test_shadow_readiness_fixes.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extraction/test_spec_codec.py,KEEP-CORE,AE,
+backend/tests/statement_engine/extractors/__init__.py,KEEP-CORE,E,
+backend/tests/statement_engine/extractors/test_hdfc_v2_synthetic.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_analysis_service.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_capability_and_states.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_detector.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_layouts_hdfc.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_real_pdfs.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_serve.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_shadow_wiring.py,KEEP-CORE,AE,
+backend/tests/statement_engine/test_universal.py,KEEP-CORE,AE,
+backend/tests/test_api_key_service.py,KEEP-CORE,AE,
+backend/tests/test_async_upload.py,KEEP-CORE,AE,
+backend/tests/test_auth_integration.py,KEEP-CORE,AE,
+backend/tests/test_bank_name_routing.py,KEEP-CORE,AE,
+backend/tests/test_history_statement_engine.py,KEEP-CORE,AE,
+backend/tests/test_mismatch_guard.py,KEEP-CORE,AE,
+backend/tests/test_persistence_service.py,KEEP-CORE,AE,
+backend/tests/test_pipeline_orchestrator.py,KEEP-CORE,AE,
+backend/tests/test_serve_api.py,KEEP-CORE,AE,
+backend/tests/test_statements_analyze_api.py,KEEP-CORE,AE,
+backend/tests/test_v2_only_banks.py,KEEP-CORE,AE,
+backend/tests/test_workflow_fields.py,KEEP-CORE,AE,
+backend/tests/verification/__init__.py,KEEP-CORE,E,
+backend/tests/verification/test_contract.py,KEEP-CORE,AE,
+backend/tests/verification/test_engine.py,KEEP-CORE,AE,
+backend/tools/propose_layouts.py,KEEP-CONTRACT,BF,layout-proposal tool; named in ARCHITECTURE/REPO_INVENTORY docs
+backend/tools/regression_gate.py,KEEP-CONTRACT,BF,regression gate tool; named in docs
+backend/tools/u3_measure.py,KEEP-CONTRACT,BF,universal-tier measurement tool; named in UNIVERSAL_RESULTS
+backend/tools/u3_remeasure.py,KEEP-CONTRACT,BF,universal-tier measurement tool; named in UNIVERSAL_RESULTS
+backend/tools/u3c_crosscheck.py,KEEP-CONTRACT,BF,u3 crosscheck tool; named in ENGINE_OBSERVABILITY
+backend/words.json,KEEP-CORE,B,loaded by bank classifiers
+comparison/wave11/REPORT.md,UNSURE,F,historical analysis artifact
+comparison/wave11/e1_candidates.py,UNSURE,F,historical analysis artifact
+comparison/wave11/e3_accept.py,UNSURE,F,historical analysis artifact
+comparison/wave11/e3_picks.py,UNSURE,F,historical analysis artifact
+comparison/wave11/e3_probes.py,UNSURE,F,historical analysis artifact
+comparison/wave11/e3_ui.py,UNSURE,F,historical analysis artifact
+database/migrations/migrate_metadata_to_extra_data.sql,KEEP-CONTRACT,D,migrations
+database/migrations/version_001_init.sql,KEEP-CONTRACT,D,migrations
+database/migrations/version_002_statement_metadata.sql,KEEP-CONTRACT,D,migrations
+database/migrations/version_003_layout_registry.sql,KEEP-CONTRACT,D,migrations
+database/schemas/E2E_VALIDATION_CHECKLIST.md,KEEP-CONTRACT,D,migrations
+database/schemas/audit_validation_queries.sql,KEEP-CONTRACT,D,migrations
+database/schemas/audit_views.sql,KEEP-CONTRACT,D,migrations
+database/schemas/production_monitoring_schema.sql,KEEP-CONTRACT,D,migrations
+database/schemas/supabase_audit_schema.sql,KEEP-CONTRACT,D,migrations
+database/seeds/init.sql,KEEP-CONTRACT,D,migrations
+database/seeds/postgres.conf,KEEP-CONTRACT,D,migrations
+database/seeds/setup_supabase.py,KEEP-CONTRACT,D,migrations
+docs/AGENT_STATE.md,KEEP-CORE,F,documentation
+docs/PRODUCT_STATUS.md,KEEP-CORE,F,documentation
+docs/REPO_INVENTORY.md,KEEP-CORE,F,documentation
+docs/UNIFIED_ENTRY_PLAN.md,KEEP-CORE,F,documentation
+docs/architecture/ARCHITECTURE.md,KEEP-CORE,F,documentation
+docs/architecture/SECURE_INSIGHTS_SYSTEM_OVERVIEW.md,KEEP-CORE,F,documentation
+docs/archive/ARCHITECTURE_PREV.md,KEEP-CORE,F,documentation
+docs/archive/HANDOFF.md,KEEP-CORE,F,documentation
+docs/archive/RUN_SLICE1.bat,KEEP-CORE,F,documentation
+docs/archive/RUN_SLICE1.md,KEEP-CORE,F,documentation
+docs/archive/RUN_SLICE2B.bat,KEEP-CORE,F,documentation
+docs/archive/RUN_SLICE2B_TESTS_ONLY.bat,KEEP-CORE,F,documentation
+docs/archive/RUN_TESTS_ONLY.bat,KEEP-CORE,F,documentation
+docs/archive/baseline_branch.txt,KEEP-CORE,F,documentation
+docs/archive/baseline_git_diff_stat.txt,KEEP-CORE,F,documentation
+docs/archive/baseline_git_status.txt,KEEP-CORE,F,documentation
+docs/archive/known_failures.txt,KEEP-CORE,F,documentation
+docs/archive/run_all_slice1.ps1,KEEP-CORE,F,documentation
+docs/archive/run_slice2b.ps1,KEEP-CORE,F,documentation
+docs/archive/tickets/CLEANUP_LITE_ONLY_EXCEL.md,KEEP-CORE,F,documentation
+docs/archive/tickets/PHASE2B_CLASSIFICATION_STATUS.md,KEEP-CORE,F,documentation
+docs/archive/tickets/PHASE5_REPORTING_STATUS.md,KEEP-CORE,F,documentation
+docs/archive/tickets/PHASE6_CLEANUP_STATUS.md,KEEP-CORE,F,documentation
+docs/archive/tickets/RECON_BASELINE_AND_PARITY.md,KEEP-CORE,F,documentation
+docs/banks/BANK_COMPARISON_MATRIX.md,KEEP-CORE,F,documentation
+docs/banks/BANK_INTEGRATION_GUIDE.md,KEEP-CORE,F,documentation
+docs/banks/BANK_STATUS.md,KEEP-CORE,F,documentation
+docs/banks/INDIAN_BANK_IMPLEMENTATION_SUMMARY.md,KEEP-CORE,F,documentation
+docs/banks/KVB_DESIGN_NOTE.md,KEEP-CORE,F,documentation
+docs/banks/KVB_FEASIBILITY.md,KEEP-CORE,F,documentation
+docs/banks/ONBOARDING_3C_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/PNB_DESIGN_NOTE.md,KEEP-CORE,F,documentation
+docs/banks/WAVE10_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE11A_NOTES.md,KEEP-CORE,F,documentation
+docs/banks/WAVE1_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE2_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE3_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE4_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE5_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE6_RESULTS.md,KEEP-CORE,F,documentation
+docs/banks/WAVE7_RESULTS.md,KEEP-CORE,F,documentation
+docs/engine/Date Validations.md,KEEP-CORE,F,documentation
+docs/engine/HDFC_V2_DESIGN.md,KEEP-CORE,F,documentation
+docs/engine/HEADERLESS_VARIANTS_DESIGN.md,KEEP-CORE,F,documentation
+docs/engine/HEADER_ONLY_CANDIDATES.md,KEEP-CORE,F,documentation
+docs/engine/ICICI_STALE_BALANCE_DESIGN_NOTE.md,KEEP-CORE,F,documentation
+docs/engine/SHARED_ENGINE_3B.md,KEEP-CORE,F,documentation
+docs/engine/UNIVERSAL_PROPOSALS.md,KEEP-CORE,F,documentation
+docs/engine/UNIVERSAL_READER_DESIGN.md,KEEP-CORE,F,documentation
+docs/engine/UNIVERSAL_RESULTS.md,KEEP-CORE,F,documentation
+docs/engine/V2_API_CONTRACT.md,KEEP-CORE,F,documentation
+docs/engine/V2_API_CONTRACT_CHANGES.md,KEEP-CORE,F,documentation
+docs/engine/V2_SERVE_DESIGN.md,KEEP-CORE,F,documentation
+docs/engine/V2_SERVE_PARITY.md,KEEP-CORE,F,documentation
+docs/engine/V2_UI_NOTES.md,KEEP-CORE,F,documentation
+docs/operations/DEMO_READINESS.md,KEEP-CORE,F,documentation
+docs/operations/DEMO_SCRIPT.md,KEEP-CORE,F,documentation
+docs/operations/ENGINE_OBSERVABILITY.md,KEEP-CORE,F,documentation
+docs/operations/FEATURE_FLAGS.md,KEEP-CORE,F,documentation
+docs/operations/PII_REMEDIATION.md,KEEP-CORE,F,documentation
+docs/operations/ROLLOUT_MATRIX.md,KEEP-CORE,F,documentation
+docs/operations/RUNBOOK.md,KEEP-CORE,F,documentation
+docs/operations/SHADOW_READINESS.md,KEEP-CORE,F,documentation
+docs/operations/V2_ENABLEMENT.md,KEEP-CORE,F,documentation
+docs/operations/security_audit.md,KEEP-CORE,F,documentation
+docs/verification/ARCHITECTURE_INVENTORY.md,KEEP-CORE,F,documentation
+docs/verification/CODE_HYGIENE.md,KEEP-CORE,F,documentation
+docs/verification/COMPARATOR_FOUNDATION_REPORT.md,KEEP-CORE,F,documentation
+docs/verification/DETECTION_FINDINGS.md,KEEP-CORE,F,documentation
+docs/verification/FINDINGS_RUN1.md,KEEP-CORE,F,documentation
+docs/verification/FREEZE_PROPOSAL.md,KEEP-CORE,F,documentation
+docs/verification/HDFC_CORPUS_BASELINE.md,KEEP-CORE,F,documentation
+docs/verification/ISSUE_hdfc_legacy_closing_balance.md,KEEP-CORE,F,documentation
+docs/verification/KNOWN_FAILURES.md,KEEP-CORE,F,documentation
+docs/verification/OLD_CAPTURE_PILOT_REPORT.md,KEEP-CORE,F,documentation
+docs/verification/PHASE8_VERIFY.md,KEEP-CORE,F,documentation
+docs/verification/SLICE2B_FINAL_REPORT.md,KEEP-CORE,F,documentation
+docs/verification/SLICE2C_FINAL_REPORT.md,KEEP-CORE,F,documentation
+e2e/ue_e2e.mjs,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e/uicheck.mjs,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e_pdfs/hdfc_locked.pdf,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e_pdfs/hdfc_ok.pdf,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e_pdfs/kotak_override.pdf,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e_pdfs/scanned.pdf,KEEP-TEST,E,synthetic E2E fixtures/scripts
+e2e_pdfs/unsupported.pdf,KEEP-TEST,E,synthetic E2E fixtures/scripts
+frontend/Dockerfile,KEEP-CORE,D,build/config
+frontend/app/analyze/page.tsx,DELETE-AFTER-SOAK,AE,redirects to /dashboard when flag on; after soak remove page entirely
+frontend/app/api/api-keys/[id]/route.ts,KEEP-CORE,ADE,
+frontend/app/api/api-keys/route.ts,KEEP-CORE,ADE,
+frontend/app/api/auth/callback/route.ts,KEEP-CORE,ADE,
+frontend/app/api/auth/login/route.ts,KEEP-CORE,ADE,
+frontend/app/api/auth/refresh/route.ts,KEEP-CORE,ADE,
+frontend/app/api/check-pdf/route.ts,KEEP-CORE,ADE,
+frontend/app/api/download/[filename]/route.ts,KEEP-CORE,ADE,
+frontend/app/api/jobs/[jobId]/download/route.ts,KEEP-CORE,ADE,
+frontend/app/api/jobs/[jobId]/route.ts,KEEP-CORE,ADE,
+frontend/app/api/profile/files/[fileId]/route.ts,KEEP-CORE,ADE,
+frontend/app/api/profile/history/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/[analysisId]/confirm/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/[analysisId]/documents/[documentId]/unlock/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/[analysisId]/process/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/[analysisId]/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/analyze/route.ts,KEEP-CORE,ADE,
+frontend/app/api/statements/banks/route.ts,KEEP-CORE,ADE,
+frontend/app/api/sync/route.ts,KEEP-CORE,ADE,
+frontend/app/api/unlock-pdf/route.ts,KEEP-CORE,ADE,
+frontend/app/api/upload/route.ts,KEEP-CORE,ADE,
+frontend/app/api/upload/supported-banks/route.ts,KEEP-CORE,ADE,
+frontend/app/auth/callback/page.tsx,KEEP-CORE,ACE,
+frontend/app/components/Dashboard.tsx,KEEP-CORE,AC,
+frontend/app/components/analyze/AnalyzeFlow.tsx,DELETE-AFTER-SOAK,AE,analyze page body; page redirects to /dashboard when flag on
+frontend/app/components/api-keys/ApiKeyList.tsx,KEEP-CORE,A,
+frontend/app/components/api-keys/CreateKeyModal.tsx,KEEP-CORE,A,
+frontend/app/components/api-keys/QuickStartGuide.tsx,KEEP-CORE,A,
+frontend/app/components/layout/Header.tsx,KEEP-CORE,AC,
+frontend/app/components/layout/StepForm.tsx,DELETE-AFTER-SOAK,AE,legacy details step; only Dashboard(flag-off) + page.tsx dead-import + own test
+frontend/app/components/layout/__tests__/StepForm.test.tsx,KEEP-CORE,AE,
+frontend/app/components/processing/ProcessingStep.tsx,KEEP-CORE,A,
+frontend/app/components/results/CollapsiblePreview.tsx,KEEP-CORE,A,
+frontend/app/components/results/DownloadButtons.tsx,KEEP-CORE,A,
+frontend/app/components/results/ResultStep.tsx,KEEP-CORE,A,
+frontend/app/components/results/engine/EngineDetails.tsx,KEEP-CORE,A,
+frontend/app/components/results/engine/ReviewReasons.tsx,KEEP-CORE,A,
+frontend/app/components/results/engine/VerificationBadge.tsx,KEEP-CORE,A,
+frontend/app/components/results/engine/__tests__/__snapshots__/statementEngine.test.tsx.snap,KEEP-CORE,E,
+frontend/app/components/results/engine/__tests__/statementEngine.test.tsx,KEEP-CORE,AE,
+frontend/app/components/spreadsheet/SpreadsheetContext.tsx,KEEP-CORE,A,
+frontend/app/components/spreadsheet/SpreadsheetEditor.tsx,KEEP-CORE,A,
+frontend/app/components/spreadsheet/SpreadsheetGrid.tsx,KEEP-CORE,A,
+frontend/app/components/spreadsheet/SpreadsheetHistory.tsx,KEEP-CORE,A,
+frontend/app/components/spreadsheet/SpreadsheetToolbar.tsx,KEEP-CORE,A,
+frontend/app/components/spreadsheet/types.ts,KEEP-CORE,A,
+frontend/app/components/upload/ModeSelection.tsx,DELETE-AFTER-SOAK,AE,mode step; skipped in unified mode
+frontend/app/components/upload/UploadStep.tsx,DELETE-AFTER-SOAK,AE,legacy upload step; same reach pattern as StepForm
+frontend/app/components/workflow/ProcessingList.tsx,KEEP-CORE,A,
+frontend/app/components/workflow/ReportList.tsx,KEEP-CORE,A,
+frontend/app/components/workflow/ReviewTable.tsx,KEEP-CORE,A,
+frontend/app/components/workflow/StatementWorkflow.tsx,KEEP-CORE,A,
+frontend/app/components/workflow/UploadDropzone.tsx,KEEP-CORE,A,
+frontend/app/components/workflow/__tests__/flagOffEquivalence.test.tsx,KEEP-CORE,AE,
+frontend/app/dashboard/api-keys/page.tsx,KEEP-CORE,ACE,
+frontend/app/dashboard/page.tsx,KEEP-CORE,ACE,
+frontend/app/globals.css,KEEP-CORE,C,
+frontend/app/hooks/__tests__/useStatementWorkflow.test.ts,KEEP-CORE,AE,
+frontend/app/hooks/useStatementWorkflow.ts,KEEP-CORE,A,
+frontend/app/layout.tsx,KEEP-CORE,ACE,
+frontend/app/page.tsx,KEEP-CORE,ACE,
+frontend/contexts/AuthContext.tsx,KEEP-CORE,A,
+frontend/eslint.config.mjs,KEEP-CORE,D,build/config
+frontend/lib/api.ts,SAFE-DELETE,B?,0 importers; Dashboard defines its own uploadStatement; exports unused anywhere
+frontend/lib/banks.ts,KEEP-CORE,A,
+frontend/lib/flags.ts,DELETE-AFTER-SOAK,AE,the flag gate itself; remove with the gate
+frontend/lib/keycloak.ts,KEEP-CORE,A,
+frontend/lib/sessionToken.ts,KEEP-CORE,A,
+frontend/lib/statementEngine.ts,KEEP-CORE,A,
+frontend/lib/statementsApi.ts,KEEP-CORE,A,
+frontend/lib/statementsProxy.ts,KEEP-CORE,A,
+frontend/lib/validation.ts,KEEP-CORE,A,
+frontend/next-env.d.ts,KEEP-CORE,D,build/config
+frontend/next.config.js,KEEP-CORE,D,
+frontend/package-lock.json,KEEP-CORE,D,build/config
+frontend/package.json,KEEP-CORE,D,build/config
+frontend/postcss.config.js,KEEP-CORE,D,
+frontend/public/android-chrome-192x192.png,KEEP-CORE,D,static asset
+frontend/public/android-chrome-512x512.png,KEEP-CORE,D,static asset
+frontend/public/apple-touch-icon.png,KEEP-CORE,D,static asset
+frontend/public/favicon-16x16.png,KEEP-CORE,D,static asset
+frontend/public/favicon-32x32.png,KEEP-CORE,D,static asset
+frontend/public/favicon.ico,KEEP-CORE,D,static asset
+frontend/public/logo.png,KEEP-CORE,D,static asset
+frontend/public/silent-check-sso.html,KEEP-CORE,D,static asset
+frontend/public/site.webmanifest,KEEP-CORE,D,static asset
+frontend/tailwind.config.ts,KEEP-CORE,D,build/config
+frontend/tsconfig.json,KEEP-CORE,D,build/config
+frontend/types/index.ts,KEEP-CORE,A,
+frontend/vitest.config.ts,KEEP-CORE,D,build/config
+frontend/vitest.setup.ts,KEEP-CORE,D,build/config
+infra/docker/docker-compose.ec2.yml,KEEP-CORE,D,infra
+infra/docker/docker-compose.finrc.yml,KEEP-CORE,D,infra
+infra/docker/docker-compose.local.yml,KEEP-CORE,D,infra
+infra/docker/docker-compose.w11.yml,KEEP-CORE,D,infra
+infra/docker/docker-compose.yml,KEEP-CORE,D,infra
+infra/nginx/Dockerfile,KEEP-CORE,D,infra
+infra/nginx/entrypoint.sh,KEEP-CORE,D,infra
+infra/nginx/nginx.conf,KEEP-CORE,D,infra
+infra/nginx/nginx.ec2.conf.template,KEEP-CORE,D,infra
+infra/nginx/nginx.local.conf,KEEP-CORE,D,infra
+scripts/audit/_audit_verify.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_col_check.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_col_check2.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_deep_verify_parity.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_hygiene_verify.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_migrate_hygiene.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_supabase_check.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_table_counts.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_verify_all_banks.py,UNSURE,B?,ops script — reference check needed
+scripts/audit/_verify_parity.py,UNSURE,B?,ops script — reference check needed
+scripts/deploy/bootstrap-ec2-ubuntu.sh,UNSURE,B?,ops script — reference check needed
+scripts/deploy/deploy-ec2.sh,UNSURE,B?,ops script — reference check needed
+scripts/deploy/deploy-fintech.ps1,UNSURE,B?,ops script — reference check needed
+scripts/deploy/deploy-simple.ps1,UNSURE,B?,ops script — reference check needed
+scripts/deploy/deploy-to-aws.ps1,UNSURE,B?,ops script — reference check needed
+scripts/deploy/deploy-to-ec2.sh,UNSURE,B?,ops script — reference check needed
+scripts/deploy/diagnose-infrastructure.ps1,UNSURE,B?,ops script — reference check needed
+scripts/deploy/pull-and-rebuild.ps1,UNSURE,B?,ops script — reference check needed
+scripts/deploy/update-from-github.sh,UNSURE,B?,ops script — reference check needed
+scripts/dev/generate_bank_tracker.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/run_api_key_gates.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_all_banks.ps1,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_banks.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_end_to_end_parsing.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_fallback_functionality.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_hygiene_integration.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_hygiene_nonblocking.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_hygiene_standalone.py,UNSURE,B?,ops script — reference check needed
+scripts/dev/test_parsers_locally.py,UNSURE,B?,ops script — reference check needed
+scripts/frontend-app-client.json,KEEP-CONTRACT,D,keycloak client config used by setup scripts
+scripts/pkce-clear.json,KEEP-CONTRACT,D,keycloak pkce config used by setup scripts
+scripts/setup/fix-keycloak-client.sh,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-aws-local.bat,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-aws-local.ps1,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-aws-server.sh,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-keycloak-realm.sh,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-keycloak.sh,UNSURE,B?,ops script — reference check needed
+scripts/setup/setup-local-keycloak.ps1,UNSURE,B?,ops script — reference check needed
+scripts/setup/test-login.sh,UNSURE,B?,ops script — reference check needed

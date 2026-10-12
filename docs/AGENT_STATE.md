@@ -78,3 +78,11 @@ workflow components (UploadDropzone/ReviewTable/ProcessingList/ReportList/Statem
 flag-off equivalence tested), 360px h-scroll fixed (0px at 360/768/1280), E2E on synthetic PDFs (detection/override/unlock/honest
 negatives/parallel/report/history/redirect, 0 console errors), docs updated. Not verified: nothing blocking; legacy-engine jobs show no
 verification badge (correct). Decisions for Claude: none required; flag default stays off.
+
+[CA] START 4192b78 — legacy cleanup audit (analysis only; nothing deleted).
+
+[CA] DONE 740b7b7 — legacy cleanup safety audit @4192b78 (analysis only; nothing deleted; nothing pushed).
+Verdicts over 855 tracked files: KEEP-CORE 526, KEEP-FALLBACK 227, KEEP-CONTRACT 19, KEEP-TEST 7, DELETE-AFTER-SOAK 6 (legacy UI set), SAFE-DELETE 3, UNSURE 67.
+SAFE-DELETE: frontend/lib/api.ts, backend/app/core/security.py, backend/app/services/monitoring/error_logger.py (0 importers/0 refs/0%% coverage).
+Unused deps: npm exceljs+file-saver; pip xlsxwriter+passlib. Trial removal in throwaway wt-trial: tsc/eslint/vitest/next-build/backend-imports/pytest all PASS; 400-file corpus compare 0 diffs.
+Report: docs/cleanup/CLEANUP_AUDIT.md + VERDICTS.csv + INVENTORY.csv + ENDPOINTS.csv; tools under tools/cleanup_audit/.
