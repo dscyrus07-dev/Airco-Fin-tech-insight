@@ -42,6 +42,18 @@ function LoginScreen() {
   const router = useRouter()
   const { isLoading, login: startLogin } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [bankCount, setBankCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/upload/supported-banks')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.count) setBankCount(data.count)
+      })
+      .catch(() => undefined)
+    return () => { cancelled = true }
+  }, [])
 
   const mailtoHref = useMemo(() => {
     const subject = encodeURIComponent('Airco Insights Login Credentials')
@@ -127,7 +139,9 @@ function LoginScreen() {
                   </div>
                   <div className="flex items-center gap-3 text-neutral-700">
                     <div className="h-2 w-2 rounded-full bg-black"></div>
-                    <span className="text-base font-medium">Multi-bank support (HDFC, ICICI, SBI & more)</span>
+                    <span className="text-base font-medium">
+                      Multi-bank support{bankCount ? ` (${bankCount} banks and more)` : ''}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3 text-neutral-700">
                     <div className="h-2 w-2 rounded-full bg-black"></div>

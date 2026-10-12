@@ -283,3 +283,32 @@ describe('EngineDetails', () => {
     expect(screen.queryByText(/Verified/)).not.toBeInTheDocument()
   })
 })
+
+// --- T3 universal reader ---
+const UNIVERSAL_REVIEW = {
+  engine: 'universal',
+  mode: 'serve',
+  layout_id: 'universal_auto',
+  verdict: 'REVIEW',
+  needs_review: true,
+  review_codes: ['GENERAL_READER'],
+  anchored: false,
+  detected_bank: { key: 'pnb', name: 'Punjab National Bank', confidence: 'VERY_HIGH', source: 'detector' },
+  advisory: null,
+}
+
+describe('VerificationBadge — T3 general reader', () => {
+  it('shows Read by general reader with the GENERAL_READER sentence, never Verified', () => {
+    render(<VerificationBadge engine={asBlock(UNIVERSAL_REVIEW)} />)
+    const badge = screen.getByRole('status')
+    expect(badge).toHaveTextContent('Read by general reader')
+    expect(badge).toHaveTextContent(
+      "This statement's layout was read with our general reader, so please check the figures against your statement."
+    )
+    expect(screen.queryByText(/Verified/)).not.toBeInTheDocument()
+  })
+
+  it('badge label maps the universal engine', () => {
+    expect(engineBadgeLabel(asBlock(UNIVERSAL_REVIEW))).toBe('Read by general reader')
+  })
+})

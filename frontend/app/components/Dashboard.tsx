@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { BankStatementFileItem, UserDetails, ProcessingResult, ProcessingMode, Step, JobSubmitted, ProfileHistoryResponse, UserUploadHistoryItem, UserReportHistoryItem, StatementTypeSelection, StatementEngineBlock } from '@/types'
 import { SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
+import { listBanks } from '../../lib/statementsApi'
 import { engineNeedsAttention, parseStatementEngine } from '@/lib/statementEngine'
 import VerificationBadge from './results/engine/VerificationBadge'
 
@@ -92,6 +93,17 @@ function readSavedFormState(): SavedFormState | null {
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
+  const [bankNames, setBankNames] = useState<string[]>(SUPPORTED_BANK_OPTIONS.map((b) => b.name))
+  useEffect(() => {
+    let cancelled = false
+    listBanks()
+      .then((banks) => {
+        if (!cancelled && banks?.length) setBankNames(banks.filter((b) => b.id !== 'other').map((b) => b.name))
+      })
+      .catch(() => undefined) // keep the documented fallback list
+    return () => { cancelled = true }
+  }, [])
+
   const [savedForm] = useState<SavedFormState | null>(readSavedFormState)
   const savedDetails = savedForm?.userDetails || {}
   const savedStep = savedForm?.step || 1
@@ -838,20 +850,20 @@ export default function Dashboard() {
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                {SUPPORTED_BANK_OPTIONS.map(({ name, available }) => (
+                {bankNames.slice(0, 14).map((name) => (
                   <span
                     key={name}
-                    className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] ${
-                      available
-                        ? 'border-neutral-200 bg-neutral-50 text-neutral-500'
-                        : 'border-dashed border-neutral-200 bg-white text-neutral-300'
-                    }`}
+                    className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[10px] text-neutral-500"
                   >
-                    <span className={`h-1.5 w-1.5 rounded-full ${available ? 'bg-green-400' : 'bg-neutral-300'}`} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
                     {name}
-                    {!available && <span className="ml-0.5 text-[9px] text-neutral-300">soon</span>}
                   </span>
                 ))}
+                {bankNames.length > 14 && (
+                  <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[10px] text-neutral-500">
+                    and {bankNames.length - 14} more
+                  </span>
+                )}
               </div>
 
               <p className="mx-auto max-w-md text-[10px] leading-relaxed text-neutral-300">

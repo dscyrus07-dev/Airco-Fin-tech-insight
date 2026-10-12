@@ -273,10 +273,16 @@ export default function AnalyzeFlow() {
                     </div>
                   )}
 
-                  {d.state === 'UNSUPPORTED' && (
+                  {d.state === 'UNSUPPORTED' && d.detail_state === 'UNSUPPORTED_SCANNED_PDF' && (
                     <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
-                      This file cannot be processed (for example a scanned/image-based statement). OCR is not supported, so nothing
-                      will be run on it.
+                      This statement appears to be scanned or image-based. AirCo currently supports text-based PDF
+                      statements, so nothing will be run on it.
+                    </p>
+                  )}
+
+                  {d.state === 'UNSUPPORTED' && d.detail_state !== 'UNSUPPORTED_SCANNED_PDF' && (
+                    <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
+                      {d.message || "This bank isn't fully supported yet."}
                     </p>
                   )}
 

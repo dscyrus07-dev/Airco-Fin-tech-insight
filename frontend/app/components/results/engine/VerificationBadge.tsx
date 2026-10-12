@@ -28,6 +28,19 @@ export default function VerificationBadge({
   if (!engine) return null
   const suffix = details ? ` · ${details}` : ''
 
+  if (engine.engine === 'universal') {
+    // T3: REVIEW is the ceiling — never a verification claim.
+    return (
+      <span role="status" aria-label={`Read by general reader${suffix}`}
+        className="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-medium text-amber-800">
+        {warn}Read by general reader
+        <span className="font-normal text-amber-700">
+          {"· This statement's layout was read with our general reader, so please check the figures against your statement."}
+        </span>
+      </span>
+    )
+  }
+
   if (engine.engine === 'v2') {
     if (engine.verdict === 'VERIFIED') {
       const label = engine.anchored ? 'Verified · independently checked' : 'Verified'
@@ -65,6 +78,18 @@ export default function VerificationBadge({
       <span role="status" aria-label={`${label}${suffix}`}
         className="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600">
         {v === 'VERIFIED' ? check : warn}{label}{details && <span className="font-normal text-slate-500">· {details}</span>}
+      </span>
+    )
+  }
+
+  // T2 legacy, flag-on modes only: neutral "Processed" — no verification claim.
+  // Mode off renders nothing (previous contract); flagged/advisory results keep
+  // their own signals above.
+  if (engine.mode !== 'off' && !engine.needs_review && !(engine.review_codes || []).length) {
+    return (
+      <span role="status" aria-label={`Processed${suffix}`}
+        className="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600">
+        {check}Processed{details && <span className="font-normal text-slate-500">· {details}</span>}
       </span>
     )
   }
