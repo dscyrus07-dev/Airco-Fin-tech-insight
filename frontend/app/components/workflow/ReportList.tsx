@@ -15,24 +15,24 @@ export default function ReportList({ docs }: ReportListProps) {
   const finished = docs.filter((d) => d.document.job_id && d.job?.status === 'completed')
   const failed = docs.filter((d) => d.document.job_id && d.job?.status === 'failed')
   const [results, setResults] = useState<Record<string, ProcessingResult>>({})
+  const [retry, setRetry] = useState(0)
 
   useEffect(() => {
-    let cancelled = false
-    finished.forEach(async ({ document: d }) => {
-      if (!d.job_id || results[d.job_id]) return
+    const missing = finished.filter(({ document: d }) => d.job_id && !results[d.job_id])
+    if (!missing.length) return
+    missing.forEach(async ({ document: d }) => {
       try {
-        const job = await getJob(d.job_id)
-        if (cancelled || !job.result_data) return
-        setResults((r) => ({ ...r, [d.job_id!]: job.result_data as unknown as ProcessingResult }))
+        const job = await getJob(d.job_id!)
+        // apply even if a later effect run started: keyed by job_id, harmless
+        if (job.result_data) setResults((r) => ({ ...r, [d.job_id!]: job.result_data as unknown as ProcessingResult }))
       } catch {
-        // job row may be history-backed; leave blank rather than blocking others
+        // history-backed row may lag; retried below
       }
     })
-    return () => {
-      cancelled = true
-    }
+    const t = setTimeout(() => setRetry((n) => n + 1), 2500)
+    return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finished.map((f) => f.document.job_id).join(',')])
+  }, [finished.map((f) => f.document.job_id).join(','), retry])
 
   if (!finished.length && !failed.length) return null
 
