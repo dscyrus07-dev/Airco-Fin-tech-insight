@@ -78,3 +78,5 @@ workflow components (UploadDropzone/ReviewTable/ProcessingList/ReportList/Statem
 flag-off equivalence tested), 360px h-scroll fixed (0px at 360/768/1280), E2E on synthetic PDFs (detection/override/unlock/honest
 negatives/parallel/report/history/redirect, 0 console errors), docs updated. Not verified: nothing blocking; legacy-engine jobs show no
 verification badge (correct). Decisions for Claude: none required; flag default stays off.
+
+[CA] START 4192b78 — legacy cleanup audit (analysis only; nothing deleted).
