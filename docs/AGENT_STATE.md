@@ -106,3 +106,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK kvb SHADOW_ONLY 1066d54
 [OB] BANK iob REVIEW_ONLY 92bbb8f
 [OB] BANK central_bank SHADOW_ONLY 71046c5
+[OB] BANK equitas_sfb SHADOW_ONLY 5b21e0b
