@@ -86,3 +86,8 @@ Verdicts over 855 tracked files: KEEP-CORE 526, KEEP-FALLBACK 227, KEEP-CONTRACT
 SAFE-DELETE: frontend/lib/api.ts, backend/app/core/security.py, backend/app/services/monitoring/error_logger.py (0 importers/0 refs/0%% coverage).
 Unused deps: npm exceljs+file-saver; pip xlsxwriter+passlib. Trial removal in throwaway wt-trial: tsc/eslint/vitest/next-build/backend-imports/pytest all PASS; 400-file corpus compare 0 diffs.
 Report: docs/cleanup/CLEANUP_AUDIT.md + VERDICTS.csv + INVENTORY.csv + ENDPOINTS.csv; tools under tools/cleanup_audit/.
+
+[SC] START 82ad73a — small safe cleanup (3 dead files + 4 unused deps) per docs/cleanup/VERDICTS.csv.
+
+[SC] DONE 37b155b — removed 3 dead files (lib/api.ts, core/security.py, monitoring/error_logger.py) + npm deps exceljs/file-saver/@types/file-saver + pip xlsxwriter, passlib[bcrypt] from backend requirements.
+All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build, backend 271 tests, fresh-venv install + import smoke, 400-file corpus compare 0 diffs, docker builds OK. passlib kept in auth-service (live use).
