@@ -114,6 +114,20 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
                     "v2_served": True,
                 })
 
+    try:
+        from ...services.statement_engine.universal.serve import mode as _u_mode
+        _u_serve = _u_mode() == "serve"
+    except Exception:
+        _u_serve = False
+    if _u_serve:
+        banks.append({
+            "id": "other",
+            "name": "Other bank / not listed",
+            "pipeline_name": None,
+            "engines": ["universal"],
+            "v2_served": False,
+        })
+
     return {"banks": banks}
 
 

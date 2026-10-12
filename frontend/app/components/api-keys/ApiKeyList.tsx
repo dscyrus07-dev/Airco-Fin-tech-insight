@@ -59,7 +59,9 @@ export default function ApiKeyList({ getToken }: ApiKeyListProps) {
   }, [getToken])
 
   useEffect(() => {
-    void loadKeys()
+    // Defer the fetch (which sets state) out of the synchronous effect body.
+    const t = setTimeout(() => void loadKeys(), 0)
+    return () => clearTimeout(t)
   }, [loadKeys])
 
   const newestActivePrefix = useMemo(() => {

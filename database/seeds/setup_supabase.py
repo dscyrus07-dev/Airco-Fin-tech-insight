@@ -2,14 +2,16 @@
 Run this script once to create tables on Supabase.
 Usage: python database/setup_supabase.py
 """
+import os
+
 import psycopg2
 
 CONN_STRING = (
-    "host=aws-1-ap-northeast-1.pooler.supabase.com "
-    "port=5432 "
+    f"host={os.environ.get('SUPABASE_DB_HOST', '')} "
+    f"port={os.environ.get('SUPABASE_DB_PORT', '5432')} "
     "dbname=postgres "
-    "user=postgres.ldfpqjlooogfhsszfope "
-    "password=fintech@#321"
+    f"user={os.environ.get('SUPABASE_DB_USER', '')} "
+    f"password={os.environ.get('SUPABASE_DB_PASSWORD', '')}"
 )
 
 SQL = """

@@ -136,6 +136,7 @@ class FileHistoryService:
             "upload_object_key": self._record_value(record, "upload_object_key") if entry_type == "upload" else None,
             "report_object_key": self._record_value(record, "report_object_key") if entry_type == "report" else self._record_value(record, "report_object_key"),
             "total_transactions": self._record_value(record, "total_transactions"),
+            "statement_engine": self._record_value(record, "statement_engine"),
             "retention_expires_at": retention_expires_at.isoformat() if retention_expires_at else None,
             "retention_days_left": self._retention_days_left(retention_expires_at, current_time=current_time),
             "retention_status": self._retention_status_label(record, current_time=current_time),
@@ -216,6 +217,7 @@ class FileHistoryService:
             "backup_purge_status": existing.get("backup_purge_status", "pending"),
             "status": existing.get("status", "uploaded"),
             "total_transactions": existing.get("total_transactions"),
+            "statement_engine": existing.get("statement_engine"),
             "error_message": existing.get("error_message"),
             "created_at": existing.get("created_at") or datetime.now(timezone.utc),
             "updated_at": datetime.now(timezone.utc),
@@ -475,6 +477,7 @@ class FileHistoryService:
             stats = result_data.get("stats") or {}
             total_transactions = stats.get("total_transactions")
             record.total_transactions = int(total_transactions) if total_transactions is not None else None
+            record.statement_engine = result_data.get("statement_engine")
             record.error_message = None
             db.commit()
         except OperationalError:
@@ -491,6 +494,7 @@ class FileHistoryService:
                 stats = result_data.get("stats") or {}
                 total_transactions = stats.get("total_transactions")
                 record["total_transactions"] = int(total_transactions) if total_transactions is not None else None
+                record["statement_engine"] = result_data.get("statement_engine")
                 record["error_message"] = None
                 record["updated_at"] = datetime.now(timezone.utc)
         finally:

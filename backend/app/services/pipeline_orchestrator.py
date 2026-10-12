@@ -97,6 +97,12 @@ SUPPORTED_BANKS = {
     "bank of baroda": "Bank of Baroda",
     "bankofbaroda": "Bank of Baroda",
     "bob": "Bank of Baroda",
+    "bank of india": "Bank of India",
+    "bankofindia": "Bank of India",
+    "bank_of_india": "Bank of India",
+    "indian bank": "Indian Bank",
+    "indianbank": "Indian Bank",
+    "indian_bank": "Indian Bank",
     "unknown": "Unknown",
     "unknown bank": "Unknown",
 }
@@ -128,6 +134,22 @@ SUPPORTED_BANK_PROCESSORS = {
     "bank of baroda": "bank_of_baroda",
     "bankofbaroda": "bank_of_baroda",
     "bob": "bank_of_baroda",
+    "bank of india": "bank_of_india",
+    "bankofindia": "bank_of_india",
+    "bank_of_india": "bank_of_india",
+    "south indian bank": "south_indian_bank",
+    "southindianbank": "south_indian_bank",
+    "indian bank": "indian_bank",
+    "indianbank": "indian_bank",
+    "indian_bank": "indian_bank",
+    # v2-served banks with no legacy processor: display names -> spec keys.
+    # The bank key reaches the v2 serving plan; processor lookup returns None.
+    "indusind": "indusind",
+    "indusind bank": "indusind",
+    "citibank": "citibank",
+    "citi bank": "citibank",
+    "city union": "city_union",
+    "city union bank": "city_union",
     "unknown": "unknown",
     "unknown bank": "unknown",
 }
@@ -136,6 +158,68 @@ SUPPORTED_BANK_PROCESSORS = {
 # ---------------------------------------------------------------------------
 # Input Validation
 # ---------------------------------------------------------------------------
+
+# legacy wrong-bank guard: cheap detector re-check after a legacy success.
+# env-gated; "0" disables completely (no behaviour change at all).
+_MISMATCH_GUARD_ENV = "STATEMENT_ENGINE_MISMATCH_GUARD"
+
+
+def _mismatch_guard_enabled() -> bool:
+    return os.getenv(_MISMATCH_GUARD_ENV, "1").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _mismatch_detect(file_path: str):
+    """Cheap detector probe: first-3-page text only, no extraction. Returns
+    the DetectionResult or None on any failure."""
+    try:
+        import pdfplumber
+        from app.services.statement_engine import detect_bank
+        texts = []
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages[:3]:
+                texts.append(page.extract_text() or "")
+        return detect_bank(texts)
+    except Exception as exc:
+        logger.warning("mismatch guard skipped (%s)", type(exc).__name__)
+        return None
+
+
+def _apply_mismatch_flag(det, bank_key: str, v2_block: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """If det is HIGH/VERY_HIGH confidence for a *different* supported bank,
+    return the block flagged needs_review + BANK_MISMATCH; else the block
+    unchanged. Pure — never raises, never blocks, never switches banks."""
+    if det is None:
+        return v2_block
+    try:
+        from app.services.statement_engine import Confidence
+        confident = det.confidence in (Confidence.HIGH, Confidence.VERY_HIGH)
+    except Exception:
+        confident = False
+    if not (confident and det.supported and det.processor_key and det.processor_key != bank_key):
+        return v2_block
+    block = dict(v2_block or {})
+    codes = list(block.get("review_codes") or [])
+    if "BANK_MISMATCH" not in codes:
+        codes.append("BANK_MISMATCH")
+    block["needs_review"] = True
+    block["review_codes"] = codes
+    block["detected_bank"] = {
+        "key": det.bank_id, "name": det.bank_name,
+        "confidence": det.confidence.name, "source": "detector",
+    }
+    logger.warning(
+        "mismatch guard: file processed as %s but detector is %s for %s",
+        bank_key, det.confidence.name, det.bank_id,
+    )
+    return block
+
+
+def _maybe_flag_bank_mismatch(file_path: str, bank_key: str, v2_block: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Flag-gated wrapper around the mismatch detector + flagger."""
+    if not _mismatch_guard_enabled():
+        return v2_block
+    return _apply_mismatch_flag(_mismatch_detect(file_path), bank_key, v2_block)
+
 
 def _validate_input(
     file_path: str,
@@ -340,6 +424,10 @@ def process_statement(
     v2_plan = None
     v2_block = _v2serve.minimal_block(_v2_mode)
 
+    from app.services.statement_engine.universal import serve as _userv
+    _u_mode = _userv.mode()
+    _u_block = None
+
     if _v2_mode == "serve" and _v2serve.serving_enabled_for(bank_key):
         _spec_key = _v2serve.spec_key_for(bank_key)
         try:
@@ -363,7 +451,7 @@ def process_statement(
     # =================================================================
     ProcessorClass = _get_bank_processor(bank_key)
 
-    if ProcessorClass is None and v2_plan is None:
+    if ProcessorClass is None and v2_plan is None and _u_mode != "serve":
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -382,7 +470,7 @@ def process_statement(
         _serve_key = _v2serve.pipeline_key_for(v2_plan.v2_spec_key)
         ProcessorClass = _get_bank_processor(_serve_key) or _get_bank_processor("unknown")
 
-    if ProcessorClass is None:
+    if ProcessorClass is None and _u_mode != "serve":
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -396,11 +484,13 @@ def process_statement(
         api_key=api_key if enable_ai else None,
         audit_service=audit_service,
         job_id=job_id,
-    )
+    ) if ProcessorClass is not None else None
 
     # =================================================================
     # STEP 4: Run Bank-Specific Processing
     # =================================================================
+    result = None
+    _t2_failed = False
     try:
         if output_dir is None:
             from app.utils.file_handler import get_temp_dir
@@ -431,12 +521,23 @@ def process_statement(
                         file_path=file_path, user_info=user_info, output_dir=output_dir,
                     )
         elif ProcessorClass is not None:
-            result = processor.process(
-                file_path=file_path,
-                user_info=user_info,
-                output_dir=output_dir,
-            )
-        else:
+            if _u_mode == "serve":
+                # T2 failure must not abort before the T3 attempt below.
+                try:
+                    result = processor.process(
+                        file_path=file_path, user_info=user_info, output_dir=output_dir,
+                    )
+                except Exception as _t2_exc:
+                    logger.warning("legacy processing failed; T3 attempt follows (%s)", type(_t2_exc).__name__)
+                    result = None
+                    _t2_failed = _t2_exc
+            else:
+                result = processor.process(
+                    file_path=file_path,
+                    user_info=user_info,
+                    output_dir=output_dir,
+                )
+        elif _u_mode == "off":
             raise UnsupportedBankError(
                 f"Bank '{bank_name}' is not yet supported. "
                 f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -470,6 +571,43 @@ def process_statement(
                             detected_bank=v2_block.get("detected_bank"),
                             advisory=None,
                         )
+
+        # T3 universal reader: only when T1/T2 produced nothing usable (flag-gated;
+        # shadow records the block only; serve feeds REVIEW rows downstream or
+        # fails honestly — FAILED carries no data).
+        _served = (
+            result is not None
+            and getattr(result, "status", "") == "success"
+            and getattr(getattr(result, "metrics", None), "transaction_count", 0) or 0
+        ) > 0
+        if _u_mode != "off" and not _served:
+            _u_res, _u_rs = _userv.attempt(file_path, bank_hint=v2_block.get("detected_bank") and
+                                           v2_block["detected_bank"].get("name") or bank_name or "Unknown bank")
+            if _u_mode == "shadow":
+                _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+            elif _u_res.ok:
+                _u_class = _get_bank_processor("unknown")
+                _u_result = _u_class(
+                    strict_mode=False, enable_ai=enable_ai,
+                    api_key=api_key if enable_ai else None,
+                    audit_service=audit_service, job_id=job_id,
+                )._run_pipeline(file_path, user_info, output_dir, row_source=_u_rs) if (_u_class and _u_rs) else None
+                if getattr(_u_result, "status", "") == "success":
+                    result = _u_result
+                    _u_block = _userv.block_for(_u_res, served=True, u_mode=_u_mode)
+                    v2_block = _userv.engine_block_for(_u_res, _u_mode,
+                                                       detected_bank=v2_block.get("detected_bank"))
+                else:
+                    _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+            else:
+                _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+                if isinstance(_t2_failed, Exception):
+                    raise _t2_failed
+                raise PipelineAbortError(
+                    f"Statement could not be read ({_u_res.code or _u_res.verdict})",
+                    stage="universal_reader",
+                    error_code="GENERAL_READER_FAILED" if _u_res.ok is False else _u_res.code,
+                )
 
     except Exception as e:
         logger.error("Bank processor failed: %s", str(e), exc_info=True)
@@ -509,8 +647,16 @@ def process_statement(
     response["bank_key"] = bank_key
     response["mode"] = mode
 
+    # wrong-bank guard on the successful result: flag BANK_MISMATCH when the
+    # detector is HIGH-confidence for a different supported bank (flag-gated).
+    if getattr(result, "status", "") == "success":
+        v2_block = _maybe_flag_bank_mismatch(file_path, bank_key, v2_block)
+
     # v2 serving: attach the additive block, audit the decision, and append the
     # Statement Check sheet when the block calls for it (never at mode off).
+    if _u_block is not None and "universal" not in v2_block:
+        v2_block["universal"] = _u_block
+        _userv.audit_attempt(audit_service, job_id, _u_block)
     response["statement_engine"] = v2_block
     _v2serve.audit_serve_decision(audit_service, job_id, v2_block)
     if _v2serve.wants_statement_check(v2_block):

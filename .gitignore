@@ -180,3 +180,16 @@ comparison/
 
 # runtime unsupported-format queue (may carry source filenames)
 backend/data/unsupported_formats/
+
+# Local corpus (customer data, read-only — never commit)
+Unified All Statements/
+
+# Local wave worktrees / demo scratch (live outside version control)
+wt-*/
+
+# Shell-artifact dirs from bad `;C` pastes
+*;C/
+
+# Demo private local files
+local.env
+*.local.env

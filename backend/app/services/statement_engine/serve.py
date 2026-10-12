@@ -1,4 +1,4 @@
-"""Serving path for the v2 statement engine (contract: docs/slice3/V2_API_CONTRACT.md).
+"""Serving path for the v2 statement engine (contract: docs/engine/V2_API_CONTRACT.md).
 
 Flag-gated, default OFF. In `serve` mode an allow-listed bank's statement may be
 processed from verified v2 rows; everything else stays on the legacy path with a
@@ -23,7 +23,7 @@ from .v2_router import DETECTOR_TO_SPEC_BANK, _CONFIDENT, detect_spec_bank, rout
 log = logging.getLogger(__name__)
 
 SERVE_BANKS_ENV = "STATEMENT_ENGINE_V2_SERVE_BANKS"
-SERVE_TIMEOUT_S = float(os.getenv("STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S", "45"))
+SERVE_TIMEOUT_S = float(os.getenv("STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S", "30"))
 _POOL = ThreadPoolExecutor(max_workers=1, thread_name_prefix="v2-serve")
 
 # user-facing spec key when the selection is "auto-detect" / not a real bank

@@ -16,8 +16,11 @@ import {
   Trash2,
   UserCircle2,
 } from 'lucide-react'
-import { BankStatementFileItem, UserDetails, ProcessingResult, ProcessingMode, Step, JobSubmitted, ProfileHistoryResponse, UserUploadHistoryItem, UserReportHistoryItem, StatementTypeSelection } from '@/types'
+import { BankStatementFileItem, UserDetails, ProcessingResult, ProcessingMode, Step, JobSubmitted, ProfileHistoryResponse, UserUploadHistoryItem, UserReportHistoryItem, StatementTypeSelection, StatementEngineBlock } from '@/types'
 import { SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
+import { listBanks } from '../../lib/statementsApi'
+import { engineNeedsAttention, parseStatementEngine } from '@/lib/statementEngine'
+import VerificationBadge from './results/engine/VerificationBadge'
 
 type BatchResultItem = {
   id: string
@@ -70,17 +73,53 @@ const getUploadErrorCode = (error: unknown): string | undefined => {
 
 const APP_API_BASE = '/api'
 
+type SavedFormState = {
+  userDetails?: Partial<UserDetails>
+  mode?: ProcessingMode
+  apiKey?: string
+  step?: number
+}
+
+function readSavedFormState(): SavedFormState | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem('airco-form-data')
+    return raw ? (JSON.parse(raw) as SavedFormState) : null
+  } catch (e) {
+    console.error('Failed to load saved form data:', e)
+    return null
+  }
+}
+
 export default function Dashboard() {
   const { user, logout } = useAuth()
-  const [step, setStep] = useState<Step>(1)
+  const [bankNames, setBankNames] = useState<string[]>(SUPPORTED_BANK_OPTIONS.map((b) => b.name))
+  useEffect(() => {
+    let cancelled = false
+    listBanks()
+      .then((banks) => {
+        if (!cancelled && banks?.length) setBankNames(banks.filter((b) => b.id !== 'other').map((b) => b.name))
+      })
+      .catch(() => undefined) // keep the documented fallback list
+    return () => { cancelled = true }
+  }, [])
+
+  const [savedForm] = useState<SavedFormState | null>(readSavedFormState)
+  const savedDetails = savedForm?.userDetails || {}
+  const savedStep = savedForm?.step || 1
+  const [step, setStep] = useState<Step>((savedStep === 4 ? 3 : savedStep) as Step)
   const [filesTab, setFilesTab] = useState<'uploaded' | 'reports'>('uploaded')
   const [isProfilePanelOpen, setIsProfilePanelOpen] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set())
   const [userDetails, setUserDetails] = useState<UserDetails>({
-    fullName: '',
-    accountType: '',
-    bankName: '',
-    selectedBanks: [],
+    fullName: savedDetails.fullName || '',
+    accountType: savedDetails.accountType || '',
+    bankName: savedDetails.bankName || '',
+    selectedBanks: Array.isArray(savedDetails.selectedBanks)
+      ? savedDetails.selectedBanks
+      : savedDetails.bankName
+        ? [savedDetails.bankName]
+        : [],
   })
   const [filesByBank, setFilesByBank] = useState<Record<string, BankStatementFileItem[]>>({})
   const [batchId, setBatchId] = useState<string>(createBatchId())
@@ -88,8 +127,8 @@ export default function Dashboard() {
   const [batchResults, setBatchResults] = useState<BatchResultItem[]>([])
   const [currentBatchIndex, setCurrentBatchIndex] = useState(0)
   const [activeBatchFile, setActiveBatchFile] = useState<BankStatementFileItem | null>(null)
-  const [mode, setMode] = useState<ProcessingMode>('free')
-  const [apiKey, setApiKey] = useState('')
+  const [mode, setMode] = useState<ProcessingMode>(savedForm?.mode || 'free')
+  const [apiKey, setApiKey] = useState(savedForm?.apiKey || '')
   const [jobId, setJobId] = useState<string | null>(null)
   const [result, setResult] = useState<ProcessingResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -129,6 +168,7 @@ export default function Dashboard() {
     retentionDaysLeft?: number | null
     retentionExpiresAt?: string | null
     deletedAt?: string | null
+    statement_engine?: StatementEngineBlock | null
   }>>([])
 
   const [generatedReports, setGeneratedReports] = useState<Array<{
@@ -145,34 +185,13 @@ export default function Dashboard() {
     retentionDaysLeft?: number | null
     retentionExpiresAt?: string | null
     deletedAt?: string | null
+    statement_engine?: StatementEngineBlock | null
   }>>([])
 
-  useEffect(() => {
-    const savedData = localStorage.getItem('airco-form-data')
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData)
-        const restoredDetails = parsed.userDetails || {}
-        setUserDetails({
-          fullName: restoredDetails.fullName || '',
-          accountType: restoredDetails.accountType || '',
-          bankName: restoredDetails.bankName || '',
-          selectedBanks: Array.isArray(restoredDetails.selectedBanks)
-            ? restoredDetails.selectedBanks
-            : restoredDetails.bankName
-              ? [restoredDetails.bankName]
-              : [],
-        })
-        setFilesByBank({})
-        setMode(parsed.mode || 'free')
-        setApiKey(parsed.apiKey || '')
-        const restoredStep = parsed.step || 1
-        setStep(restoredStep === 4 ? 3 : restoredStep)
-      } catch (e) {
-        console.error('Failed to load saved form data:', e)
-      }
-    }
-  }, [])
+  const [needsReviewOnly, setNeedsReviewOnly] = useState(false)
+
+  // Form state restores from localStorage via lazy useState initializers
+  // (readSavedFormState above) — no mount effect needed.
 
   useEffect(() => {
     const dataToSave = {
@@ -185,7 +204,8 @@ export default function Dashboard() {
     localStorage.setItem('airco-form-data', JSON.stringify(dataToSave))
   }, [userDetails, mode, apiKey, step])
 
-  const loadProfileHistory = useCallback(async () => {
+  // Named function expression so the retry path can safely reference itself.
+  const loadProfileHistory = useCallback(async function loadProfileHistory(isRetried = false) {
     const token = await getValidSessionAccessToken()
     if (!token) return
 
@@ -217,6 +237,7 @@ export default function Dashboard() {
           retentionExpiresAt: item.retention_expires_at || null,
           deletedAt: item.deleted_at || null,
           status: normalizeUploadStatus(item.status),
+          statement_engine: item.statement_engine || null,
         }))
       )
       setGeneratedReports(
@@ -233,10 +254,15 @@ export default function Dashboard() {
           retentionDaysLeft: typeof item.retention_days_left === 'number' ? item.retention_days_left : null,
           retentionExpiresAt: item.retention_expires_at || null,
           deletedAt: item.deleted_at || null,
+          statement_engine: item.statement_engine || null,
         }))
       )
     } catch (fetchError) {
-      console.error('Failed to load profile history:', fetchError)
+      if (isRetried || !(fetchError instanceof TypeError)) {
+        console.warn('Failed to load profile history:', fetchError)
+        return
+      }
+      window.setTimeout(() => void loadProfileHistory(true), 1000)
     }
   }, [])
 
@@ -382,7 +408,7 @@ export default function Dashboard() {
     setResult(data)
     setJobId(null)
     setUploadedStatements((prev) =>
-      prev.map((f) => (f.status === 'Processing' ? { ...f, status: 'Processed' } : f))
+      prev.map((f) => (f.status === 'Processing' ? { ...f, status: 'Processed', statement_engine: data.statement_engine || null } : f))
     )
 
     if (data.excel_url && activeBatchFile) {
@@ -397,6 +423,7 @@ export default function Dashboard() {
         date: uploadDate,
         accountType: activeBatchFile.accountType,
         downloadUrl: data.excel_url,
+        statement_engine: data.statement_engine || null,
       }])
       setBatchResults((prev) => [...prev, {
         id: activeBatchFile.id,
@@ -509,11 +536,11 @@ export default function Dashboard() {
     }
   }, [isProfilePanelOpen])
 
-  useEffect(() => {
-    if (step === 4 && !jobId && !isProcessing) {
-      setStep(3)
-    }
-  }, [step, jobId, isProcessing])
+  // Render-time correction (React-documented "adjusting state" pattern):
+  // step 4 requires an in-flight job; converge by stepping back to 3.
+  if (step === 4 && !jobId && !isProcessing) {
+    setStep(3)
+  }
 
   const stepLabels = ['Details', 'Upload', 'Mode', 'Processing', 'Report']
   const effectiveUser = historyUser || user
@@ -546,6 +573,9 @@ export default function Dashboard() {
       : generatedReports.map((item) => item.id)
   }, [generatedReports, historyBatches, uploadedStatements])
 
+  const itemNeedsReview = (item: unknown) =>
+    engineNeedsAttention(parseStatementEngine((item as { statement_engine?: unknown })?.statement_engine))
+
   const renderHistoryRow = (
     item: UserUploadHistoryItem | UserReportHistoryItem,
     tab: 'uploaded' | 'reports',
@@ -564,6 +594,7 @@ export default function Dashboard() {
       : null
     const title = item.display_name || item.name
     const bankLabel = item.bank_name || 'Unknown'
+    const itemEngine = parseStatementEngine((item as any).statement_engine)
 
     const statementMetadata = (item as any).statement_metadata
 
@@ -624,6 +655,7 @@ export default function Dashboard() {
                     Api
                   </span>
                 )}
+                <VerificationBadge engine={itemEngine} />
               </div>
               <p className="text-xs text-neutral-500">{createdLabel}</p>
             </div>
@@ -770,6 +802,7 @@ export default function Dashboard() {
                     </div>
                   )}
                   <ProcessingStep
+                    key={jobId ?? 'no-job'}
                     jobId={jobId}
                     mode={mode}
                     fileName={activeBatchFile?.file?.name || null}
@@ -817,20 +850,20 @@ export default function Dashboard() {
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                {SUPPORTED_BANK_OPTIONS.map(({ name, available }) => (
+                {bankNames.slice(0, 14).map((name) => (
                   <span
                     key={name}
-                    className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] ${
-                      available
-                        ? 'border-neutral-200 bg-neutral-50 text-neutral-500'
-                        : 'border-dashed border-neutral-200 bg-white text-neutral-300'
-                    }`}
+                    className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[10px] text-neutral-500"
                   >
-                    <span className={`h-1.5 w-1.5 rounded-full ${available ? 'bg-green-400' : 'bg-neutral-300'}`} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
                     {name}
-                    {!available && <span className="ml-0.5 text-[9px] text-neutral-300">soon</span>}
                   </span>
                 ))}
+                {bankNames.length > 14 && (
+                  <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[10px] text-neutral-500">
+                    and {bankNames.length - 14} more
+                  </span>
+                )}
               </div>
 
               <p className="mx-auto max-w-md text-[10px] leading-relaxed text-neutral-300">
@@ -918,21 +951,35 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-semibold text-black">Files</h3>
-                    <div className="inline-flex rounded-full bg-neutral-100 p-0.5 text-xs font-medium text-neutral-500">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
-                        className={`rounded-full px-3 py-1 transition ${filesTab === 'uploaded' ? 'bg-white text-black shadow-sm' : ''}`}
+                        onClick={() => setNeedsReviewOnly((v) => !v)}
+                        aria-pressed={needsReviewOnly}
+                        className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                          needsReviewOnly
+                            ? 'border-amber-300 bg-amber-100 text-amber-800'
+                            : 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300'
+                        }`}
                       >
-                        Uploaded Statements
+                        Needs review
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
-                        className={`rounded-full px-3 py-1 transition ${filesTab === 'reports' ? 'bg-white text-black shadow-sm' : ''}`}
-                      >
-                        Generated Reports
-                      </button>
+                      <div className="inline-flex rounded-full bg-neutral-100 p-0.5 text-xs font-medium text-neutral-500">
+                        <button
+                          type="button"
+                          onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
+                          className={`rounded-full px-3 py-1 transition ${filesTab === 'uploaded' ? 'bg-white text-black shadow-sm' : ''}`}
+                        >
+                          Uploaded Statements
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
+                          className={`rounded-full px-3 py-1 transition ${filesTab === 'reports' ? 'bg-white text-black shadow-sm' : ''}`}
+                        >
+                          Generated Reports
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -1039,7 +1086,8 @@ export default function Dashboard() {
                               </summary>
                               <div className="border-t border-neutral-100 p-3 space-y-3">
                                 {(batch.bank_groups || []).map((bankGroup, bankIndex) => {
-                                  const bankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
+                                  const allBankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
+                                  const bankItems = needsReviewOnly ? allBankItems.filter(itemNeedsReview) : allBankItems
                                   return (
                                     <details
                                       key={bankGroup.bank_name}
@@ -1080,7 +1128,7 @@ export default function Dashboard() {
                       </div>
                     ) : filesTab === 'uploaded' ? (
                       uploadedStatements.length > 0 ? (
-                        uploadedStatements.map((item) => (
+                        uploadedStatements.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
                           <div
                             key={item.id}
                             className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
@@ -1105,7 +1153,10 @@ export default function Dashboard() {
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                  <div className="flex min-w-0 items-center gap-2">
+                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                  </div>
                                   <p className="text-xs text-neutral-500">{item.date}</p>
                                 </div>
                                 <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.status === 'Processed' ? 'border-green-200 bg-green-50 text-green-700' : item.status === 'Processing' ? 'border-amber-200 bg-amber-50 text-amber-700' : item.status === 'Failed' ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>
@@ -1168,7 +1219,7 @@ export default function Dashboard() {
                       )
                     ) : (
                       generatedReports.length > 0 ? (
-                        generatedReports.map((item) => (
+                        generatedReports.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
                           <div
                             key={item.id}
                             className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
@@ -1193,7 +1244,10 @@ export default function Dashboard() {
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                  <div className="flex min-w-0 items-center gap-2">
+                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
+                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                  </div>
                                   <p className="text-xs text-neutral-500">{item.date}</p>
                                 </div>
                                 <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.retentionStatus === 'Deleted' || item.deletedAt ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>

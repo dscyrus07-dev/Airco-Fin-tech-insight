@@ -14,6 +14,7 @@ import {
   unlockDocument,
   JobStatus,
 } from '../../../lib/statementsApi'
+import { FALLBACK_BANK_LIST } from '../../../lib/banks'
 
 const STATE_STYLE: Record<string, string> = {
   DETECTED: 'bg-green-100 text-green-800',
@@ -41,7 +42,9 @@ export default function AnalyzeFlow() {
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    listBanks().then(setBanks).catch(() => undefined)
+    listBanks()
+      .then((list) => setBanks(list?.length ? list : FALLBACK_BANK_LIST))
+      .catch(() => setBanks(FALLBACK_BANK_LIST))
     return () => {
       if (timer.current) clearInterval(timer.current)
     }
@@ -167,6 +170,12 @@ export default function AnalyzeFlow() {
           </button>
           {busy && <span className="text-sm text-gray-600">{busy}</span>}
         </div>
+        {banks.length > 0 && (
+          <p className="mt-3 text-xs text-gray-500">
+            Supported banks: {banks.map((b) => b.name).join(', ')}. Other banks stay unprocessed — you can still pick a
+            bank manually if one was detected incorrectly.
+          </p>
+        )}
       </div>
 
       {error && (
@@ -264,10 +273,25 @@ export default function AnalyzeFlow() {
                     </div>
                   )}
 
-                  {d.state === 'UNSUPPORTED' && (
+                  {d.state === 'UNSUPPORTED' && d.detail_state === 'UNSUPPORTED_SCANNED_PDF' && (
                     <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
-                      This file cannot be processed (for example a scanned/image-based statement). OCR is not supported, so nothing
-                      will be run on it.
+                      This statement appears to be scanned or image-based. AirCo currently supports text-based PDF
+                      statements, so nothing will be run on it.
+                    </p>
+                  )}
+
+                  {d.state === 'UNSUPPORTED' && d.detail_state !== 'UNSUPPORTED_SCANNED_PDF' && (
+                    <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
+                      {d.message || "This bank isn't fully supported yet."}
+                    </p>
+                  )}
+
+                  {d.state === 'UNKNOWN' && (
+                    <p className="mt-2 rounded bg-gray-50 p-2 text-sm text-gray-800">
+                      We could not tell which bank issued this statement.
+                      {selectable
+                        ? ' If you know it, pick the bank below — otherwise this file stays unprocessed.'
+                        : ' Nothing will be run on it.'}
                     </p>
                   )}
 

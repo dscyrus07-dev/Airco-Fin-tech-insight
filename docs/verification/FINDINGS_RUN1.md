@@ -1,7 +1,7 @@
 # Slice 1: findings from run 1 (5 Oct 2026, 21:52 to 22:17)
 
 Branch `feature/statement-verification-v1`. Observe-only: no parser, repair, Excel, upload or UI behaviour was changed.
-Run 1 raw outputs are kept in `docs/slice1/out_run1_before_fixes/`. Run 2 (after the fixes below) writes to `docs/slice1/out/`.
+Run 1 raw outputs are kept in `archive-external/slice1-out_run1_before_fixes/`. Run 2 (after the fixes below) writes to `archive-external/slice1-out/`.
 
 ## 1. Environment (from `02_environment.log`)
 
@@ -67,7 +67,7 @@ Up to 102 of 148 rows break the balance chain in one statement; in 11 statements
 
 ## 6. Manual review queue
 
-`docs/slice1/out/needs_manual_review.csv` (written by run 2). Categories: wrong-bank-for-folder, unsupported scanned PDF, no transactions found, FAILED/ROWS_SUSPECT statements. Open questions needing a human: F6 (what the printed totals cover), F7 (is a row dated before the header period legitimate for that bank), F1 impact on delivered reports.
+`archive-external/slice1-out/needs_manual_review.csv` (written by run 2). Categories: wrong-bank-for-folder, unsupported scanned PDF, no transactions found, FAILED/ROWS_SUSPECT statements. Open questions needing a human: F6 (what the printed totals cover), F7 (is a row dated before the header period legitimate for that bank), F1 impact on delivered reports.
 
 ## 7. Not done / limitations
 

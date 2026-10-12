@@ -107,6 +107,7 @@ class UserFileRecord(Base):
     backup_purge_status = Column(String(50), nullable=True)
     status = Column(String(50), nullable=False, default="pending")
     total_transactions = Column(Integer, nullable=True)
+    statement_engine = Column(JSON, nullable=True)
     error_message = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
