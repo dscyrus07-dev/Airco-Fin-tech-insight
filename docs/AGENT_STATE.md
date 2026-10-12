@@ -102,3 +102,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK indusind SHADOW_ONLY a81b03b
 [OB] BANK idbi SHADOW_ONLY 4588f56
 [OB] BANK yes SHADOW_ONLY 3813032
+[OB] BANK pnb SHADOW_ONLY 6618147
