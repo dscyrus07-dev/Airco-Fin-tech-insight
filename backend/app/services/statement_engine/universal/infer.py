@@ -529,7 +529,14 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
         amount_prefix="Rs.|₹|INR",
         empty_amount_marker=empty_marker,
         row_order="auto",
-        ignore_line_res=tuple(re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]),
+        # never-matching page_break_re sentinel: enables the "dated rows above a repeated
+        # period marker start the scan at line 0" branches in _region_start without ever
+        # entering break-skip mode (a charge-breakup footer may re-print the period line
+        # below the last rows and must not truncate them).
+        page_break_re=re.compile(r"(?!x)x"),
+        ignore_line_res=tuple([re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]]
+                              + [summ["period"]] if "period" in summ else
+                              [re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]]),
         year_from_period=bool(tail_re or "-Y" not in date_fmt) and "period" in summ,
         opening_row_balance_only=True,
     )
@@ -610,7 +617,9 @@ def _respec(spec: LayoutSpec, summ) -> LayoutSpec:
                    totals_line_re=summ.get("totals"),
                    period_re=summ.get("period", spec.period_re),
                    period_date_format=summ.get("period_fmt", spec.period_date_format),
-                   summary_expected=True)
+                   summary_expected=True,
+                   page_break_re=re.compile(r"(?!x)x"),   # sentinel: see _build_spec
+                   ignore_line_res=spec.ignore_line_res + ((summ["period"],) if "period" in summ else ()))
 
 
 def _implicit_margin(lines, idxs, edges, date_re):

@@ -64,9 +64,9 @@ def _is_password(exc: BaseException) -> bool:
     return False
 
 
-def read(pdf_path: str, password: Optional[str] = None,
+def read(pdf_path: Optional[str] = None, password: Optional[str] = None,
            budget_s: float = BUDGET_S, max_pages: int = MAX_PAGES,
-           bank_hint: str = "Unknown bank") -> UniversalResult:
+           bank_hint: str = "Unknown bank", pages=None) -> UniversalResult:
     t0 = time.monotonic()
     res = UniversalResult(verdict="FAILED", code="", bank_hint=bank_hint)
 
@@ -75,10 +75,11 @@ def read(pdf_path: str, password: Optional[str] = None,
         res.elapsed_s = time.monotonic() - t0
         return res
 
-    try:
-        pages = read_pages(pdf_path, password)
-    except Exception as exc:
-        return over(LOCKED if _is_password(exc) else READ_ERROR, type(exc).__name__)
+    if pages is None:
+        try:
+            pages = read_pages(pdf_path, password)
+        except Exception as exc:
+            return over(LOCKED if _is_password(exc) else READ_ERROR, type(exc).__name__)
     if not pages:
         return over(NO_TEXT_LAYER, "no pages")
     if len(pages) > max_pages:
