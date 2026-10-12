@@ -86,3 +86,5 @@ Verdicts over 855 tracked files: KEEP-CORE 526, KEEP-FALLBACK 227, KEEP-CONTRACT
 SAFE-DELETE: frontend/lib/api.ts, backend/app/core/security.py, backend/app/services/monitoring/error_logger.py (0 importers/0 refs/0%% coverage).
 Unused deps: npm exceljs+file-saver; pip xlsxwriter+passlib. Trial removal in throwaway wt-trial: tsc/eslint/vitest/next-build/backend-imports/pytest all PASS; 400-file corpus compare 0 diffs.
 Report: docs/cleanup/CLEANUP_AUDIT.md + VERDICTS.csv + INVENTORY.csv + ENDPOINTS.csv; tools under tools/cleanup_audit/.
+
+[SC] START 82ad73a — small safe cleanup (3 dead files + 4 unused deps) per docs/cleanup/VERDICTS.csv.
