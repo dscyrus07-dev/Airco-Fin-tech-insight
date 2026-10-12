@@ -47,7 +47,8 @@ class UniversalResult:
 
     @property
     def ok(self) -> bool:
-        return self.verdict == "REVIEW" and self.outcome is not None and bool(self.outcome.rows)
+        return self.verdict == "REVIEW" and (
+            (self.outcome is not None and bool(self.outcome.rows)) or bool(self.meta.get("rows")))
 
 
 def _is_password(exc: BaseException) -> bool:

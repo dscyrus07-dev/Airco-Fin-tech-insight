@@ -423,7 +423,12 @@ def _spec_from_header(pages, hit: HeaderHit, header_repeats: bool, date_re, date
     notes.extend(n2)
     if err:
         return _fail(*err)
-    return _check_margin(spec, pages, date_re, hit, notes, meta_extra={"header": True})
+    return _check_margin(spec, pages, date_re, hit, notes,
+                         meta_extra={"header": True,
+                                     "header_tokens": " ".join(sorted(hit.spans))[:300],
+                                     "money": "/".join(sorted(r for r in hit.spans if r in ("debit", "credit", "amount", "balance")))[:80],
+                                     "date_shape": date_fmt,
+                                     "amount_form": next((n.split(":", 1)[1] for n in notes if n.startswith("amount_form:")), "")})
 
 
 def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, tail_re,
