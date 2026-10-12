@@ -12,7 +12,7 @@ from app.services.statement_engine.extraction.layout_spec import LayoutSpec
 from app.services.statement_engine.extraction.rows import Page
 from app.services.statement_engine.extraction.words import Word
 
-W = 600.0
+W = 1200.0
 DATE_SAMPLES = {
     "%d-%m-%Y": "05-01-2024", "%d/%m/%Y": "05/01/2024", "%d.%m.%Y": "05.01.2024",
     "%d-%m-%y": "05-01-24", "%d/%m/%y": "05/01/24",
@@ -52,14 +52,18 @@ def geometry(spec: LayoutSpec):
         title_w = sum(5.5 * len(t) + 3 for t in toks)
         min_w = 60.0 if c in ("date", "value_date", "secondary_date") else 90.0
         x += max(min_w, title_w + 8)
-    edge = W - 30.0
+    # money columns must start right of the last text column: classify_word assigns
+    # the last text band to any word whose x0 is >= its header-left, so amounts placed
+    # under a text column's band are swallowed as narration/ref text.
+    edge = x + 10.0
     money_edge = {}
     money_left = {}
-    for c in reversed(money):
-        money_edge[c] = edge
+    for c in money:
         toks = spec.columns[c][0]
-        edge -= max(75.0, sum(5.5 * len(t) + 3 for t in toks) + 8)
+        width = max(75.0, sum(5.5 * len(t) + 3 for t in toks) + 8)
         money_left[c] = edge
+        money_edge[c] = edge + width
+        edge += width
     return text_x, money_edge, money_left
 
 
@@ -84,7 +88,7 @@ def header(spec: LayoutSpec, top=200.0):
 
 
 def amount_text(spec: LayoutSpec, value: str, side: str) -> str:
-    if spec.single_amount_column:
+    if spec.single_amount_column and not spec.side_marker_column:
         suf = "Cr" if side == "credit" else "Dr"
         return f"{value}{suf}" if spec.merge_drcr_suffix else f"{value} {suf}"
     return value
@@ -112,8 +116,12 @@ def row(spec: LayoutSpec, top, narration="UPI REF 1234", debit=None, credit=None
             for t in narration.split():
                 ws.append(w(t, tx, top))
                 tx += 5.5 * len(t) + 3
+            if spec.side_marker_column == col:
+                ws.append(w("Cr" if credit is not None else "Dr", tx, top))
         else:
-            ws.append(w("REF1", text_x[col], top))
+            tok = w("REF1", text_x[col], top)
+            if tok.x1 < min(money_left.values()):
+                ws.append(tok)
     if spec.single_amount_column:
         if debit or credit:
             ws.append(_place_amount(spec, amount_text(spec, debit or credit,
@@ -125,6 +133,8 @@ def row(spec: LayoutSpec, top, narration="UPI REF 1234", debit=None, credit=None
         if credit is not None:
             ws.append(_place_amount(spec, credit, spec.credit_column, money_edge, money_left, top))
     ws.append(_place_amount(spec, balance, spec.balance_column, money_edge, money_left, top))
+    if "side" in spec.columns and "side" not in spec.text_columns:
+        ws.append(rt("Cr" if credit is not None else "Dr", money_edge["side"], top))
     return ws
 
 
