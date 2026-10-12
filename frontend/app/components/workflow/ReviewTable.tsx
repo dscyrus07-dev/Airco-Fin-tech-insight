@@ -80,9 +80,14 @@ export default function ReviewTable({
 
       <ul className="mt-4 space-y-3">
         {docs.map(({ document: d, override, accountType, statementLabel }) => {
-          const selectable = d.state !== 'ERROR' && !d.requires_password && d.workflow_status === 'AWAITING_CONFIRMATION'
-          const selectedBank = override || d.bank?.id || ''
-          const overridePending = Boolean(override && d.bank && override !== d.bank.id)
+          const selectable = d.state !== 'ERROR' && d.state !== 'UNSUPPORTED' && !d.requires_password && d.workflow_status === 'AWAITING_CONFIRMATION'
+          const detectedListed = Boolean(
+            d.bank && d.bank.supported && banks.some((b) => b.id === d.bank!.id)
+          )
+          const detectedValue = detectedListed ? d.bank!.id : ''
+          const selectedBank = override || detectedValue
+          const manualPick = Boolean(override && override !== detectedValue)
+          const canPickBank = selectable && (d.state === 'UNKNOWN' || d.state === 'REVIEW')
           return (
             <li key={d.document_id} className="rounded border p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -164,30 +169,34 @@ export default function ReviewTable({
                 </p>
               )}
 
-              {selectable && overridePending && (
+              {selectable && manualPick && (
                 <p className="mt-2 rounded bg-yellow-50 p-2 text-sm text-yellow-900">
-                  You are overriding the automatic detection ({d.bank?.name}). If the PDF is not actually from the
-                  selected bank, processing may fail validation.
+                  {d.bank
+                    ? `You are overriding the automatic detection (${d.bank.name}).`
+                    : 'You are selecting a bank manually.'}{' '}
+                  If the PDF is not actually from the selected bank, processing may fail validation.
                 </p>
               )}
 
               {selectable && (
                 <>
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,10rem)_auto]">
-                    <select
-                      value={selectedBank}
-                      onChange={(e) => onOverride(d.document_id, e.target.value)}
-                      className="min-w-0 rounded border px-2 py-1 text-sm"
-                      aria-label="Bank"
-                    >
-                      {!d.bank && <option value="">Select bank…</option>}
-                      {banks.map((b) => (
-                        <option key={b.id} value={b.id}>
-                          {b.name}
-                          {b.v2_served ? ' · verified engine' : ''}
-                        </option>
-                      ))}
-                    </select>
+                    {canPickBank && (
+                      <select
+                        value={selectedBank}
+                        onChange={(e) => onOverride(d.document_id, e.target.value)}
+                        className="min-w-0 rounded border px-2 py-1 text-sm"
+                        aria-label="Bank"
+                      >
+                        {!detectedValue && <option value="">Select bank…</option>}
+                        {banks.map((b) => (
+                          <option key={b.id} value={b.id}>
+                            {b.name}
+                            {b.v2_served ? ' · verified engine' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                     <select
                       value={accountType}
                       onChange={(e) => onAccountType(d.document_id, e.target.value)}
@@ -202,10 +211,10 @@ export default function ReviewTable({
                     </select>
                     <button
                       onClick={() => void onConfirmOne(d, accountType || undefined)}
-                      disabled={!!busy || !selectedBank}
+                      disabled={!!busy || !selectedBank || (d.bank?.supported === false && !manualPick)}
                       className="min-w-0 rounded bg-black px-3 py-1 text-sm text-white disabled:opacity-40"
                     >
-                      {overridePending ? 'Use selected bank' : 'Confirm'}
+                      {manualPick ? 'Use selected bank' : 'Confirm'}
                     </button>
                   </div>
                   <input

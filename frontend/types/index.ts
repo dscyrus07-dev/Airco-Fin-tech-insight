@@ -37,6 +37,34 @@ export type BankName =
   | 'HSBC Bank'
   | 'SBI'
   | 'Other'
+  // v2-only banks registered in the statement engine (display names from
+  // backend/app/services/statement_engine/banks/*.json). Only ever selectable
+  // when the API lists them (serve mode + allowlist); the offline fallback
+  // list intentionally does not include them.
+  | 'Citibank'
+  | 'City Union Bank'
+  | 'Standard Chartered Bank'
+  | 'DBS Bank'
+  | 'Ujjivan Small Finance Bank'
+  | 'AU Small Finance Bank'
+  | 'DCB Bank'
+  | 'Federal Bank'
+  | 'IDBI Bank'
+  | 'Yes Bank'
+  | 'Punjab National Bank'
+  | 'Karur Vysya Bank'
+  | 'Indian Overseas Bank'
+  | 'Central Bank of India'
+  | 'Equitas Small Finance Bank'
+  | 'Bank of Maharashtra'
+  | 'Bandhan Bank'
+  | 'HSBC'
+  | 'South Indian Bank'
+  | 'CSB Bank'
+  | 'UCO Bank'
+  | 'Airtel Payments Bank'
+  | 'India Post Payments Bank'
+  | 'Dhanlaxmi Bank'
 
 export type ProcessingMode = 'free' | 'hybrid'
 
