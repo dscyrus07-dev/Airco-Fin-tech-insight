@@ -128,3 +128,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OW] BACKEND-WIRED 9ecd2e6 - 22 v2-only banks, apgv blocked
 [OW] DONE debc4c9 - 22 wired (spec-key aliases + API tests + UI), apgv wiring-blocked (detector absent by design); onb stack healthy 8401/3400; banks endpoint=15 listed/7 v2_served; compare 400/400 zero diffs; suite 712p/8f pre-existing; Keycloak +3400 redirects/origins only
 [OV] START 5d8026a - independent verification of onboarding+wiring (base integration/v2-waves @ 8b57e0d)
+[OV] DONE PENDING - verification complete: NO-GO merge; 1 regression (d4de1ead paytm foreign-marker via c43e8f1), 1 workbook row-drop (0a05a1f7 hdfc), 8 unresolved markerless csb->federal accepts; all 30 bank statuses confirmed; SERVE_BANKS unchanged; suite 712p/8f pre-existing; PII scan CLEAN
