@@ -70,3 +70,11 @@ until the registered-spec fix; creds still in git history (rotation needed).
 NEXT CLAUDE ACTION #1: review and merge devin/final-rc.
 
 [UE] START 5744400 (devin/unified-entry from integration/v2-waves tip, worktree wt-ue)
+
+[UE] DONE b506830 — unified single entry point on devin/unified-entry (from integration/v2-waves@5744400).
+Built: backend additive fields (confirm account_type; process full_name + per-doc account_type/statement_label; absent = today's payload, tested),
+statementsApi extensions, useStatementWorkflow hook (upload/review/processing/report, 2.5s polling, expiry handling),
+workflow components (UploadDropzone/ReviewTable/ProcessingList/ReportList/StatementWorkflow), NEXT_PUBLIC_UNIFIED_ENTRY flag (default off,
+flag-off equivalence tested), 360px h-scroll fixed (0px at 360/768/1280), E2E on synthetic PDFs (detection/override/unlock/honest
+negatives/parallel/report/history/redirect, 0 console errors), docs updated. Not verified: nothing blocking; legacy-engine jobs show no
+verification badge (correct). Decisions for Claude: none required; flag default stays off.
