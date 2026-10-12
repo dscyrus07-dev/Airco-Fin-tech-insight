@@ -52,3 +52,19 @@ NEXT CLAUDE ACTION (ranked):
 5. U8 live compose acceptance leg (API+UI on own stack, LibreOffice recalc) not run — run before any demo claim of T3 serve.
 6. T3 stays REVIEW — do not elevate; conditions in UNIVERSAL_RESULTS.md recommendation.
 7. Prior wave-11 blockers unchanged: indusind row-0 mutation, legacy ICICI wrong-bank acceptance, PII purge decision.
+
+[FINAL] DONE 2026-10-12 09:19 head 15fef67 (+ pending report commit)
+
+devin/final-rc consolidates wave11 + universal. All required gates pass:
+14,445-file probe vs phase8c: 0 wrong-bank VERIFIED, 0 rowhash diffs on
+7,294 double-VERIFIED, 0 unexplained escalations/de-escalations, VERIFIED
+total identical (7,294). Flag matrix: default cell content-identical to
+880b5e2 (sole diff = new BoI coverage). Regression gate 19/19. Backend
+510 pass + 8 pre-existing env fails; frontend 31/31 vitest, tsc/lint/build
+clean. E2E on own finrc compose project: 17 API legs + icici override +
+UI legs (0 console errors) + kill switch + LibreOffice recalc (0 formula
+errors, 903 numeric cells identical) + dedup + wrong-bank BANK_MISMATCH x3.
+BLOCKERS in comparison/final/REPORT.md: axis audit-WRONG reproduced VERIFIED
+on truncated 1,141/1,147 rows — recommend dropping axis from serve allowlist
+until the registered-spec fix; creds still in git history (rotation needed).
+NEXT CLAUDE ACTION #1: review and merge devin/final-rc.
