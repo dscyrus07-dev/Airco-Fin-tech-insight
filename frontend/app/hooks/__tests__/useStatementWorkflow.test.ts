@@ -85,7 +85,7 @@ describe('useStatementWorkflow', () => {
   })
 
   it('override sends OVERRIDE with the chosen bank', async () => {
-    const confirmCalls: unknown[] = []
+    const confirmCalls: { documents: { action: string; bank_id: string }[] }[] = []
     handlers['/api/statements/a-1/confirm'] = (_u, init) => {
       confirmCalls.push(JSON.parse(String(init?.body)))
       return jsonResponse({ analysis_id: 'a-1', documents: [{ ...DOC, workflow_status: 'CONFIRMED', effective_bank: { id: 'sbi', name: 'SBI' } }], summary: { total: 1, by_state: {}, groups: [] } })
