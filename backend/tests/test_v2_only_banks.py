@@ -13,7 +13,7 @@ from app.services.analysis_service import _registry_cfg_for, _v2_servable
 from app.services.pipeline_orchestrator import _get_bank_processor, _normalize_bank_name
 from app.services.statement_engine import serve as v2serve
 
-# spec keys eligible per comparison/phase8c (see docs/slice3/V2_ENABLEMENT.md)
+# spec keys eligible per comparison/phase8c (see docs/operations/V2_ENABLEMENT.md)
 ELIGIBLE = ["hdfc", "axis", "idfc", "paytm", "indusind", "citibank", "city_union"]
 V2_ONLY = ["indusind", "citibank", "city_union"]
 
