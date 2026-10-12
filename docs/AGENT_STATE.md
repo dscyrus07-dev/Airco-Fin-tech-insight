@@ -117,3 +117,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK fino_pb NOT_POSSIBLE 8d5d3e6
 [OB] BANK fincare_sfb NOT_POSSIBLE e5c72bb
 [OB] BANK apgb NOT_POSSIBLE 312dd1d
+[OB] BANK cosmos NOT_POSSIBLE db6fa88
