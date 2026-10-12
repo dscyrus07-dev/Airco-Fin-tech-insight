@@ -144,4 +144,4 @@ OPENING_ROW_MARKERS = ("OPENINGBALANCE", "BALANCEBROUGHTFORWARD", "BALANCEB/F", 
 CLOSING_ROW_MARKERS = ("CLOSINGBALANCE", "BALANCECARRIEDFORWARD", "CARRIEDFORWARD", "C/F", "CLOSING")
 
 # a line with no real words -> glyph dump detector
-CID_RE = re.compile(r"^\(cid:\d+\)$")
+CID_RE = re.compile(r"\(cid:\d+\)")

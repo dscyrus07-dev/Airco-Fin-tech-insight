@@ -88,7 +88,7 @@ def read(pdf_path: Optional[str] = None, password: Optional[str] = None,
     total_words = sum(len(p.words) for p in pages)
     if total_words == 0:
         return over(NO_TEXT_LAYER, "no text layer")
-    cid = sum(1 for p in pages for w in p.words if CID_RE.match(w.text.strip()))
+    cid = sum(1 for p in pages for w in p.words if CID_RE.search(w.text))
     if cid > max(20, total_words * 0.3):
         return over(GLYPH_DUMP, f"{cid} cid tokens")
     if total_words / len(pages) < MIN_WORDS_PER_PAGE:
