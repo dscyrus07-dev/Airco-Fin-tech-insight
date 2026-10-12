@@ -424,6 +424,10 @@ def process_statement(
     v2_plan = None
     v2_block = _v2serve.minimal_block(_v2_mode)
 
+    from app.services.statement_engine.universal import serve as _userv
+    _u_mode = _userv.mode()
+    _u_block = None
+
     if _v2_mode == "serve" and _v2serve.serving_enabled_for(bank_key):
         _spec_key = _v2serve.spec_key_for(bank_key)
         try:
@@ -447,7 +451,7 @@ def process_statement(
     # =================================================================
     ProcessorClass = _get_bank_processor(bank_key)
 
-    if ProcessorClass is None and v2_plan is None:
+    if ProcessorClass is None and v2_plan is None and _u_mode != "serve":
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -466,7 +470,7 @@ def process_statement(
         _serve_key = _v2serve.pipeline_key_for(v2_plan.v2_spec_key)
         ProcessorClass = _get_bank_processor(_serve_key) or _get_bank_processor("unknown")
 
-    if ProcessorClass is None:
+    if ProcessorClass is None and _u_mode != "serve":
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -480,11 +484,13 @@ def process_statement(
         api_key=api_key if enable_ai else None,
         audit_service=audit_service,
         job_id=job_id,
-    )
+    ) if ProcessorClass is not None else None
 
     # =================================================================
     # STEP 4: Run Bank-Specific Processing
     # =================================================================
+    result = None
+    _t2_failed = False
     try:
         if output_dir is None:
             from app.utils.file_handler import get_temp_dir
@@ -515,12 +521,23 @@ def process_statement(
                         file_path=file_path, user_info=user_info, output_dir=output_dir,
                     )
         elif ProcessorClass is not None:
-            result = processor.process(
-                file_path=file_path,
-                user_info=user_info,
-                output_dir=output_dir,
-            )
-        else:
+            if _u_mode == "serve":
+                # T2 failure must not abort before the T3 attempt below.
+                try:
+                    result = processor.process(
+                        file_path=file_path, user_info=user_info, output_dir=output_dir,
+                    )
+                except Exception as _t2_exc:
+                    logger.warning("legacy processing failed; T3 attempt follows (%s)", type(_t2_exc).__name__)
+                    result = None
+                    _t2_failed = _t2_exc
+            else:
+                result = processor.process(
+                    file_path=file_path,
+                    user_info=user_info,
+                    output_dir=output_dir,
+                )
+        elif _u_mode == "off":
             raise UnsupportedBankError(
                 f"Bank '{bank_name}' is not yet supported. "
                 f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -554,6 +571,43 @@ def process_statement(
                             detected_bank=v2_block.get("detected_bank"),
                             advisory=None,
                         )
+
+        # T3 universal reader: only when T1/T2 produced nothing usable (flag-gated;
+        # shadow records the block only; serve feeds REVIEW rows downstream or
+        # fails honestly — FAILED carries no data).
+        _served = (
+            result is not None
+            and getattr(result, "status", "") == "success"
+            and getattr(getattr(result, "metrics", None), "transaction_count", 0) or 0
+        ) > 0
+        if _u_mode != "off" and not _served:
+            _u_res, _u_rs = _userv.attempt(file_path, bank_hint=v2_block.get("detected_bank") and
+                                           v2_block["detected_bank"].get("name") or bank_name or "Unknown bank")
+            if _u_mode == "shadow":
+                _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+            elif _u_res.ok:
+                _u_class = _get_bank_processor("unknown")
+                _u_result = _u_class(
+                    strict_mode=False, enable_ai=enable_ai,
+                    api_key=api_key if enable_ai else None,
+                    audit_service=audit_service, job_id=job_id,
+                )._run_pipeline(file_path, user_info, output_dir, row_source=_u_rs) if (_u_class and _u_rs) else None
+                if getattr(_u_result, "status", "") == "success":
+                    result = _u_result
+                    _u_block = _userv.block_for(_u_res, served=True, u_mode=_u_mode)
+                    v2_block = _userv.engine_block_for(_u_res, _u_mode,
+                                                       detected_bank=v2_block.get("detected_bank"))
+                else:
+                    _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+            else:
+                _u_block = _userv.block_for(_u_res, served=False, u_mode=_u_mode)
+                if isinstance(_t2_failed, Exception):
+                    raise _t2_failed
+                raise PipelineAbortError(
+                    f"Statement could not be read ({_u_res.code or _u_res.verdict})",
+                    stage="universal_reader",
+                    error_code="GENERAL_READER_FAILED" if _u_res.ok is False else _u_res.code,
+                )
 
     except Exception as e:
         logger.error("Bank processor failed: %s", str(e), exc_info=True)
@@ -600,6 +654,9 @@ def process_statement(
 
     # v2 serving: attach the additive block, audit the decision, and append the
     # Statement Check sheet when the block calls for it (never at mode off).
+    if _u_block is not None and "universal" not in v2_block:
+        v2_block["universal"] = _u_block
+        _userv.audit_attempt(audit_service, job_id, _u_block)
     response["statement_engine"] = v2_block
     _v2serve.audit_serve_decision(audit_service, job_id, v2_block)
     if _v2serve.wants_statement_check(v2_block):

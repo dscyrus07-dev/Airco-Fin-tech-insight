@@ -63,6 +63,16 @@ def _v2_servable(bank_id: Optional[str]) -> bool:
         return False
 
 
+def _universal_servable() -> bool:
+    """T3 general reader serves files no registered layout or legacy parser
+    handles (STATEMENT_ENGINE_UNIVERSAL_MODE=serve)."""
+    try:
+        from .statement_engine.universal.serve import mode as _u_mode
+        return _u_mode() == "serve"
+    except Exception:
+        return False
+
+
 def _registry_cfg_for(bank_or_spec_id: Optional[str]):
     """BankConfig for a detector id, or for a v2-only SPEC key
     (/api/statements/banks emits spec keys for banks with no legacy id)."""
@@ -432,8 +442,21 @@ class AnalysisService:
                 if state != "DETECTED":
                     state = "REVIEW"
                 message = f"This looks like a {bank['name']} statement. Please confirm to continue."
+            elif _universal_servable() and analysis.capability.capability in (Capability.TEXT, Capability.MIXED):
+                # T3 general reader: confirmable, but the verdict is capped at
+                # REVIEW and the figures must be checked by the user.
+                state = "REVIEW"
+                if bank:
+                    bank["supported"] = True
+                    message = (f"We recognised this as a {bank['name']} statement. "
+                               "We'll read it with our general reader; please check the figures.")
+                else:
+                    message = ("This bank isn't fully supported yet. "
+                               "We'll read it with our general reader; please check the figures.")
             else:
                 state = "UNSUPPORTED"
+                if analysis.state == DocumentState.UNSUPPORTED_BANK:
+                    message = "This bank isn't fully supported yet."
             workflow = "AWAITING_CONFIRMATION"  # the user may still pick a supported bank if the detection is wrong
         requires_confirmation = state in ("REVIEW", "UNKNOWN")
         return {
@@ -549,6 +572,15 @@ class AnalysisService:
             doc["selection"] = {"action": "CONFIRM", "bank_id": bank["id"], "by": actor, "at": _now()}
             doc["events"].append({"event": "USER_CONFIRM", "at": _now(), "by": actor, "bank_id": bank["id"]})
         elif action == "OVERRIDE":
+            if bank_id == "other" and _universal_servable():
+                # "Other bank / not listed": auto-detect downstream, T3 reads it.
+                doc["effective_bank"] = {"id": "other", "name": "Other bank / not listed"}
+                doc["selection"] = {"action": "OVERRIDE", "bank_id": "other", "by": actor, "at": _now()}
+                doc["events"].append({"event": "USER_OVERRIDE", "at": _now(), "by": actor,
+                                      "detected_bank": (doc.get("bank") or doc.get("suggestion") or {}).get("id"),
+                                      "user_selected_bank": "other"})
+                doc["workflow_status"] = "CONFIRMED"
+                return {"document_id": did, "ok": True, "workflow_status": "CONFIRMED", "bank_id": "other"}
             cfg = _registry_cfg_for(bank_id) if bank_id else None
             if not cfg or (cfg.id not in PIPELINE_BANK_NAME and not _v2_servable(cfg.id)):
                 return fail("BANK_NOT_SUPPORTED", "Choose one of the supported banks.")

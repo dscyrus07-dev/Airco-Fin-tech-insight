@@ -19,6 +19,7 @@ export const REVIEW_REASON_LABELS: Record<string, string> = {
   SCHEMA_ERRORS: 'Row schema errors',
   EXTRACTION_WARNINGS: 'Extraction warnings were raised',
   BANK_MISMATCH: 'Detected bank differs from the selected bank',
+  GENERAL_READER: 'Layout read by the general reader — check the figures',
 }
 
 export function reviewReasonLabel(code: string): string {
@@ -83,7 +84,9 @@ export function engineNeedsAttention(b: StatementEngineBlock | null): boolean {
 
 /** Short badge label for a job/result; null when nothing should be shown. */
 export function engineBadgeLabel(b: StatementEngineBlock | null): string | null {
-  if (!b || b.engine !== 'v2') return null
+  if (!b) return null
+  if (b.engine === 'universal') return 'Read by general reader'
+  if (b.engine !== 'v2') return null
   if (b.verdict === 'VERIFIED') return b.anchored ? 'Verified · independently checked' : 'Verified'
   if (b.verdict === 'REVIEW' || b.needs_review) return 'Needs review'
   return null

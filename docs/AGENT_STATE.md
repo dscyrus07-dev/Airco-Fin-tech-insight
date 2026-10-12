@@ -20,7 +20,6 @@ NEXT CLAUDE ACTION (ranked):
 4. Persist statement_engine into /api/profile/history so dashboard badges work on old rows.
 5. Replace dead `next lint` (Next 16) with a real eslint config.
 6. PII history purge decision — still blocks any push.
-
 [W11] A START 2026-10-12 01:55 head c022630
 [W11] A DONE 2026-10-12 02:12 head 6e38f95 — T1 wrong-bank guard (0/300 false alarms), T2 history statement_engine, T3 eslint flat config (11e/1w -> 0/0), T4 friendly UNKNOWN + supported-banks note, T5 all checks green. Notes: docs/slice3/WAVE11A_NOTES.md
 
@@ -40,3 +39,16 @@ NEXT CLAUDE ACTION (ranked):
 4. D5 legacy parser gaps: Canara (no txn table), Union (no rows) — also keeps them below E1 eligibility.
 5. Unswept specs (idfc, citibank, city_union, indusind) have no forced cross-bank sweep coverage — run the c5 sweep on them to firm up xb evidence.
 6. PII history purge decision — still blocks any push.
+[UNI] START 2026-10-12 05:53 — universal reader wave, part1 engine on devin/universal
+
+[UNI] PART1 DONE 2026-10-12 head ddf14de — T3 universal reader: lexicon+infer+reader, REVIEW cap, budgets, isolation. U3a done: 6361 base-VERIFIED, 67.8% row-exact, false-clean 0.00% post-fixes.
+[UNI] DONE 2026-10-12 head a52e951 — part2 product+UI wired behind STATEMENT_ENGINE_UNIVERSAL_MODE (off default, byte-identical off vs serve on 20 files). Reports: comparison/universal/REPORT.md, docs/slice3/UNIVERSAL_RESULTS.md.
+
+NEXT CLAUDE ACTION (ranked):
+1. Registered-spec truncation class (UNIVERSAL_PROPOSALS #1): axis spec drops dated rows above period-marker footers — `000df35f` 1141 vs true 1147 VERIFIED, ~50 axis + ~19 kotak files. Shared `_region_start` fix or per-spec workaround.
+2. u3b still running (resumable): finish, then run propose_layouts for real fingerprints (u3a records lack header_tokens).
+3. `opening_row_balance_only` under single-amount specs drops row 0 — fixed in T3 infer; registered specs would need the same check (PROPOSALS #2).
+4. Corpus relabel: Non_Bank_Documents has ≥20 real statements; BoB folder holds a Union file (PROPOSALS #3).
+5. U8 live compose acceptance leg (API+UI on own stack, LibreOffice recalc) not run — run before any demo claim of T3 serve.
+6. T3 stays REVIEW — do not elevate; conditions in UNIVERSAL_RESULTS.md recommendation.
+7. Prior wave-11 blockers unchanged: indusind row-0 mutation, legacy ICICI wrong-bank acceptance, PII purge decision.

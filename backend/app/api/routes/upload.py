@@ -378,23 +378,38 @@ async def unlock_pdf(temp_path: str = Form(...), password: str = Form(...)):
 
 @router.get("/supported-banks")
 async def get_supported_banks():
-    """Get list of supported banks."""
+    """Public bank list for the landing page: live registry, not a hardcoded set.
+    `count` is the number of banks the backend can route today."""
+    from ...services.analysis_service import PIPELINE_BANK_NAME
+    from ...services.statement_engine import default_registry
+
+    reg = default_registry()
+    banks = [
+        {
+            "key": bid,
+            "name": reg.get(bid).display_name if reg.get(bid) else name,
+            "status": "available",
+            "accuracy": "99%+",
+        }
+        for bid, name in PIPELINE_BANK_NAME.items()
+    ]
+    try:
+        from ...services.statement_engine import serve as _v2serve
+        if _v2serve.v2_mode() == "serve":
+            from ...services.statement_engine.extractors.registry import DEFAULT_REGISTRY as _LREG
+            names_by_key = {s.bank_key: s.bank_name for s in _LREG._specs.values()}
+            known_names = {b["name"] for b in banks}
+            for spec_key in sorted(_v2serve.spec_bank_keys() & _v2serve.serve_banks()):
+                name = names_by_key.get(spec_key, spec_key)
+                if name not in known_names:
+                    banks.append({"key": spec_key, "name": name,
+                                  "status": "available", "accuracy": "99%+"})
+                    known_names.add(name)
+    except Exception:
+        pass
     return {
-        "banks": [
-            {"key": "hdfc", "name": "HDFC Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "axis", "name": "Axis Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "icici", "name": "ICICI Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "kotak", "name": "Kotak Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "sbi", "name": "SBI", "status": "available", "accuracy": "99%+"},
-            {"key": "canara", "name": "Canara Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "idfc", "name": "IDFC First Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "karnataka", "name": "Karnataka Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "paytm", "name": "Paytm Bank", "status": "available", "accuracy": "99%+"},
-            {"key": "union", "name": "Union Bank of India", "status": "available", "accuracy": "99%+"},
-            {"key": "bank_of_baroda", "name": "Bank of Baroda", "status": "available", "accuracy": "99%+"},
-            {"key": "bank_of_india", "name": "Bank of India", "status": "available", "accuracy": "99%+"},
-            {"key": "unknown", "name": "Unknown", "status": "available", "accuracy": "99%+"},
-        ],
+        "banks": banks,
+        "count": len(banks),
         "default_mode": "free",
         "modes": [
             {"key": "free", "name": "Free Mode", "description": "Deterministic rule engine only. No AI, no API cost."},

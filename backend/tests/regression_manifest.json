@@ -1,0 +1,130 @@
+{
+ "HDFC Bank": {
+  "sha": "0000d106",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 184,
+  "row_hash": "aa273d1d394acf78"
+ },
+ "SBI": {
+  "sha": "0034814d",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 299,
+  "row_hash": "ec1f959700038016"
+ },
+ "Axis Bank": {
+  "sha": "000df35f",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 1147,
+  "row_hash": "09c2ed9e0eb9e609"
+ },
+ "ICICI Bank": {
+  "sha": "008b2597",
+  "verdict": "FAILED",
+  "code": "INFER_ERROR",
+  "rows": 0
+ },
+ "Kotak Mahindra Bank": {
+  "sha": "001023e6",
+  "verdict": "FAILED",
+  "code": "CHECKS_FAILED",
+  "rows": 296,
+  "row_hash": "49677a65e01102ed"
+ },
+ "IDFC First Bank": {
+  "sha": "0155eb6e",
+  "verdict": "FAILED",
+  "code": "CHECKS_FAILED",
+  "rows": 798,
+  "row_hash": "5976e97295aaa4b2"
+ },
+ "Karnataka Bank": {
+  "sha": "03cce77b",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 231,
+  "row_hash": "a4087323bfa75552"
+ },
+ "Paytm Payments Bank": {
+  "sha": "03abc177",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 414,
+  "row_hash": "f1b9321b8eacffbb"
+ },
+ "Bank of India": {
+  "sha": "01beb162",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 150,
+  "row_hash": "b18c7764890ee045"
+ },
+ "Bank of Baroda": {
+  "sha": "00196b23",
+  "verdict": "FAILED",
+  "code": "NO_TABLE_HEADER",
+  "rows": 0,
+  "row_hash": "e3b0c44298fc1c14"
+ },
+ "Indian Bank": {
+  "sha": "00b7c2e3",
+  "verdict": "FAILED",
+  "code": "NO_DATES",
+  "rows": 0
+ },
+ "Canara Bank": {
+  "sha": "01003e02",
+  "verdict": "FAILED",
+  "code": "CHECKS_FAILED",
+  "rows": 373,
+  "row_hash": "b7f5925623787f51"
+ },
+ "Union Bank of India": {
+  "sha": "002d16e6",
+  "verdict": "FAILED",
+  "code": "LOW_CONFIDENCE_COLUMNS",
+  "rows": 0
+ },
+ "Punjab National Bank": {
+  "sha": "019d0839",
+  "verdict": "FAILED",
+  "code": "LOW_CONFIDENCE_COLUMNS",
+  "rows": 0
+ },
+ "CSB Bank": {
+  "sha": "105adbdd",
+  "verdict": "FAILED",
+  "code": "TOO_FEW_ROWS",
+  "rows": 0
+ },
+ "UCO Bank": {
+  "sha": "14ab1185",
+  "verdict": "FAILED",
+  "code": "CHECKS_FAILED",
+  "rows": 450,
+  "row_hash": "a3bd6d0f0a6a8066"
+ },
+ "Airtel Payments Bank": {
+  "sha": "258830dc",
+  "verdict": "FAILED",
+  "code": "CHECKS_FAILED",
+  "rows": 68,
+  "row_hash": "4e4512b51892ba97"
+ },
+ "Tamilnad Mercantile Bank": {
+  "sha": "7faf14de",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 464,
+  "row_hash": "14cbff3e317ae00e"
+ },
+ "Dhanlaxmi Bank": {
+  "sha": "119ac42f",
+  "verdict": "REVIEW",
+  "code": "GENERAL_READER",
+  "rows": 121,
+  "row_hash": "5cbb7f266bd9dc68"
+ }
+}
