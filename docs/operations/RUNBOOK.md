@@ -39,6 +39,17 @@ recreate. Defaults are all safe (`docs/operations/FEATURE_FLAGS.md`).
 - Universal serve exposes T3 `REVIEW` rows for banks with no legacy/T2 path —
   never `VERIFIED`.
 
+## UI entry-point flag
+
+| Switch | Effect | Apply |
+|---|---|---|
+| `NEXT_PUBLIC_UNIFIED_ENTRY` unset/off | legacy `/dashboard` stepper + `/analyze` page (today's behaviour) | build-time env on the frontend image |
+| `NEXT_PUBLIC_UNIFIED_ENTRY=on` | single entry: `/dashboard` renders Upload → Review → Processing → Report; `/analyze` redirects; header Analyze link hidden; Mode step skipped (free) | build-time env on the frontend image |
+
+Rollback = unset the flag and rebuild the frontend image — both legacy pages
+return unchanged (no data or backend change involved). Details:
+`docs/UNIFIED_ENTRY_PLAN.md`, `docs/engine/V2_UI_NOTES.md`.
+
 ## Kill switches
 
 | Switch | Effect | Apply |

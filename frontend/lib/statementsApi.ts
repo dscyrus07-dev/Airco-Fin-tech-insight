@@ -61,6 +61,12 @@ export interface Decision {
   document_id: string
   action: 'CONFIRM' | 'OVERRIDE'
   bank_id?: string
+  account_type?: string
+}
+
+export interface ProcessOptions {
+  fullName?: string
+  perDocument?: Record<string, { account_type?: string; statement_label?: string }>
 }
 
 export class StatementsApiError extends Error {
@@ -128,13 +134,19 @@ export async function unlockDocument(
 }
 
 export async function processConfirmed(
-  analysisId: string
+  analysisId: string,
+  opts: ProcessOptions = {}
 ): Promise<{ started: { document_id: string; job_id: string }[]; skipped: { document_id: string; reason: string }[] }> {
+  const payload: Record<string, unknown> = {}
+  if (opts.fullName != null && opts.fullName !== '') payload.full_name = opts.fullName
+  if (opts.perDocument && Object.keys(opts.perDocument).length) {
+    payload.documents = Object.entries(opts.perDocument).map(([document_id, f]) => ({ document_id, ...f }))
+  }
   return parse(
     await fetch(`/api/statements/${encodeURIComponent(analysisId)}/process`, {
       method: 'POST',
       headers: await authHeaders(true),
-      body: '{}',
+      body: JSON.stringify(payload),
     })
   )
 }
@@ -143,6 +155,8 @@ export interface JobStatus {
   id: string
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled'
   error_message?: string | null
+  result_data?: Record<string, unknown> | null
+  bank_name?: string | null
 }
 
 export async function getJob(jobId: string): Promise<JobStatus> {

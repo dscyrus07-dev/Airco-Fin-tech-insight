@@ -45,3 +45,11 @@ Filled from `comparison/final/REPORT.md` §2.2 — see the per-folder table ther
   recommended allowlist — flagged as a BLOCKER in the final report.
 - IndusInd is correctly excluded (mutation gate).
 - T3/general reader never emits VERIFIED by construction.
+
+## UI entry (devin/unified-entry)
+
+One entry point behind `NEXT_PUBLIC_UNIFIED_ENTRY` (default off): `/dashboard`
+runs Upload → Review → Processing → Report with per-file bank override,
+statement type, inline unlock, parallel processing and the existing report
+view. `/analyze` redirects when the flag is on. Flag off = both legacy pages
+unchanged. See `docs/UNIFIED_ENTRY_PLAN.md` + `docs/engine/V2_UI_NOTES.md`.

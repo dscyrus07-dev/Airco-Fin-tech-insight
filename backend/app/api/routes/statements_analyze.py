@@ -30,6 +30,42 @@ router = APIRouter(prefix="/statements", tags=["statements-analyze"])
 
 _MAX_TOTAL_BYTES = int(os.getenv("ANALYZE_MAX_TOTAL_MB", "200")) * 1024 * 1024
 
+_ACCOUNT_TYPES = {"salaried", "business", "auto_detect", ""}
+
+
+def _norm_account_type(value: Any, code: str = "BAD_ACCOUNT_TYPE") -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise HTTPException(status_code=400, detail={"code": code, "error": "account_type must be a string"})
+    v = value.strip().lower()
+    if v not in _ACCOUNT_TYPES:
+        raise HTTPException(status_code=400, detail={
+            "code": code, "error": "account_type must be one of: salaried, business, auto_detect (or empty)"})
+    return v
+
+
+def _norm_full_name(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise HTTPException(status_code=400, detail={"code": "BAD_FULL_NAME", "error": "full_name must be a string"})
+    v = value.strip()
+    if len(v) > 120:
+        raise HTTPException(status_code=400, detail={"code": "BAD_FULL_NAME", "error": "full_name must be at most 120 characters"})
+    return v or None
+
+
+def _norm_statement_label(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise HTTPException(status_code=400, detail={"code": "BAD_STATEMENT_LABEL", "error": "statement_label must be a string"})
+    v = value.strip()
+    if len(v) > 120:
+        raise HTTPException(status_code=400, detail={"code": "BAD_STATEMENT_LABEL", "error": "statement_label must be at most 120 characters"})
+    return v or None
+
 
 def _http(exc: AnalysisError) -> HTTPException:
     return HTTPException(status_code=exc.status_code, detail={"code": exc.code, "error": exc.message})
@@ -164,6 +200,9 @@ async def confirm_documents(
     decisions = payload.get("documents") or []
     if not isinstance(decisions, list) or any(not isinstance(d, dict) for d in decisions):
         raise HTTPException(status_code=400, detail={"code": "BAD_REQUEST", "error": "documents must be a list of objects"})
+    for dec in decisions:
+        if "account_type" in dec:
+            _norm_account_type(dec.get("account_type"))
     try:
         return await analysis_service.confirm(
             analysis_id, user, decisions, confirm_all_detected=bool(payload.get("confirm_all_detected"))
@@ -179,7 +218,23 @@ async def process_confirmed(
     user: Dict[str, Any] = Depends(get_current_user),
 ):
     ids = (payload or {}).get("document_ids")
+    full_name = _norm_full_name((payload or {}).get("full_name"))
+    doc_fields: Dict[str, Dict[str, Any]] = {}
+    per_doc = (payload or {}).get("documents")
+    if per_doc is not None:
+        if not isinstance(per_doc, list) or any(not isinstance(d, dict) for d in per_doc):
+            raise HTTPException(status_code=400, detail={"code": "BAD_REQUEST", "error": "documents must be a list of objects"})
+        for d in per_doc:
+            did = d.get("document_id")
+            if not isinstance(did, str) or not did:
+                raise HTTPException(status_code=400, detail={"code": "BAD_REQUEST", "error": "each document needs a document_id"})
+            doc_fields[did] = {
+                "account_type": _norm_account_type(d.get("account_type")) or None,
+                "statement_label": _norm_statement_label(d.get("statement_label")),
+            }
     try:
-        return await analysis_service.process_confirmed(analysis_id, user, ids if isinstance(ids, list) else None)
+        return await analysis_service.process_confirmed(
+            analysis_id, user, ids if isinstance(ids, list) else None,
+            full_name=full_name, doc_fields=doc_fields)
     except AnalysisError as exc:
         raise _http(exc)

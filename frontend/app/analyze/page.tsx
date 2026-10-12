@@ -5,10 +5,19 @@ import { useRouter } from 'next/navigation'
 import { AuthProvider } from '../../contexts/AuthContext'
 import AnalyzeFlow from '../components/analyze/AnalyzeFlow'
 import { getValidSessionAccessToken } from '../../lib/sessionToken'
+import { unifiedEntry } from '../../lib/flags'
 
 function AnalyzeGuard() {
   const router = useRouter()
   const [state, setState] = useState<'checking' | 'ok'>('checking')
+
+  // Unified entry: /analyze is an alias of /dashboard.
+  useEffect(() => {
+    if (unifiedEntry()) {
+      router.replace('/dashboard')
+      return
+    }
+  }, [router])
 
   useEffect(() => {
     getValidSessionAccessToken()
