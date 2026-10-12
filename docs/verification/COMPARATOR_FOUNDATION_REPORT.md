@@ -3,7 +3,7 @@
 Scope kept: no old parser changed or deleted, no V2 extractor built, no duplicate aggregation/recurring cleanup, nothing committed.
 
 ## 1. Files changed
-New (all untracked): `backend/app/services/migration/{__init__,contract,comparator}.py`, `backend/tests/migration/{__init__,test_comparator}.py`, `docs/slice2/{ARCHITECTURE_INVENTORY,FREEZE_PROPOSAL,COMPARATOR_FOUNDATION_REPORT}.md`.
+New (all untracked): `backend/app/services/migration/{__init__,contract,comparator}.py`, `backend/tests/migration/{__init__,test_comparator}.py`, `docs/verification/{ARCHITECTURE_INVENTORY,FREEZE_PROPOSAL,COMPARATOR_FOUNDATION_REPORT}.md`.
 Modified existing files: none.
 
 ## 2. Tests

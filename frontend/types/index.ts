@@ -103,7 +103,7 @@ export interface StatementEngineAdvisory {
   layout_id: string | null
 }
 
-/** Additive contract block (docs/slice3/V2_API_CONTRACT.md §3). */
+/** Additive contract block (docs/engine/V2_API_CONTRACT.md §3). */
 export interface StatementEngineBlock {
   engine: 'legacy' | 'v2' | string
   mode: 'off' | 'shadow' | 'serve' | string

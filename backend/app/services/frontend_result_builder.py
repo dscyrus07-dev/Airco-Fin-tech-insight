@@ -117,7 +117,7 @@ def build_frontend_processing_result(
     if result.get("ai_usage") is not None:
         response["ai_usage"] = result.get("ai_usage")
 
-    # statement_engine block (additive, contract docs/slice3/V2_API_CONTRACT.md)
+    # statement_engine block (additive, contract docs/engine/V2_API_CONTRACT.md)
     response["statement_engine"] = result.get("statement_engine")
 
     # Verification v1 (observe-only, additive diagnostic): independent checks on raw parser rows.

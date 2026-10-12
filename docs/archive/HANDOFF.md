@@ -1,6 +1,6 @@
 # Slice 1 handoff: Verification V1 (observe-only)
 
-Branch `feature/statement-verification-v1`, created from `main`. Nothing is committed. Evidence: `docs/slice1/out_run2/` (baseline, E2E, logs), `docs/slice1/out_run1_before_fixes/` (first run), `docs/slice1/FINDINGS_RUN1.md`.
+Branch `feature/statement-verification-v1`, created from `main`. Nothing is committed. Evidence: `docs/slice1/out_run2/` (baseline, E2E, logs), `docs/slice1/out_run1_before_fixes/` (first run), `docs/verification/FINDINGS_RUN1.md`.
 
 ## 1. Executive summary
 
@@ -23,7 +23,7 @@ New:
 - `backend/app/services/verification/{__init__,models,engine}.py`: pure stdlib. Six checks, state rules, `reasons`, `notes`, `failure_class`, `repair_masks_balance_failure`.
 - `backend/tests/verification/{__init__,test_engine}.py`: 22 synthetic tests.
 - `backend/scripts/baseline_run.py`, `backend/scripts/e2e_smoke.py`: baseline runner and live-stack contract test.
-- `docs/slice1/` (run script, `RUN_SLICE1.bat`, run guide, findings, this file), `docs/SYSTEM_MAP.md`.
+- `docs/archive/` (run scripts) + `docs/verification/` (findings) (run script, `RUN_SLICE1.bat`, run guide, findings, this file), `docs/SYSTEM_MAP.md`.
 
 Not changed: parsers, repair, reconciliation, categorisation, Excel, upload, jobs, frontend, dataset. No new dependency in `requirements.txt` (pytest and pytest-asyncio are pip-installed inside throw-away test containers only).
 

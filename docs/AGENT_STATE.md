@@ -21,7 +21,7 @@ NEXT CLAUDE ACTION (ranked):
 5. Replace dead `next lint` (Next 16) with a real eslint config.
 6. PII history purge decision — still blocks any push.
 [W11] A START 2026-10-12 01:55 head c022630
-[W11] A DONE 2026-10-12 02:12 head 6e38f95 — T1 wrong-bank guard (0/300 false alarms), T2 history statement_engine, T3 eslint flat config (11e/1w -> 0/0), T4 friendly UNKNOWN + supported-banks note, T5 all checks green. Notes: docs/slice3/WAVE11A_NOTES.md
+[W11] A DONE 2026-10-12 02:12 head 6e38f95 — T1 wrong-bank guard (0/300 false alarms), T2 history statement_engine, T3 eslint flat config (11e/1w -> 0/0), T4 friendly UNKNOWN + supported-banks note, T5 all checks green. Notes: docs/banks/WAVE11A_NOTES.md
 
 NEXT CLAUDE ACTION (ranked):
 1. D3 wrong-bank still open at the parser level: guard now flags BANK_MISMATCH (needs_review) but legacy ICICI still silently accepts HDFC input — issuer validation belongs in the legacy/v2 gap work, not here.
@@ -42,7 +42,7 @@ NEXT CLAUDE ACTION (ranked):
 [UNI] START 2026-10-12 05:53 — universal reader wave, part1 engine on devin/universal
 
 [UNI] PART1 DONE 2026-10-12 head ddf14de — T3 universal reader: lexicon+infer+reader, REVIEW cap, budgets, isolation. U3a done: 6361 base-VERIFIED, 67.8% row-exact, false-clean 0.00% post-fixes.
-[UNI] DONE 2026-10-12 head a52e951 — part2 product+UI wired behind STATEMENT_ENGINE_UNIVERSAL_MODE (off default, byte-identical off vs serve on 20 files). Reports: comparison/universal/REPORT.md, docs/slice3/UNIVERSAL_RESULTS.md.
+[UNI] DONE 2026-10-12 head a52e951 — part2 product+UI wired behind STATEMENT_ENGINE_UNIVERSAL_MODE (off default, byte-identical off vs serve on 20 files). Reports: comparison/universal/REPORT.md, docs/engine/UNIVERSAL_RESULTS.md.
 
 NEXT CLAUDE ACTION (ranked):
 1. Registered-spec truncation class (UNIVERSAL_PROPOSALS #1): axis spec drops dated rows above period-marker footers — `000df35f` 1141 vs true 1147 VERIFIED, ~50 axis + ~19 kotak files. Shared `_region_start` fix or per-spec workaround.

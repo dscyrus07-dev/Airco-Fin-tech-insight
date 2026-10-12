@@ -14,7 +14,7 @@ import EngineDetails from '../EngineDetails'
 import { StatementEngineBlock } from '@/types'
 
 // Real block shapes produced by backend/app/services/statement_engine/serve.py
-// (engine_block / minimal_block), per docs/slice3/V2_API_CONTRACT.md §3.
+// (engine_block / minimal_block), per docs/engine/V2_API_CONTRACT.md §3.
 const V2_VERIFIED = {
   engine: 'v2',
   mode: 'serve',

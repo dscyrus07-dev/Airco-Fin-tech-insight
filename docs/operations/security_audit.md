@@ -79,7 +79,7 @@ Issue: Production Supabase connection string with credentials is in .env:
 
 
 env
-DATABASE_URL=postgresql://postgres.zesqwvycakqrrtdunzlt:4IBNX7HW0Ynz6Ur6@aws-1-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require
+DATABASE_URL=postgresql://postgres.<project>:<password>@<pooler-host>:6543/postgres?sslmode=require
 Impact: If .env is committed to git (it's not in .gitignore but could be accidentally committed), credentials are exposed.
 
 Fix:

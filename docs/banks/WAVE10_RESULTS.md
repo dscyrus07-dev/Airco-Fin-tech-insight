@@ -47,7 +47,7 @@ exports failing honestly, per prompt parked class). REVIEW-ONLY flag set for thi
   cluster fingerprinted, not built. **Axis (18 `no_layout`)**: 7-file `particulars|debit|credit|
   balance` cluster fingerprinted, not built. Both within residual budgets.
 
-### W10-4 KVB — **NO-GO** (`docs/slice3/KVB_FEASIBILITY.md`)
+### W10-4 KVB — **NO-GO** (`docs/banks/KVB_FEASIBILITY.md`)
 
 67 `bank_unconfirmed` files: entire table body is `(cid:N)` under pdfplumber — `VerdanaBold`
 Type0 font with an **empty** `/ToUnicode` stream and no embedded cmap/post tables. PyMuPDF

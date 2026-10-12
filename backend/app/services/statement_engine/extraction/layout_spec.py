@@ -83,7 +83,7 @@ class LayoutSpec:
     date_left_pad: float = 3.0               # extra left pad for the date column when data dates sit left of the
                                              # first anchored date cell (centred "Date" title over a wide column)
     header_only_ok: bool = False             # opt-in policy: a header match alone (bank_evidence "none") may route this layout;
-                                            # set only when the candidate table in docs/slice3/HEADER_ONLY_CANDIDATES.md proves it safe
+                                            # set only when the candidate table in docs/engine/HEADER_ONLY_CANDIDATES.md proves it safe
     anchor_full: bool = False                # VERIFIED only when BOTH chain ends carry an independent printed figure:
                                              # opening AND (closing or printed debit/credit totals). A single anchor leaves the
                                              # far end of the chain self-derived -> first/last-row corruption survives as VERIFIED.

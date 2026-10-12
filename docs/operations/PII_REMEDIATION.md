@@ -65,7 +65,7 @@ Code-level constants, test literals, config examples, and docs — listed for Cl
 - `backend/tests/mypaisaa/test_parser.py`, `backend/tests/pipeline/test_lite_excel_export.py`, `backend/tests/test_async_upload.py`, `backend/tests/test_persistence_service.py`, `backend/tests/test_statements_analyze_api.py`
 - `backend/tests/statement_engine/test_analysis_service.py`, `test_capability_and_states.py`, `test_detector.py`, `test_real_pdfs.py`, `extraction/test_generic_engine.py`, `extraction/test_registry_store_and_router.py`, `extractors/test_hdfc_v2_synthetic.py`
 - `database/schemas/supabase_audit_schema.sql`
-- `docs/BANK_INTEGRATION_GUIDE.md`, `docs/INDIAN_BANK_IMPLEMENTATION_SUMMARY.md`, `docs/SECURE_INSIGHTS_SYSTEM_OVERVIEW.md`, `docs/security_audit.md`
+- `docs/banks/BANK_INTEGRATION_GUIDE.md`, `docs/banks/INDIAN_BANK_IMPLEMENTATION_SUMMARY.md`, `docs/architecture/SECURE_INSIGHTS_SYSTEM_OVERVIEW.md`, `docs/operations/security_audit.md`
 - `frontend/app/page.tsx`, `frontend/package-lock.json`
 - `scripts/audit/_audit_verify.py`, `scripts/deploy/deploy-to-aws.ps1`, `scripts/deploy/deploy-to-ec2.sh`, `scripts/dev/test_banks.py`, `scripts/setup/setup-keycloak-realm.sh`, `scripts/setup/setup-keycloak.sh`, `scripts/setup/setup-local-keycloak.ps1`, `scripts/setup/test-login.sh`
 

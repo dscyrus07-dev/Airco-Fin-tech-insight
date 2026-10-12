@@ -1,4 +1,4 @@
-"""Serving path for the v2 statement engine (contract: docs/slice3/V2_API_CONTRACT.md).
+"""Serving path for the v2 statement engine (contract: docs/engine/V2_API_CONTRACT.md).
 
 Flag-gated, default OFF. In `serve` mode an allow-listed bank's statement may be
 processed from verified v2 rows; everything else stays on the legacy path with a

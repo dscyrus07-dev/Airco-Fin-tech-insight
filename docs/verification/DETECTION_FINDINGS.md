@@ -6,4 +6,4 @@
 - Table-header fix (Indian Bank, Federal Jupiter, Central Bank layouts) recovered ~25 files. Remaining LOW: Federal "Fi" statements (IFSC only, no table recognized).
 - 19 of 64 files in Other_Unknown/Non_Bank/Password_Protected were detected as a bank (mostly HIGH): likely misfiled; not yet verified.
 - Old detector agrees with folder on 25.6%, new on 71.4%. 49 files where only the old one agreed (mostly Paytm/Kotak/Axis/ICICI abstains) - to be reviewed.
-Corpus folders are labels, not truth. Outputs: docs/slice2/out/.
+Corpus folders are labels, not truth. Outputs: docs/slice2/out/ (outputs moved to external archive 2026-10-12).
