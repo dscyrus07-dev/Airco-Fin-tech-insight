@@ -162,3 +162,17 @@ a benign `sessionToken` mock warning. Both exist on `4192b78` unmodified.
   validated by corpus coverage hits.
 - No PII anywhere: corpus files keyed by sha8 only; statement text never read
   or logged; `passwords.txt` never opened; locked files counted, not opened.
+
+## Removed (Prompt 22 — devin/safe-cleanup @ 37b155b)
+
+| item | action | evidence | commit |
+|---|---|---|---|
+| `frontend/lib/api.ts` (139 lines) | deleted | 0 importers; Dashboard defines own `uploadStatement`; flagged dead in audit | 7f2fa5c |
+| `backend/app/core/security.py`— `app/core/security.java` (36 lines) | deleted | 0 importers (auth moved to Keycloak/`app.core.config`); 0% coverage | 7f2fa5c |
+| `backend/app/services/monitoring/error_logger.py`— `.java` (116 lines) | deleted | 0 importers; `monitoring/__init__` re-exports `health_monitor` only; 0% coverage | 7f2fa5c |
+| npm `exceljs`, `file-saver`, `@types/file-saver` | removed from package.json + lockfile (npm uninstall, 92 pkgs) | 0 source refs | fded43d |
+| pip `xlsxwriter`, `passlib[bcrypt]` | removed from `backend/requirements.txt` | 0 imports; pandas writers use `engine='openpyxl'`; **kept** in `auth/auth-service/requirements.txt` (live: `jwt_utils.py` CryptContext) | 37b155b |
+
+Post-removal verification: tsc (baseline error only), eslint clean, vitest 38/38,
+backend import smoke + 271 tests PASS, fresh-venv install + import smoke PASS,
+400-file corpus compare 0 diffs, backend/frontend Docker builds PASS.
