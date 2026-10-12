@@ -95,3 +95,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] START 8b57e0d - overnight all-banks onboarding (base 8b57e0d)
 [OB] BANK standard_chartered SHADOW_ONLY 3236b09
 [OB] BANK dbs SHADOW_ONLY 24411d3
+[OB] BANK ujjivan_sfb SHADOW_ONLY 0bfbc9a
