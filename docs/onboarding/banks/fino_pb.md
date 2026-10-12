@@ -17,3 +17,7 @@ distinct fingerprints: 1 | top share: 100.0%
 - verdicts: {}
 - fallback reasons: {'other_bank:fino_pb': 1}
 - cross-bank false accepts on pooled other-bank files: 0
+
+## Notes
+
+- 1 usable text file only — nothing to validate against.

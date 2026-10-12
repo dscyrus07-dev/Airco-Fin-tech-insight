@@ -17,3 +17,7 @@ distinct fingerprints: 1 | top share: 100.0%
 - verdicts: {}
 - fallback reasons: {'no_layout': 3}
 - cross-bank false accepts on pooled other-bank files: 0
+
+## Notes
+
+- 3 usable text files, no running-balance column on any — VERIFIED impossible even with a spec.

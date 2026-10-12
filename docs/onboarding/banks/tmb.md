@@ -17,3 +17,7 @@ distinct fingerprints: 1 | top share: 100.0%
 - verdicts: {}
 - fallback reasons: {'other_bank:tmb': 2}
 - cross-bank false accepts on pooled other-bank files: 0
+
+## Notes
+
+- 2 usable text files only — too few to sample+holdout; detector knows tmb (files fall back other_bank:tmb), no spec built.

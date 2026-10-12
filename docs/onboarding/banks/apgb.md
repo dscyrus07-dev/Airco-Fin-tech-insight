@@ -17,3 +17,7 @@ distinct fingerprints: 1 | top share: 100.0%
 - verdicts: {}
 - fallback reasons: {'foreign_bank': 2}
 - cross-bank false accepts on pooled other-bank files: 0
+
+## Notes
+
+- 2 usable text files, no running-balance column — VERIFIED impossible.
