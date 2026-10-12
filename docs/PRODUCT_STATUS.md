@@ -53,3 +53,48 @@ runs Upload → Review → Processing → Report with per-file bank override,
 statement type, inline unlock, parallel processing and the existing report
 view. `/analyze` redirects when the flag is on. Flag off = both legacy pages
 unchanged. See `docs/UNIFIED_ENTRY_PLAN.md` + `docs/engine/V2_UI_NOTES.md`.
+
+## Onboarded banks (devin/onboard-all, shadow wave)
+
+Measured on `devin/onboard-all` (base `8b57e0d`), 30 previously unsupported bank
+folders. All shadow or review-ceiling — **none enabled for serving**; the
+`SERVE_BANKS` allowlist is unchanged. Per-bank detail:
+`docs/onboarding/OVERNIGHT_REPORT.md` + `docs/onboarding/banks/<id>.md`.
+
+| Bank | Status | Note |
+|---|---|---|
+| standard_chartered | shadow_only | det 91.9%, audit clean; FAILEDs are real chain/reference issues |
+| dbs | shadow_only | det 99.2%; all REVIEW (self-derived chain, no independent anchor) |
+| ujjivan_sfb | shadow_only | det 76.9% |
+| au_sfb | shadow_only | det 94.4%, 15/15 VERIFIED audit clean — nearest READY candidate |
+| dcb | shadow_only | det 100%; 8/15 real multi-account FAILED |
+| federal | shadow_only | det 95.5%, 144 VERIFIED; audit heuristic flags = anchor lines |
+| indusind | shadow_only | det 93.2% |
+| idbi | shadow_only | det 72.5% |
+| yes | shadow_only | det 85.8%; marker-less (detector/bank_key evidence only) |
+| pnb | shadow_only | det 98.9%; all REVIEW |
+| kvb | shadow_only | det 5.1% — pre-existing detector weakness |
+| iob | review_only | det 100%; no printed balance anchors → VERIFIED impossible |
+| central_bank | shadow_only | det 89.8% |
+| equitas_sfb | shadow_only | det 89.5% |
+| bank_of_maharashtra | shadow_only | det 100%, 9 VERIFIED; audit clean |
+| bandhan | shadow_only | det 94.4% |
+| hsbc | shadow_only | 66/103 files image-only; det 97.3% on text files |
+| south_indian | review_only | det 100%; marker-less + no printed anchors |
+| apgv | shadow_only | det 84.2%; detector entry intentionally absent |
+| csb | shadow_only | NEW spec; ~6 folder files are mislabeled Federal docs |
+| uco | shadow_only | NEW spec; det 100%; 4 real chain FAILEDs |
+| airtel_pb | shadow_only | NEW spec; real schema errors on edge rows |
+| ippb | shadow_only | NEW spec; REVIEW-ceiling (self-derived chain) |
+| dhanlaxmi | shadow_only | NEW spec; fp with balance-on-continuation unsupported |
+| iob→(see above) | | |
+| apgb | not_possible | 2 text files |
+| cosmos | not_possible | 2 text files |
+| deutsche | not_possible | 2 text files |
+| fincare_sfb | not_possible | 3 text files |
+| fino_pb | not_possible | 1 text file |
+| tmb | not_possible | 2 text files |
+
+Cross-bank pooled check: 415 probes, zero genuine false accepts. 400-file
+regression compare vs base: 0 diffs. Full suite: 639 passed vs 519 on base,
+same 8 pre-existing failures.
