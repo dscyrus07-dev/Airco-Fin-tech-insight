@@ -30,6 +30,7 @@ DETECTOR_TO_SPEC_BANK = {
     "uco": "uco",
     "airtel_pb": "airtel_pb",
     "ippb": "ippb",
+    "dhanlaxmi": "dhanlaxmi",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 

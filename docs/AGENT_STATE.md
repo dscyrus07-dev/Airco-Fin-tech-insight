@@ -122,3 +122,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK uco SHADOW_ONLY 430506e
 [OB] BANK airtel_pb SHADOW_ONLY 8f2e55c
 [OB] BANK ippb SHADOW_ONLY b634a7d
+[OB] BANK dhanlaxmi SHADOW_ONLY 89274a7

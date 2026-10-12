@@ -1,0 +1,20 @@
+{
+  "id": "dhanlaxmi",
+  "display_name": "Dhanlaxmi Bank",
+  "names": [
+    "dhanlaxmi bank",
+    "dhanlaxmi bank ltd",
+    "dhan bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "DLXB"
+  ],
+  "domains": [
+    "dhanbank.com",
+    "dhanbank.co.in"
+  ],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "Dhanlaxmi Bank"
+}
