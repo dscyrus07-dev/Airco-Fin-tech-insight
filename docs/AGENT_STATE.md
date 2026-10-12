@@ -98,3 +98,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OB] BANK ujjivan_sfb SHADOW_ONLY 0bfbc9a
 [OB] BANK au_sfb SHADOW_ONLY 36d410e
 [OB] BANK dcb SHADOW_ONLY 498c245
+[OB] BANK federal SHADOW_ONLY 86d2bd0
