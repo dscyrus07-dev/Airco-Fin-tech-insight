@@ -108,6 +108,25 @@ Always tag a known-good image before rebuilding (`docker tag <img>:latest
   counts wall-time in the isolated child; saturated hosts can trip it —
   results are honest failures, retry succeeds.
 
+## Onboarded-bank stack (`onb`)
+
+`docker-compose.onboard.yml` brings up an isolated stack (project `onb`,
+containers `onb_*`, images `onb-*`) for testing onboarded banks. It reuses the
+host Keycloak/auth service and remote DB; only redis/rabbitmq/backend/frontend
+are new. Ports: backend 8401, frontend 3400 (env-overridable).
+
+```bash
+cd infra/docker
+docker compose -p onb -f docker-compose.yml -f docker-compose.onboard.yml \
+  --env-file <env> up -d --build    # start
+docker compose -p onb -f docker-compose.yml -f docker-compose.onboard.yml \
+  --env-file <env> down             # stop (onb_* only)
+```
+
+Enable another bank / roll back: set `ONB_SERVE_BANKS` (or `ONB_V2_MODE=off`)
+and `up -d --no-deps backend` — no rebuild. Full details and the serving gate:
+`docs/onboarding/WIRING.md`.
+
 ## Demo stack (wt-demo) specifics
 
 Ports: frontend 3000, backend 8000, auth 8001, keycloak 8080, kc-db 5433,
