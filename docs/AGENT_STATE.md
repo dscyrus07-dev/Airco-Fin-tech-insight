@@ -20,3 +20,4 @@ NEXT CLAUDE ACTION (ranked):
 4. Persist statement_engine into /api/profile/history so dashboard badges work on old rows.
 5. Replace dead `next lint` (Next 16) with a real eslint config.
 6. PII history purge decision — still blocks any push.
+[UNI] START 2026-10-12 05:53 — universal reader wave, part1 engine on devin/universal
