@@ -30,8 +30,8 @@
   "sha": "001023e6",
   "verdict": "FAILED",
   "code": "CHECKS_FAILED",
-  "rows": 295,
-  "row_hash": "d175fa62356a1af7"
+  "rows": 296,
+  "row_hash": "49677a65e01102ed"
  },
  "IDFC First Bank": {
   "sha": "0155eb6e",
@@ -51,8 +51,8 @@
   "sha": "03abc177",
   "verdict": "REVIEW",
   "code": "GENERAL_READER",
-  "rows": 413,
-  "row_hash": "194f01bb650216a0"
+  "rows": 414,
+  "row_hash": "f1b9321b8eacffbb"
  },
  "Bank of India": {
   "sha": "01beb162",

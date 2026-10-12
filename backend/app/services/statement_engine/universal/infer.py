@@ -543,7 +543,10 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
                               + [summ["period"]] if "period" in summ else
                               [re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]]),
         year_from_period=bool(tail_re or "-Y" not in date_fmt) and "period" in summ,
-        opening_row_balance_only=True,
+        # balance-only opening row detection needs real debit/credit cells; under a
+        # single amount column those names are virtual, so row 0 always qualified and
+        # was silently popped — leave it off for single-amount layouts.
+        opening_row_balance_only=not single_amount,
     )
     return spec, None, notes
 
@@ -605,7 +608,7 @@ def _infer_implicit(pages, date_re, date_fmt, tail_re, texts, furn, notes) -> In
         amount_prefix="Rs.|₹|INR",
         row_order="auto",
         ignore_line_res=tuple(re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]),
-        opening_row_balance_only=True,
+        opening_row_balance_only=not bool(single),
     )
     summ = infer_summary_lines([texts[0], texts[-1]])
     if summ:
