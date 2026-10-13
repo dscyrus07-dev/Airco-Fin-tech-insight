@@ -33,3 +33,21 @@ distinct fingerprints: 13 | top share: 31.2%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 15 of 15 VERIFIED | ok: 15 | disagreements: 0
+
+## Unblock pass (prompt-29, current branch)
+
+- new `IDBI_LAYOUT_4`: passbook `Date | Particulars | Cheque No | Debit | Credit | Closing Balance`
+  (dd/mm/yy, split `CR`/`DR` balance suffix, `Opening Balance As On <d> :<amt> CR` anchor) -> 2 VERIFIED.
+- new `IDBI_LAYOUT_5`: passbook `Date | Particulars | Chq No. | Chq Date | Debit | Credit | Balance`
+  (dd-mm-yyyy, merged `Cr` balance suffix, undated `Opening/Closing Balance` in-table anchor lines;
+  closing line carries period totals -> regex takes the last `\d+\.dd` before `Cr`). Both corpus files
+  route but stay honest FAILED (printed balance missing on rows: 1 row and 1409/2045 rows respectively).
+- after: 104 manifest files -> 48 v2 / 46 fallback | 17 VERIFIED / 20 REVIEW / 11 FAILED
+  (before: 15 VERIFIED). audit n/a (2 VERIFIED delta only). cross-bank: see run.
+- parked `IDBI_LAYOUT_3` (defined, unregistered): the dominant 19-file family
+  `Srl|Txn Date|Value Date|Description|Cheque No|CR/DR|CCY|Amount(INR)|Balance(INR)` prints period-suffixed
+  `Dr.`/`Cr.` side markers; `normalize.py` marker regex lacks `\.?$` -> every row errors. ENGINE GAP.
+- engine gaps left: `Dr.`/`Cr.` marker suffix (19 files), balance-less `Date|Description|Amount|Type`
+  family (8 files), markerless/det-deep-page files (bank_unconfirmed+det_none = honest unrouteable).
+- misfiled (class D): `3fd73a3a` is an AP Mahesh Bank doc (apmaheshbank.com footer),
+  `2cde3656` is a GL ledger print (not a statement). `7dd67f11` carries ICICI evidence -> routed there.
