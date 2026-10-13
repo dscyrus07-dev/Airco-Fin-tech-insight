@@ -25,3 +25,20 @@ distinct fingerprints: 4 | top share: 74.4%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 0 of 0 VERIFIED | ok: 0 | disagreements: 0
+
+## Unblock pass (devin/unblock-1)
+
+Re-measure (33 files): 24 v2 (20 REVIEW + 4 FAILED), 9 no_layout.
+- All REVIEWs are self-derived chains: L1 statements print no opening/closing
+  anchors (a per-account-type "Summary of Accounts" is unrelated). Honest (E);
+  Vshare 0% -> stays SHADOW_ONLY.
+- no_layout causes: 6 files use a `Sr | Date | Description | Amount | Type`
+  (Dr/Cr) loan/passbook layout with NO balance column - engine gap (F);
+  `91db325d` is a fully monospace-glued export (each line one word): a
+  `monospace_text` spec extracts it after prep, but registry header detection
+  runs pre-split so it can never route - engine gap (F);
+  `0e8ceb69` is a misfiled IDBI statement (header IFSC `IBKL..`; `UJVN` only in
+  body) - excluded (D). The Human-Verification detector hit (`f3105a96`) no
+  longer reproduces at tip (UNKNOWN/no_layout).
+- FAILED `a08627e2`,`c7f7cb38`,`793b0633`,`0197b955`: real printed chain
+  discontinuities (balance jumps across page boundaries) - honest.
