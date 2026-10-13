@@ -4,6 +4,7 @@ from app.services.statement_engine import Confidence, detect_bank
 from app.services.statement_engine.extraction.rows import Page
 from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
 from app.services.statement_engine.extractors.dbs.layout_spec import DBS_LAYOUT_1 as SPEC
+from app.services.statement_engine.extractors.dbs.layout_spec import DBS_LAYOUT_2 as SPEC2
 from app.services.statement_engine.v2_router import route_pages
 
 from tests.statement_engine.extraction.onboarded_kit import W, header, row, rt, w
@@ -69,3 +70,44 @@ def test_dbs_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+def _header2(top=200.0):
+    """DBS_LAYOUT_2's real header: 'Cheque/Reference' wraps 'number' onto the next line."""
+    return [
+        w("Transaction date", 38, top), w("Value date", 106, top), w("Branch code", 157, top),
+        w("Description", 209, top), w("Cheque/Reference", 283, top),
+        rt("Debit", 418, top), rt("Credit", 475, top), rt("Balance", 566, top),
+        w("number", 283, top + 10),
+    ]
+
+
+def _row2(top, narr, debit=None, credit=None, balance="1,000.00", branch="999"):
+    ws = [w("01/12/2022", 38, top), w("01/12/2022", 106, top), w(branch, 157, top), w(narr, 209, top)]
+    ws += [rt(debit, 418, top)] if debit else []
+    ws += [rt(credit, 475, top)] if credit else []
+    ws += [rt(balance, 566, top)]
+    return ws
+
+
+def test_dbs_layout2_wrapped_ref_header_parses_and_chains():
+    ws = list(MARKER) + _header2()
+    ws += _row2(220, "UPI DR 233548321138", debit="40.00", balance="2,367.63")
+    ws += _row2(236, "NEFT SALARY", credit="1,000.00", balance="3,367.63")
+    ws += _row2(252, "ATM CASH", debit="367.63", balance="3,000.00")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC2.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3 and [str(t.balance) for t in txns] == ["2367.63", "3367.63", "3000.00"]
+    assert txns[0].description.startswith("UPI")
+
+
+def test_dbs_layout2_summary_anchor_regexes():
+    # last-page joined text "Opening balance Total debit amount Debit count INR2,407.63 ..."
+    import re as _re
+    line = "OpeningbalanceTotaldebitamountDebitcountINR2,407.63INR12,07,921.80453" \
+        "ClosingbalanceTotalcreditamountCreditcountINR5,266.31INR12,10,780.48140"
+    mo = SPEC2.opening_balance_re.search(line)
+    mc = SPEC2.closing_balance_re.search(line)
+    assert mo and mo.group(1) == "2,407.63"
+    assert mc and mc.group(1) == "5,266.31"

@@ -69,3 +69,57 @@ def test_bank_of_maharashtra_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+from app.services.statement_engine.extractors.bom.layout_spec import BOM_LAYOUT_3 as SPEC3
+from app.services.statement_engine.extractors.bom.layout_spec import BOM_LAYOUT_4 as SPEC4
+
+
+def _header3(top=200.0):
+    return [w("Sr No", 65, top), w("Date", 165, top), w("Particulars", 283, top),
+            rt("Debit", 560, top), rt("Credit", 640, top), rt("Balance", 760, top), w("Channel", 849, top)]
+
+
+def _row3(top, narr, debit=None, credit=None, balance="1,000.00"):
+    ws = [w("1", 65, top), w("05/01/2024", 165, top), w(narr, 283, top)]
+    ws += [rt(debit, 560, top)] if debit else [w("-", 540, top)]
+    ws += [rt(credit, 640, top)] if credit else [w("-", 620, top)]
+    ws += [rt(balance, 760, top)]
+    return ws
+
+
+def test_bom_layout3_no_ref_column_parses_and_chains():
+    ws = list(MARKER) + _header3()
+    ws += _row3(220, "UPI REF 1234", debit="100.00", balance="900.00")
+    ws += _row3(236, "NEFT SALARY", credit="1,000.00", balance="1,900.00")
+    ws += _row3(252, "ATM CASH", debit="400.00", balance="1,500.00")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC3.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3 and [str(t.balance) for t in txns] == ["900.00", "1900.00", "1500.00"]
+
+
+def _header4(top=200.0):
+    return [w("Date", 15, top), w("Particulars", 40, top), w("Cheque No", 384, top),
+            rt("Withdrawals", 500, top), rt("Deposits", 555, top), rt("Balance", 610, top)]
+
+
+def _row4(top, narr, debit=None, credit=None, balance="1,000.00 Cr"):
+    ws = [w("01/10/22", 9, top), w(narr, 40, top)]
+    ws += [rt(debit, 500, top)] if debit else [rt("0.00", 500, top)]
+    ws += [rt(credit, 555, top)] if credit else [rt("0.00", 555, top)]
+    ws += [rt(balance, 610, top)]
+    return ws
+
+
+def test_bom_layout4_withdrawals_variant_zero_empty_and_cr_suffix():
+    ws = list(MARKER) + _header4()
+    ws += [w("01/10/22", 9, 216), w("B/F ...", 40, 216), rt("66,557.82 Cr", 610, 216)]  # opening row
+    ws += _row4(236, "UPI 227450145351PAYMENT", credit="7,500.00", balance="74,057.82 Cr")
+    ws += _row4(252, "UPI 227446830977PAYMENT", debit="30.00", balance="74,027.82 Cr")
+    ws += [w("Total", 208, 280), rt("30.00", 500, 280), rt("7,500.00", 555, 280), rt("74,027.82 Cr", 610, 280)]
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC4.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 2 and [str(t.balance) for t in txns] == ["74057.82", "74027.82"]
+    assert str(txns[0].credit) == "7500.00" and str(txns[1].debit) == "30.00"

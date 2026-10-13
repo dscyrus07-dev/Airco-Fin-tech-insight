@@ -34,7 +34,10 @@ AIRTEL_LAYOUT_1 = LayoutSpec(
     summary_expected=False,
     header_repeats=True,
     opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]*\.\d{2})"),
-    closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]*\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)Closing(?:Day)?Balance:?(-?[\d,]*\.\d{2})"),
+    opening_row_balance_only=True,
+    totals_line_re=re.compile(r"(?i)TotalCredits(-?[\d,]*\.\d{2})TotalDebits(-?[\d,]*\.\d{2})"),
+    totals_credit_first=True,
     anchor_full=True,
     date_left_pad=8.0,
 )

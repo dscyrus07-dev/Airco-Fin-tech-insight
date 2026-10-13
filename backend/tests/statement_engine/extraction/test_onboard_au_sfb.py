@@ -4,11 +4,13 @@ from app.services.statement_engine import Confidence, detect_bank
 from app.services.statement_engine.extraction.rows import Page
 from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
 from app.services.statement_engine.extractors.au_sfb.layout_spec import AU_LAYOUT_1 as SPEC
+from app.services.statement_engine.extractors.au_sfb.layout_spec import AU_LAYOUT_2 as SPEC2
 from app.services.statement_engine.v2_router import route_pages
 
 from tests.statement_engine.extraction.onboarded_kit import W, header, row, rt, w
 
 MARKER = [w("AU", 30, 40), w("SMALL", 60, 40), w("FINANCE", 110, 40), w("BANK", 170, 40), w("AUBL0001234", 30, 56)]
+MARKER2 = [w("IFSC:AUBL0001234", 30, 40), w("www.aubank.in", 30, 56), w("customercare@aubank.in", 120, 56)]
 
 
 def _rows():
@@ -57,6 +59,56 @@ def test_au_sfb_narration_with_other_bank_still_au_sfb():
             row(SPEC, 252, "AXIS BANK REFUND", debit="400.00", balance="1,500.00")]
     r = route_pages(_page(rows), DEFAULT_REGISTRY)
     assert r.status == "v2" and r.layout_id == SPEC.layout_id
+
+
+def _header2(top=200.0):
+    """AU_LAYOUT_2's real two-line header: titles on the first line, 'Date'/'Reference No.'
+    wrapped onto the second."""
+    return [
+        w("Transaction", 26, top), w("Value Date", 98, top), w("Description/Narration", 169, top),
+        w("Cheque/", 295, top), w("Debit (₹)", 384, top), w("Credit (₹)", 452, top), w("Balance (₹)", 518, top),
+        w("Date", 41, top + 10), w("Reference No.", 291, top + 10),
+    ]
+
+
+def _row2(top, narr, debit=None, credit=None, balance="1,000.00", ref="134545276"):
+    ws = [w("05 Jan 2024", 26, top), w("05 Jan 2024", 95, top), w(narr, 159, top), w(ref, 278, top)]
+    ws += [rt(debit, 420, top)] if debit else [w("-", 430, top)]
+    ws += [rt(credit, 491, top)] if credit else [w("-", 500, top)]
+    if balance is not None:
+        ws += [rt(balance, 566, top)]
+    return ws
+
+
+def test_au_sfb_layout2_wrapped_header_parses_and_chains():
+    ws = list(MARKER2) + _header2()
+    ws += _row2(220, "OPENING", credit="1,000.00", balance="1,000.00")
+    ws += _row2(236, "UPI REF 1234", debit="100.00", balance="900.00")
+    ws += _row2(252, "NEFT SALARY", credit="400.00", balance="1,300.00")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC2.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3 and [str(t.balance) for t in txns] == ["1000.00", "900.00", "1300.00"]
+    assert txns[0].description.startswith("OPENING")
+
+
+def test_au_sfb_layout2_sign_gap_negative_balance():
+    ws = list(MARKER2) + _header2()
+    ws += _row2(220, "OPENING", credit="1,000.00", balance="1,000.00")
+    ws += _row2(236, "ACH DR RAZOR", debit="46,400.00", balance=None)  # placeholder replaced below
+    ws[-1] = w("- 39,457.19", 531, 236)   # negative balance: sign and digits separated by a space
+    ws += _row2(252, "ACH REVERSAL", credit="46,400.00", balance="6,942.81")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC2.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3 and str(txns[1].balance) == "-39457.19"
+
+
+def test_au_sfb_layout2_needs_aubank_marker():
+    ws = _header2() + _row2(220, "UPI REF 1234", debit="100.00", balance="900.00") \
+        + _row2(236, "NEFT SALARY", credit="1,000.00", balance="1,900.00")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert not (r.status == "v2" and r.layout_id == SPEC2.layout_id)
 
 
 def test_au_sfb_unread_dated_line_caps_at_review():

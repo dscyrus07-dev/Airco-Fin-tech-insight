@@ -1,6 +1,11 @@
 # dbs — onboarding notes
 
-Status: **SHADOW_ONLY** — detection 99.2% (<100%); VERIFIED unreachable under current spec (opening row consumed -> self-derived chain caps at REVIEW); spec frozen by rules
+Status: **SHADOW_ONLY** (promote-1, improved) — yield 87.0% (114/131 V|R) < 90% gate because
+9 files print a balance-less layout the engine cannot verify (engine gap, parked for Claude).
+VERIFIED share of routed files is 91.7% (110/120). The original diagnosis was wrong:
+the 'Opening Balance' line is undated (dropped as a pre-row narration line), not a dated opening
+row — adding `opening_balance_re` (searched on the table's first page) restored both anchors.
+Was: SHADOW_ONLY — detection 99.2%, 0 VERIFIED.
 
 Folders: DBS Bank
 Files: 137 pdf | 131 text | 4 scanned | 2 locked
@@ -23,3 +28,22 @@ distinct fingerprints: 3 | top share: 91.6%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 0 of 0 VERIFIED | ok: 0 | disagreements: 0
+
+## promote-1 changes
+
+1. `opening_balance_re` added to DBS_LAYOUT_1 -> 109/112 former REVIEWs now VERIFIED.
+   The 6 `chain+side` FAILEDs are multi-account docs where merged statement segments share
+   one row stream — the boundary break is engine behaviour, not a spec defect (unchanged).
+2. `DBS_LAYOUT_2` added for the `Transaction date | Value date | Branch code | Description |
+   Cheque/Reference number | Debit | Credit | Balance` variant (wrapped 'number' title,
+   dd/mm/yyyy dates, label/value summary block anchored via INR-prefixed last-page text).
+   `d8e38ff6` -> VERIFIED/593 rows; `fe125181` -> REVIEW (summary block sits on the
+   second-to-last page — out of reach of the last-page anchor scan; honest cap).
+
+Remaining gaps (engine/corpus, not spec-fixable):
+- 9 files `Date | Details of Transaction | Debit | Credit` with NO balance column —
+  the engine cannot verify a chain without balances -> park (engine capability needed).
+- `b4a408e2` (CID-encoded fonts, v2_failed:NO_ROWS), `2afd8fc8` (scanned),
+  `0e3bc943` (consolidated-accounts certificate, not a transaction statement),
+  4 scanned + 2 locked -> corpus problems.
+- `fe125181` REVIEW as described above.
