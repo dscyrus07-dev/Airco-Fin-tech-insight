@@ -26,3 +26,17 @@ distinct fingerprints: 2 | top share: 83.3%
 - Post-spec folder measure (6 text): 5 v2 all REVIEW (self-derived chain — opening line folds into
   rows), 1 no_layout (second fingerprint uncovered).
 - Detector identifies ippb VERY_HIGH on the routed files.
+
+## unblock-1 update
+
+- `opening_balance_re` widened to `OpeningBalance:?` — the printed label carries a colon
+  (`OpeningBalance:20.02Cr.`). Opening anchor now detectable, but `anchor_full=True` still requires
+  the closing/totals end.
+- Closing end unparseable at spec level: summary prints labels
+  (`OPENING BALANCE|TOTAL WITHDRAWALS|TOTAL DEPOSITS|CLOSING BALANCE|No. of Transactions`) then a
+  5-value line whose amounts merge ambiguously when squashed (e.g. `20.0221,94622,205279.0227`),
+  and `No. of Transactions` maps to no `PrintedSummary` field -> engine gap (needs a
+  column-skipping summary parse or positional value-row parse). REVIEW ceiling stands.
+- `5128847f` is a custom-encoded-font PDF: transaction text extracts as garbage glyphs -> excluded
+  as unreadable (class D), not a parser failure.
+- Status: **SHADOW_ONLY** — det 100% (6/6), yield 5/5 v2 REVIEW, VERIFIED unreachable, thin corpus.
