@@ -43,6 +43,34 @@ from .generic_bank import (
 logger = logging.getLogger(__name__)
 
 
+def restore_statement_order(validated, engine_rows, key_fn):
+    """Order engine rows like the validated sequence.
+
+    One queue per content key, so identical (legitimately repeated)
+    transactions each map to their own engine copy. Returns
+    (ordered, used_ids); unmatched validated rows are kept as they are.
+    """
+    queues: Dict[tuple, List[Dict[str, Any]]] = {}
+    for row in engine_rows:
+        queues.setdefault(key_fn(row), []).append(row)
+    ordered: List[Dict[str, Any]] = []
+    used: set = set()
+    for src in validated:
+        queue = queues.get(key_fn(src))
+        hit = None
+        while queue:
+            cand = queue.pop(0)
+            if id(cand) not in used:
+                hit = cand
+                break
+        if hit is not None:
+            ordered.append(hit)
+            used.add(id(hit))
+        else:
+            ordered.append(src)
+    return ordered, used
+
+
 @dataclass
 class BasePipelineResult(GenericProcessingResult):
     """Extended result carrying audit + quality fields."""
@@ -323,19 +351,8 @@ class BaseBankProcessor:
                         str(txn.get('credit') or ''),
                         str(txn.get('balance') or ''),
                     )
-                eng_map = {}
-                for t2 in list(classified) + list(unclassified):
-                    eng_map.setdefault(_k(t2), t2)
-                ordered = []
-                used = set()
-                for src in validated:
-                    key = _k(src)
-                    hit = eng_map.get(key)
-                    if hit is not None and id(hit) not in used:
-                        ordered.append(hit)
-                        used.add(id(hit))
-                    else:
-                        ordered.append(src)
+                eng_rows = list(classified) + list(unclassified)
+                ordered, used = restore_statement_order(validated, eng_rows, _k)
                 for t2 in list(classified) + list(unclassified):
                     if id(t2) not in used:
                         ordered.append(t2)
@@ -381,19 +398,9 @@ class BaseBankProcessor:
                     str(txn.get("balance") or ""),
                 )
 
-            eng_map: Dict[tuple, Dict[str, Any]] = {}
-            for t2 in all_transactions:
-                eng_map.setdefault(_txn_order_key(t2), t2)
-            ordered: List[Dict[str, Any]] = []
-            used_ids: set = set()
-            for src in validated:
-                key = _txn_order_key(src)
-                hit = eng_map.get(key)
-                if hit is not None and id(hit) not in used_ids:
-                    ordered.append(hit)
-                    used_ids.add(id(hit))
-                else:
-                    ordered.append(src)
+            ordered, used_ids = restore_statement_order(
+                validated, all_transactions, _txn_order_key
+            )
             for t2 in all_transactions:
                 if id(t2) not in used_ids:
                     ordered.append(t2)
