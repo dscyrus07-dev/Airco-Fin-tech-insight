@@ -27,9 +27,6 @@ from tests.statement_engine.test_analysis_service import FakeStorage, pdf_bytes 
 ALICE = {"id": "alice-1", "email": "alice@example.com", "name": "Alice"}
 
 # bank_id (registry/detector id) -> spec key; all v2-only onboarded banks.
-# apgv is intentionally absent: no registry bank config exists for it (adding one
-# activates detector name/IFSC evidence that prompt-24 left out pending APGB
-# collision evidence), so its override path cannot resolve — wiring blocked.
 ONBOARDED = {
     "standard_chartered": "scb",
     "dbs": "dbs",
@@ -53,6 +50,7 @@ ONBOARDED = {
     "airtel_pb": "airtel_pb",
     "ippb": "ippb",
     "dhanlaxmi": "dhanlaxmi",
+    "apgv": "apgv",
 }
 
 GENERIC = "Statement of account\nTxn Date  Particulars  Debit  Credit  Balance\n01-04-2023  UPI X  100.00  0.00  900.00\n"
@@ -165,13 +163,17 @@ def test_onboarded_bank_analyze_detects(env, monkeypatch, text, bank_id):
     )
     assert r.status_code == 200, r.text
     d = r.json()["documents"][0]
+    if bank_id is None:
+        # foreign-only evidence: must not resolve to an onboarded bank
+        assert not d["bank"] or d["bank"]["id"] != "apgv"
+        return
     assert d["bank"] is not None and d["bank"]["id"] == bank_id, (
         f"{bank_id}: detection failed -> {d['bank'] or d.get('suggestion')}"
     )
     assert d["bank"]["supported"] is True
 
 
-def test_all_23_listed_together_under_serve(env, monkeypatch):
+def test_all_onboarded_listed_together_under_serve(env, monkeypatch):
     _serve_env(monkeypatch)
     client, _ = env
     banks = client.get("/api/statements/banks").json()["banks"]

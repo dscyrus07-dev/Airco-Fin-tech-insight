@@ -19,7 +19,7 @@ Out of scope: `au_sfb`, `bank_of_maharashtra` (candidates, under verify — unto
 | uco | 11 | yield, Vshare | B/F residual | 8 routed post-fix incl. honest FAILED (space-glyph cells, multi-segment) |
 | iob | 62 | REVIEW ceiling | E | no printed anchors by design — decide_serve honesty test (§3) |
 | south_indian | 29 | REVIEW ceiling | E | same |
-| apgv | 19 | wiring | C/collision | detector absent by design; APGB↔APGV collision check required |
+| apgv | 19 | — | wired | collision clean (APGB docs UNKNOWN/fallback, 0/393 cross detects); 13 x v2 REVIEW (no anchors), 2 honest fallbacks -> REVIEW_ONLY_SERVABLE |
 | equitas_sfb | 38 | det 89.5%, yield 76% | A+B+C | 9 no_layout + 6 FAILED + 4 det_none |
 | dbs | 131 | yield ~87% | F residual | 9 balance-less variant = engine gap; 6 multi-account FAILED honest; Vshare ~96% |
 | central_bank | 49 | det 89.8%, yield 75.5% | A+B | 11 no_layout + 5 det_none + 9 FAILED |

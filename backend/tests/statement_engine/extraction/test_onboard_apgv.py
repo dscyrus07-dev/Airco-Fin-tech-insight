@@ -42,9 +42,22 @@ def test_apgv_detected_by_detector():
            "Date Narration Withdrawal Deposit Balance\n" \
            "05 Jan 2024 UPI REF 100.00 900.00\n" * 3
     det = detect_bank([text])
-    # apgv is the registry's documented no-detector exception: the detector must NOT
-    # claim it from text alone; routing relies on the layout's own markers instead.
+    assert det.bank_id == "apgv"
+
+
+def test_apgb_evidence_never_detects_apgv():
+    # Andhra Pragathi Grameena Bank shares the same core table shape. Its branding
+    # must never resolve to apgv at the detector or at the layout.
+    text = "Andhra Pragathi Grameena Bank\nStatement of Account\nIFSC: APGB0001234\n" \
+           "Date Narration Withdrawal Deposit Balance\n" \
+           "05 Jan 2024 UPI REF 100.00 900.00\n" * 3
+    det = detect_bank([text])
     assert det.bank_id != "apgv"
+
+    apgb = [w("ANDHRA", 30, 40), w("PRAGATHI", 80, 40), w("GRAMEENA", 160, 40), w("BANK", 240, 40),
+            w("APGB0001234", 30, 56)]
+    r = route_pages(_page(_rows(), marker=False, extra=apgb), DEFAULT_REGISTRY)
+    assert not (r.status == "v2" and r.layout_id == SPEC.layout_id)
 
 
 def test_apgv_foreign_marker_refused():

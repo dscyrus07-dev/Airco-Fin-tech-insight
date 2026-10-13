@@ -188,9 +188,12 @@ SUPPORTED_BANK_PROCESSORS = {
     "bandhan": "bandhan",
     "bandhan bank": "bandhan",
     "hsbc": "hsbc",
-    # apgv intentionally unwired: no registry bank config (would activate
-    # detector evidence left out pending APGB/APGV collision checks), so an
-    # override cannot resolve; listing it would be dishonest.
+    # apgv wired after the APGB collision check: APGV docs carry APGV/"AP GRAMEENA
+    # VIKAS BANK" evidence only; APGB docs carry ANDHRA PRAGATHI GRAMEENA BANK /
+    # APGB and never APGV evidence -> detector separates them cleanly.
+    "apgv": "apgv",
+    "apgv bank": "apgv",
+    "ap grameena vikas bank": "apgv",
     "csb": "csb",
     "csb bank": "csb",
     "uco": "uco",
