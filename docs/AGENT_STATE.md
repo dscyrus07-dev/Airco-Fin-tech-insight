@@ -140,3 +140,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [V2] START 54f51ab - verify-2: independent E2E verification of au_sfb + bank_of_maharashtra serve candidates
 [V2] BANK au_sfb NO-GO - all engine gates pass (16/17 VERIFIED, audit clean, cross 0) but served workbook corrupted on 7b2023ab: base_processor dup-key order-rebuild leak, 142 rows vs engine 140, wrong closing balance, integrity_passed=false under VERIFIED
 [V2] BANK bank_of_maharashtra NO-GO - all engine gates pass (21V+5R, audit clean, cross 0) but same shared serve-path defect is latent: 6 corpus files carry duplicate keys
+[V2] DONE 93d0556 - NO-GO both candidates: all engine gates pass but shared base_processor dup-key row-leak corrupts served workbooks (7b2023ab: 142/140 rows, wrong closing, integrity=false under VERIFIED); 9/46 corpus files carry trigger; SERVE_BANKS restored to defaults; onb on tip image
