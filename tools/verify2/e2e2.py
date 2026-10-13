@@ -15,7 +15,7 @@ for a in sys.argv[3:]:
         b, _, s = a[11:].partition(":"); overrides[s] = b
     elif a.startswith("--timeout="): timeout = int(a[10:])
 
-API = "http://localhost:8401"
+API = "http://127.0.0.1:8401"
 KC = "http://localhost:8080"
 SECRET = os.environ.get("KC_SECRET", "airco-frontend-secret")
 PW = os.environ.get("E2E_USER_PW", "Test123!")

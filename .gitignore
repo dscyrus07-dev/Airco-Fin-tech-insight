@@ -196,3 +196,4 @@ local.env
 
 # prompt-26 verification tooling outputs (sha8/counts only, not for commit)
 tools/verify/.local/
+tools/verify3/.local/

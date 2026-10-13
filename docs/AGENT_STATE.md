@@ -164,3 +164,13 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 
 [UI] START 54f51ab - UI bank states (dropdown groups, support_state, review notices); base integration/v2-waves @ 54f51ab
 [UI] DONE 173aa2f - grouped pickers, all_banks API, review-required notices; e2e on onb (set+unset extras)
+[V3] START 659d2b1 - re-verify after row-leak fix + prove enable list (au_sfb/bom/airtel_pb candidates; iob/apgv/sib/pnb review-only)
+
+[V3] BANK au_sfb GO - 5 e2e VERIFIED incl defect sha8 7b2023ab (140 rows=engine, closing==anchor); dup-key serves clean
+[V3] BANK bank_of_maharashtra GO - 7 e2e (4 VERIFIED, 3 REVIEW); wrong-bank confirm refused
+[V3] BANK airtel_pb GO - 3/6 VERIFIED e2e; 3 corpus files unidentifiable -> honest refusal; thin corpus
+[V3] BANK iob GO - review-only servable; 3 real + synth REVIEW e2e (NO_INDEPENDENT_ANCHOR)
+[V3] BANK apgv GO - review-only servable; 3 real + synth REVIEW e2e; APGB override refused
+[V3] BANK south_indian GO - review-only servable; 3 real REVIEW e2e; fullbrand synth detects sib not indian_bank
+[V3] BANK pnb GO - review-only servable; 3 real REVIEW e2e
+[V3] DONE 202faec - 734-file regression 0 diffs; guard 0 false alarms on 34 workbooks; defect closed; MINOR: integrity_passed=false universal (Decimal->swallowed TypeError, pre-existing)
