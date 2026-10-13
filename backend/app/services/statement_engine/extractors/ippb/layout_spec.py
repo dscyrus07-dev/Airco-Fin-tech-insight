@@ -11,7 +11,7 @@ from ...extraction.layout_spec import LayoutSpec
 IPPB_LAYOUT_1 = LayoutSpec(
     layout_id="ippb_date_tranid_transaction_particulars_withdrwal_deposit_balance",
     bank_key="ippb",
-    bank_markers=("INDIAPOSTPAYMENTSBANK", "IPPB"),
+    bank_markers=("INDIAPOSTPAYMENTSBANK",),
     bank_name="India Post Payments Bank",
     columns={
         "date": (("date",),),
