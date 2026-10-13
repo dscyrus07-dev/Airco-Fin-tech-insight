@@ -131,3 +131,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OV] DONE 2a8fb3f - verification complete: NO-GO merge; 1 regression (d4de1ead paytm foreign-marker via c43e8f1), 1 workbook row-drop (0a05a1f7 hdfc), 8 unresolved markerless csb->federal accepts; all 30 bank statuses confirmed; SERVE_BANKS unchanged; suite 712p/8f pre-existing; PII scan CLEAN
 [PR] START c550bac - promote-1: rebuild onb from merged tip + close gaps on near-READY banks
 [PR] BANK au_sfb READY_TO_SERVE_CANDIDATE 318856d - AU_LAYOUT_2 added; 16/17 v2+VERIFIED (1 no_layout has zero own-bank evidence); audit 16/16 clean; cross-bank 0/388
+[PR] BANK dbs SHADOW_ONLY 87617b7 - opening_balance_re fixes 109/112 REVIEW->VERIFIED; DBS_LAYOUT_2 (branch-code variant) +1 VERIFIED; yield 87.0% < 90% gate: 9 balance-less-layout files are an engine gap; audit 40/40 clean
+[PR] BANK bank_of_maharashtra READY_TO_SERVE_CANDIDATE 87617b7 - L1/L2 ref alternatives + anchors, new L3 (no-ref) + L4 (withdrawals/dd-mm-yy/Cr-suffix); 26/27 routed: 21V+5R, yield 96.3% Vshare 80.8%; audit clean (2 sign-regex artifacts, anchors match); cross-bank 0/388

@@ -69,3 +69,19 @@ def test_airtel_pb_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+def test_airtel_pb_opening_row_totals_and_closing_day_furniture():
+    rows = _rows()
+    ws = list(MARKER) + header(SPEC)
+    ws += [w("05-01-2024", 30, 212), w("Opening Balance", 140, 212), rt("1,000.00", 500, 212)]
+    for r in rows:
+        ws += r
+    ws += [w("08-01-2024", 30, 272), w("Closing Day Balance", 140, 272), rt("1,500.00", 500, 272)]
+    ws += [w("Total Credits", 240, 288), rt("1,000.00", 330, 288),
+           w("Total Debits", 460, 288), rt("500.00", 540, 288)]
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2"
+    txns = r.result.transactions
+    assert len(txns) == 3 and [str(t.balance) for t in txns] == ["900.00", "1900.00", "1500.00"]
+    assert r.result.verification_status in ("VERIFIED", "REVIEW")

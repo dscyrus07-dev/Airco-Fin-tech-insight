@@ -1,4 +1,4 @@
-# airtel_pb — onboarding notes
+# airtel_pb â€” onboarding notes
 
 Status: **SHADOW_ONLY**
 
@@ -24,5 +24,17 @@ distinct fingerprints: 3 | top share: 57.1%
 
 - NEW spec `airtelpb_date_transactiontype_particulars_withdrawal_deposit_balance` + `airtel_pb`
   detector entry (AIRP). Detector identifies airtel_pb VERY_HIGH on 4/7 files (LOW x2).
-- Post-spec folder measure (7 text): 4 v2 (all FAILED on 1-2 schema-error rows each � real edge rows,
+- Post-spec folder measure (7 text): 4 v2 (all FAILED on 1-2 schema-error rows each — real edge rows,
   rows otherwise parse), 3 no_layout (other fingerprints uncovered).
+
+## promote-1 changes
+
+- `opening_row_balance_only=True`: the dated `Opening Balance` first row (label lands in the
+  ref band, not narration) is dropped and its balance becomes the printed opening.
+- `closing_balance_re` widened to `Closing(?:Day)?Balance`: the dated `Closing Day Balance`
+  last row is consumed as the printed closing instead of failing schema.
+- `totals_line_re` + `totals_credit_first` for the `Total Credits | Total Debits` line.
+- Result: 4/4 routed files FAILED(`schema errors`) -> VERIFIED (68/807/700/70 rows).
+  3 fallback files are credit-billing documents (previous-dues/amount-payable tables),
+  not deposit tables -- correctly unrouted; not a layout gap.
+- Stays SHADOW_ONLY: corpus is 7 files and 3 are a different document class.
