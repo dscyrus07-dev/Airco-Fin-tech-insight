@@ -69,3 +69,43 @@ def test_central_bank_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+from app.services.statement_engine.extractors.central_bank.layout_spec import (
+    CBI_LAYOUT_3 as SPEC3)
+
+
+def _header3(top=200.0):
+    return [
+        w("Value", 41, top), w("Post", 91, top),
+        w("Details", 144, top + 6), w("Chq.No.", 264, top + 6),
+        w("Debit", 350, top + 6), w("Credit", 453, top + 6), w("Balance", 527, top + 6),
+        w("Date", 41, top + 12), w("Date", 91, top + 12),
+    ]
+
+
+def _row3(top, narr="TRF TO 12345", debit=None, credit=None, balance="500.00 Cr"):
+    ws = [w("01/06/26", 27, top), w("01/06/26", 81, top), w(narr, 134, top), w("-", 309, top)]
+    if debit:
+        ws += [rt(debit, 415, top)]
+    if credit:
+        ws += [rt(credit, 500, top)]
+    ws += [rt(balance, 597, top)]
+    return ws
+
+
+def test_central_bank_l3_brought_forward_verified():
+    ws = list(MARKER)
+    ws += [w("Statement", 30, 100), w("From", 100, 100), w("01/11/2023", 150, 100),
+           w("to", 230, 100), w("19/02/2024", 270, 100)]
+    ws += _header3()
+    ws += [w("BROUGHT FORWARD :", 144, 188), rt("1,769.09Cr", 635, 188)]
+    ws += _row3(230, credit="2,000.00", balance="3,769.09 Cr")
+    ws += _row3(246, debit="100.00", balance="3,669.09 Cr")
+    ws += _row3(262, credit="50.00", balance="3,719.09 Cr")
+    ws += [w("*** END OF STATEMENT ***", 36, 300)]
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC3.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3
+    assert str(txns[-1].balance) == "3719.09"
