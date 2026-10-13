@@ -25,6 +25,12 @@ OTHER_BANK_MARKERS = (
 )
 
 
+def _strip(text: str, wider: Sequence[str]) -> str:
+    for w in sorted(wider, key=len, reverse=True):
+        text = text.replace(w, " ")
+    return text
+
+
 @dataclass
 class Resolution:
     """Outcome of layout resolution. spec is None when no layout may be used; status says why."""
@@ -176,9 +182,14 @@ class LayoutRegistry:
         doc_hit: Dict[str, bool] = {}
         for spec in hits:
             own_markers = {m for sp in self._specs.values() if sp.bank_key == spec.bank_key for m in sp.bank_markers}
-            own = any(m in region for m in own_markers)
-            doc_own = any(m in evidence_text for m in own_markers)
             others = [m for m in known if m not in own_markers]
+            # a marker that only appears inside a longer marker of another bank is not evidence of this bank
+            # (INDIANBANK inside SOUTHINDIANBANK)
+            wider = [o for o in others if any(m != o and m in o for m in own_markers)]
+            own_region = _strip(region, wider)
+            own_evidence = _strip(evidence_text, wider)
+            own = any(m in own_region for m in own_markers)
+            doc_own = any(m in own_evidence for m in own_markers)
             foreign = any(m in region for m in others)
             foreign_doc = any(m in furniture for m in others)
             own_hit[spec.layout_id], doc_hit[spec.layout_id] = own, doc_own
