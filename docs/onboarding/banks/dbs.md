@@ -47,3 +47,22 @@ Remaining gaps (engine/corpus, not spec-fixable):
   `0e3bc943` (consolidated-accounts certificate, not a transaction statement),
   4 scanned + 2 locked -> corpus problems.
 - `fe125181` REVIEW as described above.
+
+## Unblock pass (devin/unblock-1)
+
+Re-measure at unblock tip (137 files): 110 VERIFIED + 4 REVIEW + 6 FAILED v2;
+11 no_layout; 2 locked; 3 scanned; 1 NO_ROWS. Yield 114/~130 = ~88% <90%;
+Vshare 110/114 = 96.5%. Remaining gap is entirely engine-class, not spec:
+- balance-less `Date | Details of Transaction | Debit | Credit` variant (no
+  balance column; LayoutSpec requires balance_column): ~9 files
+  (`4e83e770`,`660bdbec`,`80f46ade`,`0d4c198e`,`4b87612b`,`c6fefe46`,
+  `fe8199d0`,`01de47c4`,`d408b98c`).
+- multi-account / mid-document summary statements: FAILED chain
+  `2cce319e`,`fa24a579`,`ac939c61`,`e22fdd6a`,`6d986d74`,`e7494071`; honest
+  REVIEW `c898cb0f`,`af0a1396`,`b7f2b63c` (second account section unread).
+- `fe125181` honest REVIEW (no printed anchors).
+- `b4a408e2` zero-transaction statement -> NO_ROWS (honest).
+- excluded as non-statement/unreadable: `0e3bc943` (1-page consolidated
+  summary), `2afd8fc8` (scanned, 1 word).
+Still **SHADOW_ONLY**; needs the balance-less and multi-account engine
+capabilities listed in ENGINE_GAPS.md.

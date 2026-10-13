@@ -69,3 +69,90 @@ def test_yes_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+# ---- newer export family: literal 0.00 in the unused side, dated B/F opening row,
+# "Opening Balance: ... Closing Balance:" summary tail, yesbank.in footer marker ----
+from app.services.statement_engine.extractors.yes.layout_spec import YES_LAYOUT_3 as SPEC3
+
+
+def _summary_line(top, opening="1,000.00", wd="500.00", dep="1,000.00", closing="1,500.00"):
+    x = 30.0
+    ws = []
+    for t in ("Opening", "Balance:", opening, "Total", "Withdrawals:", wd,
+              "Total", "Deposits:", dep, "Closing", "Balance:", closing):
+        ws.append(w(t, x, top))
+        x += 5.5 * len(t) + 3
+    return ws
+
+
+def _bf_row(spec, top, balance):
+    return row(spec, top, "B/F", balance=balance)
+
+
+def test_yes_zero_amount_unused_side_parses():
+    rows = [row(SPEC, 220, "UPI DR", debit="100.00", credit="0.00", balance="900.00"),
+            row(SPEC, 236, "UPI CR", debit="0.00", credit="1,000.00", balance="1,900.00")]
+    r = route_pages(_page(rows), DEFAULT_REGISTRY, bank_key="yes")
+    assert r.status == "v2" and r.layout_id == SPEC.layout_id
+    assert len(r.result.transactions) == 2
+
+
+def test_yes_bf_opening_row_plus_summary_verifies():
+    ws = list(MARKER) + header(SPEC)
+    ws += _bf_row(SPEC, 220, "1,000.00")
+    ws += [
+        *row(SPEC, 236, "UPI DR", debit="100.00", credit="0.00", balance="900.00"),
+        *row(SPEC, 252, "UPI CR", debit="0.00", credit="1,000.00", balance="1,900.00"),
+        *row(SPEC, 268, "ATM DR", debit="400.00", credit="0.00", balance="1,500.00"),
+    ]
+    ws += _summary_line(300)
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY, bank_key="yes")
+    assert r.status == "v2" and r.layout_id == SPEC.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3
+    assert all("b/f" not in str(t.description).lower() for t in txns)
+    assert r.result.metadata.extras.get("verdict") == "VERIFIED"
+
+
+def test_yes_l3_summary_anchors_verify():
+    ws = list(MARKER) + header(SPEC3)
+    ws += _bf_row(SPEC3, 220, "1,000.00")
+    ws += [
+        *row(SPEC3, 236, "UPI DR", debit="100.00", credit="0.00", balance="900.00"),
+        *row(SPEC3, 252, "UPI CR", debit="0.00", credit="1,000.00", balance="1,900.00"),
+        *row(SPEC3, 268, "ATM DR", debit="400.00", credit="0.00", balance="1,500.00"),
+    ]
+    ws += _summary_line(300)
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY, bank_key="yes")
+    assert r.status == "v2" and r.layout_id == SPEC3.layout_id
+    assert r.result.metadata.extras.get("verdict") == "VERIFIED"
+
+
+def test_yes_domain_marker_routes_without_wordmark():
+    ws = [w("care@yesbank.in", 30, 700)] + header(SPEC)
+    ws += _bf_row(SPEC, 220, "1,000.00")
+    ws += [
+        *row(SPEC, 236, "UPI DR", debit="100.00", credit="0.00", balance="900.00"),
+        *row(SPEC, 252, "UPI CR", debit="0.00", credit="1,000.00", balance="1,900.00"),
+        *row(SPEC, 268, "ATM DR", debit="400.00", credit="0.00", balance="1,500.00"),
+    ]
+    ws += _summary_line(300)
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC.layout_id
+
+
+def test_yes_trailing_dated_section_not_swallowed():
+    ws = list(MARKER) + header(SPEC)
+    ws += _bf_row(SPEC, 220, "1,000.00")
+    ws += [
+        *row(SPEC, 236, "UPI DR", debit="100.00", credit="0.00", balance="900.00"),
+        *row(SPEC, 252, "UPI CR", debit="0.00", credit="1,000.00", balance="1,900.00"),
+        *row(SPEC, 268, "ATM DR", debit="400.00", credit="0.00", balance="1,500.00"),
+    ]
+    ws += _summary_line(300)
+    ws += [w("20/11/2021", 30, 330), w("FD", 140, 330), w("CERT", 170, 330),
+           rt("2,00,000.00", 570, 330)]
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY, bank_key="yes")
+    assert r.status == "v2"
+    assert len(r.result.transactions) == 3

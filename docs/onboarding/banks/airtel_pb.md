@@ -38,3 +38,13 @@ distinct fingerprints: 3 | top share: 57.1%
   3 fallback files are credit-billing documents (previous-dues/amount-payable tables),
   not deposit tables -- correctly unrouted; not a layout gap.
 - Stays SHADOW_ONLY: corpus is 7 files and 3 are a different document class.
+
+## unblock-1 update
+
+- Re-verified at tip: 4 v2 VERIFIED (`bb24712d` 700, `258830dc` 68, `544c29ce` 807,
+  `d9ed04ad` 70 rows), 3 no_layout are postpaid/fibre MONTHLY BILLING statements
+  (`60130945`, `82e92232`, `b7eb2e45`) — dues/payable docs, not deposit statements:
+  proven mislabels, excluded (class D).
+- Gates on valid files: det 4/4, yield 4/4 VERIFIED (100%), cross 0, audit clean
+  (independently re-audited in verify-2). Evidence base is thin — 4 files.
+- Status: **READY_TO_SERVE_CANDIDATE** (thin-corpus caveat for the independent check).

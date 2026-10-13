@@ -38,3 +38,15 @@ distinct fingerprints: 13 | top share: 37.3%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 15 of 144 VERIFIED | ok: 15 | disagreements: 0
+
+## Unblock pass (prompt-29, current branch)
+
+- 113 no_layout fingerprinted in full: ~100 are the Federal/Jupiter app-statement family
+  (`Reference ID | Transaction details | Amount(₹) | Balance(₹)`) where the date prints once per
+  day-group as a section header and transaction rows carry no date word -> needs section-date
+  inheritance; the engine starts a row only on a dated line. ENGINE GAP (generic: "dated section
+  headers grouping undated rows"). A doubled-glyph render of the same layout also exists.
+- ~16 are balance-less `Date | Description | Amount | Type(Dr/Cr)` statements -> no balance column
+  (same engine gap as dbs/idbi). No safe spec change possible for either family.
+- misfiled/other: `a18ccc97` (address-doc, not a statement), GL-style prints.
+- status unchanged: SHADOW_ONLY; Vshare 144/194 stays honest.

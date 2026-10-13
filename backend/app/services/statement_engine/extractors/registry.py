@@ -20,14 +20,14 @@ from .dbs.layout_spec import DBS_LAYOUT_1, DBS_LAYOUT_2
 from .citibank.layout_spec import CITIBANK_LAYOUT_1
 from .kvb.layout_spec import KVB_LAYOUT_1
 from .hsbc.layout_spec import HSBC_LAYOUT_1
-from .indusind.layout_spec import INDUSIND_LAYOUT_1
-from .idbi.layout_spec import IDBI_LAYOUT_1, IDBI_LAYOUT_2
+from .indusind.layout_spec import INDUSIND_LAYOUT_1, INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3
+from .idbi.layout_spec import IDBI_LAYOUT_1, IDBI_LAYOUT_2, IDBI_LAYOUT_3, IDBI_LAYOUT_4, IDBI_LAYOUT_5
 from .pnb.layout_spec import PNB_LAYOUT_1
-from .yes.layout_spec import YES_LAYOUT_1, YES_LAYOUT_2, YES_LAYOUT_3
+from .yes.layout_spec import YES_LAYOUT_1, YES_LAYOUT_2, YES_LAYOUT_3, YES_LAYOUT_4
 from .iob.layout_spec import IOB_LAYOUT_1, IOB_LAYOUT_2
 from .south_indian.layout_spec import SIB_LAYOUT_1
-from .central_bank.layout_spec import CBI_LAYOUT_1, CBI_LAYOUT_2
-from .equitas.layout_spec import EQUITAS_LAYOUT_1
+from .central_bank.layout_spec import CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3
+from .equitas.layout_spec import EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAYOUT_3
 from .city_union.layout_spec import CUB_LAYOUT_1, CUB_LAYOUT_2
 from .ujjivan.layout_spec import UJJIVAN_LAYOUT_1
 from .bom.layout_spec import BOM_LAYOUT_1, BOM_LAYOUT_2, BOM_LAYOUT_3, BOM_LAYOUT_4
@@ -35,7 +35,7 @@ from .bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2
 from .au_sfb.layout_spec import AU_LAYOUT_1, AU_LAYOUT_2
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
-from .csb.layout_spec import CSB_LAYOUT_1
+from .csb.layout_spec import CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3
 from .airtel_pb.layout_spec import AIRTEL_LAYOUT_1
 from .ippb.layout_spec import IPPB_LAYOUT_1
 from .dhanlaxmi.layout_spec import DHANLAXMI_LAYOUT_1
@@ -62,15 +62,18 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # Balance", dd-Mmm-yyyy, '-' empties) — anchorless, REVIEW ceiling
                                    PAYTM_LAYOUT_2, SCB_LAYOUT_1, SCB_LAYOUT_2, INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2,
                                    # INDIAN_BANK_LAYOUT_3 parked: 62%/56% trusted on build/hold-out (Mmm-first sub-variant embeds balances inside narration)
-                                   KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, IOB_LAYOUT_1, IOB_LAYOUT_2,
+                                   KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1,
+                                   # unblock-1: IndusInd newer export ("Chq No/Ref No" ref title, B/F+C/F anchor rows,
+                                   # 0.00-empty money cells; dashed and space-separated date prints)
+                                   INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3, IDBI_LAYOUT_1, IDBI_LAYOUT_2, IDBI_LAYOUT_4, IDBI_LAYOUT_5, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, YES_LAYOUT_4, IOB_LAYOUT_1, IOB_LAYOUT_2,
                                    # YES_LAYOUT_2 parked: wrapped 'Running|Balance' header routes 24% trusted (5V/16F chain+side) on fresh 97-file re-measure
-                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1,
+                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3, EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAYOUT_3, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1,
                                    # promote-1: AU newer export (wrapped 2-line header, rupee-marked money cols, AUBANK.IN footer marker)
                                    AU_LAYOUT_2,
                                    DBS_LAYOUT_2,
                                    BOM_LAYOUT_3, BOM_LAYOUT_4, DCB_LAYOUT_1, APGV_LAYOUT_1,
                                    # onboard-all: CSB "Statement of Account" export (federal-shaped; CSB marker evidence)
-                                   CSB_LAYOUT_1,
+                                   CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3,
                                    # onboard-all: UCO "Statement of Account" exports (with/without instrument column)
                                    UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1],
                                   foreign_markers=OTHER_BANK_MARKERS)

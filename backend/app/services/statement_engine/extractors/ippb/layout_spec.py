@@ -34,7 +34,7 @@ IPPB_LAYOUT_1 = LayoutSpec(
     summary_label_text="",
     summary_expected=False,
     header_repeats=True,
-    opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]*\.\d{2})"),
+    opening_balance_re=re.compile(r"(?i)OpeningBalance:?(-?[\d,]*\.\d{2})"),
     anchor_full=True,
     date_left_pad=10.0,
 )

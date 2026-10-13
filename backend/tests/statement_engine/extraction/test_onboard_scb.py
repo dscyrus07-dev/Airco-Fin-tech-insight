@@ -69,3 +69,25 @@ def test_scb_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+def test_scb_ifsc_marker_routes_when_wordmark_absent():
+    # SCB prints no "Standard Chartered" wordmark on these exports; the account block's "IFSC: SCBL..." is the
+    # own-bank evidence. A foreign bank name in the header region (e.g. an address "NEAR ICICI BANK ATM") must not
+    # refuse the route once own evidence exists.
+    ws = [w("IFSC:", 30, 40), w("SCBL0036001", 90, 40), w("NEAR", 200, 40), w("ICICI", 260, 40), w("BANK", 310, 40)]
+    ws += header(SPEC)
+    for r in _rows():
+        ws += r
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC.layout_id
+
+
+def test_scb_other_bank_ifsc_does_not_count_as_own():
+    # a labelled foreign IFSC is not own evidence and a matching foreign marker elsewhere refuses the route
+    ws = [w("IFSC:", 30, 40), w("HDFC0001234", 90, 40), w("HDFC", 200, 40), w("BANK", 255, 40)]
+    ws += header(SPEC)
+    for r in _rows():
+        ws += r
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert not (r.status == "v2" and r.layout_id == SPEC.layout_id)

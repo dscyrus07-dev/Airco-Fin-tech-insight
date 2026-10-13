@@ -69,3 +69,67 @@ def test_idbi_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+# ---- passbook variants: "Cheque No | Debit | Credit | Closing Balance" (dd/mm/yy) and the
+# "Chq No. | Chq Date" family with Cr-suffixed balances + Opening/Closing Balance anchors ----
+from app.services.statement_engine.extractors.idbi.layout_spec import (
+    IDBI_LAYOUT_4 as SPEC4, IDBI_LAYOUT_5 as SPEC5)
+
+
+def _rows4():
+    return [
+        row(SPEC4, 220, "TWDSGB", credit="450.00", balance="8,952.81  CR", date="01/06/22"),
+        row(SPEC4, 236, "UPIDR", debit="2,000.00", balance="6,952.81  CR", date="02/06/22"),
+    ]
+
+
+def _page4(extra=None):
+    ws = list(MARKER)
+    if extra:
+        ws += extra
+    ws += header(SPEC4)
+    for r in _rows4():
+        ws += r
+    return [Page(ws, W)]
+
+
+def test_idbi_l4_rows_parse_crsuffix_balances():
+    r = route_pages(_page4(), DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC4.layout_id
+    assert len(r.result.transactions) == 2
+    assert [str(t.balance) for t in r.result.transactions] == ["8952.81", "6952.81"]
+
+
+def test_idbi_l4_opening_as_on_anchor():
+    ws = [w("Opening", 30, 150), w("Balance", 90, 150), w("As", 150, 150), w("On", 170, 150),
+          w("01/06/2022", 200, 150), w(":8,502.81", 280, 150), w("CR", 340, 150)]
+    r = route_pages([Page(ws + _page4()[0].words, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC4.layout_id
+
+
+def test_idbi_l4_foreign_marker_refused():
+    foreign = [w("HDFC", 30, 40), w("BANK", 60, 40), w("HDFC0001234", 30, 56)]
+    r = route_pages(_page4(extra=foreign), DEFAULT_REGISTRY)
+    assert not (r.status == "v2" and r.layout_id == SPEC4.layout_id)
+
+
+def _page5():
+    ws = list(MARKER) + header(SPEC5)
+    ws += [w("Opening", 81, 216), w("Balance", 130, 216), w("463.00Cr", 527, 216)]
+    ws += [
+        *row(SPEC5, 236, "ACHAPBS", credit="3.95", balance="466.95Cr"),
+        *row(SPEC5, 252, "SALARYCR", credit="1,000.00", balance="1,466.95Cr"),
+        *row(SPEC5, 268, "ATM DR", debit="400.00", balance="1,066.95Cr"),
+    ]
+    ws += [w("Closing", 30, 316), w("Balance", 90, 316), w("1,403.95", 356, 316),
+           w("403.95", 458, 316), w("1,066.95", 524, 316), w("Cr", 561, 316)]
+    return [Page(ws, W)]
+
+
+def test_idbi_l5_full_anchors_verify():
+    r = route_pages(_page5(), DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC5.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3
+    assert r.result.metadata.extras.get("verdict") == "VERIFIED"

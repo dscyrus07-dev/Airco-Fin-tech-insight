@@ -1,0 +1,15 @@
+{
+  "id": "apgv",
+  "display_name": "AP Grameena Vikas Bank",
+  "names": [
+    "ap grameena vikas bank"
+  ],
+  "short_names": [],
+  "ifsc_prefixes": [
+    "APGV"
+  ],
+  "domains": [],
+  "statement_phrases": [],
+  "processor_key": null,
+  "corpus_folder": "APGV Bank"
+}

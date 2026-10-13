@@ -141,3 +141,23 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [V2] BANK au_sfb NO-GO - all engine gates pass (16/17 VERIFIED, audit clean, cross 0) but served workbook corrupted on 7b2023ab: base_processor dup-key order-rebuild leak, 142 rows vs engine 140, wrong closing balance, integrity_passed=false under VERIFIED
 [V2] BANK bank_of_maharashtra NO-GO - all engine gates pass (21V+5R, audit clean, cross 0) but same shared serve-path defect is latent: 6 corpus files carry duplicate keys
 [V2] DONE 93d0556 - NO-GO both candidates: all engine gates pass but shared base_processor dup-key row-leak corrupts served workbooks (7b2023ab: 142/140 rows, wrong closing, integrity=false under VERIFIED); 9/46 corpus files carry trigger; SERVE_BANKS restored to defaults; onb on tip image
+[UB] START 54f51ab - unblock-1: triage + fix 22 SHADOW_ONLY + 2 REVIEW_ONLY + APGV (base integration/v2-waves @ 54f51ab)
+[UB] BANK ippb SHADOW_ONLY - opening_balance_re colon fix (correctness, verdict unchanged); REVIEW ceiling = 5-col label:value summary w/ unmapped txn-count + merged amounts (engine gap); 5128847f custom-font unreadable excluded
+[UB] BANK airtel_pb READY_TO_SERVE_CANDIDATE - 4/4 VERIFIED on valid files; 3 unrouted are postpaid/fibre billing docs (proven mislabels); thin corpus caveat; already wired
+[UB] BANK uco SHADOW_ONLY - 3R+6F all routed; FAILEDs are honest doc inconsistencies/unreadable cells; no spec gap
+[UB] BANK equitas_sfb SHADOW_ONLY 08a393a
+[UB] BANK dbs SHADOW_ONLY - remaining gap purely engine-class: ~9 balance-less variant files + 6 multi-account FAILED + empty-statement NO_ROWS; Vshare 96.5% but yield ~88% <90%
+[UB] BANK hsbc SHADOW_ONLY - 57/91 scanned (D); 22 honest REVIEW (no printed anchors); 9 UK sparse-balance variant = engine gap; 2 non-statement docs
+[UB] BANK ujjivan_sfb SHADOW_ONLY - Vshare 0% (no printed anchors); no_layout = balance-less Type layout + fully-glued monospace export + misfiled IDBI doc; FAILEDs honest
+
+[UB] BANK indusind SHADOW_ONLY - add INDUSIND_LAYOUT_2/3 (Chq No/Ref No family, B/F+C/F anchors; 12 files recovered to VERIFIED, audit clean, cross 0/364)
+
+[UB] BANK standard_chartered SHADOW_ONLY - IFSC:SCBL own-marker on L1/L2 (+13 VERIFIED, audit clean, cross 0/364)
+
+[UB] BANK csb SHADOW_ONLY - L2 ePassbook + L3 TRANS/VALUE variants (1 VERIFIED new; FAILEDs honest: unprinted balances/stray date fragment; 2 markerless bank_unconfirmed; 8 misfiled Federal docs correctly routed; cross 0/393)
+
+[UB] BANK dhanlaxmi SHADOW_ONLY - fp-A confirmed engine gap (above-row amount + inline Balance: label + 3-line header); fp-C spec-able but space-glyph balances -> honest FAILED, not added; yield ceiling 47% stands
+
+[UB] BANK iob REVIEW_ONLY_SERVABLE - decide_serve REVIEW+no-legacy serves v2 needs_review; synthetic e2e workbook shows REVIEW/Needs review:yes/NO_INDEPENDENT_ANCHOR (onb, extras=iob)
+
+[UB] BANK south_indian REVIEW_ONLY_SERVABLE - same e2e honest REVIEW serve; latent marker collision noted (INDIANBANK substring inside SOUTHINDIANBANK if brand ever prints)

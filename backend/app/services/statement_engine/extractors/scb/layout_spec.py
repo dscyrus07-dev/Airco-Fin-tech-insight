@@ -11,7 +11,7 @@ from ...extraction.layout_spec import LayoutSpec
 SCB_LAYOUT_1 = LayoutSpec(
     layout_id="scb_date_valuedate_description_cheque_deposit_withdrawal_balance",
     bank_key="scb",
-    bank_markers=("STANDARDCHARTERED",),
+    bank_markers=("STANDARDCHARTERED", "IFSC:SCBL"),   # prints never carry the brand wordmark; the account block's IFSC label+bank code is the own-bank evidence,
     merge_statements=True,
     bank_name="Standard Chartered Bank",
     columns={

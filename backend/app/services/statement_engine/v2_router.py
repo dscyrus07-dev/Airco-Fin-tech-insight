@@ -31,6 +31,7 @@ DETECTOR_TO_SPEC_BANK = {
     "airtel_pb": "airtel_pb",
     "ippb": "ippb",
     "dhanlaxmi": "dhanlaxmi",
+    "apgv": "apgv",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 

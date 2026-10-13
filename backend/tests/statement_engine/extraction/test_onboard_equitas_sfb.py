@@ -69,3 +69,67 @@ def test_equitas_sfb_unread_dated_line_caps_at_review():
         extras = r.result.metadata.extras
         assert extras.get("verdict") != "VERIFIED" or \
             any("unread" in str(x) for x in extras.get("warnings", []))
+
+
+from app.services.statement_engine.extractors.equitas.layout_spec import (
+    EQUITAS_LAYOUT_2 as SPEC2, EQUITAS_LAYOUT_3 as SPEC3)
+
+
+def _header2(top=200.0):
+    return [
+        w("Tran Date", 23, top), w("Value Date", 95, top), w("Ref", 163, top),
+        w("Description", 253, top), w("Debits", 383, top), w("Credits", 460, top),
+        w("Balance", 523, top),
+    ]
+
+
+def _row2(top, narr="UPI REF 1234", debit="0.00", credit=None, balance="1,000.00", ref="RF001"):
+    ws = [w("05-Jan-24", 23, top), w("05-Jan-24", 95, top), w(ref, 163, top),
+          w(narr, 253, top), rt(debit, 401, top)]
+    ws += [rt(credit, 487, top)] if credit else [rt("0.00", 487, top)]
+    ws += [rt(balance, 550, top)]
+    return ws
+
+
+def test_equitas_l2_trandate_rows_parse_and_chain():
+    ws = list(MARKER) + _header2()
+    ws += _row2(220, narr="B/F ...", debit="0.00", credit="866.74", balance="866.74")
+    ws += _row2(236, debit="0.00", credit="314.00", balance="1,180.74")
+    ws += _row2(252, debit="100.00", balance="1,080.74")
+    ws += [w("Statement Summary:", 30, 300), w("******END OF STATEMENT******", 30, 320)]
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC2.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 2
+
+
+def _header3(top=200.0):
+    return [
+        w("Date of TXN", 46, top), w("Value date of", 110, top), w("Reference or", 180, top),
+        w("Narration", 288, top), w("Debit", 392, top), w("Credit", 455, top), w("Balance", 518, top),
+        w("TXN", 129, top + 12), w("cheque no", 185, top + 12),
+        w("(`)", 399, top + 12), w("(`)", 463, top + 12), w("(`)", 529, top + 12),
+    ]
+
+
+def _row3(top, narr="UPI REF NO 1234", debit=None, credit=None, balance="500.00"):
+    ws = [w("01/12/2023", 47, top), w("01/12/2023", 113, top), w(narr, 247, top)]
+    if debit:
+        ws += [rt(debit, 432, top)]
+    if credit:
+        ws += [rt(credit, 496, top)]
+    ws += [rt(balance, 565, top)]
+    return ws
+
+
+def test_equitas_l3_wrapped_txn_header_verified():
+    ws = list(MARKER) + _header3()
+    ws += [w("OPENING BALANCE", 247, 216), rt("1.95", 565, 216)]
+    ws += _row3(230, credit="500.00", balance="501.95")
+    ws += _row3(246, debit="100.00", balance="401.95")
+    ws += _row3(262, credit="20.00", balance="421.95")
+    r = route_pages([Page(ws, W)], DEFAULT_REGISTRY)
+    assert r.status == "v2" and r.layout_id == SPEC3.layout_id
+    txns = r.result.transactions
+    assert len(txns) == 3
+    assert str(txns[-1].balance) == "421.95"

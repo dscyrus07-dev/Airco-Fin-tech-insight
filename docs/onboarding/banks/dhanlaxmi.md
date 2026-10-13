@@ -26,7 +26,21 @@ distinct fingerprints: 3 | top share: 53.3%
   `dhanlaxmi` detector entry (DLXB / dhanbank domains). Detector: VERY_HIGH on all 15 files.
 - Real rows print literal `0.00` in the unused debit/credit cell -> `zero_amount_is_empty` set.
 - Post-spec measure (15 text): 5 v2 REVIEW, 10 no_layout.
-  Uncovered: fp-A x8 (interleaved layout printing the running balance on its OWN line after the row �
+  Uncovered: fp-A x8 (interleaved layout printing the running balance on its OWN line after the row �
   needs a balance-as-continuation capability the engine does not have today -> stayed fallback, not built);
   fp-C x2 (`debit amount | credit amount` titles, `srno` column).
 - VERIFIED not reachable yet: routed files are REVIEW (self-derived chain).
+
+## [UB] re-check (fp-A / fp-C)
+
+- fp-A x8 (`Txn Date`/`Value Date`/`Description`/`Cheque-RefNo`/`Txn Amount` titles scattered across
+  THREE interleaved header lines): each transaction prints amount+`Dr/Cr` on the narration line ABOVE
+  the dated line and the running balance inline as `Balance :  n.nn` text inside the dated row —
+  `continuation_amounts` cannot reach backwards and no column anchor exists for the balance. Engine
+  gap (needs: above-row amount capture + inline-labelled balance + 3-line header). Parked.
+- fp-C x2 (`Date|Cheque/Ref No|Description|Debit Amount|Credit Amount|Balance`, dd/mm/yyyy, `B/F ...`
+  opening row, `Total d.dd c.cc` tail): shape is spec-able BUT most data rows print the balance cell
+  as a space glyph (empty word at the balance x; digits absent from the text layer). A spec would land
+  honest FAILED on missing balances — no gate improvement; not added.
+- fp-B x5 remain REVIEW via `dhanlaxmi_date_valuedate_description_chequeno_debits_credits_balance`.
+- Yield ceiling ~47% unchanged; status stays SHADOW_ONLY. No engine/spec edits this pass.
