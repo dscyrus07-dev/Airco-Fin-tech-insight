@@ -141,3 +141,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK ippb SHADOW_ONLY - opening_balance_re colon fix (correctness, verdict unchanged); REVIEW ceiling = 5-col label:value summary w/ unmapped txn-count + merged amounts (engine gap); 5128847f custom-font unreadable excluded
 [UB] BANK airtel_pb READY_TO_SERVE_CANDIDATE - 4/4 VERIFIED on valid files; 3 unrouted are postpaid/fibre billing docs (proven mislabels); thin corpus caveat; already wired
 [UB] BANK uco SHADOW_ONLY - 3R+6F all routed; FAILEDs are honest doc inconsistencies/unreadable cells; no spec gap
+[UB] BANK equitas_sfb SHADOW_ONLY 08a393a
