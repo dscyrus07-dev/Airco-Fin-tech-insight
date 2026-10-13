@@ -145,3 +145,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK dbs SHADOW_ONLY - remaining gap purely engine-class: ~9 balance-less variant files + 6 multi-account FAILED + empty-statement NO_ROWS; Vshare 96.5% but yield ~88% <90%
 [UB] BANK hsbc SHADOW_ONLY - 57/91 scanned (D); 22 honest REVIEW (no printed anchors); 9 UK sparse-balance variant = engine gap; 2 non-statement docs
 [UB] BANK ujjivan_sfb SHADOW_ONLY - Vshare 0% (no printed anchors); no_layout = balance-less Type layout + fully-glued monospace export + misfiled IDBI doc; FAILEDs honest
+
+[UB] BANK indusind SHADOW_ONLY - add INDUSIND_LAYOUT_2/3 (Chq No/Ref No family, B/F+C/F anchors; 12 files recovered to VERIFIED, audit clean, cross 0/364)
