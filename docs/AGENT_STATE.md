@@ -151,3 +151,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK standard_chartered SHADOW_ONLY - IFSC:SCBL own-marker on L1/L2 (+13 VERIFIED, audit clean, cross 0/364)
 
 [UB] BANK csb SHADOW_ONLY - L2 ePassbook + L3 TRANS/VALUE variants (1 VERIFIED new; FAILEDs honest: unprinted balances/stray date fragment; 2 markerless bank_unconfirmed; 8 misfiled Federal docs correctly routed; cross 0/393)
+
+[UB] BANK dhanlaxmi SHADOW_ONLY - fp-A confirmed engine gap (above-row amount + inline Balance: label + 3-line header); fp-C spec-able but space-glyph balances -> honest FAILED, not added; yield ceiling 47% stands
