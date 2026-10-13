@@ -35,6 +35,7 @@ DBS_LAYOUT_1 = LayoutSpec(
     secondary_date_column="value_date",
     header_repeats=True,
     opening_row_marker="OPENINGBALANCE",
+    opening_balance_re=re.compile(r"(?i)openingbalance:?(-?[\d,]+\.\d{2})"),
     closing_balance_re=re.compile(r"(?i)^closingbalance:?(-?[\d,]+\.\d{2})$"),
     anchor_full=True,
     end_markers=("***ENDOFSTATEMENT",),
@@ -44,3 +45,43 @@ DBS_LAYOUT_1 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 DBS_LAYOUT_1.validate()
+
+DBS_LAYOUT_2 = LayoutSpec(
+    layout_id="dbs_transactiondate_valuedate_branchcode_description_chequereferencenumber_debit_credit_balance",
+    bank_key="dbs",
+    bank_markers=("DBSBANK",),
+    bank_name="DBS Bank",
+    columns={
+        "date": (("transaction", "date"), ("transactiondate",)),
+        "value_date": (("value", "date"), ("valuedate",)),
+        "branch_code": (("branch", "code"), ("branchcode",)),
+        "narration": (("description",),),
+        "ref": (("chequereference", "number"), ("chequereference",), ("chequereferencenumber",)),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "value_date", "branch_code", "narration", "ref"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
+    date_format="%d/%m/%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"(?i)periodfrom:?(\d{2}/\d{2}/\d{4})to:?(\d{2}/\d{2}/\d{4})"),   # prints as two separate
+    period_date_format="%d/%m/%Y",                                                      # lines -> stays unmatched
+    summary_marker="^SUMMARY",
+    summary_label_text="",
+    summary_expected=False,
+    secondary_date_column="value_date",
+    header_repeats=True,
+    header_wraps=True,
+    opening_balance_re=re.compile(r"(?i)openingbalance[^0-9]*?INR(-?[\d,]+\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)closingbalance[^0-9]*?INR(-?[\d,]+\.\d{2})"),
+    anchor_full=True,
+    end_markers=("***ENDOFSTATEMENT",),
+    account_label="ACCOUNTNUMBER",
+    row_order="auto",
+    dates_monotonic_expected=False,
+)
+DBS_LAYOUT_2.validate()

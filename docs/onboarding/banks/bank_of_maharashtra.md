@@ -1,6 +1,6 @@
 # bank_of_maharashtra — onboarding notes
 
-Status: **SHADOW_ONLY**
+Status: **READY_TO_SERVE_CANDIDATE** (promote-1) — was SHADOW_ONLY; see promote-1 below.
 
 Folders: Bank of Maharashtra
 Files: 36 pdf | 33 text | 0 scanned | 3 locked
@@ -26,3 +26,23 @@ distinct fingerprints: 6 | top share: 39.4%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 9 of 9 VERIFIED | ok: 9 | disagreements: 0
+
+## promote-1 changes
+
+- `BOM_LAYOUT_1` ref alternatives widened (`cheque`, `chequereference`, `chequeno`)
+  -> routed `b84caf1b`, `c499d608`, `edaba8de`, `c5b35379`.
+- `BOM_LAYOUT_2` ref alternatives widened (`chequerefer`, `chequereference`)
+  + added missing `opening/closing_balance_re` + `anchor_full`
+  -> routed `e775dd3a` (VERIFIED), `ff707aad` (VERIFIED).
+- `BOM_LAYOUT_3` new: `Sr No | Date | Particulars | Debit | Credit | Balance | Channel`
+  (no cheque column) -> `6f062db1` REVIEW, `ae282376` VERIFIED.
+- `BOM_LAYOUT_4` new: `Date | Particulars | Cheque No | Withdrawals | Deposits | Balance`
+  (dd/mm/yy, `0.00` empty cells, `Cr`-suffixed balance, `B/F` opening row, `Total` 3-figure
+  line) -> `0b9c23b9` VERIFIED / 339 rows.
+
+After: 26/27 text files routed — 21 VERIFIED / 5 REVIEW / 0 FAILED.
+Yield 96.3%, VERIFIED share 80.8%. Multi-segment docs whose summary sits mid-document
+keep honest REVIEW (opening anchor out of page1/last scan — engine gap).
+`904ca49e` parked: pathological extract (dates split over 3 lines, fused amounts) — engine gap.
+Audit: 21 VERIFIED audited, 19 clean, 2 false-positive sign-regex artifacts
+(anchors verified to match exactly, e.g. -3,91,483.45 opening).
