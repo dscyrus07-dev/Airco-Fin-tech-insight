@@ -1,6 +1,10 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import type { BankCatalogEntry, BankOption } from '@/lib/statementsApi'
+import { catalogFromBanks, isSelectable } from '@/lib/bankSupport'
+import BankSelect from '@/app/components/bank/BankSelect'
+import BankSupportPanel from '@/app/components/bank/BankSupportPanel'
 
 interface UploadDropzoneProps {
   onFiles: (list: FileList | null) => void
@@ -8,7 +12,8 @@ interface UploadDropzoneProps {
   onAnalyze: () => Promise<void>
   busy: string | null
   error: string | null
-  banks: { id: string; name: string }[]
+  banks: BankOption[]
+  catalog?: BankCatalogEntry[]
   holderName?: string
   onHolderName?: (v: string) => void
   bankHint?: string
@@ -22,6 +27,7 @@ export default function UploadDropzone({
   busy,
   error,
   banks,
+  catalog,
   holderName,
   onHolderName,
   bankHint,
@@ -30,6 +36,7 @@ export default function UploadDropzone({
   const [detailsOpen, setDetailsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragOver, setDragOver] = useState(false)
+  const effectiveCatalog = catalog?.length ? catalog : catalogFromBanks(banks)
 
   return (
     <div className="w-full max-w-2xl min-w-0">
@@ -95,21 +102,18 @@ export default function UploadDropzone({
             </label>
           )}
           {onBankHint && (
-            <label className="block">
+            <div className="block">
               <span className="text-xs font-medium text-neutral-600">I already know the bank</span>
-              <select
+              <BankSelect
+                catalog={effectiveCatalog.filter((b) => isSelectable(b.support_state))}
                 value={bankHint ?? ''}
-                onChange={(e) => onBankHint(e.target.value)}
+                onChange={onBankHint}
+                ariaLabel="Bank hint"
+                placeholder="Detect automatically"
+                showPlaceholder
                 className="mt-1 w-full rounded border px-3 py-2 text-sm"
-              >
-                <option value="">Detect automatically</option>
-                {banks.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+              />
+            </div>
           )}
         </div>
       </details>
@@ -125,12 +129,7 @@ export default function UploadDropzone({
         {busy && <span className="text-sm text-gray-600">{busy}</span>}
       </div>
 
-      {banks.length > 0 && (
-        <p className="mt-3 text-xs text-gray-500">
-          Supported banks: {banks.map((b) => b.name).join(', ')}. Other banks stay unprocessed — you can still pick a
-          bank manually if one was detected incorrectly.
-        </p>
-      )}
+      <BankSupportPanel catalog={effectiveCatalog} />
 
       {error && (
         <div role="alert" className="mt-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-800">

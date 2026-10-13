@@ -150,3 +150,57 @@ def test_banks_list_only_contains_processable_banks(env):
     as_user(app, ALICE)
     ids = {b["id"] for b in client.get("/api/statements/banks").json()["banks"]}
     assert "hdfc" in ids and "yes" not in ids and len(ids) == 13
+
+
+def test_banks_all_banks_additive_and_complete(env, monkeypatch):
+    """Additive: `banks` unchanged (13 processable ids), `all_banks` covers every
+    known bank id with a valid support_state."""
+    app, client, _ = env
+    as_user(app, ALICE)
+    monkeypatch.delenv("STATEMENT_ENGINE_V2_MODE", raising=False)
+    monkeypatch.delenv("STATEMENT_ENGINE_V2_SERVE_BANKS", raising=False)
+
+    body = client.get("/api/statements/banks").json()
+    ids = {b["id"] for b in body["banks"]}
+    assert "hdfc" in ids and "yes" not in ids and len(ids) == 13  # unchanged contract
+
+    all_banks = body["all_banks"]
+    seen = {b["id"] for b in all_banks}
+    from app.services.statement_engine.registry import default_registry
+    from app.services.statement_engine.serve import spec_bank_keys, spec_key_for
+    reg = default_registry()
+    # spec keys that fold into a registry id (scb->standard_chartered, bob->bank_of_baroda)
+    # are the same bank; all_banks must cover registry ids + orphan spec keys only
+    known = set(reg.banks) | (spec_bank_keys() - {spec_key_for(b) for b in reg.banks})
+    assert seen >= known
+    assert len(seen) == len(all_banks)  # no duplicate ids (scb/bob fold into registry ids)
+    assert {b["support_state"] for b in all_banks} <= {
+        "verified", "review_required", "legacy", "coming_soon", "unsupported"}
+    assert ids < seen  # every servable bank appears in all_banks
+
+
+def test_banks_all_banks_states_with_allowlist(env, monkeypatch):
+    """Serve mode + allowlist flips a spec bank to verified; a review-ceiling
+    bank lands on review_required; pipeline banks stay legacy."""
+    app, client, _ = env
+    as_user(app, ALICE)
+    monkeypatch.setenv("STATEMENT_ENGINE_V2_MODE", "serve")
+    monkeypatch.setenv("STATEMENT_ENGINE_V2_SERVE_BANKS", "hdfc,sbi,axis,idfc,paytm,citibank,city_union,yes,iob")
+    all_banks = {b["id"]: b for b in client.get("/api/statements/banks").json()["all_banks"]}
+    assert all_banks["hdfc"]["support_state"] == "verified"
+    assert all_banks["yes"]["support_state"] == "verified"          # extra allowlisted bank moves to verified
+    assert all_banks["iob"]["support_state"] == "review_required"   # review-ceiling stays honest
+    assert all_banks["icici"]["support_state"] == "legacy"          # served via legacy parser only
+    assert all_banks["deutsche"]["support_state"] == "unsupported"  # never promoted by config
+    assert all_banks["deutsche"]["reason"]
+
+
+def test_banks_servable_entries_carry_state(env, monkeypatch):
+    app, client, _ = env
+    as_user(app, ALICE)
+    monkeypatch.setenv("STATEMENT_ENGINE_V2_MODE", "serve")
+    monkeypatch.setenv("STATEMENT_ENGINE_V2_SERVE_BANKS", "hdfc,iob")
+    banks = {b["id"]: b for b in client.get("/api/statements/banks").json()["banks"]}
+    assert banks["hdfc"]["support_state"] == "verified"
+    assert banks["icici"]["support_state"] == "legacy"
+    assert banks["iob"]["support_state"] == "review_required"

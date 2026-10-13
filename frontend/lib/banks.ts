@@ -1,8 +1,11 @@
 import { BankName } from '@/types'
+import type { SupportState } from './statementsApi'
 
 export interface BankOption {
   name: BankName
   available: boolean
+  id?: string
+  support_state?: SupportState | null
 }
 
 export const SUPPORTED_BANK_OPTIONS: BankOption[] = [

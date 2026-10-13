@@ -9,12 +9,16 @@ import {
   confirmDocuments,
   downloadJobReport,
   getJob,
-  listBanks,
+  listBankCatalog,
   processConfirmed,
   unlockDocument,
   JobStatus,
+  BankCatalogEntry,
 } from '../../../lib/statementsApi'
 import { FALLBACK_BANK_LIST } from '../../../lib/banks'
+import { catalogFromBanks, findCatalogEntry } from '../../../lib/bankSupport'
+import BankSelect from '../bank/BankSelect'
+import BankSupportPanel from '../bank/BankSupportPanel'
 
 const STATE_STYLE: Record<string, string> = {
   DETECTED: 'bg-green-100 text-green-800',
@@ -34,6 +38,7 @@ export default function AnalyzeFlow() {
   const [files, setFiles] = useState<File[]>([])
   const [analysis, setAnalysis] = useState<AnalysisView | null>(null)
   const [banks, setBanks] = useState<BankOption[]>([])
+  const [catalog, setCatalog] = useState<BankCatalogEntry[]>([])
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [overrides, setOverrides] = useState<Record<string, string>>({})
@@ -42,9 +47,16 @@ export default function AnalyzeFlow() {
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    listBanks()
-      .then((list) => setBanks(list?.length ? list : FALLBACK_BANK_LIST))
-      .catch(() => setBanks(FALLBACK_BANK_LIST))
+    listBankCatalog()
+      .then(({ banks: list, all_banks }) => {
+        const usable = list?.length ? list : FALLBACK_BANK_LIST
+        setBanks(usable)
+        setCatalog(all_banks.length ? all_banks : catalogFromBanks(usable))
+      })
+      .catch(() => {
+        setBanks(FALLBACK_BANK_LIST)
+        setCatalog(catalogFromBanks(FALLBACK_BANK_LIST))
+      })
     return () => {
       if (timer.current) clearInterval(timer.current)
     }
@@ -170,12 +182,7 @@ export default function AnalyzeFlow() {
           </button>
           {busy && <span className="text-sm text-gray-600">{busy}</span>}
         </div>
-        {banks.length > 0 && (
-          <p className="mt-3 text-xs text-gray-500">
-            Supported banks: {banks.map((b) => b.name).join(', ')}. Other banks stay unprocessed — you can still pick a
-            bank manually if one was detected incorrectly.
-          </p>
-        )}
+        <BankSupportPanel catalog={catalog} />
       </div>
 
       {error && (
@@ -222,6 +229,7 @@ export default function AnalyzeFlow() {
               const selectedBank = overrides[d.document_id] ?? detectedValue
               const manualPick = Boolean(overrides[d.document_id] && overrides[d.document_id] !== detectedValue)
               const canPickBank = selectable && (d.state === 'UNKNOWN' || d.state === 'REVIEW')
+              const bankEntry = findCatalogEntry(catalog, d.bank?.id)
               return (
                 <li key={d.document_id} className="rounded border p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -289,7 +297,14 @@ export default function AnalyzeFlow() {
 
                   {d.state === 'UNSUPPORTED' && d.detail_state !== 'UNSUPPORTED_SCANNED_PDF' && (
                     <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
-                      {d.message || "This bank isn't fully supported yet."}
+                      {d.bank
+                        ? `${d.bank.name} is not enabled yet`
+                        : "This bank isn't fully supported yet."}
+                      {bankEntry?.support_state && bankEntry.support_state !== 'verified' &&
+                       bankEntry.support_state !== 'legacy' && bankEntry.reason
+                        ? ` — ${bankEntry.reason}`
+                        : ''}
+                      {d.message ? ` ${d.message}` : ''}
                     </p>
                   )}
 
@@ -314,19 +329,13 @@ export default function AnalyzeFlow() {
                   {selectable && (
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       {canPickBank && (
-                        <select
+                        <BankSelect
+                          catalog={catalog.length ? catalog : catalogFromBanks(banks)}
                           value={selectedBank}
-                          onChange={(e) => setOverrides((o) => ({ ...o, [d.document_id]: e.target.value }))}
-                          className="rounded border px-2 py-1 text-sm"
-                          aria-label="Bank"
-                        >
-                          {!detectedValue && <option value="">Select bank…</option>}
-                          {banks.map((b) => (
-                            <option key={b.id} value={b.id}>
-                              {b.name}{b.v2_served ? ' · verified engine' : ''}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={(id) => setOverrides((o) => ({ ...o, [d.document_id]: id }))}
+                          ariaLabel="Bank"
+                          showPlaceholder={!detectedValue}
+                        />
                       )}
                       <button
                         onClick={() => confirmOne(d)}

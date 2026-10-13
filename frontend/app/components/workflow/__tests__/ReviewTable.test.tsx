@@ -2,12 +2,21 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import ReviewTable from '../ReviewTable'
 import type { WorkflowDoc } from '@/app/hooks/useStatementWorkflow'
-import type { AnalyzedDocument, BankOption } from '@/lib/statementsApi'
+import type { AnalyzedDocument, BankCatalogEntry, BankOption } from '@/lib/statementsApi'
 
 const BANKS: BankOption[] = [
-  { id: 'hdfc', name: 'HDFC Bank', engines: ['legacy', 'v2'], v2_served: true },
-  { id: 'icici', name: 'ICICI Bank', engines: ['legacy'], v2_served: false },
-  { id: 'scb', name: 'Standard Chartered Bank', engines: ['v2'], v2_served: true },
+  { id: 'hdfc', name: 'HDFC Bank', engines: ['legacy', 'v2'], v2_served: true, support_state: 'verified' },
+  { id: 'icici', name: 'ICICI Bank', engines: ['legacy'], v2_served: false, support_state: 'legacy' },
+  { id: 'scb', name: 'Standard Chartered Bank', engines: ['v2'], v2_served: true, support_state: 'verified' },
+]
+
+const CATALOG: BankCatalogEntry[] = [
+  { id: 'hdfc', name: 'HDFC Bank', support_state: 'verified' },
+  { id: 'icici', name: 'ICICI Bank', support_state: 'legacy' },
+  { id: 'scb', name: 'Standard Chartered Bank', support_state: 'verified' },
+  { id: 'iob', name: 'Indian Overseas Bank', support_state: 'review_required', reason: 'No printed anchors.' },
+  { id: 'yes', name: 'Yes Bank', support_state: 'coming_soon', reason: 'Measured, not enabled.' },
+  { id: 'rbl', name: 'RBL Bank', support_state: 'unsupported', reason: 'No layout built for RBL.' },
 ]
 
 function doc(over: Partial<AnalyzedDocument>): AnalyzedDocument {
@@ -48,8 +57,8 @@ const PROPS = {
   onProcess: vi.fn(async () => {}),
 }
 
-function renderRow(d: WorkflowDoc) {
-  return render(<ReviewTable docs={[d]} banks={BANKS} {...PROPS} />)
+function renderRow(d: WorkflowDoc, catalog?: BankCatalogEntry[]) {
+  return render(<ReviewTable docs={[d]} banks={BANKS} catalog={catalog} {...PROPS} />)
 }
 
 describe('ReviewTable bank selection', () => {
@@ -114,11 +123,47 @@ describe('ReviewTable bank selection', () => {
         detail_state: 'AWAITING_CONFIRMATION',
         bank: { id: 'scb', name: 'Standard Chartered Bank', confidence: 'HIGH', score: 1, supported: true },
         requires_confirmation: true,
-      })
+      }),
+      CATALOG
     )
     const sel = screen.getByLabelText('Bank') as HTMLSelectElement
     expect(sel.value).toBe('scb')
     expect(screen.getByRole('button', { name: 'Confirm' })).toHaveProperty('disabled', false)
     expect(sel.textContent).toContain('verified engine')
+  })
+
+  it('UNSUPPORTED row names the bank and gives the support-state reason', () => {
+    renderRow(
+      wf({
+        state: 'UNSUPPORTED',
+        detail_state: 'UNSUPPORTED_BANK',
+        bank: { id: 'rbl', name: 'RBL Bank', confidence: 'HIGH', score: 1, supported: false },
+      }),
+      CATALOG
+    )
+    const note = screen.getByText(/RBL Bank is not enabled yet/)
+    expect(note.textContent).toContain('No layout built for RBL.')
+    expect(screen.queryByLabelText('Bank')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Confirm' })).toBeNull()
+  })
+
+  it('picker groups by state; coming_soon/unsupported rows are greyed and disabled', () => {
+    renderRow(wf({ state: 'UNKNOWN', detail_state: 'UNKNOWN_BANK' }), CATALOG)
+    const sel = screen.getByLabelText('Bank') as HTMLSelectElement
+    const groups = Array.from(sel.querySelectorAll('optgroup')).map((g) => g.getAttribute('label'))
+    expect(groups).toEqual(
+      expect.arrayContaining(['Verified', 'Review required', 'Legacy parser', 'Coming soon', 'Not supported'])
+    )
+    expect(sel.querySelector('option[value="yes"]')).toBeDisabled()
+    expect(sel.querySelector('option[value="rbl"]')).toBeDisabled()
+    expect(sel.querySelector('option[value="iob"]')).not.toBeDisabled()
+    expect(sel.textContent).toContain('always needs review')
+  })
+
+  it('works without a catalog (older backend): servable banks stay selectable', () => {
+    renderRow(wf({ state: 'UNKNOWN', detail_state: 'UNKNOWN_BANK' }))
+    const sel = screen.getByLabelText('Bank') as HTMLSelectElement
+    expect(sel.querySelector('option[value="hdfc"]')).not.toBeDisabled()
+    expect(sel.textContent).not.toContain('RBL Bank')
   })
 })

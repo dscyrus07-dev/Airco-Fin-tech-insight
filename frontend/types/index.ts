@@ -65,6 +65,20 @@ export type BankName =
   | 'Airtel Payments Bank'
   | 'India Post Payments Bank'
   | 'Dhanlaxmi Bank'
+  // display names as returned by the API (registry display_name) that differ
+  // from the short names above, plus every registered bank without a union
+  // member yet — the catalog is API-derived, the union only covers known names
+  | 'IDFC FIRST Bank'
+  | 'Paytm Payments Bank'
+  | 'State Bank of India'
+  | 'Kotak Mahindra Bank'
+  | 'AP Grameena Vikas Bank'
+  | 'IndusInd Bank'
+  | 'Deutsche Bank'
+  | 'Fino Payments Bank'
+  | 'RBL Bank'
+  | 'SBM Bank (India)'
+  | 'Tamilnad Mercantile Bank'
 
 export type ProcessingMode = 'free' | 'hybrid'
 

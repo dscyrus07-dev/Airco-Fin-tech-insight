@@ -50,6 +50,7 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
             busy={wf.busy}
             error={wf.error}
             banks={wf.banks}
+            catalog={wf.catalog}
             holderName={holderName}
             onHolderName={setHolderName}
             bankHint={bankHint}
@@ -61,6 +62,7 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
           <ReviewTable
             docs={wf.docs}
             banks={wf.banks}
+            catalog={wf.catalog}
             busy={wf.busy}
             passwords={wf.passwords}
             onOverride={wf.setOverride}

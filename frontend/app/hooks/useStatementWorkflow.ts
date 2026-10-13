@@ -11,11 +11,13 @@ import {
   analyzeStatements,
   confirmDocuments,
   getJob,
-  listBanks,
+  listBankCatalog,
   processConfirmed,
   unlockDocument,
+  BankCatalogEntry,
 } from '@/lib/statementsApi'
 import { FALLBACK_BANK_LIST } from '@/lib/banks'
+import { catalogFromBanks } from '@/lib/bankSupport'
 
 export type WorkflowStep = 'upload' | 'review' | 'processing' | 'report'
 
@@ -31,6 +33,7 @@ export interface StatementWorkflowState {
   step: WorkflowStep
   docs: WorkflowDoc[]
   banks: BankOption[]
+  catalog: BankCatalogEntry[]
   busy: string | null
   error: string | null
   allDone: boolean
@@ -62,6 +65,7 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
   const [step, setStep] = useState<WorkflowStep>('upload')
   const [analysis, setAnalysis] = useState<AnalysisView | null>(null)
   const [banks, setBanks] = useState<BankOption[]>([])
+  const [catalog, setCatalog] = useState<BankCatalogEntry[]>([])
   const [files, setFiles] = useState<File[]>([])
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -77,9 +81,16 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
   }, [onJobsSettled])
 
   useEffect(() => {
-    listBanks()
-      .then((list) => setBanks(list?.length ? list : FALLBACK_BANK_LIST))
-      .catch(() => setBanks(FALLBACK_BANK_LIST))
+    listBankCatalog()
+      .then(({ banks: list, all_banks }) => {
+        const usable = list?.length ? list : FALLBACK_BANK_LIST
+        setBanks(usable)
+        setCatalog(all_banks.length ? all_banks : catalogFromBanks(usable))
+      })
+      .catch(() => {
+        setBanks(FALLBACK_BANK_LIST)
+        setCatalog(catalogFromBanks(FALLBACK_BANK_LIST))
+      })
     return () => {
       if (timer.current) clearInterval(timer.current)
     }
@@ -249,6 +260,7 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
     step,
     docs: wfDocs,
     banks,
+    catalog,
     busy,
     error,
     allDone,
