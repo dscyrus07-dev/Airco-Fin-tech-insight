@@ -138,3 +138,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [PR] GATE partD-final: suite 391 engine + 336/8f API (same pre-existing); 613-file compare base c550bac: 3 diffs = karnataka-folder files that are misfiled UCO statements (own UCBA IFSC), correctly attributed + honest FAILED; 0 true regressions
 [PR] DONE 94cdfb5 - Part A PASS all checks; candidates au_sfb + bank_of_maharashtra READY_TO_SERVE_CANDIDATE; dbs/airtel_pb/uco improved SHADOW_ONLY; bandhan/pnb/dcb parked (engine gaps); 613-file compare 0 true regressions; nothing pushed
 [V2] START 54f51ab - verify-2: independent E2E verification of au_sfb + bank_of_maharashtra serve candidates
+[V2] BANK au_sfb NO-GO - all engine gates pass (16/17 VERIFIED, audit clean, cross 0) but served workbook corrupted on 7b2023ab: base_processor dup-key order-rebuild leak, 142 rows vs engine 140, wrong closing balance, integrity_passed=false under VERIFIED
+[V2] BANK bank_of_maharashtra NO-GO - all engine gates pass (21V+5R, audit clean, cross 0) but same shared serve-path defect is latent: 6 corpus files carry duplicate keys
