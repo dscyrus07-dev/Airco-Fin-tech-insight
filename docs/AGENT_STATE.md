@@ -137,3 +137,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [PR] BANK dcb PARKED - multi-account exports; printed TotalNumberofTransactions (22-9328) far exceeds extracted rows; sub-table continuation is an engine gap; reference failed honest
 [PR] GATE partD-final: suite 391 engine + 336/8f API (same pre-existing); 613-file compare base c550bac: 3 diffs = karnataka-folder files that are misfiled UCO statements (own UCBA IFSC), correctly attributed + honest FAILED; 0 true regressions
 [PR] DONE 94cdfb5 - Part A PASS all checks; candidates au_sfb + bank_of_maharashtra READY_TO_SERVE_CANDIDATE; dbs/airtel_pb/uco improved SHADOW_ONLY; bandhan/pnb/dcb parked (engine gaps); 613-file compare 0 true regressions; nothing pushed
+[UB] START 54f51ab - unblock-1: triage + fix 22 SHADOW_ONLY + 2 REVIEW_ONLY + APGV (base integration/v2-waves @ 54f51ab)
