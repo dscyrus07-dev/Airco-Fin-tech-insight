@@ -149,3 +149,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK indusind SHADOW_ONLY - add INDUSIND_LAYOUT_2/3 (Chq No/Ref No family, B/F+C/F anchors; 12 files recovered to VERIFIED, audit clean, cross 0/364)
 
 [UB] BANK standard_chartered SHADOW_ONLY - IFSC:SCBL own-marker on L1/L2 (+13 VERIFIED, audit clean, cross 0/364)
+
+[UB] BANK csb SHADOW_ONLY - L2 ePassbook + L3 TRANS/VALUE variants (1 VERIFIED new; FAILEDs honest: unprinted balances/stray date fragment; 2 markerless bank_unconfirmed; 8 misfiled Federal docs correctly routed; cross 0/393)

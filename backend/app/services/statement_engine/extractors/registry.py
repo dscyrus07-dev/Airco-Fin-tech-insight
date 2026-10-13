@@ -35,7 +35,7 @@ from .bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2
 from .au_sfb.layout_spec import AU_LAYOUT_1, AU_LAYOUT_2
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
-from .csb.layout_spec import CSB_LAYOUT_1
+from .csb.layout_spec import CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3
 from .airtel_pb.layout_spec import AIRTEL_LAYOUT_1
 from .ippb.layout_spec import IPPB_LAYOUT_1
 from .dhanlaxmi.layout_spec import DHANLAXMI_LAYOUT_1
@@ -73,7 +73,7 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    DBS_LAYOUT_2,
                                    BOM_LAYOUT_3, BOM_LAYOUT_4, DCB_LAYOUT_1, APGV_LAYOUT_1,
                                    # onboard-all: CSB "Statement of Account" export (federal-shaped; CSB marker evidence)
-                                   CSB_LAYOUT_1,
+                                   CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3,
                                    # onboard-all: UCO "Statement of Account" exports (with/without instrument column)
                                    UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1],
                                   foreign_markers=OTHER_BANK_MARKERS)
