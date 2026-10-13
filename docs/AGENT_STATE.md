@@ -147,3 +147,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK ujjivan_sfb SHADOW_ONLY - Vshare 0% (no printed anchors); no_layout = balance-less Type layout + fully-glued monospace export + misfiled IDBI doc; FAILEDs honest
 
 [UB] BANK indusind SHADOW_ONLY - add INDUSIND_LAYOUT_2/3 (Chq No/Ref No family, B/F+C/F anchors; 12 files recovered to VERIFIED, audit clean, cross 0/364)
+
+[UB] BANK standard_chartered SHADOW_ONLY - IFSC:SCBL own-marker on L1/L2 (+13 VERIFIED, audit clean, cross 0/364)
