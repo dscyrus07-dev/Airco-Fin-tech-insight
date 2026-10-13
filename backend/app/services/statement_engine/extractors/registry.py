@@ -23,7 +23,7 @@ from .hsbc.layout_spec import HSBC_LAYOUT_1
 from .indusind.layout_spec import INDUSIND_LAYOUT_1, INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3
 from .idbi.layout_spec import IDBI_LAYOUT_1, IDBI_LAYOUT_2
 from .pnb.layout_spec import PNB_LAYOUT_1
-from .yes.layout_spec import YES_LAYOUT_1, YES_LAYOUT_2, YES_LAYOUT_3
+from .yes.layout_spec import YES_LAYOUT_1, YES_LAYOUT_2, YES_LAYOUT_3, YES_LAYOUT_4
 from .iob.layout_spec import IOB_LAYOUT_1, IOB_LAYOUT_2
 from .south_indian.layout_spec import SIB_LAYOUT_1
 from .central_bank.layout_spec import CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3
@@ -65,7 +65,7 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1,
                                    # unblock-1: IndusInd newer export ("Chq No/Ref No" ref title, B/F+C/F anchor rows,
                                    # 0.00-empty money cells; dashed and space-separated date prints)
-                                   INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, IOB_LAYOUT_1, IOB_LAYOUT_2,
+                                   INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, YES_LAYOUT_4, IOB_LAYOUT_1, IOB_LAYOUT_2,
                                    # YES_LAYOUT_2 parked: wrapped 'Running|Balance' header routes 24% trusted (5V/16F chain+side) on fresh 97-file re-measure
                                    SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3, EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAYOUT_3, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1,
                                    # promote-1: AU newer export (wrapped 2-line header, rupee-marked money cols, AUBANK.IN footer marker)

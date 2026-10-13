@@ -33,3 +33,27 @@ distinct fingerprints: 13 | top share: 36.8%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 16 of 16 VERIFIED | ok: 16 | disagreements: 0
+
+## Unblock pass (prompt-29, current branch)
+
+- spec fixes (yes-owned only): `YESBANK.IN` footer/RM-mail marker on all registered specs;
+  `zero_amount_is_empty` (this family prints literal `0`/`0.00` in the unused side);
+  `opening_row_balance_only` (dated `B/F ...` opening row — its words sit in the value-date band
+  so narration never sees them); `end_markers=("^OPENINGBALANCE:",)` so a post-statement section
+  (FD certificate page) cannot be swallowed into rows; L3 gained the printed
+  `Opening Balance:/Closing Balance:` summary regexes + `anchor_full` that only L1 had.
+- new `YES_LAYOUT_4`: 6-col variant `Transaction Date | Value Date | Description | Withdrawals |
+  Deposits | Balance` (no ref column), integer debit/credit cells, left-aligned amounts,
+  `band_left_pad` on narration, `opening_row_marker="B/F"`.
+- after: 92 manifest files -> 86 v2 / 6 fallback | 33 VERIFIED / 34 REVIEW / 20 FAILED
+  (before on same set: 16 VERIFIED). audit: 33/33 clean. cross-bank: 0 foreign accepts (364 files).
+- remaining gaps (honest):
+  - 34 REVIEW: documents genuinely print no opening/closing anchor -> self-derived chain (correct cap).
+  - 20 FAILED: per-pair balance print (fee+GST debit pairs move the balance once while two debit
+    lines carry the same running balance) -> printed data cannot reconcile row-wise; plus one
+    trailing FD-certificate section flagged `additional_statement_after_summary` (REVIEW).
+  - `008a966b`: 3-line interleaved header (`Transaction ... Running` / `Description Debit Credit` /
+    `Date Date Transaction Number Balance`) - `header_wraps` merges only pairs -> engine gap.
+  - misfiled (class D): `e99c7c1d` Union Bank letterhead, `2aed793f` AU (AUBL IFSC,
+    detector au_sfb VERY_HIGH). `508a9258` foreign_bank: UTIB/AXIS IFSCs on page 1 (guard kept).
+  - `382d5465`: zero-transaction statement -> honest NO_ROWS.
