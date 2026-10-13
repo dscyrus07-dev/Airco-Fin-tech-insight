@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "_readme": "See bank_status.README.md. Data, not logic: 'state' may only be review_required | coming_soon | unsupported (verified/legacy are derived from the serve configuration). 'reason' is shown verbatim in the UI for greyed-out or review-flagged banks \u2014 keep it one plain sentence.",
+  "banks": {
+    "iob": {
+      "state": "review_required",
+      "reason": "IOB statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+    },
+    "south_indian": {
+      "state": "review_required",
+      "reason": "South Indian Bank statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+    },
+    "apgv": {
+      "state": "review_required",
+      "reason": "AP Grameena Vikas statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+    },
+    "bandhan": {
+      "state": "coming_soon",
+      "reason": "Bandhan's statement layout needs engine work that is not scheduled yet."
+    },
+    "dcb": {
+      "state": "coming_soon",
+      "reason": "DCB's statement layout needs engine work that is not scheduled yet."
+    },
+    "pnb": {
+      "state": "coming_soon",
+      "reason": "Punjab National's mPassbook layout needs engine work that is not scheduled yet."
+    },
+    "indusind": {
+      "state": "coming_soon",
+      "reason": "Measured on samples but held back: the independent verification gate is not passed yet."
+    },
+    "kvb": {
+      "state": "coming_soon",
+      "reason": "Most Karur Vysya samples store digits as image data that cannot be read, so only a subset can be supported."
+    },
+    "dhanlaxmi": {
+      "state": "coming_soon",
+      "reason": "Most Dhanlaxmi samples are missing readable balance digits; support would be partial and is not enabled."
+    },
+    "csb": {
+      "state": "coming_soon",
+      "reason": "Several CSB layouts read correctly but a share of samples carry no bank markers, so coverage is partial."
+    },
+    "deutsche": {
+      "state": "unsupported",
+      "reason": "Too few readable sample statements on file to build a verified layout."
+    },
+    "fino_pb": {
+      "state": "unsupported",
+      "reason": "Only one readable sample statement on file; nothing to validate a layout against."
+    },
+    "tmb": {
+      "state": "unsupported",
+      "reason": "Too few readable sample statements on file to build a layout."
+    },
+    "rbl": {
+      "state": "unsupported",
+      "reason": "No statement layout or parser has been built for RBL yet."
+    },
+    "sbm": {
+      "state": "unsupported",
+      "reason": "No statement layout or parser has been built for SBM yet."
+    }
+  }
+}

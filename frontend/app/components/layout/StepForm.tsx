@@ -5,7 +5,8 @@ import { Plus, X } from 'lucide-react'
 import { UserDetails, BankName } from '@/types'
 import { validateUserDetails } from '@/lib/validation'
 import { BankOption, SUPPORTED_BANK_OPTIONS } from '@/lib/banks'
-import { listBanks } from '@/lib/statementsApi'
+import { listBankCatalog, type BankCatalogEntry } from '@/lib/statementsApi'
+import { STATE_LABEL, STATE_ORDER, STATE_TAG, isSelectable } from '@/lib/bankSupport'
 
 interface StepFormProps {
   onSubmit: (details: UserDetails) => void
@@ -24,13 +25,17 @@ export default function StepForm({ onSubmit, initialDetails }: StepFormProps) {
   const [bankToAdd, setBankToAdd] = useState<BankName | ''>('')
   const [error, setError] = useState<string | null>(null)
   const [bankOptions, setBankOptions] = useState<BankOption[]>(SUPPORTED_BANK_OPTIONS)
+  const [catalog, setCatalog] = useState<BankCatalogEntry[]>([])
 
   useEffect(() => {
     let cancelled = false
-    listBanks()
-      .then((banks) => {
+    listBankCatalog()
+      .then(({ banks, all_banks }) => {
         if (cancelled || !banks?.length) return
-        setBankOptions(banks.map((b) => ({ name: b.name as BankName, available: true })))
+        setBankOptions(
+          banks.map((b) => ({ name: b.name as BankName, available: true, id: b.id, support_state: b.support_state }))
+        )
+        setCatalog(all_banks)
       })
       .catch(() => undefined) // API down or unauthenticated: keep fallback list
     return () => {
@@ -39,6 +44,43 @@ export default function StepForm({ onSubmit, initialDetails }: StepFormProps) {
   }, [])
 
   const availableBanks = useMemo(() => bankOptions.filter(({ available }) => available), [bankOptions])
+
+  // grouped by support state; non-servable banks stay visible but disabled.
+  // Names are the option values (the legacy flow keys files by display name).
+  const groupedOptions = useMemo(() => {
+    if (!catalog.length) {
+      // no catalog (offline / older backend): flat list, one group
+      return [{
+        state: 'legacy',
+        label: STATE_LABEL.legacy,
+        options: bankOptions.map((b) => ({ name: b.name, selectable: b.available, tag: '' })),
+      }]
+    }
+    const byName = new Map(bankOptions.map((b) => [b.name, b]))
+    const groups: { state: string; label: string; options: { name: BankName; selectable: boolean; tag: string }[] }[] = []
+    for (const state of STATE_ORDER) {
+      const names: { name: BankName; selectable: boolean; tag: string }[] = []
+      for (const entry of catalog.filter((e) => e.support_state === state)) {
+        const opt = byName.get(entry.name as BankName)
+        if (opt) names.push({ name: opt.name, selectable: true, tag: STATE_TAG[state] })
+        else names.push({ name: entry.name as BankName, selectable: isSelectable(state), tag: STATE_TAG[state] })
+      }
+      if (names.length) groups.push({ state, label: STATE_LABEL[state], options: names })
+    }
+    // servable entries absent from the catalog (e.g. the universal 'other' bank)
+    // stay selectable under the legacy heading rather than disappearing
+    if (catalog.length) {
+      const listed = new Set(groups.flatMap((g) => g.options.map((o) => o.name)))
+      const leftover = availableBanks.filter((b) => !listed.has(b.name))
+      if (leftover.length) {
+        const legacyGroup = groups.find((g) => g.state === 'legacy')
+        const items = leftover.map((b) => ({ name: b.name, selectable: true, tag: '' }))
+        if (legacyGroup) legacyGroup.options.push(...items)
+        else groups.push({ state: 'legacy', label: STATE_LABEL.legacy, options: items })
+      }
+    }
+    return groups
+  }, [bankOptions, catalog, availableBanks])
 
   const syncPrimaryBank = (selectedBanks: BankName[]) => {
     const primaryBank = selectedBanks[0] ?? ''
@@ -131,10 +173,15 @@ export default function StepForm({ onSubmit, initialDetails }: StepFormProps) {
               className="w-full flex-1 px-4 py-2.5 border border-border rounded-md text-sm bg-white text-black appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-shadow"
             >
               <option value="">Select a bank</option>
-              {availableBanks.map(({ name }) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
+              {groupedOptions.map((group) => (
+                <optgroup key={group.state} label={group.label}>
+                  {group.options.map((opt) => (
+                    <option key={opt.name} value={opt.name} disabled={!opt.selectable}>
+                      {opt.name}
+                      {opt.tag ? ` · ${opt.tag}` : ''}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
 

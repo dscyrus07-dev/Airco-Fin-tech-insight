@@ -1,6 +1,8 @@
 'use client'
 
-import { AnalyzedDocument, BankOption } from '@/lib/statementsApi'
+import { AnalyzedDocument, BankCatalogEntry, BankOption } from '@/lib/statementsApi'
+import { catalogFromBanks, findCatalogEntry, isSelectable } from '@/lib/bankSupport'
+import BankSelect from '@/app/components/bank/BankSelect'
 import type { WorkflowDoc } from '@/app/hooks/useStatementWorkflow'
 
 const STATE_STYLE: Record<string, string> = {
@@ -20,6 +22,8 @@ const ACCOUNT_TYPES = [
 interface ReviewTableProps {
   docs: WorkflowDoc[]
   banks: BankOption[]
+  /** Full bank catalog (all support states); falls back to `banks` when absent. */
+  catalog?: BankCatalogEntry[]
   busy: string | null
   passwords: Record<string, string>
   onOverride: (documentId: string, bankId: string) => void
@@ -35,6 +39,7 @@ interface ReviewTableProps {
 export default function ReviewTable({
   docs,
   banks,
+  catalog,
   busy,
   passwords,
   onOverride,
@@ -46,6 +51,7 @@ export default function ReviewTable({
   onUnlock,
   onProcess,
 }: ReviewTableProps) {
+  const effectiveCatalog = catalog?.length ? catalog : catalogFromBanks(banks)
   const confirmedCount = docs.filter((d) => d.document.workflow_status === 'CONFIRMED').length
   const detectedPending = docs.filter(
     (d) => d.document.state === 'DETECTED' && d.document.workflow_status === 'AWAITING_CONFIRMATION' && !d.document.requires_password
@@ -88,6 +94,8 @@ export default function ReviewTable({
           const selectedBank = override || detectedValue
           const manualPick = Boolean(override && override !== detectedValue)
           const canPickBank = selectable && (d.state === 'UNKNOWN' || d.state === 'REVIEW')
+          const bankEntry = findCatalogEntry(effectiveCatalog, d.bank?.id)
+          const bankState = bankEntry?.support_state
           return (
             <li key={d.document_id} className="rounded border p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -156,7 +164,13 @@ export default function ReviewTable({
 
               {d.state === 'UNSUPPORTED' && d.detail_state !== 'UNSUPPORTED_SCANNED_PDF' && (
                 <p className="mt-2 rounded bg-orange-50 p-2 text-sm text-orange-900">
-                  {d.message || "This bank isn't fully supported yet."}
+                  {d.bank
+                    ? `${d.bank.name} is not enabled yet`
+                    : "This bank isn't fully supported yet."}
+                  {bankState && bankState !== 'verified' && bankState !== 'legacy' && bankEntry?.reason
+                    ? ` — ${bankEntry.reason}`
+                    : ''}
+                  {d.message ? ` ${d.message}` : ''}
                 </p>
               )}
 
@@ -182,20 +196,13 @@ export default function ReviewTable({
                 <>
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,10rem)_auto]">
                     {canPickBank && (
-                      <select
+                      <BankSelect
+                        catalog={effectiveCatalog}
                         value={selectedBank}
-                        onChange={(e) => onOverride(d.document_id, e.target.value)}
-                        className="min-w-0 rounded border px-2 py-1 text-sm"
-                        aria-label="Bank"
-                      >
-                        {!detectedValue && <option value="">Select bank…</option>}
-                        {banks.map((b) => (
-                          <option key={b.id} value={b.id}>
-                            {b.name}
-                            {b.v2_served ? ' · verified engine' : ''}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(id) => onOverride(d.document_id, id)}
+                        ariaLabel="Bank"
+                        showPlaceholder={!detectedValue}
+                      />
                     )}
                     <select
                       value={accountType}

@@ -161,3 +161,6 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK iob REVIEW_ONLY_SERVABLE - decide_serve REVIEW+no-legacy serves v2 needs_review; synthetic e2e workbook shows REVIEW/Needs review:yes/NO_INDEPENDENT_ANCHOR (onb, extras=iob)
 
 [UB] BANK south_indian REVIEW_ONLY_SERVABLE - same e2e honest REVIEW serve; latent marker collision noted (INDIANBANK substring inside SOUTHINDIANBANK if brand ever prints)
+
+[UI] START 54f51ab - UI bank states (dropdown groups, support_state, review notices); base integration/v2-waves @ 54f51ab
+[UI] DONE 173aa2f - grouped pickers, all_banks API, review-required notices; e2e on onb (set+unset extras)

@@ -114,6 +114,7 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
     only when that bank is actually servable (mode serve + allowlisted), so the
     response never lists a bank that cannot be processed."""
     from ...services.statement_engine import serve as _v2serve
+    from ...services.statement_engine import bank_status as _bank_status
 
     reg = default_registry()
     try:
@@ -125,6 +126,7 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
 
     banks = []
     mapped_spec_keys = set()
+    _states = _bank_status.support_state_map()
     for bid, name in PIPELINE_BANK_NAME.items():
         spec_key = _v2serve.spec_key_for(bid)
         mapped_spec_keys.add(spec_key)
@@ -135,6 +137,7 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
             "pipeline_name": name,
             "engines": engines,
             "v2_served": _mode == "serve" and spec_key in _allow,
+            "support_state": _states.get(bid),
         })
 
     if _mode == "serve":
@@ -148,6 +151,7 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
                     "pipeline_name": None,
                     "engines": ["v2"],
                     "v2_served": True,
+                    "support_state": _states.get(spec_key) or _states.get(_v2serve.pipeline_key_for(spec_key)),
                 })
 
     try:
@@ -164,7 +168,7 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
             "v2_served": False,
         })
 
-    return {"banks": banks}
+    return {"banks": banks, "all_banks": _bank_status.support_states()}
 
 
 @router.get("/{analysis_id}")

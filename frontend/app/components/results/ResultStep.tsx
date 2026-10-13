@@ -10,6 +10,8 @@ import { SpreadsheetProvider } from '../spreadsheet/SpreadsheetContext'
 import { engineNeedsAttention, parseStatementEngine } from '@/lib/statementEngine'
 import VerificationBadge from './engine/VerificationBadge'
 import EngineDetails from './engine/EngineDetails'
+import BankStateNotice from './engine/BankStateNotice'
+import { useBankCatalog } from '@/app/hooks/useBankCatalog'
 
 interface ResultStepProps {
   result: ProcessingResult
@@ -94,6 +96,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
   const modeLabel = activeResult.mode === 'hybrid' ? 'Hybrid (System + AI)' : 'Free (System Only)'
 
   const engine = parseStatementEngine(activeResult.statement_engine)
+  const catalog = useBankCatalog()
   const showEnginePanel = !!engine && (engine.engine === 'v2' || !!engine.advisory)
   const needsReviewCount = batchResults.filter(
     (item) => engineNeedsAttention(parseStatementEngine(item.result.statement_engine))
@@ -216,6 +219,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
             {modeLabel}
           </span>
           <VerificationBadge engine={engine} />
+          <BankStateNotice catalog={catalog.all_banks} bankKey={engine?.detected_bank?.key} />
           {activeResult.stats && (
             <>
               <span className="text-xs text-neutral-500 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-full">

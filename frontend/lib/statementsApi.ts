@@ -50,12 +50,28 @@ export interface AnalysisView {
   documents: AnalyzedDocument[]
   summary: { total: number; by_state: Record<string, number>; groups: BankGroup[] }
 }
+/** Additive `all_banks` entry + per-bank support state (docs/operations/UI_BANK_STATES.md). */
+export type SupportState = 'verified' | 'review_required' | 'legacy' | 'coming_soon' | 'unsupported'
+
+export interface BankCatalogEntry {
+  id: string
+  name: string
+  support_state: SupportState
+  reason?: string | null
+}
+
 export interface BankOption {
   id: string
   name: string
   pipeline_name?: string | null
   engines?: string[]
   v2_served?: boolean
+  support_state?: SupportState | null
+}
+
+export interface BankCatalog {
+  banks: BankOption[]
+  all_banks: BankCatalogEntry[]
 }
 export interface Decision {
   document_id: string
@@ -103,6 +119,12 @@ export async function analyzeStatements(files: File[], passwords: Record<string,
 export async function listBanks(): Promise<BankOption[]> {
   const data = await parse<{ banks: BankOption[] }>(await fetch('/api/statements/banks', { headers: await authHeaders(false) }))
   return data.banks
+}
+
+/** Full catalog: servable `banks` (unchanged contract) + every known bank with its support_state. */
+export async function listBankCatalog(): Promise<BankCatalog> {
+  const data = await parse<Partial<BankCatalog>>(await fetch('/api/statements/banks', { headers: await authHeaders(false) }))
+  return { banks: data.banks ?? [], all_banks: data.all_banks ?? [] }
 }
 
 export async function confirmDocuments(

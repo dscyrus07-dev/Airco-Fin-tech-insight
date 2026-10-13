@@ -46,6 +46,19 @@ Filled from `comparison/final/REPORT.md` Â§2.2 â€” see the per-folder tab
 - IndusInd is correctly excluded (mutation gate).
 - T3/general reader never emits VERIFIED by construction.
 
+
+## UI bank states (devin/ui-banks)
+
+`GET /api/statements/banks` returns an additive `all_banks` list: every known
+bank id with `support_state` — `verified` (v2-served, VERIFIED-capable),
+`review_required` (servable but VERIFIED-impossible; persistent needs-review
+notice), `legacy` (legacy parser only), `coming_soon` (detected + measured,
+not enabled), `unsupported` (scanned/too few samples). Derivation: serve
+config + `statement_engine/bank_status.json` (see its README).
+`banks[]` is unchanged — still only servable banks.
+Surfaces: grouped bank pickers, supported-banks panel, "<Bank> is not enabled
+yet" rows, persistent review-required notice. See `docs/operations/UI_BANK_STATES.md`.
+
 ## UI entry (devin/unified-entry)
 
 One entry point behind `NEXT_PUBLIC_UNIFIED_ENTRY` (default off): `/dashboard`
