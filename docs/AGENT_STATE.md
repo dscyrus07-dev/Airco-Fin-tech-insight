@@ -130,3 +130,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [OV] START 5d8026a - independent verification of onboarding+wiring (base integration/v2-waves @ 8b57e0d)
 [OV] DONE 2a8fb3f - verification complete: NO-GO merge; 1 regression (d4de1ead paytm foreign-marker via c43e8f1), 1 workbook row-drop (0a05a1f7 hdfc), 8 unresolved markerless csb->federal accepts; all 30 bank statuses confirmed; SERVE_BANKS unchanged; suite 712p/8f pre-existing; PII scan CLEAN
 [PR] START c550bac - promote-1: rebuild onb from merged tip + close gaps on near-READY banks
+[PR] BANK au_sfb READY_TO_SERVE_CANDIDATE 318856d - AU_LAYOUT_2 added; 16/17 v2+VERIFIED (1 no_layout has zero own-bank evidence); audit 16/16 clean; cross-bank 0/388
