@@ -124,7 +124,10 @@ docker compose -p onb -f docker-compose.yml -f docker-compose.onboard.yml \
 ```
 
 Enable another bank / roll back: set `ONB_SERVE_BANKS` (or `ONB_V2_MODE=off`)
-and `up -d --no-deps backend` — no rebuild. Full details and the serving gate:
+and `up -d --no-deps backend` — no rebuild. To append promotion candidates to
+the shipped allowlist instead of replacing it, set `ONB_EXTRA_SERVE_BANKS`
+(e.g. `ONB_EXTRA_SERVE_BANKS=au_sfb,bank_of_maharashtra`); the compose file
+joins it onto `ONB_SERVE_BANKS`'s default. Full details and the serving gate:
 `docs/onboarding/WIRING.md`.
 
 ## Demo stack (wt-demo) specifics

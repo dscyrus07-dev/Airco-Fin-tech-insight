@@ -13,6 +13,8 @@
 # Serve allowlist: defaults to the demo build's list. To exercise the newly
 # wired banks add their spec keys:
 #   ONB_SERVE_BANKS="hdfc,sbi,axis,idfc,paytm,citibank,city_union,scb,dbs,dcb,..."
+# Or append promotion candidates to the shipped default without retyping it:
+#   ONB_EXTRA_SERVE_BANKS="au_sfb,bank_of_maharashtra"
 # (see docs/onboarding/OVERNIGHT_REPORT.md for statuses; nothing onboarded is
 # READY_TO_SERVE, so REVIEW/SHADOW banks serve REVIEW-capped rows).
 services:
@@ -51,7 +53,7 @@ services:
       DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
       RETENTION_ENABLED: ${RETENTION_ENABLED:-false}
       STATEMENT_ENGINE_V2_MODE: ${ONB_V2_MODE:-serve}
-      STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union}
+      STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union}${ONB_EXTRA_SERVE_BANKS:+,$ONB_EXTRA_SERVE_BANKS}
       STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
       STATEMENT_ENGINE_UNIVERSAL_MODE: ${STATEMENT_ENGINE_UNIVERSAL_MODE:-off}
       STATEMENT_ENGINE_MISMATCH_GUARD: ${STATEMENT_ENGINE_MISMATCH_GUARD:-1}
