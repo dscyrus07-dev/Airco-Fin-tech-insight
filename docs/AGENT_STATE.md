@@ -139,3 +139,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [PR] DONE 94cdfb5 - Part A PASS all checks; candidates au_sfb + bank_of_maharashtra READY_TO_SERVE_CANDIDATE; dbs/airtel_pb/uco improved SHADOW_ONLY; bandhan/pnb/dcb parked (engine gaps); 613-file compare 0 true regressions; nothing pushed
 [UB] START 54f51ab - unblock-1: triage + fix 22 SHADOW_ONLY + 2 REVIEW_ONLY + APGV (base integration/v2-waves @ 54f51ab)
 [UB] BANK ippb SHADOW_ONLY - opening_balance_re colon fix (correctness, verdict unchanged); REVIEW ceiling = 5-col label:value summary w/ unmapped txn-count + merged amounts (engine gap); 5128847f custom-font unreadable excluded
+[UB] BANK airtel_pb READY_TO_SERVE_CANDIDATE - 4/4 VERIFIED on valid files; 3 unrouted are postpaid/fibre billing docs (proven mislabels); thin corpus caveat; already wired
