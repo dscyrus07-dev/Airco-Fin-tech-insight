@@ -424,11 +424,18 @@ def append_statement_check_sheet(excel_path: str, block: Dict[str, Any]) -> bool
         ws.append(["Engine", block.get("engine")])
         ws.append(["Verdict", block.get("verdict") or (advisory.get("verdict") or "")])
         ws.append(["Independently verified", "yes" if block.get("anchored") else "no"])
-        ws.append(["Needs review", "yes" if block.get("needs_review") else "no"])
+        # A FAILED advisory means the engine read the statement but could not reconcile its balances while the legacy
+        # parser produced this workbook: it must not say "no review needed" next to a FAILED verdict.
+        advisory_failed = (advisory.get("verdict") == "FAILED") and block.get("engine") != "v2"
+        ws.append(["Needs review", "yes" if (block.get("needs_review") or advisory_failed) else "no"])
         ws.append(["Review reasons", ", ".join(reasons) if reasons else "none"])
         if advisory:
             ws.append(["Advisory verdict", advisory.get("verdict") or ""])
             ws.append(["Advisory reasons", ", ".join(advisory.get("review_codes") or []) or "none"])
+        if advisory_failed:
+            ws.append(["Note", "The statement engine could not reconcile this statement's balances. The figures in this "
+                               "workbook come from the legacy parser and may be incomplete: check the transaction count "
+                               "against the PDF before relying on it."])
         ws.append(["Generated", datetime.now(timezone.utc).isoformat(timespec="seconds")])
         wb.save(excel_path)
         return True

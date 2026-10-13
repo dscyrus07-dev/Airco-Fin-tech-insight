@@ -4,7 +4,9 @@
   "names": [
     "india post payments bank"
   ],
-  "short_names": [],
+  "short_names": [
+    "ippb"
+  ],
   "ifsc_prefixes": [
     "IPOS"
   ],

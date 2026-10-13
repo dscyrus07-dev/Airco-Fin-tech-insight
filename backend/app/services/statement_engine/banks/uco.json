@@ -4,7 +4,9 @@
   "names": [
     "uco bank"
   ],
-  "short_names": [],
+  "short_names": [
+    "uco"
+  ],
   "ifsc_prefixes": [
     "UCBA"
   ],

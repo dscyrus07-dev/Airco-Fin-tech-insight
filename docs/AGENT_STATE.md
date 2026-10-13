@@ -91,3 +91,41 @@ Report: docs/cleanup/CLEANUP_AUDIT.md + VERDICTS.csv + INVENTORY.csv + ENDPOINTS
 
 [SC] DONE 37b155b — removed 3 dead files (lib/api.ts, core/security.py, monitoring/error_logger.py) + npm deps exceljs/file-saver/@types/file-saver + pip xlsxwriter, passlib[bcrypt] from backend requirements.
 All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build, backend 271 tests, fresh-venv install + import smoke, 400-file corpus compare 0 diffs, docker builds OK. passlib kept in auth-service (live use).
+
+[OB] START 8b57e0d - overnight all-banks onboarding (base 8b57e0d)
+[OB] BANK standard_chartered SHADOW_ONLY 3236b09
+[OB] BANK dbs SHADOW_ONLY 24411d3
+[OB] BANK ujjivan_sfb SHADOW_ONLY 0bfbc9a
+[OB] BANK au_sfb SHADOW_ONLY 36d410e
+[OB] BANK dcb SHADOW_ONLY 498c245
+[OB] BANK federal SHADOW_ONLY 86d2bd0
+[OB] BANK indusind SHADOW_ONLY a81b03b
+[OB] BANK idbi SHADOW_ONLY 4588f56
+[OB] BANK yes SHADOW_ONLY 3813032
+[OB] BANK pnb SHADOW_ONLY 6618147
+[OB] BANK kvb SHADOW_ONLY 1066d54
+[OB] BANK iob REVIEW_ONLY 92bbb8f
+[OB] BANK central_bank SHADOW_ONLY 71046c5
+[OB] BANK equitas_sfb SHADOW_ONLY 5b21e0b
+[OB] BANK bank_of_maharashtra SHADOW_ONLY 1dae342
+[OB] BANK bandhan SHADOW_ONLY 20a04c1
+[OB] BANK hsbc SHADOW_ONLY 8b34812
+[OB] BANK south_indian REVIEW_ONLY 82658af
+[OB] BANK apgv SHADOW_ONLY 2411712
+[OB] BANK tmb NOT_POSSIBLE 3065b2c
+[OB] BANK deutsche NOT_POSSIBLE efbdce4
+[OB] BANK fino_pb NOT_POSSIBLE 8d5d3e6
+[OB] BANK fincare_sfb NOT_POSSIBLE e5c72bb
+[OB] BANK apgb NOT_POSSIBLE 312dd1d
+[OB] BANK cosmos NOT_POSSIBLE db6fa88
+[OB] BANK csb SHADOW_ONLY 933f0be
+[OB] BANK uco SHADOW_ONLY 430506e
+[OB] BANK airtel_pb SHADOW_ONLY 8f2e55c
+[OB] BANK ippb SHADOW_ONLY b634a7d
+[OB] BANK dhanlaxmi SHADOW_ONLY 89274a7
+[OB] DONE db53415 - 30 banks: 0 READY / 22 SHADOW_ONLY / 2 REVIEW_ONLY / 6 NOT_POSSIBLE; regression 0-diff 400-file compare; suite 639p/8f (all pre-existing); SERVE_BANKS unchanged
+[OW] START e63bcdb - wiring onboarded banks into backend, UI, docker (base devin/onboard-all @ e63bcdb)
+[OW] BACKEND-WIRED 9ecd2e6 - 22 v2-only banks, apgv blocked
+[OW] DONE debc4c9 - 22 wired (spec-key aliases + API tests + UI), apgv wiring-blocked (detector absent by design); onb stack healthy 8401/3400; banks endpoint=15 listed/7 v2_served; compare 400/400 zero diffs; suite 712p/8f pre-existing; Keycloak +3400 redirects/origins only
+[OV] START 5d8026a - independent verification of onboarding+wiring (base integration/v2-waves @ 8b57e0d)
+[OV] DONE 2a8fb3f - verification complete: NO-GO merge; 1 regression (d4de1ead paytm foreign-marker via c43e8f1), 1 workbook row-drop (0a05a1f7 hdfc), 8 unresolved markerless csb->federal accepts; all 30 bank statuses confirmed; SERVE_BANKS unchanged; suite 712p/8f pre-existing; PII scan CLEAN

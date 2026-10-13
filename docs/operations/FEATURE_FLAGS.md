@@ -46,6 +46,18 @@ STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
 `STATEMENT_ENGINE_UNIVERSAL_MODE` is **not** declared in compose — unset
 containers therefore run it `off` (safe).
 
+`docker-compose.onboard.yml` (project `onb`) declares the same flags through
+stack-local variables so the onb defaults can differ without touching shipped
+defaults:
+
+```
+STATEMENT_ENGINE_V2_MODE: ${ONB_V2_MODE:-serve}
+STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union}
+```
+
+Shipped defaults are unchanged; `ONB_*` only affects the `onb` stack. See
+`docs/onboarding/WIRING.md`.
+
 ## Frontend
 
 No `STATEMENT_ENGINE_*` variable is read by frontend code. The UI learns

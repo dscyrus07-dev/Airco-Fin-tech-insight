@@ -454,3 +454,29 @@ def test_statement_check_lands_after_real_generator_sheets(tmp_path):
         for ws in after.worksheets[: len(names_before)]
     ))
     assert hash_after == hash_before  # the 9 original sheets are cell-identical
+
+
+def test_statement_check_flags_needs_review_when_advisory_failed(tmp_path):
+    """Legacy-served workbook next to a FAILED engine advisory must say it needs review (found in overnight verification:
+    a FAILED statement showed 'Needs review: no')."""
+    xlsx = tmp_path / "w.xlsx"
+    _tiny_workbook(str(xlsx))
+    adv = {"verdict": "FAILED", "review_codes": ["CHAIN_BREAK", "SIDE_MISMATCH"]}
+    block = serve.engine_block(engine="legacy", mode="serve", routed=None, verdict=None, needs_review=False,
+                               codes=[], advisory=adv)
+    assert serve.append_statement_check_sheet(str(xlsx), block) is True
+    from openpyxl import load_workbook
+    rows = {r[0]: r[1] for r in load_workbook(str(xlsx))["Statement Check"].iter_rows(values_only=True) if r and r[0]}
+    assert rows["Verdict"] == "FAILED" and rows["Needs review"] == "yes"
+    assert "legacy parser" in rows["Note"]
+
+
+def test_statement_check_advisory_review_does_not_force_needs_review(tmp_path):
+    xlsx = tmp_path / "w.xlsx"
+    _tiny_workbook(str(xlsx))
+    block = serve.engine_block(engine="legacy", mode="serve", routed=None, verdict=None, needs_review=False,
+                               codes=[], advisory={"verdict": "REVIEW", "review_codes": ["NO_INDEPENDENT_ANCHOR"]})
+    serve.append_statement_check_sheet(str(xlsx), block)
+    from openpyxl import load_workbook
+    rows = {r[0]: r[1] for r in load_workbook(str(xlsx))["Statement Check"].iter_rows(values_only=True) if r and r[0]}
+    assert rows["Needs review"] == "no" and "Note" not in rows

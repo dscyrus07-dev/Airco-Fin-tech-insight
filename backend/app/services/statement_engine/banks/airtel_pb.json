@@ -4,12 +4,15 @@
   "names": [
     "airtel payments bank"
   ],
-  "short_names": [],
+  "short_names": [
+    "airtel"
+  ],
   "ifsc_prefixes": [
     "AIRP"
   ],
   "domains": [
-    "airtelbank.com"
+    "airtelbank.com",
+    "airtel.in/bank"
   ],
   "statement_phrases": [],
   "processor_key": null,

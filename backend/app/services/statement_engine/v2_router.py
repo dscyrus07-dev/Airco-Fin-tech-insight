@@ -26,6 +26,11 @@ DETECTOR_TO_SPEC_BANK = {
     "federal": "federal", "bank_of_baroda": "bob", "icici": "icici", "union": "union", "paytm": "paytm",
     "standard_chartered": "scb", "indian_bank": "indian_bank", "karnataka": "karnataka", "dbs": "dbs", "citibank": "citibank", "kvb": "kvb", "hsbc": "hsbc", "indusind": "indusind", "idbi": "idbi", "pnb": "pnb", "yes": "yes", "iob": "iob", "south_indian": "south_indian", "central_bank": "central_bank", "equitas_sfb": "equitas_sfb", "ujjivan_sfb": "ujjivan_sfb", "bank_of_maharashtra": "bank_of_maharashtra", "bandhan": "bandhan", "au_sfb": "au_sfb", "dcb": "dcb",
     "city_union": "city_union",
+    "csb": "csb",
+    "uco": "uco",
+    "airtel_pb": "airtel_pb",
+    "ippb": "ippb",
+    "dhanlaxmi": "dhanlaxmi",
 }
 _CONFIDENT = ("MEDIUM", "HIGH", "VERY_HIGH")
 

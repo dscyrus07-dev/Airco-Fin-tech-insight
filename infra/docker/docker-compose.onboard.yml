@@ -1,0 +1,114 @@
+# Onboard-wave verification stack — SEPARATE from demo (airco_*), finrc_* and ue_*.
+#
+# Run (from infra/docker):
+#   docker compose -p onb \
+#     -f docker-compose.yml -f docker-compose.onboard.yml \
+#     --env-file <path-to-.env> up -d --build backend frontend redis rabbitmq
+#
+# Distinct container names (onb_*), image tags (onb-*), host ports and a
+# project-scoped network; never `down` or retag the other stacks.
+# Keycloak (8080) + auth-service (8001) are reused read-only via
+# host.docker.internal, same as docker-compose.finrc.yml.
+#
+# Serve allowlist: defaults to the demo build's list. To exercise the newly
+# wired banks add their spec keys:
+#   ONB_SERVE_BANKS="hdfc,sbi,axis,idfc,paytm,citibank,city_union,scb,dbs,dcb,..."
+# (see docs/onboarding/OVERNIGHT_REPORT.md for statuses; nothing onboarded is
+# READY_TO_SERVE, so REVIEW/SHADOW banks serve REVIEW-capped rows).
+services:
+  backend:
+    image: onb-backend
+    container_name: onb_backend
+    restart: "no"
+    depends_on: !reset
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports: !override
+      - "${ONB_BACKEND_PORT:-8401}:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SERVICE_URL: http://host.docker.internal:8001
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
+      S3_ADDRESSING_STYLE: ${S3_ADDRESSING_STYLE:-path}
+      S3_SKIP_CREATE_BUCKET: ${S3_SKIP_CREATE_BUCKET:-true}
+      S3_BUCKET: ${S3_BUCKET:-airco-files}
+      S3_BUCKET_REPORTS: ${S3_BUCKET_REPORTS:-airco-reports}
+      STORAGE_TYPE: ${STORAGE_TYPE:-supabase-s3}
+      SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL}
+      KEYCLOAK_URL: http://localhost:8080
+      KEYCLOAK_INTERNAL_URL: http://host.docker.internal:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
+      KEYCLOAK_ALLOWED_AZP: ${KEYCLOAK_ALLOWED_AZP:-frontend-app}
+      API_KEY_ENVIRONMENT: ${API_KEY_ENVIRONMENT:-test}
+      API_KEY_RATE_LIMIT_DEFAULT: ${API_KEY_RATE_LIMIT_DEFAULT:-60}
+      DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
+      RETENTION_ENABLED: ${RETENTION_ENABLED:-false}
+      STATEMENT_ENGINE_V2_MODE: ${ONB_V2_MODE:-serve}
+      STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union}
+      STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
+      STATEMENT_ENGINE_UNIVERSAL_MODE: ${STATEMENT_ENGINE_UNIVERSAL_MODE:-off}
+      STATEMENT_ENGINE_MISMATCH_GUARD: ${STATEMENT_ENGINE_MISMATCH_GUARD:-1}
+      TEMP_DIR: /app/tmp
+      PYTHONUNBUFFERED: "1"
+
+  frontend:
+    image: onb-frontend
+    container_name: onb_frontend
+    restart: "no"
+    build:
+      context: ../../frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:${ONB_BACKEND_PORT:-8401}
+        NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+        NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
+        NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+        NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
+    ports: !override
+      - "${ONB_FRONTEND_PORT:-3400}:3000"
+    environment:
+      BACKEND_URL: http://backend:8000
+      AUTH_SERVICE_URL: http://host.docker.internal:8001
+      NEXT_PUBLIC_API_URL: http://localhost:${ONB_BACKEND_PORT:-8401}
+      NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+      NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+      NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
+  # collide with (or touch) the running demo/keycloak containers.
+  auth-service:
+    container_name: onb_auth_service
+    ports: !override []
+    profiles: ["onb-disabled"]
+
+  keycloak-postgres:
+    container_name: onb_keycloak_postgres
+    ports: !override []
+    profiles: ["onb-disabled"]
+
+  keycloak:
+    container_name: onb_keycloak
+    ports: !override []
+    profiles: ["onb-disabled"]
+
+  nginx:
+    container_name: onb_nginx
+    ports: !override []
+    profiles: ["onb-disabled"]
+
+  redis:
+    container_name: onb_redis
+    restart: "no"
+    ports: !override []
+    volumes: !override []
+
+  rabbitmq:
+    container_name: onb_rabbitmq
+    restart: "no"
+    ports: !override []
+    volumes: !override []

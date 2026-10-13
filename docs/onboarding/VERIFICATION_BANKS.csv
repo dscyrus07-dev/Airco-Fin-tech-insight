@@ -1,0 +1,31 @@
+bank,files_all,files_text,report_det_pct,my_det_pct,report_V/R/F,my_V/R/F,wrong_bank_accepts,report_status,verify_verdict,verify_note
+airtel_pb,7,7,57.1,85.7,4/7 v2,0/0/4,0,SHADOW_ONLY,CONFIRMED,my det% counts text-file attribution; report measured routed share
+apgb,2,2,-,0.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+apgv,15,15,84.2,86.7,0/16/0,0/13/0,0,SHADOW_ONLY,CONFIRMED,
+au_sfb,17,17,94.4,94.1,15/0/0,14/0/0,0,SHADOW_ONLY,CONFIRMED,
+bandhan,19,18,94.4,94.4,5/5/0,5/5/0,0,SHADOW_ONLY,CONFIRMED,
+bank_of_maharashtra,30,27,100,100.0,9/11/0,8/9/0,0,SHADOW_ONLY,CONFIRMED,
+central_bank,46,38,89.8,86.8,0/28/9,0/24/4,0,SHADOW_ONLY,CONFIRMED,
+cosmos,2,2,-,0.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+csb,17,16,18.8,37.5,pre-spec,0/10/0,8,SHADOW_ONLY,CONFIRMED,8 files accepted under federal spec with zero bank markers; ground truth unresolvable (no OCR)
+dbs,137,132,99.2,98.5,0/112/6,0/112/6,0,SHADOW_ONLY,CONFIRMED,
+dcb,16,15,100,100.0,7/0/8,7/0/8,0,SHADOW_ONLY,CONFIRMED,
+deutsche,2,2,-,100.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+dhanlaxmi,11,11,0,100.0,5/15 v2,0/4/0,0,SHADOW_ONLY,CONFIRMED,
+equitas_sfb,40,36,89.5,88.9,0/23/6,0/23/5,0,SHADOW_ONLY,CONFIRMED,
+federal,344,292,95.5,95.2,144/37/13,130/36/13,0,SHADOW_ONLY,CONFIRMED,
+fincare_sfb,3,3,-,0.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+fino_pb,1,1,-,100.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+hsbc,91,34,97.3,97.1,0/25/0,0/22/0,0,SHADOW_ONLY,CONFIRMED,
+idbi,104,94,72.5,72.3,15/31/9,15/20/9,1,SHADOW_ONLY,CONFIRMED,"1 file (7dd67f11) is a real ICICI doc - corpus mislabel, correct routing"
+indusind,136,130,93.2,93.8,95/3/2,80/3/2,0,SHADOW_ONLY,CONFIRMED,
+iob,66,57,100,100.0,0/55/3,0/50/3,0,REVIEW_ONLY,CONFIRMED,
+ippb,5,5,100,100.0,routed REVIEW,0/4/0,0,SHADOW_ONLY,CONFIRMED,
+kvb,83,74,5.1,5.4,3/0/1,3/0/1,0,SHADOW_ONLY,CONFIRMED,det 5.4% pre-existing; VERIFIED files never reconcile printed summary closing
+pnb,107,86,98.9,98.8,0/57/0,0/56/0,0,SHADOW_ONLY,CONFIRMED,
+south_indian,33,29,100,100.0,0/28/0,0/28/0,0,REVIEW_ONLY,CONFIRMED,
+standard_chartered,232,197,91.9,91.4,158/0/24,147/0/22,0,SHADOW_ONLY,CONFIRMED,
+tmb,2,2,-,100.0,-,0/0/0,0,NOT_POSSIBLE,CONFIRMED,
+uco,9,9,100,100.0,8 v2 (4R/4F),0/4/3,0,SHADOW_ONLY,CONFIRMED,
+ujjivan_sfb,33,33,76.9,75.8,0/24/5,0/20/4,0,SHADOW_ONLY,CONFIRMED,
+yes,128,97,85.8,88.7,16/37/29,15/34/28,0,SHADOW_ONLY,CONFIRMED,

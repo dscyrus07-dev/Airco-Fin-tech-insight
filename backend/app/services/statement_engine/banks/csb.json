@@ -2,9 +2,13 @@
   "id": "csb",
   "display_name": "CSB Bank",
   "names": [
-    "csb bank"
+    "csb bank",
+    "csb bank ltd",
+    "csb bank limited"
   ],
-  "short_names": [],
+  "short_names": [
+    "csb"
+  ],
   "ifsc_prefixes": [
     "CSBK"
   ],
