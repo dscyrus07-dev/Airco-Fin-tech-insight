@@ -142,3 +142,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK airtel_pb READY_TO_SERVE_CANDIDATE - 4/4 VERIFIED on valid files; 3 unrouted are postpaid/fibre billing docs (proven mislabels); thin corpus caveat; already wired
 [UB] BANK uco SHADOW_ONLY - 3R+6F all routed; FAILEDs are honest doc inconsistencies/unreadable cells; no spec gap
 [UB] BANK equitas_sfb SHADOW_ONLY 08a393a
+[UB] BANK dbs SHADOW_ONLY - remaining gap purely engine-class: ~9 balance-less variant files + 6 multi-account FAILED + empty-statement NO_ROWS; Vshare 96.5% but yield ~88% <90%
