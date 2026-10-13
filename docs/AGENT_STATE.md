@@ -139,4 +139,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [PR] DONE 94cdfb5 - Part A PASS all checks; candidates au_sfb + bank_of_maharashtra READY_TO_SERVE_CANDIDATE; dbs/airtel_pb/uco improved SHADOW_ONLY; bandhan/pnb/dcb parked (engine gaps); 613-file compare 0 true regressions; nothing pushed
 
 [UI] START 54f51ab - UI bank states (dropdown groups, support_state, review notices); base integration/v2-waves @ 54f51ab
-[UI] DONE pending-commit - grouped pickers, all_banks API, review-required notices; e2e on onb (set+unset extras)
+[UI] DONE 173aa2f - grouped pickers, all_banks API, review-required notices; e2e on onb (set+unset extras)
