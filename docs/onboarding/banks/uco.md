@@ -43,3 +43,12 @@ distinct fingerprints: 3 | top share: 72.7%
   chain breaks at out-of-order date segments (multi-segment doc, engine gap).
 - Result: 5 REVIEW + 4 FAILED (was 4 REVIEW + 3 FAILED + 2 fallback). Yield 55.6% < 90%,
   corpus 9 files -> SHADOW_ONLY.
+
+## unblock-1 update
+
+- Re-measured at tip: 9 text files -> 3 REVIEW + 6 FAILED, 0 unrouted, det 100%.
+- FAILEDs confirmed honest (promote-1 diagnoses): printed closings contradict the file's own
+  rows (`c3b7130c`, `1dbcd47a`, `2e8168db`, `7f03a50e`), space-glyph unreadable cells
+  (`eb3419dc`), out-of-order multi-segment dates (`14ab1185`). No spec gap remains.
+- Status: **SHADOW_ONLY** — yield 3/9, corpus documents genuinely inconsistent; not fixable
+  by spec, not an engine gap the docs evidence.
