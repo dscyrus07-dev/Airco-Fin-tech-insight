@@ -1,18 +1,18 @@
 {
   "version": 1,
-  "_readme": "See bank_status.README.md. Data, not logic: 'state' may only be review_required | coming_soon | unsupported (verified/legacy are derived from the serve configuration). 'reason' is shown verbatim in the UI for greyed-out or review-flagged banks \u2014 keep it one plain sentence.",
+  "_readme": "See bank_status.README.md. Data, not logic: 'state' may only be review_required | coming_soon | unsupported (verified/legacy are derived from the serve configuration). 'reason' is shown verbatim in the UI for greyed-out or review-flagged banks — keep it one plain sentence.",
   "banks": {
     "iob": {
       "state": "review_required",
-      "reason": "IOB statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+      "reason": "IOB statements print no opening/closing balance anchors, so reports can never be independently verified — every report is marked needs review."
     },
     "south_indian": {
       "state": "review_required",
-      "reason": "South Indian Bank statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+      "reason": "South Indian Bank statements print no opening/closing balance anchors, so reports can never be independently verified — every report is marked needs review."
     },
     "apgv": {
       "state": "review_required",
-      "reason": "AP Grameena Vikas statements print no opening/closing balance anchors, so reports can never be independently verified \u2014 every report is marked needs review."
+      "reason": "AP Grameena Vikas statements print no opening/closing balance anchors, so reports can never be independently verified — every report is marked needs review."
     },
     "bandhan": {
       "state": "coming_soon",
@@ -23,8 +23,8 @@
       "reason": "DCB's statement layout needs engine work that is not scheduled yet."
     },
     "pnb": {
-      "state": "coming_soon",
-      "reason": "Punjab National's mPassbook layout needs engine work that is not scheduled yet."
+      "state": "review_required",
+      "reason": "Punjab National statements print no opening/closing balance anchors, so reports can never be independently verified — every report is marked needs review."
     },
     "indusind": {
       "state": "coming_soon",
