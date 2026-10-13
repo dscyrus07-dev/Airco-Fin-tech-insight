@@ -708,6 +708,11 @@ def process_statement(
     if getattr(result, "status", "") == "success":
         v2_block = _maybe_flag_bank_mismatch(file_path, bank_key, v2_block)
 
+    if getattr(result, "status", "") == "success" and v2_plan is not None:
+        v2_block = _v2serve.apply_row_count_guard(
+            v2_block, v2_plan.routed, getattr(result.metrics, "transaction_count", None)
+        )
+
     # v2 serving: attach the additive block, audit the decision, and append the
     # Statement Check sheet when the block calls for it (never at mode off).
     if _u_block is not None and "universal" not in v2_block:

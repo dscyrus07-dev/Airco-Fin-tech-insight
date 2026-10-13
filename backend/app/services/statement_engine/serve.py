@@ -444,6 +444,29 @@ def append_statement_check_sheet(excel_path: str, block: Dict[str, Any]) -> bool
         return False
 
 
+def apply_row_count_guard(block: Dict[str, Any], routed, workbook_rows: Optional[int]) -> Dict[str, Any]:
+    """A served v2 workbook must carry exactly the rows the engine read.
+
+    If it does not, the workbook is no longer what the engine verified: the block is flagged for review
+    (it never claims a clean result). Only v2-served blocks are touched; counts that cannot be compared are ignored.
+    """
+    try:
+        if not block or block.get("engine") != "v2" or routed is None or workbook_rows is None:
+            return block
+        engine_rows = len(routed.result.transactions or [])
+        if engine_rows and int(workbook_rows) != engine_rows:
+            block["needs_review"] = True
+            block["anchored"] = False
+            codes = list(block.get("review_codes") or [])
+            if "WORKBOOK_ROW_COUNT_MISMATCH" not in codes:
+                codes.append("WORKBOOK_ROW_COUNT_MISMATCH")
+            block["review_codes"] = codes
+            log.warning("v2 served workbook rows (%s) differ from engine rows (%s)", workbook_rows, engine_rows)
+    except Exception:
+        log.debug("row count guard failed", exc_info=True)
+    return block
+
+
 def wants_statement_check(block: Dict[str, Any]) -> bool:
     return bool(block) and (
         block.get("engine") == "v2" or block.get("needs_review") or bool(block.get("advisory"))

@@ -265,7 +265,9 @@ _V2_ROWS_SEEN = []
 
 def _stub_v2_pipeline(self, file_path, user_info, output_dir=None, row_source=None):
     _V2_ROWS_SEEN.append(row_source)
-    return _stub_process_ok(self, file_path, user_info, output_dir)
+    res = _stub_process_ok(self, file_path, user_info, output_dir)
+    res.metrics.transaction_count = len(row_source.transactions)
+    return res
 
 
 class _StubProcessor:
@@ -480,3 +482,23 @@ def test_statement_check_advisory_review_does_not_force_needs_review(tmp_path):
     from openpyxl import load_workbook
     rows = {r[0]: r[1] for r in load_workbook(str(xlsx))["Statement Check"].iter_rows(values_only=True) if r and r[0]}
     assert rows["Needs review"] == "no" and "Note" not in rows
+
+
+def test_row_count_guard_flags_workbook_that_differs_from_engine():
+    from types import SimpleNamespace as NS
+    from app.services.statement_engine import serve
+    routed = NS(result=NS(transactions=[1] * 140))
+    blk = {"engine": "v2", "verdict": "VERIFIED", "needs_review": False, "anchored": True, "review_codes": []}
+    out = serve.apply_row_count_guard(dict(blk), routed, 142)
+    assert out["needs_review"] is True and out["anchored"] is False
+    assert "WORKBOOK_ROW_COUNT_MISMATCH" in out["review_codes"]
+
+
+def test_row_count_guard_leaves_matching_or_legacy_blocks_alone():
+    from types import SimpleNamespace as NS
+    from app.services.statement_engine import serve
+    routed = NS(result=NS(transactions=[1] * 140))
+    ok = {"engine": "v2", "needs_review": False, "anchored": True, "review_codes": []}
+    assert serve.apply_row_count_guard(dict(ok), routed, 140) == ok
+    leg = {"engine": "legacy", "needs_review": False}
+    assert serve.apply_row_count_guard(dict(leg), routed, 1) == leg
