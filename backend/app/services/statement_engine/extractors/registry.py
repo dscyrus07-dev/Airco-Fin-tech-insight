@@ -32,7 +32,7 @@ from .city_union.layout_spec import CUB_LAYOUT_1, CUB_LAYOUT_2
 from .ujjivan.layout_spec import UJJIVAN_LAYOUT_1
 from .bom.layout_spec import BOM_LAYOUT_1, BOM_LAYOUT_2
 from .bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2
-from .au_sfb.layout_spec import AU_LAYOUT_1
+from .au_sfb.layout_spec import AU_LAYOUT_1, AU_LAYOUT_2
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
 from .csb.layout_spec import CSB_LAYOUT_1
@@ -64,7 +64,9 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # INDIAN_BANK_LAYOUT_3 parked: 62%/56% trusted on build/hold-out (Mmm-first sub-variant embeds balances inside narration)
                                    KARNATAKA_LAYOUT_1, DBS_LAYOUT_1, CITIBANK_LAYOUT_1, KVB_LAYOUT_1, HSBC_LAYOUT_1, INDUSIND_LAYOUT_1, IDBI_LAYOUT_1, IDBI_LAYOUT_2, PNB_LAYOUT_1, YES_LAYOUT_1, YES_LAYOUT_3, IOB_LAYOUT_1, IOB_LAYOUT_2,
                                    # YES_LAYOUT_2 parked: wrapped 'Running|Balance' header routes 24% trusted (5V/16F chain+side) on fresh 97-file re-measure
-                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1, DCB_LAYOUT_1, APGV_LAYOUT_1,
+                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, EQUITAS_LAYOUT_1, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1,
+                                   # promote-1: AU newer export (wrapped 2-line header, rupee-marked money cols, AUBANK.IN footer marker)
+                                   AU_LAYOUT_2, DCB_LAYOUT_1, APGV_LAYOUT_1,
                                    # onboard-all: CSB "Statement of Account" export (federal-shaped; CSB marker evidence)
                                    CSB_LAYOUT_1,
                                    # onboard-all: UCO "Statement of Account" exports (with/without instrument column)
