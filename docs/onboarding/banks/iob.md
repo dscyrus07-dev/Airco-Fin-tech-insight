@@ -25,3 +25,15 @@ distinct fingerprints: 5 | top share: 50.0%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 0 of 0 VERIFIED | ok: 0 | disagreements: 0
+
+## [UB] §3 REVIEW_ONLY serve test
+
+- `decide_serve` for a REVIEW verdict on an allowlisted bank with NO legacy processor:
+  `serve_v2=True, needs_review=True` -> v2 rows served flagged, workbook clearly marked.
+- Synthetic e2e (onb stack, `ONB_EXTRA_SERVE_BANKS=iob`): analyze REVIEW (iob VERY_HIGH,
+  L1 layout), confirm, process -> completed. Workbook `Statement Check`:
+  `Engine: v2 | Verdict: REVIEW | Independently verified: no | Needs review: yes |
+  Review reasons: NO_INDEPENDENT_ANCHOR, EXTRACTION_WARNINGS`. Transactions correct;
+  Summary `bankName` shows `Unknown` (generic v2 row renderer) - cosmetic.
+- Honest: verdict is never dressed up as verified. Status: **REVIEW_ONLY_SERVABLE**
+  (requires `iob` in the serve allowlist; corpus: 55 REVIEW, 3 honest FAILED, 4 no_layout).

@@ -153,3 +153,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [UB] BANK csb SHADOW_ONLY - L2 ePassbook + L3 TRANS/VALUE variants (1 VERIFIED new; FAILEDs honest: unprinted balances/stray date fragment; 2 markerless bank_unconfirmed; 8 misfiled Federal docs correctly routed; cross 0/393)
 
 [UB] BANK dhanlaxmi SHADOW_ONLY - fp-A confirmed engine gap (above-row amount + inline Balance: label + 3-line header); fp-C spec-able but space-glyph balances -> honest FAILED, not added; yield ceiling 47% stands
+
+[UB] BANK iob REVIEW_ONLY_SERVABLE - decide_serve REVIEW+no-legacy serves v2 needs_review; synthetic e2e workbook shows REVIEW/Needs review:yes/NO_INDEPENDENT_ANCHOR (onb, extras=iob)
+
+[UB] BANK south_indian REVIEW_ONLY_SERVABLE - same e2e honest REVIEW serve; latent marker collision noted (INDIANBANK substring inside SOUTHINDIANBANK if brand ever prints)
