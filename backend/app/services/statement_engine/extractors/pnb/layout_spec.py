@@ -18,7 +18,7 @@ PNB_LAYOUT_1 = LayoutSpec(
         "instid": (("instrumentid",), ("instrument", "id")),
         "type": (("type",),),
         "narration": (("remarks",),),
-        "amount": (("amount",),),
+        "amount": (("amount",), ("amountinr",)),
         "balance": (("balance",),),
     },
     text_columns=("date", "narration"),
