@@ -177,4 +177,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 
 [RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
 
-[RO] DONE pending-commit - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
+[RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
