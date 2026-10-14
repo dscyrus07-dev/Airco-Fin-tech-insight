@@ -43,6 +43,16 @@ from .generic_bank import (
 logger = logging.getLogger(__name__)
 
 
+
+def _num(value):
+    """Decimal (or numeric string) expectation as float for the integrity guard; None stays None."""
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
 def restore_statement_order(validated, engine_rows, key_fn):
     """Order engine rows like the validated sequence.
 
@@ -458,16 +468,16 @@ class BaseBankProcessor:
                     lambda: self.integrity_guard.validate(
                         all_transactions,
                         expected_count=structure_result.metadata.expected_transaction_count,
-                        expected_opening_balance=(
+                        expected_opening_balance=_num(
                             structure_result.metadata.opening_balance
                             or parse_result.opening_balance
                         ),
-                        expected_closing_balance=(
+                        expected_closing_balance=_num(
                             structure_result.metadata.closing_balance
                             or parse_result.closing_balance
                         ),
-                        expected_total_credits=parse_result.total_credits,
-                        expected_total_debits=parse_result.total_debits,
+                        expected_total_credits=_num(parse_result.total_credits),
+                        expected_total_debits=_num(parse_result.total_debits),
                     ),
                     metrics,
                 )
