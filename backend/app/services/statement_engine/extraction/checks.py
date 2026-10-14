@@ -151,12 +151,22 @@ def check_date_outliers(rows: Sequence[NormalizedRow]) -> CheckResult:
     return CheckResult("date_outliers", WARN if out else PASS, {"rows": out[:5], "count": len(out)})
 
 
+def parse_period_date(text: str, period_format: str) -> date:
+    """strptime over the format's "|" alternates (same convention as normalize.parse_date)."""
+    for fmt in period_format.split("|"):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            continue
+    raise ValueError(f"period date {text!r} matches no format")
+
+
 def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], period_format: str = "%d/%m/%Y",
                  tolerance_days: int = _PERIOD_TOLERANCE_DAYS) -> CheckResult:
     if period is None or not rows:
         return CheckResult("period", SKIPPED, {"reason": "no printed period or no rows"})
     try:
-        start, end = (datetime.strptime(period[i], period_format).date() for i in (0, 1))
+        start, end = (parse_period_date(period[i], period_format) for i in (0, 1))
     except ValueError:
         return CheckResult("period", WARN, {"reason": "unparseable printed period", "printed": list(period)})
     first = date.fromisoformat(rows[0].txn.date)

@@ -223,7 +223,9 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                        and any(c in cols for c in (spec.debit_column, spec.credit_column)))
             if "date" in cols or inherit:
                 prev = current
-                current = RawRow(page=pno, top=min(w.top for w in line), date=cols["date"][0] if "date" in cols else prev.date)
+                date_words = " ".join(cols["date"]) if getattr(spec, "date_join_words", False) and "date" in cols \
+                    else (cols["date"][0] if "date" in cols else prev.date)
+                current = RawRow(page=pno, top=min(w.top for w in line), date=date_words)
                 table.rows.append(current)
                 if pending_prefix:
                     current.narration_lines.extend(pending_prefix)
@@ -264,7 +266,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if spec.side_marker_column and cols.get(spec.side_marker_column) and spec.single_amount_column in current.amounts:
                     marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
                     cell = current.amounts[spec.single_amount_column]
-                    if marker and not re.search(r"(?i)\(?(cr|dr)\)?$", cell):
+                    if marker and not re.search(r"(?i)\(?(cr|dr)\)?\.?$", cell):
                         current.amounts[spec.single_amount_column] = cell + " " + marker
                 if any(c in cols for c in spec.amount_columns) and not filled:
                     current.warnings.append("orphan_amount_on_wrapped_line")

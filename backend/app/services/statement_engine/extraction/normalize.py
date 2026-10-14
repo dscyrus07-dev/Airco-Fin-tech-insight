@@ -17,6 +17,10 @@ class NormalizeError(ValueError):
     pass
 
 
+# "(cr|dr)" with optional parens and an optional trailing period: IDBI prints `Dr.`/`Cr.`.
+SIDE_MARKER_RE = re.compile(r"(?i)\(?(cr|dr)\)?\.?$")
+
+
 def _strip_drcr(text: str, spec) -> str:
     """Drop a trailing Dr/Cr word that only restates a split column ("220.00 DR" -> "220.00"); opt-in."""
     if spec.drcr_suffix_decoration:
@@ -33,7 +37,7 @@ def parse_amount(text: str, suffix_sign: bool = False, clipped_sign: bool = Fals
         return None
     t = t.replace(",", "")
     if suffix_sign:
-        m = re.search(r"(?i)\(?(cr|dr)\)?$", t)
+        m = SIDE_MARKER_RE.search(t)
         if not m and clipped_sign:
             m = re.search(r"(?<=[\d.])([cCdD])\)?$", t)
         if m:
@@ -78,7 +82,7 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None
             if spec.single_amount_column:
                 cell = r.amounts.get(spec.single_amount_column, "").strip()
-                m = re.search(r"(?i)\(?(cr|dr)\)?$", cell)
+                m = SIDE_MARKER_RE.search(cell)
                 if m:
                     value = parse_amount(cell[:m.start()])
                     wd, dp = (value, None) if m.group(1).lower() == "dr" else (None, value)

@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Sequence, Tuple
 
 from .anchors import AnchorError, ColumnAnchors, derive_anchors
-from .checks import Checks, run_checks
+from .checks import Checks, parse_period_date, run_checks
 from .layout_spec import LayoutSpec
 from .normalize import NormalizeError, NormalizedRow, normalize_rows, parse_amount
 from .rows import AssembledTable, Page, assemble
@@ -100,7 +100,7 @@ def _merge_drcr_suffix(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     """Attach a separate "Cr"/"Dr" word to the amount printed immediately before it on the same line."""
     out: List[Word] = []
     for w in words:
-        if w.text.strip().lower() in ("cr", "dr", "(cr)", "(dr)") and out:
+        if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", w.text.strip()) and out:
             prev = out[-1]
             if abs(prev.top - w.top) <= 3.0 and -1.0 <= w.x0 - prev.x1 <= 12.0 and spec.amount_re.match(prev.text.strip()):
                 out[-1] = Word(prev.text.strip() + w.text.strip(), prev.x0, w.x1, prev.top, prev.bottom)
@@ -299,7 +299,7 @@ def _add_years(rows, period, spec) -> None:
     if not period:
         return
     try:
-        start, end = (datetime.strptime(period[i], spec.period_date_format).date() for i in (0, 1))
+        start, end = (parse_period_date(period[i], spec.period_date_format) for i in (0, 1))
     except ValueError:
         return
     years = list(range(start.year, end.year + 1))

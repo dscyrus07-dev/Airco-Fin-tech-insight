@@ -108,6 +108,7 @@ IDBI_LAYOUT_3 = LayoutSpec(
     secondary_date_column="value_date",
     band_left_pad={"drcr": 60.0},
     continuation_amounts=True,
+    header_lines=3,               # "Cheque"/"CC" title halves print one line above the main line, "No"/"Y" one below
     header_wraps=True,
     date_left_pad=30.0,
     date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),

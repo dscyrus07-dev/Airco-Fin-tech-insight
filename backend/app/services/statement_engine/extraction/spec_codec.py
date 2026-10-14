@@ -34,6 +34,8 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "anchor_full": spec.anchor_full, "date_left_pad": spec.date_left_pad, "header_wraps": spec.header_wraps,
         "ignore_line_res": [r.pattern for r in spec.ignore_line_res],
         "implicit_header": list(spec.implicit_header),
+        "header_lines": spec.header_lines, "header_merge_tol": spec.header_merge_tol,
+        "untitled_date_column": spec.untitled_date_column, "date_join_words": spec.date_join_words,
     }
 
 
@@ -71,6 +73,9 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             anchor_full=bool(data.get("anchor_full", False)), date_left_pad=float(data.get("date_left_pad", 3.0)), header_wraps=bool(data.get("header_wraps", False)),
             ignore_line_res=tuple(re.compile(x) for x in data.get("ignore_line_res") or ()),
             implicit_header=tuple(data.get("implicit_header") or ()),
+            header_lines=int(data.get("header_lines", 1)), header_merge_tol=float(data.get("header_merge_tol", 4.0)),
+            untitled_date_column=bool(data.get("untitled_date_column", False)),
+            date_join_words=bool(data.get("date_join_words", False)),
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc

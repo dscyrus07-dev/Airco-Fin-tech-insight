@@ -162,3 +162,56 @@ YES_LAYOUT_4 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 YES_LAYOUT_4.validate()
+
+
+# L5 (n1): three-line interleaved header - "Transaction | Value | Cheque | Number/" on the top
+# line, "Description | Debit | Credit" on the middle, "Date | Date | Transaction | Number |
+# Balance" on the bottom. The balance title's halves sit two lines apart with the money titles
+# between them; `header_wraps` cannot bridge that, `header_lines=3` merges all three by
+# horizontal-overlap clusters. Date cells print as three words ("08 Aug 2021") so the date
+# band's words are joined (date_join_words). Ref title merges to "cheque number transaction
+# number" tokens. No own-brand text -> detector routes.
+YES_LAYOUT_5 = LayoutSpec(
+    layout_id="yes_transactiondate_valuedate_chequeno_txnno_description_debit_credit_runningbalance_3l",
+    bank_key="yes",
+    bank_name="Yes Bank",
+    bank_markers=(),
+    merge_statements=True,
+    columns={
+        "date": (("transaction", "date"),),
+        "value_date": (("value", "date"),),
+        "ref": (("chequenumber", "transactionnumber"), ("cheque", "number", "transaction", "number"),
+                ("cheque", "number"), ("transaction", "number"), ("chequenumber",), ("transactionnumber",)),
+        "narration": (("description",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("running", "balance"),),
+    },
+    text_columns=("date", "value_date", "ref", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    secondary_date_column="value_date",
+    header_lines=3,
+    date_join_words=True,
+    band_left_pad={"narration": 46.0},   # description cells start ~25pt left of the title
+    zero_amount_is_empty=True,
+    date_re=re.compile(r"^\d{2} [A-Za-z]{3} \d{4}$|^\d{2}/\d{2}/\d{4}$|^\d{2}-[A-Za-z]{3}-\d{4}$"
+                       r"|^\d{1,2}$|^[A-Za-z]{3}$|^\d{4}$"),
+    date_format="%d %b %Y|%d/%m/%Y|%d-%b-%Y",
+    amount_re=YES_LAYOUT_1.amount_re,
+    period_re=YES_LAYOUT_1.period_re,
+    period_date_format="%d/%m/%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    opening_row_balance_only=True,
+    opening_balance_re=YES_LAYOUT_1.opening_balance_re,
+    closing_balance_re=YES_LAYOUT_1.closing_balance_re,
+    anchor_full=True,
+    end_markers=("^OPENINGBALANCE:",),
+    continuation_start="top",
+    row_order="auto",
+    dates_monotonic_expected=False,
+)
+YES_LAYOUT_5.validate()

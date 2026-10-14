@@ -36,6 +36,19 @@ class LayoutSpec:
     header_repeats: bool = False               # True when every page repeats the table header
     header_wraps: bool = False                 # True when a column title may wrap onto the next visual line; the
                                                # pair is matched as one header (row scan starts after both lines)
+    header_lines: int = 1                      # opt-in: merge up to this many adjacent visual lines into one header
+                                               # stream (fragments of one column title may sit on non-adjacent lines).
+                                               # Words cluster by horizontal overlap (x-ranges within header_merge_tol);
+                                               # each cluster emits its fragments top-to-bottom. Refusal unchanged: the
+                                               # merged view must complete the column set with no unknown token inside.
+    header_merge_tol: float = 4.0              # x-gap (pt) still counted as one title cluster when merging header lines
+    date_join_words: bool = False              # opt-in: the date cell prints as several same-line words
+                                               # ("08 Aug 2021" -> three tokens): join all words of the date band
+                                               # with spaces before parsing (secondary date column already joins)
+    untitled_date_column: bool = False         # opt-in: the leftmost column prints dates but no title. The header must
+                                               # complete every other column with no token left of the first title; the
+                                               # date span is then read from the data rows below (the leftmost x-cluster
+                                               # whose cells all match date_re). Refuses when 0 or >=2 candidates exist.
     ifsc_re: Optional[Pattern[str]] = None
     account_label: str = ""                    # normalised token that precedes the account number value
     end_markers: Tuple[str, ...] = ()          # extra whitespace-free upper-case markers that end the table (footers)
@@ -124,6 +137,12 @@ class LayoutSpec:
                 raise ValueError("side_marker_column requires single_amount_column")
             if self.side_marker_column not in self.columns or self.side_marker_column not in self.text_columns:
                 raise ValueError("side_marker_column must be a declared text column")
+        if self.header_lines < 1:
+            raise ValueError("header_lines must be >= 1")
+        if self.header_merge_tol < 0:
+            raise ValueError("header_merge_tol must be >= 0")
+        if self.untitled_date_column and self.implicit_header:
+            raise ValueError("untitled_date_column and implicit_header are mutually exclusive")
         if self.implicit_header:
             if "narration" not in self.implicit_header or self.implicit_header[0] != "date":
                 raise ValueError("implicit_header must start with 'date' and include 'narration'")

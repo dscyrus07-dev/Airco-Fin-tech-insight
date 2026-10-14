@@ -56,7 +56,9 @@ def _find_sequence(tokens: Sequence[Tuple[str, float, float]], seq: Tuple[str, .
     n = len(seq)
     for i in range(len(tokens) - n + 1):
         if all(tokens[i + k][0] == seq[k] for k in range(n)):
-            return tokens[i][1], tokens[i + n - 1][2]
+            # x-range of the whole run: wrapped fragments can sit left of the last token
+            hit = tokens[i:i + n]
+            return min(t[1] for t in hit), max(t[2] for t in hit)
     return None
 
 
@@ -110,6 +112,76 @@ def _merge_header_pair(upper: Sequence[Word], lower: Sequence[Word]) -> List[Wor
     return merged
 
 
+def _merge_header_lines(lines: Sequence[Sequence[Word]], tol: float) -> List[Word]:
+    """Adjacent visual lines of one wrapped header row as a single matchable stream. Unlike
+    `_merge_header_pair` (x0-proximity, two lines), words cluster by horizontal overlap: a fragment
+    joins a cluster when its x0 lands within `tol` of the cluster's right edge, so a title's pieces
+    join across non-adjacent lines (top / middle / bottom). Each cluster emits its fragments in
+    top-to-bottom line order, preserving the title's word order."""
+    line_of = {}
+    words: List[Word] = []
+    for i, line in enumerate(lines):
+        for w in line:
+            line_of[id(w)] = i
+            words.append(w)
+    words.sort(key=lambda w: w.x0)
+    clusters: List[List[Word]] = []
+    for w in words:
+        if clusters and w.x0 <= max(v.x1 for v in clusters[-1]) + tol:
+            clusters[-1].append(w)
+        else:
+            clusters.append([w])
+    merged: List[Word] = []
+    for cl in clusters:
+        merged.extend(sorted(cl, key=lambda v: (line_of[id(v)], v.x0)))
+    return merged
+
+
+def _find_untitled_date(lines: Sequence[Sequence[Word]], spec: LayoutSpec, start: int,
+                        right: float, probe: int = 12) -> Optional[Tuple[float, float]]:
+    """x-span of an untitled leading date column, read from data rows below the header: every word
+    landing left of `right` on the next `probe` lines is clustered by x-range; a cluster qualifies
+    only when it holds >= 2 cells and every cell matches the spec's date shape. Exactly one
+    qualifying cluster may exist."""
+    clusters: List[List[Word]] = []
+    started = False
+    for line in lines[start:start + probe]:
+        # a line that puts no date-shaped cell in the zone ends the data run: footers and
+        # summary blocks below the table must not poison (or fake) column membership
+        zoned = [w for w in sorted(line, key=lambda v: v.x0) if w.x1 <= right and norm_token(w.text)]
+        if started and not any(spec.date_re.match(w.text.strip()) for w in zoned):
+            break
+        for w in zoned:
+            for cl in clusters:
+                if w.x0 <= max(v.x1 for v in cl) + 4.0:
+                    cl.append(w)
+                    break
+            else:
+                clusters.append([w])
+            if spec.date_re.match(w.text.strip()):
+                started = True
+    candidates = [cl for cl in clusters
+                  if len(cl) >= 2 and all(spec.date_re.match(c.text.strip()) for c in cl)]
+    if len(candidates) != 1:
+        return None
+    cl = candidates[0]
+    return min(c.x0 for c in cl), max(c.x1 for c in cl)
+
+
+def _complete_without_date(line: Sequence[Word], spans: Dict[str, Tuple[float, float]],
+                           spec: LayoutSpec) -> bool:
+    """Every column except 'date' titled, and no token left of the first title or between titles."""
+    if len(spans) != len(spec.columns) - 1 or "date" in spans:
+        return False
+    lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
+    for w in line:
+        if not norm_token(w.text) or w.x1 > hi:
+            continue
+        if not any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values()):
+            return False
+    return True
+
+
 def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[Tuple[int, Dict[str, Tuple[float, float]]]]:
     """Index of the header row's last line holding every column title, and each title's x-span.
 
@@ -121,11 +193,24 @@ def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[T
         spans = _match_spans(line, spec)
         if _complete(line, spans, spec):
             return idx, spans
+        if getattr(spec, "untitled_date_column", False) and _complete_without_date(line, spans, spec):
+            # every other column titled; the date column prints no title: read its span from the data rows
+            dsp = _find_untitled_date(lines, spec, idx + 1, min(x[0] for x in spans.values()))
+            if dsp:
+                return idx, {**spans, "date": dsp}
         if getattr(spec, "header_wraps", False) and idx + 1 < len(lines) and "date" in spans and len(spans) >= 2:
             merged = _merge_header_pair(line, lines[idx + 1])
             mspans = _match_spans(merged, spec)
             if _complete(merged, mspans, spec, center_test=True):
                 return idx + 1, mspans
+        if getattr(spec, "header_lines", 1) > 1:
+            for n in range(2, spec.header_lines + 1):
+                if idx + n > len(lines):
+                    break
+                merged = _merge_header_lines(lines[idx:idx + n], spec.header_merge_tol)
+                mspans = _match_spans(merged, spec)
+                if _complete(merged, mspans, spec, center_test=True):
+                    return idx + n - 1, mspans
     return None
 
 
