@@ -174,3 +174,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [V3] BANK south_indian GO - review-only servable; 3 real REVIEW e2e; fullbrand synth detects sib not indian_bank
 [V3] BANK pnb GO - review-only servable; 3 real REVIEW e2e
 [V3] DONE 202faec - 734-file regression 0 diffs; guard 0 false alarms on 34 workbooks; defect closed; MINOR: integrity_passed=false universal (Decimal->swallowed TypeError, pre-existing)
+
+[RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
+
+[RO] DONE pending-commit - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned

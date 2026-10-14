@@ -9,6 +9,16 @@ STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
 STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S=30
 ```
 
+**Update `411f6ca` (rollout):** `onb` now defaults to the 14-bank list —
+append `au_sfb,bank_of_maharashtra,airtel_pb` (VERIFIED-capable; airtel thin
+corpus — 3 usable files) and `iob,apgv,south_indian,pnb` (review-only: always
+needs-review, `NO_INDEPENDENT_ANCHOR`). **Axis caveat:** the audit found a
+truncated-statement file (`000df35f`) that printed VERIFIED on 1,141 of 1,147
+rows. On the current tip the completeness guard catches it — it lands REVIEW
+with `unread_transaction_lines:6`. Do not demo Axis as unconditionally clean;
+the correct line is "verified, with automated completeness checks that catch
+truncated statements."
+
 Every bank shows exactly what is true today — v2 VERIFIED, v2 needs review,
 legacy processed, or not supported. Nothing unverified is presented as verified.
 IndusInd is deliberately **not** allowlisted: it passed every corpus gate but
@@ -21,7 +31,7 @@ the checks-layer fix lands.
 |---|---|---|---|
 | HDFC Bank | **v2** | VERIFIED badge + `Statement Check` sheet | 3/3 VERIFIED E3 picks; mutation caught → FAILED |
 | State Bank of India | **v2** | VERIFIED; REVIEW files defer to legacy | 3/3 VERIFIED E3 picks |
-| Axis Bank | **v2** | VERIFIED | 3/3 VERIFIED E3 picks |
+| Axis Bank | **v2** | VERIFIED | 3/3 VERIFIED E3 picks — **caveat**: audit-WRONG truncated file (`000df35f`); now caught by completeness guard → REVIEW |
 | IDFC First | **v2** | VERIFIED; REVIEW files defer to legacy | 3/3 VERIFIED E3 picks |
 | Paytm Payments | **v2** | VERIFIED (detector-only evidence class — sweep gate met) | 5/5 VERIFIED E3 picks |
 | Citibank | **v2** | VERIFIED — was "not supported" before this wave (no legacy processor) | 5/5 VERIFIED E3 picks; UI leg PASS incl. Excel download |

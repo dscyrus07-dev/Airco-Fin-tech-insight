@@ -27,7 +27,7 @@ Columns:
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | hdfc | 2309 | 2267 | 8 | 34 | 99.3 | 98.9 | 1.5 | 0 | 0 | document 1822, region 483, detector 4 | ok | **YES** |
 | sbi | 2326 | 1771 | 494 | 61 | 77.8 | 97.9 | 2.6 | 0 | 0 | region 2296, document 30 | ok | **YES** |
-| axis | 857 | 830 | 11 | 16 | 98.1 | 98.7 | 1.9 | 0 | 0 | document 709, detector 144, region 4 | ok | **YES** |
+| axis | 857 | 830 | 11 | 16 | 98.1 | 98.7 | 1.9 | 0 | 0 | document 709, detector 144, region 4 | ok | **YES** â€” but see truncated-statement caveat below |
 | idfc | 275 | 258 | 6 | 11 | 97.5 | 96.3 | 4.0 | 0 | n/a | document 265, region 9, detector 1 | ok | **YES\*** |
 | paytm | 142 | 139 | 0 | 3 | 98.6 | 99.3 | 2.1 | 0 | 0 (of 866) | detector 141, document 1 | ok | **YES** (detector-only class — sweep gate met: 0 foreign VERIFIED) |
 | indusind | 85 | 81 | 2 | 2 | 100.0 | 95.3 | 2.4 | 0 | n/a | region 50, document 35 | none | **BLOCKED** — E3 mutation probe: first-row amount +1 stayed VERIFIED (row 0 unconstrained: pairwise chain has no predecessor, reference check derives from balances only, totals not printed). Rows 1/5 mutations correctly FAILED. Fix belongs to checks layer (NOT-ALLOWED) → owner: Claude |
@@ -60,10 +60,34 @@ Columns:
 
 ## Eligible for serving
 
+E1 gate output (wave-11, 7 banks):
+
 ```
 STATEMENT_ENGINE_V2_MODE=serve
 STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
 ```
+
+**Update `411f6ca` (rollout `devin/rollout-1`):** the `onb` default served list
+is now 14 banks:
+
+```
+STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb
+```
+
+- `au_sfb`, `bank_of_maharashtra`, `airtel_pb` — promoted VERIFIED-capable after
+  the V3 end-to-end proof (dup-key row-leak fix + `apply_row_count_guard`).
+  **airtel_pb caveat**: thin corpus — 3 usable files; 3 more are unidentifiable
+  billing documents that correctly refuse to confirm.
+- `iob`, `apgv`, `south_indian`, `pnb` — served **review-only**: VERIFIED is
+  impossible (no printed balance anchors), every result is flagged
+  needs-review with `NO_INDEPENDENT_ANCHOR`.
+- **Axis truncated-statement caveat (still live):** `comparison/final/REPORT.md`
+  blocker — "axis audit-WRONG reproduced VERIFIED on truncated 1,141/1,147
+  rows" (file `000df35f`: the spec silently dropped rows above period-marker
+  footers). On the current tip the completeness guard catches this file — it
+  now lands REVIEW with `unread_transaction_lines:6` instead of a false
+  VERIFIED. The E1 "YES" stands only with that caveat attached; treat axis as
+  demo-flagged, not clean.
 
 **indusind is excluded**: it passed every E1 threshold but failed the E3
 mutation gate — see its row above. Do not allowlist it until the checks-layer

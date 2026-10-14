@@ -7,6 +7,15 @@ STATEMENT_ENGINE_V2_MODE=serve
 STATEMENT_ENGINE_V2_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union
 ```
 
+**Update `411f6ca` (rollout):** `onb` now defaults to the 14-bank list —
+`…,au_sfb,bank_of_maharashtra,airtel_pb` (VERIFIED-capable; airtel thin
+corpus) + `iob,apgv,south_indian,pnb` (review-only — always "Needs review",
+`NO_INDEPENDENT_ANCHOR`). **Axis caveat:** served, but the audit found a
+truncated statement (`000df35f`) that printed VERIFIED on 1,141/1,147 rows;
+the completeness guard now lands it REVIEW (`unread_transaction_lines:6`).
+Don't present Axis as unconditionally clean — the line is "verified, with
+completeness checks that catch truncated statements."
+
 Browser: `http://localhost:3000` — sign in with the dev-realm account (see RUNBOOK).
 All flows run on the **Analyze statements** page (`/analyze`).
 

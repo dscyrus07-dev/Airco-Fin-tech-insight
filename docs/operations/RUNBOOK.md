@@ -138,14 +138,38 @@ redis 6379, rabbitmq 5672/15672, nginx 80. Flags live in
 `hdfc,sbi,axis,idfc,paytm,citibank,city_union` (see DEMO_READINESS.md,
 DEMO_SCRIPT.md).
 
-## Served list after verification round 3 (V3 GO, tip `bc2cc17`)
+## Served list — current state (rollout `411f6ca`)
 
-Independently verified end to end on the `onb` stack (70 files, 0 row mismatches, 0 formula errors, 0 guard false alarms,
-734-file regression 0 diffs): the `onb` default served list is now
+The `onb` default served list is now 14 banks (shipped in
+`docker-compose.onboard.yml` as the `ONB_SERVE_BANKS` default):
 
 `hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb`
 
-- Verified-capable additions: `au_sfb`, `bank_of_maharashtra`, `airtel_pb` (thin corpus: 6 usable files).
-- Review-only additions (always "Needs review", never VERIFIED, no printed anchors): `iob`, `apgv`, `south_indian`, `pnb`.
-- The demo (`demo_*`) and `ue_*` stacks keep their own lists; to enable the same on them set
-  `STATEMENT_ENGINE_V2_SERVE_BANKS` to the line above and restart the backend only. Roll back by restoring the old line.
+- VERIFIED-capable (10): the original 7 + `au_sfb`, `bank_of_maharashtra`,
+  `airtel_pb` (thin corpus: 3 usable files).
+- Review-only (4, always "Needs review", `NO_INDEPENDENT_ANCHOR`, never
+  VERIFIED): `iob`, `apgv`, `south_indian`, `pnb`.
+- Axis carries the truncated-statement caveat — see `PRODUCT_STATUS.md`.
+
+### Roll back to the old 7-bank list (one line)
+
+```bash
+ONB_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union docker compose -p onb -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.onboard.yml --env-file <env> up -d --no-deps backend
+```
+
+### Add a bank
+
+1. It must pass the evidence gate first (V3-style end-to-end proof — see
+   `docs/onboarding/VERIFY3_REPORT.md`); do not add unverified banks.
+2. Temporary (this boot only): `ONB_EXTRA_SERVE_BANKS=<id>` + recreate backend.
+3. Permanent: edit the `ONB_SERVE_BANKS` default in
+   `docker-compose.onboard.yml` and update `bank_status.json` +
+   `PRODUCT_STATUS.md`.
+
+### Served list per stack
+
+| Stack | Served list |
+|---|---|
+| `onb_*` (:8401/:3400) | 14 banks above (compose default) |
+| `ue_*` (:8101/:3000) | own env — 7-bank list unless `STATEMENT_ENGINE_V2_SERVE_BANKS` was overridden |
+| `demo_*` / `airco_*` (wt-demo :8000/:3000) | `hdfc,sbi,axis,idfc,paytm,citibank,city_union` in `wt-demo/local.env` (DEMO_READINESS.md) |

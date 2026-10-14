@@ -1,5 +1,30 @@
 # Product status â€” per bank (`devin/final-rc`, measured 2026-10-12)
 
+> **Serve state updated for the 14-bank rollout (`devin/rollout-1`, base
+> `411f6ca`).** The `onb` default served list is now
+> `hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,
+> airtel_pb,iob,apgv,south_indian,pnb`: 10 VERIFIED-capable + 4 review-only
+> (`review_required` in the API, always flagged needs-review). The table below
+> still reflects the final-rc measurement wave; banks whose state changed are
+> re-stated in the next section.
+
+## Rolled-out serve list (`411f6ca`)
+
+| Bank | State | Caveats |
+|---|---|---|
+| hdfc, sbi, idfc, paytm, citibank, city_union | `verified` (VERIFIED-capable) | unchanged from wave-11 |
+| axis | `verified` (VERIFIED-capable) | **truncated-statement caveat**: spec could silently drop rows above period-marker footers (`000df35f`, 1,141/1,147 rows). As of the current tip the completeness guard catches it — REVIEW with `unread_transaction_lines:6` instead of VERIFIED. Still demo-flagged. |
+| au_sfb | `verified` | promoted after `restore_statement_order` dup-key fix (V3 GO) |
+| bank_of_maharashtra | `verified` | promoted (V3 GO) |
+| airtel_pb | `verified` | promoted (V3 GO) — **thin corpus** (3 usable files; 3 more are unidentifiable billing docs that honestly refuse) |
+| iob | `review_required` | no printed balance anchors — VERIFIED impossible; always needs review |
+| apgv | `review_required` | same |
+| south_indian | `review_required` | same; `SOUTHINDIANBANK` marker protects against the INDIANBANK substring collision |
+| pnb | `review_required` | same; `Amount(INR)` title variant accepted (`6705992`) |
+
+8 legacy-only banks remain on the legacy parser: icici, kotak, canara,
+karnataka, union, bank_of_baroda, bank_of_india, indian_bank.
+
 Numbers come from the final-wave runs only:
 `comparison/final/after_*.jsonl` (14,445-file router probe at this branch),
 `comparison/final/mx_*.jsonl` (30-file flag matrix through the orchestrator),
@@ -13,7 +38,7 @@ don't serve Â· **legacy-only** = legacy parser path, no v2 claims Â·
 |---|---|---|---|---|---|
 | HDFC | T2 (spec `hdfc_*`) | VERIFIED, REVIEW | probe VERIFIED count below; e2e completed VERIFIED + Statement Check; mutation caught | none known | **serve** |
 | SBI | T2 (`sbi_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | none known | **serve** |
-| Axis | T2 (`axis_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | **spec truncates rows above period-marker footers â€” audit-WRONG `000df35f` reproduced 1,141 of 1,147 rows as VERIFIED** | **serve-with-blocker** (see REPORT; audit grade WRONG â€” recommend remove from allowlist until spec fix) |
+| Axis | T2 (`axis_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | **spec truncates rows above period-marker footers â€” audit-WRONG `000df35f` reproduced 1,141 of 1,147 rows as VERIFIED. Current tip: completeness guard now lands that file REVIEW (`unread_transaction_lines:6`)** | **serve** (rolled out on `onb`; caveat stands â€” keep demo-flagged) |
 | ICICI | T1 legacy (+T3 REVIEW when legacy fails) | no VERIFIED claim | e2e UNKNOWNâ†’overrideâ†’legacy completed | **audit-WRONG**: legacy fabricates amounts on 2/3 audited files; detector often UNKNOWN â†’ manual pick | **legacy-only** â€” do not demo as verified |
 | IDFC First | T2 (`idfc_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | duplicate printed rows can break the chain check (audit TRUE-WITH-GAPS) | **serve** |
 | Paytm Payments | T2 (`paytm_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | ~30% of rows print no balance â†’ unverifiable (audit TRUE-WITH-GAPS) | **serve** |
@@ -25,11 +50,15 @@ don't serve Â· **legacy-only** = legacy parser path, no v2 claims Â·
 | Bank of India | T1 legacy (added post-880b5e2) | no VERIFIED claim | matrix: legacy success | â€” | **legacy-only** |
 | Canara | none usable (legacy fails; spec not allowlisted) | REVIEW only if T3 | matrix: legacy failed; T3 honest fail | â€” | **not supported** |
 | Bandhan | none | REVIEW only if T3 | matrix: honest fail | â€” | **not supported** |
-| Punjab National | none (no spec, no legacy) | T3 REVIEW | e2e: honest `LOW_CONFIDENCE_COLUMNS` fail | T3 can't express mPassbook layout | **general reader** (when it matches, REVIEW only) |
-| Bank of Maharashtra | none | T3 REVIEW | e2e + UI: T3 completed REVIEW, general-reader badge | REVIEW ceiling | **general reader** |
+| Punjab National | T2 (`pnb_*`, review-only) | REVIEW only | V3: 3 real files REVIEW + `NO_INDEPENDENT_ANCHOR`; 1,171-row file extracts | VERIFIED impossible (no printed anchors) | **serve review-only** (rolled out) |
+| Bank of Maharashtra | T2 (`bom*` / `bank_of_maharashtra_*`) | VERIFIED, REVIEW | V3: 7 e2e files, 4 VERIFIED + 3 REVIEW | â€” | **serve** (rolled out, VERIFIED-capable) |
 | Tamilnad Mercantile | none | T3 REVIEW | matrix u-serve: REVIEW (465-row class OK in univ wave) | â€” | **general reader** |
 | Dhanlaxmi | none | T3 REVIEW | matrix u-serve: REVIEW | â€” | **general reader** |
-| South Indian | none | T3 REVIEW | e2e: honest fail | this file's layout unreadable | **general reader** |
+| South Indian | T2 (`sib_*`/`south_indian_*`, review-only) | REVIEW only | V3: 3 real files REVIEW; full-brand synth detects `south_indian` not `indian_bank` | marker-less layouts + no printed anchors | **serve review-only** (rolled out) |
+| AU Small Finance | T2 (`au_sfb_*`) | VERIFIED, REVIEW | V3: 5 e2e VERIFIED incl. dup-key defect file (140 rows exact) | â€” | **serve** (rolled out) |
+| Airtel Payments | T2 (`airtel_*`) | VERIFIED, REVIEW | V3: 3/6 files VERIFIED | thin corpus â€” 3 files unidentifiable (honest refusal) | **serve** (rolled out; thin-corpus caveat) |
+| Indian Overseas | T2 (`iob_*`, review-only) | REVIEW only | V3: 3 real files REVIEW + `NO_INDEPENDENT_ANCHOR` | VERIFIED impossible | **serve review-only** (rolled out) |
+| AP Grameena Vikas | T2 (`apgv_*`, review-only) | REVIEW only | V3: 3 real files REVIEW | VERIFIED impossible | **serve review-only** (rolled out) |
 | Other registered specs (~30 more in `extractors/`) | T2 shadow-capable | VERIFIED only if allowlisted | not re-measured individually | evidence gate not passed | **shadow** |
 | Anything else / non-statement | â€” | â€” | e2e: non-statement â†’ "could not identify"; locked â†’ password prompt; negatives never VERIFIED | â€” | **not supported** |
 
