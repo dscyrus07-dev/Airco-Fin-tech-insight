@@ -42,6 +42,10 @@ DCB_LAYOUT_1 = LayoutSpec(
     closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]+(?:\.\d{1,2})?)"),
     anchor_full=True,
     opening_row_balance_only=True,
+    segment_header_re=re.compile(r"(?i)^ACCOUNTDETAILS$"),
+    segment_count_re=re.compile(r"(?i)totalnumberoftransactions"),
+    totals_line_re=re.compile(r"(?i)turnover(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{2})"),
+    totals_accumulate=True,
     row_order="auto",
 )
 DCB_LAYOUT_1.validate()

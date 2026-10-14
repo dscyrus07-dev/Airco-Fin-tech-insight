@@ -132,6 +132,47 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
+def _document_anchors(pages: Sequence[Page], spec: LayoutSpec) -> Tuple[List[Decimal], List[Decimal], List[Tuple[str, str]]]:
+    """Whole-document anchor scan (opt-in spec.anchor_scan == "document"): every page's lines are searched for the
+    layout's opening/closing/totals labels, in statement order. Returns the ordered DISTINCT printed values for
+    opening and closing plus every printed totals pair."""
+    openings: List[Decimal] = []
+    closings: List[Decimal] = []
+    totals: List[Tuple[str, str]] = []
+    for pg in pages:
+        lines = group_lines(pg.words)
+        for ln in lines:
+            flat = squash(ln)
+            for rx, acc in ((spec.opening_balance_re, openings), (spec.closing_balance_re, closings)):
+                if rx is not None:
+                    m = rx.search(flat)
+                    if m:
+                        try:
+                            v = Decimal(m.group(1).replace(",", ""))
+                            if v not in acc:
+                                acc.append(v)
+                        except ArithmeticError:
+                            pass
+            if spec.totals_line_re is not None:
+                mt = spec.totals_line_re.search(flat)
+                if mt:
+                    g = mt.groups()
+                    pair = (g[1], g[0]) if spec.totals_credit_first and len(g) >= 2 else (g[0], g[1])
+                    if pair not in totals:
+                        totals.append(pair)
+        if spec.opening_balance_re is not None:
+            # the label and the value may sit on separate lines: the page-level scan keeps that case
+            mo = spec.opening_balance_re.search("".join(squash(ln) for ln in lines))
+            if mo:
+                try:
+                    v = Decimal(mo.group(1).replace(",", ""))
+                    if v not in openings:
+                        openings.append(v)
+                except ArithmeticError:
+                    pass
+    return openings, closings, totals
+
+
 def _prepare_pages(pages: Sequence[Page], spec: LayoutSpec) -> List[Page]:
     """The layout's word preparation (monospace split, amount prefixes, merged dates, Dr/Cr suffixes), shared by the
     extractor and the completeness guard so both see the same words."""
@@ -181,6 +222,27 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.summary = parse_summary(above, spec) if above else None
     else:
         out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
+    doc_opening: Optional[Decimal] = None
+    if spec.anchor_scan == "document":
+        doc_openings, doc_closings, doc_totals = _document_anchors(pages, spec)
+        segmented = spec.segment_header_re is not None
+        if len(doc_openings) > 1 and not segmented:           # multi-account docs legitimately print an opening
+            out.warnings.append("anchor_conflict:opening")    # per segment; per-segment anchors are checkpointed
+        elif doc_openings:
+            doc_opening = doc_openings[0]                     # first printed opening in statement order
+        if len(doc_closings) > 1 and not segmented:
+            out.warnings.append("anchor_conflict:closing")
+        elif doc_closings and not table.printed_closing:
+            table.printed_closing = str(doc_closings[-1])     # last printed closing in statement order
+        if len(doc_totals) > 1:
+            out.warnings.append("anchor_conflict:totals")
+        elif doc_totals and not table.printed_totals:
+            table.printed_totals = doc_totals[-1]
+        if out.summary is not None:                           # the summary block must agree with every printed anchor
+            if doc_opening is not None and out.summary.opening is not None and out.summary.opening != doc_opening:
+                out.warnings.append("anchor_conflict:opening")
+            if doc_closings and out.summary.closing is not None and out.summary.closing != doc_closings[-1]:
+                out.warnings.append("anchor_conflict:closing")
     row_opening = None
     balance_only_first = bool(spec.opening_row_balance_only and table.rows and table.rows[0].amounts.get(spec.balance_column)
                               and not table.rows[0].amounts.get(spec.debit_column) and not table.rows[0].amounts.get(spec.credit_column))
@@ -220,6 +282,8 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
                 mo = spec.opening_balance_re.search(page_last_text)
             if mo:
                 opening = Decimal(mo.group(1).replace(",", ""))
+            elif doc_opening is not None:
+                opening = doc_opening
             elif row_opening is not None:
                 opening = row_opening
             if table.printed_closing:
@@ -244,6 +308,9 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         if rev and not fwd:
             rows.reverse()
             out.notes.append("row_order:reversed")
+    if spec.segment_header_re is not None and len({r.segment for r in rows}) <= 1:
+        for r in rows:                      # a single account leaves no segment id: existing consumers see no new field
+            r.txn.extras.pop("segment", None)
     out.rows = rows
     out.schema_errors = list(errors)
     if not table.rows and not (out.summary and out.summary.dr_count == 0 and out.summary.cr_count == 0):
@@ -251,7 +318,18 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         return out
     out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected,
                           spec.dates_monotonic_expected, spec.period_tolerance_days,
-                          spec.side_flip_policy)
+                          spec.side_flip_policy, spec.no_running_balance, spec.chain_reorder_same_date,
+                          table.segment_counts or None, table.segment_side_counts or None, _checkpoint_amounts(table))
+    return out
+
+
+def _checkpoint_amounts(table: AssembledTable) -> List[Tuple[int, Decimal, str]]:
+    out: List[Tuple[int, Decimal, str]] = []
+    for tup in table.checkpoints:
+        try:
+            out.append((tup[0], Decimal(tup[1].replace(",", "")), tup[2] if len(tup) > 2 else ""))
+        except ArithmeticError:
+            continue
     return out
 
 
@@ -262,6 +340,8 @@ def _key(r: NormalizedRow):
 
 def _chain_ok(prev: NormalizedRow, nxt: NormalizedRow) -> bool:
     t = nxt.txn
+    if prev.txn.balance is None or t.balance is None:
+        return False
     return prev.txn.balance - (t.debit or Decimal(0)) + (t.credit or Decimal(0)) == t.balance
 
 
@@ -289,7 +369,7 @@ def _merge(o1: V2Outcome, o2: V2Outcome, spec: LayoutSpec) -> Optional[V2Outcome
     merged.schema_errors = o1.schema_errors + o2.schema_errors
     merged.notes = o1.notes + o2.notes + [f"merged_statement:overlap_rows={start if start else 0}"]
     merged.checks = run_checks(merged.rows, merged.period, merged.summary, merged.schema_errors, merged.warnings, spec.period_date_format,
-                               spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+                               spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy, spec.no_running_balance, spec.chain_reorder_same_date)
     return merged
 
 
@@ -357,7 +437,7 @@ def _unread_transaction_lines(pages: Sequence[Page], spec: LayoutSpec, rows: Seq
     several tokens, or a line whose last amount happens to equal some balance, is not counted."""
     bals = {abs(r.txn.balance) for r in rows if r.txn.balance is not None}
     pages = _prepare_pages(pages, spec)
-    if not bals:
+    if not bals and not spec.no_running_balance:
         return 0
     keys: List[Optional[Decimal]] = []
     for pg in pages:
@@ -374,6 +454,9 @@ def _unread_transaction_lines(pages: Sequence[Page], spec: LayoutSpec, rows: Seq
             amounts = [k for k in (_amount_key(w.text) for w in ln[1:]) if k is not None]
             if amounts:
                 keys.append(amounts[-1])
+    if spec.no_running_balance:
+        # no balances to map lines onto: every dated amount-bearing line should have produced one row
+        return max(len(keys) - len(rows), 0)
     hit = [i for i, k in enumerate(keys) if k in bals]
     if not hit:
         return 0
@@ -390,7 +473,11 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.warnings.append(f"unread_transaction_lines:{unread}")
         out.notes.append(f"completeness:unread_transaction_lines={unread}")
         out.checks = run_checks(out.rows, out.period, out.summary, out.schema_errors, out.warnings, spec.period_date_format,
-                                spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+                                spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy,
+                                spec.no_running_balance, spec.chain_reorder_same_date,
+                                out.table.segment_counts if out.table is not None else None,
+                                out.table.segment_side_counts if out.table is not None else None,
+                                _checkpoint_amounts(out.table) if out.table is not None else None)
     return out
 
 
@@ -407,7 +494,11 @@ def _extract_pages_core(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
             out.warnings = [w for w in out.warnings if not w.startswith("additional_statement")]     # nothing usable follows
             out.notes.append("ignored_empty_following_statement")
             out.checks = run_checks(out.rows, out.period, out.summary, out.schema_errors, out.warnings, spec.period_date_format,
-                                    spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy)
+                                    spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy,
+                                    spec.no_running_balance, spec.chain_reorder_same_date,
+                                    out.table.segment_counts if out.table is not None else None,
+                                    out.table.segment_side_counts if out.table is not None else None,
+                                    _checkpoint_amounts(out.table) if out.table is not None else None)
             break
         if nxt.failure:
             break

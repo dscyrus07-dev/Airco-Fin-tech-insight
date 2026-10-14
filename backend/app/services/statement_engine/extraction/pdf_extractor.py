@@ -56,7 +56,7 @@ def to_extraction_result(outcome: V2Outcome, spec: LayoutSpec) -> ExtractionResu
         extras={
             "layout_id": spec.layout_id, "ifsc": outcome.ifsc,
             "verdict": checks.verdict if checks else None, "verdict_reasons": list(checks.reasons) if checks else [],
-            "checks": {k: {"status": v.status, **{dk: dv for dk, dv in v.detail.items() if dk in ("outcome", "breaks", "opening_matches", "closing_matches")}} for k, v in (checks.results.items() if checks else [])},
+            "checks": {k: {"status": v.status, **{dk: dv for dk, dv in v.detail.items() if dk in ("outcome", "breaks", "opening_matches", "closing_matches", "same_date_disorder", "segments", "mismatched")}} for k, v in (checks.results.items() if checks else [])},
             "printed_summary": None if summ is None else {
                 "opening": str(summ.opening), "closing": str(summ.closing),
                 "dr_count": summ.dr_count, "cr_count": summ.cr_count,

@@ -36,3 +36,41 @@ HSBC_LAYOUT_1 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 HSBC_LAYOUT_1.validate()
+
+HSBC_LAYOUT_2 = LayoutSpec(
+    layout_id="hsbc_date_paymenttypeanddetails_paidout_paidin_balance",
+    bank_key="hsbc",
+    bank_markers=("HSBC",),
+    bank_name="HSBC UK",
+    columns={
+        "date": (("date",),),
+        "narration": (("payment", "type", "and", "details"), ("paymenttypeanddetails",)),
+        "debit": (("paid", "out"), ("paidout",)),
+        "credit": (("paid", "in"), ("paidin",)),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    balance_optional=True,
+    date_re=re.compile(r"^\d{2} [A-Za-z]{3} \d{2}$"),
+    date_format="%d %b %y",
+    date_join_words=True,
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"(?i)(\d{1,2}[a-z]+)to(\d{1,2}[a-z]+\d{4})"),
+    period_date_format="%d%B|%d%B%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    continuation_start="top",
+    continuation_amounts=True,
+    opening_balance_re=re.compile(r"(?i)balancebroughtforward[^\d-]{0,4}(-?[\d,]+\.\d{2})"),
+    closing_balance_re=re.compile(r"(?i)closingbalance[^\d-]{0,4}(-?[\d,]+\.\d{2})"),
+    balance_checkpoint_re=re.compile(r"(?i)balance(?:brought|carried)\s*forward[^\d-]{0,4}(-?[\d,]+\.\d{2})"),
+    anchor_full=True,
+    row_order="auto",
+    dates_monotonic_expected=True,
+)
+HSBC_LAYOUT_2.validate()

@@ -32,7 +32,9 @@ class RawRow:
     ref: str = ""
     value_date: str = ""
     amounts: Dict[str, str] = field(default_factory=dict)   # money column role -> printed text
+    pending_side: str = ""                                   # side marker seen before its amount (type-on-dated-line)
     warnings: List[str] = field(default_factory=list)
+    segment: int = 0                # account segment index (0 when the document prints no segment headers)
 
     @property
     def narration(self) -> str:
@@ -47,6 +49,9 @@ class AssembledTable:
     summary_page: Optional[int] = None
     printed_totals: Optional[Tuple[str, str]] = None        # (debits, credits) printed as a totals line inside the table
     printed_closing: Optional[str] = None                   # closing balance printed as a line inside the table
+    segment_counts: Dict[int, int] = field(default_factory=dict)   # segment index -> printed transaction count (total)
+    segment_side_counts: Dict[int, Tuple[int, int]] = field(default_factory=dict)  # seg -> (printed debits, credits)
+    checkpoints: List[Tuple[int, str, str]] = field(default_factory=list)  # (rows seen so far, printed balance, 'pre'|'post'|'')
     warnings: List[str] = field(default_factory=list)
 
 
@@ -115,6 +120,7 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
     end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
     current: Optional[RawRow] = None
     ended = False
+    seg_idx = 0
     for pno, page in enumerate(pages, start=1):
         if ended:
             if not spec.dated_rows_after_end_ok and _has_dated_row(group_lines(page.words), anchors, spec) and not any(x.startswith("additional_statement") for x in table.warnings):
@@ -146,25 +152,51 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
             start = first_dated
             if spec.page_break_re is None and not spec.implicit_header:
                 table.warnings.append(f"no_period_marker:page{pno}")
-        if spec.implicit_header:
+        if spec.implicit_header or spec.leading_narration or spec.leading_amounts:
             # the row's first printed line is a narration-band txn-type line ABOVE its dated line: pull it into the scan
-            while start > 0:
-                prev_cols = {classify_word(w, anchors, spec) for w in lines[start - 1]}
-                if prev_cols and prev_cols <= {"narration"}:
+            allowed = {"narration"} | (set(spec.amount_columns) | {"ref", spec.side_marker_column or "ref"} if spec.leading_amounts else set())
+            climb = 3 if spec.leading_amounts else len(lines)
+            while start > 0 and climb:
+                prev_cols = {classify_word(w, anchors, spec) for w in lines[start - 1]} - {None}
+                if prev_cols and prev_cols <= allowed:
                     start -= 1
+                    climb -= 1
                 else:
                     break
         pending_prefix: List[str] = []
+        pending_cells: List[Dict[str, List[str]]] = []
         in_break = False
+        if spec.segment_header_re is not None and marked:
+            # an account block sits ABOVE the repeated column header, outside the scanned region: still register the
+            # new segment and its printed opening/count lines so segmentation stays correct
+            for pre in lines[:start]:
+                pf = squash(pre)
+                if spec.segment_header_re.search(pf):
+                    seg_idx += 1
+                    current = None
+                elif spec.opening_balance_re is not None and spec.opening_balance_re.search(pf):
+                    mo2 = spec.opening_balance_re.search(pf)
+                    table.checkpoints.append((len(table.rows), mo2.group(1), "pre"))
+                elif spec.closing_balance_re is not None and spec.closing_balance_re.search(pf):
+                    mc2 = spec.closing_balance_re.search(pf)
+                    table.printed_closing = mc2.group(1)
+                    table.checkpoints.append((len(table.rows), mc2.group(1), "post"))
         for li in range(start, len(lines)):
             line = lines[li]
             text = squash(line).upper()
+            flat = squash(line)
             if spec.page_break_re is not None:
                 if in_break:
+                    if spec.segment_count_re and spec.segment_count_re.search(flat):  # a count may print inside the break (B. Summary block)
+                        ints = [w.text.strip().replace(",", "") for w in line if re.fullmatch(r"\d[\d,]*", w.text.strip())]
+                        if ints:
+                            table.segment_counts[seg_idx] = int(ints[-1]) if len(ints) == 1 else int(ints[-1]) + int(ints[-2])
+                            if len(ints) >= 2:
+                                table.segment_side_counts[seg_idx] = (int(ints[-2]), int(ints[-1]))
                     if find_header([line], spec):
                         in_break = False
                     continue
-                if spec.page_break_re.search(squash(line)):
+                if spec.page_break_re.search(flat):
                     in_break = True
                     current = None
                     continue
@@ -177,13 +209,46 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if not spec.dated_rows_after_end_ok and _has_dated_row(lines[li + 1:], anchors, spec):
                     table.warnings.append(f"additional_statement_after_summary:page{pno}")
                 break
-            flat = squash(line)
             if any(rx.search(flat) for rx in spec.ignore_line_res):
                 continue
+            if spec.segment_header_re and spec.segment_header_re.search(flat):
+                seg_idx += 1
+                current = None
+                continue
+            if spec.segment_header_re is not None and spec.header_lines <= 1 and find_header([line], spec):
+                current = None                        # a segment's repeated column-header line is not a row
+                continue
+            if spec.balance_checkpoint_re:
+                mb = spec.balance_checkpoint_re.search(flat)
+                if mb:
+                    table.checkpoints.append((len(table.rows), mb.group(1), ""))
+                    current = None
+                    continue
+            if spec.segment_header_re is not None and spec.opening_balance_re is not None:
+                mo = spec.opening_balance_re.search(flat)
+                if mo:   # a segment's printed opening: asserts the NEXT row's implied starting balance
+                    table.checkpoints.append((len(table.rows), mo.group(1), "pre"))
+                    current = None
+                    continue
+            if spec.segment_count_re and spec.segment_count_re.search(flat):
+                ints = [w.text.strip().replace(",", "") for w in line if re.fullmatch(r"\d[\d,]*", w.text.strip())]
+                if ints:
+                    table.segment_counts[seg_idx] = int(ints[-1]) if len(ints) == 1 else int(ints[-1]) + int(ints[-2])
+                    if len(ints) >= 2:
+                        table.segment_side_counts[seg_idx] = (int(ints[-2]), int(ints[-1]))
+                current = None
+                continue
+            if spec.balance_inline_re and current is not None:
+                mib = spec.balance_inline_re.search(flat)
+                if mib:
+                    current.amounts[spec.balance_column] = mib.group(1)
+                    continue
             if spec.closing_balance_re:
                 mc = spec.closing_balance_re.search(flat)
                 if mc:   # printed closing balance line: a reference value, not a transaction or a narration wrap
                     table.printed_closing = mc.group(1)
+                    if spec.segment_header_re is not None:      # a segment's printed closing: asserts the
+                        table.checkpoints.append((len(table.rows), mc.group(1), "post"))   # chain's exit balance
                     current = None
                     continue
             if spec.totals_line_re:
@@ -208,14 +273,38 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 current = RawRow(page=pno, top=min(w.top for w in line), date=(cf.get("date") or [""])[0],
                                  value_date=" ".join(cf.get(spec.secondary_date_column, [])) if spec.secondary_date_column else "")
                 continue
+            line_inline_bal = None
             cols: Dict[str, List[str]] = {}
             for w in line:
+                if spec.balance_inline_re is not None and line_inline_bal is None:
+                    mib = spec.balance_inline_re.fullmatch(w.text.strip())
+                    if mib:                      # a "Balance : X" word glued onto a dated line is that row's balance
+                        line_inline_bal = mib.group(1)
+                        continue
                 col = classify_word(w, anchors, spec)
                 if col:
                     cols.setdefault(col, []).append(w.text.strip())
             if not cols:
                 continue
-            if spec.implicit_header and set(cols) == {"narration"} and li + 1 < len(lines) \
+            if spec.leading_amounts and "date" not in cols:
+                # fp-A prints a record's amount (and a narration line) ABOVE its dated line: buffer every non-dated
+                # line that sits in the run ending at the next dated line. Marker lines (closing/totals/checkpoint/
+                # inline balance) are consumed earlier and never reach this branch.
+                if spec.single_amount_column and not any(c in cols for c in spec.amount_columns):
+                    # the amount word is sometimes glued to a dash ("- 10,000.00 Dr") and lands in a text column:
+                    # recover the trailing amount+side token from the raw line text
+                    ms = re.search(r"(?i)(-?[\d,]+\.\d{2}\s*(?:cr|dr)\.?)\s*$", flat)
+                    if ms:
+                        cols[spec.single_amount_column] = [ms.group(1)]
+                j = li + 1
+                while j < len(lines) and not any(classify_word(w, anchors, spec) == "date" for w in lines[j]):
+                    if _ends(squash(lines[j]).upper(), end_markers):
+                        break
+                    j += 1
+                if j < len(lines):
+                    pending_cells.append(cols)
+                    continue
+            if (spec.implicit_header or spec.leading_narration) and set(cols) == {"narration"} and li + 1 < len(lines) \
                     and any(classify_word(w, anchors, spec) == "date" for w in lines[li + 1]):
                 pending_prefix.append(" ".join(cols["narration"]))
                 continue
@@ -225,8 +314,26 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 prev = current
                 date_words = " ".join(cols["date"]) if getattr(spec, "date_join_words", False) and "date" in cols \
                     else (cols["date"][0] if "date" in cols else prev.date)
-                current = RawRow(page=pno, top=min(w.top for w in line), date=date_words)
+                current = RawRow(page=pno, top=min(w.top for w in line), date=date_words, segment=seg_idx)
                 table.rows.append(current)
+                for pc in pending_cells:           # leading lines' cells belong to this row (amount above the date)
+                    mk = next((v for vs in pc.values() for v in vs if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
+                    for cn, vals in pc.items():
+                        if cn == "narration":
+                            rest = [v for v in vals if v != mk]
+                            if rest:
+                                pending_prefix.append(" ".join(rest))
+                        elif cn in spec.amount_columns and vals and cn not in current.amounts:
+                            current.amounts[cn] = vals[0] + (" " + mk if mk and spec.single_amount_column == cn else "")
+                        elif cn == "ref" and vals:
+                            current.ref += "".join(vals)
+                        elif spec.side_marker_column and cn == spec.side_marker_column:
+                            mk = next((v for v in vals if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
+                            if mk and spec.single_amount_column in current.amounts:
+                                current.amounts[spec.single_amount_column] += " " + mk
+                pending_cells = []
+                if line_inline_bal is not None:
+                    current.amounts[spec.balance_column] = line_inline_bal
                 if pending_prefix:
                     current.narration_lines.extend(pending_prefix)
                     pending_prefix = []
@@ -235,7 +342,8 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 if spec.secondary_date_column:
                     current.value_date = " ".join(cols.get(spec.secondary_date_column, [])) or (prev.value_date if inherit else "")
                 for name in spec.amount_columns:
-                    vals = [v for v in cols.get(name, []) if not (spec.empty_amount_marker and v == spec.empty_amount_marker)]
+                    vals = [v for v in cols.get(name, []) if v.strip()
+                            and not (spec.empty_amount_marker and v == spec.empty_amount_marker)]
                     if vals:
                         current.amounts[name] = vals[0]
                         if len(vals) > 1:
@@ -244,7 +352,11 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
                     if marker and spec.single_amount_column in current.amounts:
                         current.amounts[spec.single_amount_column] = current.amounts[spec.single_amount_column] + " " + marker
+                    elif marker:
+                        current.pending_side = marker     # the amount arrives on a later line (continuation_amounts)
             elif current is not None:
+                if line_inline_bal is not None:
+                    current.amounts[spec.balance_column] = line_inline_bal
                 if "date_tail" in cols:
                     current.date = f"{current.date} {' '.join(cols['date_tail'])}"
                 tail = (spec.secondary_date_column or "") + "_tail"
@@ -262,6 +374,9 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     for name in spec.amount_columns:
                         if cols.get(name) and not current.amounts.get(name):
                             current.amounts[name] = cols[name][0]
+                            if name == spec.single_amount_column and current.pending_side:
+                                current.amounts[name] += " " + current.pending_side
+                                current.pending_side = ""
                             filled = True
                 if spec.side_marker_column and cols.get(spec.side_marker_column) and spec.single_amount_column in current.amounts:
                     marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
@@ -274,4 +389,14 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     current.narration_lines.append(" ".join(cols["narration"]))
                 if "ref" in cols:
                     current.ref += "".join(cols["ref"])
+    if spec.segment_header_re is not None and any(r.segment for r in table.rows):
+        # account blocks above the header bump seg_idx before any row exists: renumber the used ids densely
+        # (0..k) so consumers see stable per-segment indices; segment count maps follow the same remap
+        remap: Dict[int, int] = {}
+        for r in table.rows:
+            if r.segment not in remap:
+                remap[r.segment] = len(remap)
+            r.segment = remap[r.segment]
+        table.segment_counts = {remap.get(k, k): v for k, v in table.segment_counts.items()}
+        table.segment_side_counts = {remap.get(k, k): v for k, v in table.segment_side_counts.items()}
     return table

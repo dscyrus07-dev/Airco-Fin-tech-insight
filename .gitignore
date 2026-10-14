@@ -198,3 +198,4 @@ local.env
 tools/verify/.local/
 tools/verify3/.local/
 tools/n1/.local/
+tools/n2/.local/

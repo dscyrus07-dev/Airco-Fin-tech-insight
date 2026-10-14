@@ -36,6 +36,12 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "implicit_header": list(spec.implicit_header),
         "header_lines": spec.header_lines, "header_merge_tol": spec.header_merge_tol,
         "untitled_date_column": spec.untitled_date_column, "date_join_words": spec.date_join_words,
+        "anchor_scan": spec.anchor_scan, "no_running_balance": spec.no_running_balance, "leading_narration": spec.leading_narration, "balance_optional": spec.balance_optional, "leading_amounts": spec.leading_amounts, "chain_reorder_same_date": spec.chain_reorder_same_date,
+        "segment_header_re": spec.segment_header_re.pattern if spec.segment_header_re else None,
+        "segment_count_re": spec.segment_count_re.pattern if spec.segment_count_re else None,
+        "balance_checkpoint_re": spec.balance_checkpoint_re.pattern if spec.balance_checkpoint_re else None,
+        "balance_inline_re": spec.balance_inline_re.pattern if spec.balance_inline_re else None,
+        "single_amount_default_side": spec.single_amount_default_side,
     }
 
 
@@ -76,6 +82,17 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             header_lines=int(data.get("header_lines", 1)), header_merge_tol=float(data.get("header_merge_tol", 4.0)),
             untitled_date_column=bool(data.get("untitled_date_column", False)),
             date_join_words=bool(data.get("date_join_words", False)),
+            anchor_scan=data.get("anchor_scan", "edges"),
+            no_running_balance=bool(data.get("no_running_balance", False)),
+            leading_narration=bool(data.get("leading_narration", False)),
+            balance_optional=bool(data.get("balance_optional", False)),
+            leading_amounts=bool(data.get("leading_amounts", False)),
+            chain_reorder_same_date=bool(data.get("chain_reorder_same_date", False)),
+            segment_header_re=re.compile(data["segment_header_re"]) if data.get("segment_header_re") else None,
+            segment_count_re=re.compile(data["segment_count_re"]) if data.get("segment_count_re") else None,
+            balance_checkpoint_re=re.compile(data["balance_checkpoint_re"]) if data.get("balance_checkpoint_re") else None,
+            balance_inline_re=re.compile(data["balance_inline_re"]) if data.get("balance_inline_re") else None,
+            single_amount_default_side=data.get("single_amount_default_side", ""),
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc

@@ -70,6 +70,7 @@ class NormalizedRow:
     reversal: bool               # printed as a negative amount
     row_warnings: List[str] = field(default_factory=list)
     printed_kind: str = "debit"  # "debit" | "credit": which side of the statement the printed column belongs to
+    segment: int = 0             # account segment (0 when the document prints no segment headers)
 
 
 def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[NormalizedRow], List[str]]:
@@ -89,19 +90,25 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
                 elif cell[:1] in ("+", "-") and spec.merge_sign_prefix:
                     value = parse_amount(cell[1:])
                     wd, dp = (value, None) if cell[0] == "-" else (None, value)
+                elif spec.single_amount_default_side:
+                    value = parse_amount(cell)
+                    wd, dp = (value, None) if spec.single_amount_default_side == "debit" else (None, value)
                 else:
                     raise NormalizeError("amount cell carries no Dr/Cr marker")
             else:
                 wd = parse_amount(_strip_drcr(r.amounts.get(spec.debit_column, ""), spec))
                 dp = parse_amount(_strip_drcr(r.amounts.get(spec.credit_column, ""), spec))
-            bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
-                               clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
+            if spec.no_running_balance:
+                bal = None
+            else:
+                bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                                   clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
             if spec.zero_amount_is_empty and wd is not None and dp is not None:
                 if wd == 0 and dp != 0:
                     wd = None
                 elif dp == 0 and wd != 0:
                     dp = None
-            if bal is None:
+            if bal is None and not spec.no_running_balance and not spec.balance_optional:
                 raise NormalizeError("missing balance")
             if (wd is None) == (dp is None):
                 raise NormalizeError("row must carry exactly one of the debit/credit columns")
@@ -114,6 +121,11 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             # canonical debit/credit are non-negative and consistent with the balance move: a negative debit-column amount
             # (reversal of a debit) is a credit, a negative credit-column amount is a debit
             is_debit = (side == spec.debit_column) != reversal
+            extras = {"page": r.page, "printed_side": side, "reversal": reversal}
+            if spec.segment_header_re is not None:
+                extras["segment"] = r.segment
+            if spec.no_running_balance:
+                extras["no_running_balance"] = True
             txn = NormalizedTransaction(
                 date=date,
                 description=r.narration,
@@ -122,10 +134,10 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
                 balance=bal,
                 ref_no=r.ref,
                 value_date=value_date,
-                extras={"page": r.page, "printed_side": side, "reversal": reversal},
+                extras=extras,
             )
             out.append(NormalizedRow(txn=txn, page=r.page, printed_side=side, reversal=reversal, row_warnings=list(r.warnings),
-                                    printed_kind="debit" if side == spec.debit_column else "credit"))
+                                    printed_kind="debit" if side == spec.debit_column else "credit", segment=r.segment))
         except NormalizeError as exc:
             errors.append(f"row{i + 1}(page{r.page}): {exc}")
     return out, errors

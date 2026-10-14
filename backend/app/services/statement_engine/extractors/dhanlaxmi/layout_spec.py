@@ -42,3 +42,40 @@ DHANLAXMI_LAYOUT_1 = LayoutSpec(
     date_left_pad=10.0,
 )
 DHANLAXMI_LAYOUT_1.validate()
+
+DHANLAXMI_LAYOUT_2 = LayoutSpec(
+    layout_id="dhanlaxmi_txndate_valuedate_description_chequerefno_txnamount",
+    bank_key="dhanlaxmi",
+    bank_markers=("DHANLAXMIBANK", "DHANBANK"),
+    bank_name="Dhanlaxmi Bank",
+    columns={
+        "date": (("txn", "date"), ("txndate",)),
+        "value_date": (("value", "date"), ("valuedate",)),
+        "narration": (("description",),),
+        "ref": (("cheque/refno",), ("chequerefno",), ("cheque", "refno")),
+        "txn_amount": (("txn", "amount"), ("txnamount",)),
+    },
+    text_columns=("date", "value_date", "narration", "ref"),
+    secondary_date_column="value_date",
+    debit_column="debit",
+    credit_column="credit",
+    single_amount_column="txn_amount",
+    balance_column="balance",
+    balance_inline_re=re.compile(r"(?i)^balance\s*:?\s*(-?[\d,]+\.\d{2})$"),
+    leading_amounts=True,
+    chain_reorder_same_date=True,
+    date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
+    date_format="%d/%m/%Y",
+    amount_re=re.compile(r"(?i)^-?[\d,]*\.\d{2}(\s*(cr|dr)\.?)?$"),
+    period_re=re.compile(r"(?!x)x"),
+    period_date_format="%d/%m/%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_lines=2,
+    header_repeats=True,
+    page_footer_markers=("*CLOSINGBALANCE", "*THISISACOMPUTER"),
+    end_markers=("^OPENINGBALANCEDEBITCOUNT",),
+    row_order="auto",
+)
+DHANLAXMI_LAYOUT_2.validate()

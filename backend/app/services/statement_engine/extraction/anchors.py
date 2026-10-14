@@ -336,8 +336,11 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if spec.date_tail_re and spec.date_tail_re.match(text):
             return "date_tail"
         return "narration"   # undated text in the date band = narration wrap
-    # a non-amount word right of the money columns belongs to a trailing column the layout does not use (e.g. branch code)
-    if anchors.amount_edges and word.x0 > max(anchors.amount_edges.values()) + _TRAILING_COLUMN_GAP and not spec.amount_re.match(text):
+    # a non-amount word right of the money columns belongs to a trailing column the layout does not use (e.g. branch code);
+    # exempt a layout whose last text column itself sits right of the money columns: that space is declared
+    max_edge = max(anchors.amount_edges.values()) if anchors.amount_edges else None
+    if (max_edge is not None and word.x0 > max_edge + _TRAILING_COLUMN_GAP and not spec.amount_re.match(text)
+            and anchors.text_lefts.get(spec.text_columns[-1], 0.0) <= max_edge):
         return None
     band = spec.text_columns[1]
     for col in spec.text_columns[1:]:
@@ -353,6 +356,19 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if not last_band:
             return None
     elif not last_band:
+        # a money-shaped word inside a middle text band still belongs to its money column when its right edge
+        # aligns (single-amount exports print the amount under a header flanked by text columns)
+        if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
+                or (spec.wrapped_amount_tokens and _WRAPPED_AMOUNT_FRAGMENT.match(text))):
+            edges = anchors.amount_edges
+            nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
+            if not spec.left_aligned_amounts and abs(word.x1 - edges[nearest]) <= _amount_tolerance(edges, nearest):
+                return nearest
+            if spec.left_aligned_amounts:
+                lefts = anchors.amount_lefts or {c: edges[c] for c in edges}
+                for col in sorted(lefts, key=lefts.get, reverse=True):
+                    if word.x0 >= lefts[col] - 2.0:
+                        return col
         return band
     if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
             or (spec.wrapped_amount_tokens and _WRAPPED_AMOUNT_FRAGMENT.match(text))):

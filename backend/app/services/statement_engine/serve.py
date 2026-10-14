@@ -126,13 +126,24 @@ def review_codes(routed) -> List[str]:
     checks = v2_checks(routed)
     codes: List[str] = []
     st = {n: _status(checks, n) for n in ("reference", "chain", "side", "totals", "dates",
-                                          "date_outliers", "period", "schema")}
+                                          "date_outliers", "period", "schema", "segments",
+                                          "checkpoints", "balance_delta")}
     if st["reference"] in ("skipped", "skip"):
         codes.append("NO_INDEPENDENT_ANCHOR")
     elif st["reference"] == "fail":
         codes.append("REFERENCE_MISMATCH")
-    if st["chain"] == "fail":
+    if st["chain"] == "skipped":
+        codes.append("NO_RUNNING_BALANCE")          # balance-less layout: chain cannot engage; REVIEW ceiling
+    elif st["chain"] == "fail":
         codes.append("CHAIN_BREAK")
+    if st["chain"] == "warn" and (checks.get("chain") or {}).get("same_date_disorder"):
+        codes.append("SAME_DATE_DISORDER")          # same-date rows print out of balance order; reorder reconciles
+    if st["checkpoints"] == "fail":
+        codes.append("CHECKPOINT_MISMATCH")         # printed B/F-C/F balance contradicts the rows between
+    if st["balance_delta"] == "fail":
+        codes.append("BALANCE_DELTA_MISMATCH")      # printed opening->closing gap disagrees with the sums
+    if st["segments"] in ("fail", "warn"):
+        codes.append("SEGMENT_COUNT_MISMATCH")      # per-account printed transaction count not reproduced
     if st["side"] in ("fail", "warn"):
         codes.append("SIDE_MISMATCH")
     if st["totals"] in ("fail", "warn"):

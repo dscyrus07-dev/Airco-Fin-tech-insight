@@ -18,6 +18,11 @@ export const REVIEW_REASON_LABELS: Record<string, string> = {
   OUTSIDE_PERIOD: 'Data outside the statement period',
   SCHEMA_ERRORS: 'Row schema errors',
   EXTRACTION_WARNINGS: 'Extraction warnings were raised',
+  NO_RUNNING_BALANCE: 'No running balance column — verified against completeness and printed totals only',
+  CHECKPOINT_MISMATCH: 'Printed carried-forward balance does not match the extracted rows',
+  BALANCE_DELTA_MISMATCH: 'Printed opening-to-closing movement disagrees with extracted totals',
+  SEGMENT_COUNT_MISMATCH: 'A printed per-account transaction count was not reproduced',
+  SAME_DATE_DISORDER: 'Same-date rows print out of balance order — a reorder reconciles the chain',
   BANK_MISMATCH: 'Detected bank differs from the selected bank',
   GENERAL_READER: 'Layout read by the general reader — check the figures',
 }

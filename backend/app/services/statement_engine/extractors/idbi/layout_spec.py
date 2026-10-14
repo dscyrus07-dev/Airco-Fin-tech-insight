@@ -209,3 +209,40 @@ IDBI_LAYOUT_5 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 IDBI_LAYOUT_5.validate()
+
+
+# L6: mobile-app export "Date | Description | Amount | Type" - balance-less single-amount table: the DR/CR
+# marker sits in the Type column on the dated line while the amount prints on the continuation line below.
+IDBI_LAYOUT_6 = LayoutSpec(
+    layout_id="idbi_date_description_amount_type",
+    bank_key="idbi",
+    bank_markers=("IDBIBANK", "IDBI.COM"),
+    bank_name="IDBI Bank",
+    columns={
+        "date": (("date",),),
+        "narration": (("description",),),
+        "amount": (("amount",),),
+        "type": (("type",),),
+    },
+    text_columns=("date", "narration", "type"),
+    debit_column="debit",
+    credit_column="credit",
+    single_amount_column="amount",
+    side_marker_column="type",
+    balance_column="",
+    no_running_balance=True,
+    continuation_amounts=True,
+    date_re=re.compile(r"^\d{2}-\d{2}-\d{4}$"),
+    date_format="%d-%m-%Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"(?i)from(\d{2}/\d{2}/\d{4})to(\d{2}/\d{2}/\d{4})"),
+    period_date_format="%d/%m/%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    continuation_start="top",
+    row_order="auto",
+    dates_monotonic_expected=False,
+)
+IDBI_LAYOUT_6.validate()
