@@ -183,3 +183,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N1] DONE 8e75997 - Dr./Cr. markers + header_lines/merge_tol + untitled_date_column + date_join_words; period-date '|' fix; IDBI L3 + YES L5 + CBI L4 + PNB L2/L3 registered shadow-only; implicit_header absent-col PARKED; regression 734/0 diffs; audits 32 ok; cross-bank 0
 [N2] START c352a25 - balance-less tables, per-account sub-tables, whole-doc anchors, non-row balances
 [N2] DONE f8828a0 - no_running_balance + segments (dense ids, per-seg chains/counts, pre/post checkpoints) + anchor_scan=document + checkpoints/inline/sparse balances + leading/continuation amounts + same-date reorder WARN; DBS_L3 + IDBI_L6 + DHANLAXMI_L2 + HSBC_L2 registered shadow-only; dcb counts/turnover + bom doc anchors + DBS_L1 segments; PARKED: hsbc undated sub-rows, equitas interleaved-wrap (N3); idbi L6 gated by detection (unbranded exports); regression 734/4 diffs = bom upgrades only (audit-clean); suite 472 + N2 26
+
+[N3] START edd3e36 - date-grouped app statements (federal family), section-date row grouping
