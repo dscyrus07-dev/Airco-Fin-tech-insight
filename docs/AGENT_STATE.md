@@ -180,3 +180,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
 
 [N1] START 5be615d - engine capabilities: Dr./Cr. side markers, multi-line headers, untitled date column, headerless robustness
+[N1] DONE 8e75997 - Dr./Cr. markers + header_lines/merge_tol + untitled_date_column + date_join_words; period-date '|' fix; IDBI L3 + YES L5 + CBI L4 + PNB L2/L3 registered shadow-only; implicit_header absent-col PARKED; regression 734/0 diffs; audits 32 ok; cross-bank 0
