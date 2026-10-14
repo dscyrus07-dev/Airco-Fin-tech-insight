@@ -52,7 +52,7 @@ defaults:
 
 ```
 STATEMENT_ENGINE_V2_MODE: ${ONB_V2_MODE:-serve}
-STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union}
+STATEMENT_ENGINE_V2_SERVE_BANKS: ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb}
 ```
 
 Shipped defaults are unchanged; `ONB_*` only affects the `onb` stack. See

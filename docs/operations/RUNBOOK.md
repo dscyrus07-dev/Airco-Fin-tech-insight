@@ -137,3 +137,15 @@ redis 6379, rabbitmq 5672/15672, nginx 80. Flags live in
 `wt-demo/local.env`. Demo allowlist:
 `hdfc,sbi,axis,idfc,paytm,citibank,city_union` (see DEMO_READINESS.md,
 DEMO_SCRIPT.md).
+
+## Served list after verification round 3 (V3 GO, tip `bc2cc17`)
+
+Independently verified end to end on the `onb` stack (70 files, 0 row mismatches, 0 formula errors, 0 guard false alarms,
+734-file regression 0 diffs): the `onb` default served list is now
+
+`hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb`
+
+- Verified-capable additions: `au_sfb`, `bank_of_maharashtra`, `airtel_pb` (thin corpus: 6 usable files).
+- Review-only additions (always "Needs review", never VERIFIED, no printed anchors): `iob`, `apgv`, `south_indian`, `pnb`.
+- The demo (`demo_*`) and `ue_*` stacks keep their own lists; to enable the same on them set
+  `STATEMENT_ENGINE_V2_SERVE_BANKS` to the line above and restart the backend only. Roll back by restoring the old line.
