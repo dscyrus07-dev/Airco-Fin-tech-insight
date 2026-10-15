@@ -183,4 +183,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N8] STEP robustness - analyze timeouts NOT REPRODUCED (2.9s/5.0s); 160p=88s 90p=110s @1.6GiB; 25-par all-client-timeout but jobs land; mid-flight kill honest-ish (retries to completed, ~min dishonest window); no page cap; no rate limit
 [N8] STEP security - CRITICAL unauth job read+download (measured 200s) + /download/{file} no-auth 200; committed KC secret+e2e pw; secrets in queue payload+redis blob+DLQ forever; history scan clean (355 commits)
 [N8] STEP hygiene - 35.7GB build cache + 2 unused onb-pr1 tags reclaimed; owner commands written
-[N8] DONE 0d4de60 - Track B review; reports docs/{compliance,operations,security}; tools/n8; no product fixes; nothing pushed
+[N8] DONE 760b563 - Track B review; reports docs/{compliance,operations,security}; tools/n8; no product fixes; nothing pushed
