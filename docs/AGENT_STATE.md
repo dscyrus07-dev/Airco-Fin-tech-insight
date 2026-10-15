@@ -178,3 +178,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
 
 [RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
+[N6] START 5be615d (integration/v2-waves tip; Track B, no engine branches)
+[N6] STEP boi-spec+h2h 5be615d - BoI L2 spec built+synth-tested (27/73 REVIEW audited clean, branch-print family parked as engine gap); all 8 banks h2h run w/ production-parity legacy leg; v2_worse=0 on all banks

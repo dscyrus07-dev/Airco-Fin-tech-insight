@@ -148,13 +148,16 @@ def test_legacy_only_hold_does_not_catch_other_india_banks():
 
 
 _NO_DETECTOR_ID = {"apgv"}   # banks with no banks/*.json detector: routing relies on bank_markers evidence
+_UNMAPPED_SPEC_BANKS = _NO_DETECTOR_ID | {"bank_of_india"}   # + banks held out of the detector->spec map on purpose
+                                                             # (bank_of_india sits in LEGACY_ONLY_BANKS: v2 specs exist
+                                                             # for scoped/shadow routing, detector path stays legacy)
 
 
 def test_detector_ids_map_to_registered_spec_banks():
     from app.services.statement_engine.v2_router import DETECTOR_TO_SPEC_BANK
     from app.services.statement_engine.extractors.registry import DEFAULT_REGISTRY
     spec_banks = {s.bank_key for s in DEFAULT_REGISTRY.specs()}
-    assert set(DETECTOR_TO_SPEC_BANK.values()) | _NO_DETECTOR_ID == spec_banks
+    assert set(DETECTOR_TO_SPEC_BANK.values()) | _UNMAPPED_SPEC_BANKS == spec_banks
     assert set(DETECTOR_TO_SPEC_BANK.values()) <= spec_banks
 
 
