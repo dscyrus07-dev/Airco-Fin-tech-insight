@@ -38,7 +38,7 @@ from .apgv.layout_spec import APGV_LAYOUT_1
 from .csb.layout_spec import CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3
 from .airtel_pb.layout_spec import AIRTEL_LAYOUT_1
 from .ippb.layout_spec import IPPB_LAYOUT_1
-from .dhanlaxmi.layout_spec import DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2
+from .dhanlaxmi.layout_spec import DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2, DHANLAXMI_LAYOUT_3
 from .uco.layout_spec import UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4
 
 DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, SBI_LAYOUT_3, SBI_LAYOUT_4, SBI_LAYOUT_5, SBI_LAYOUT_6, SBI_LAYOUT_7, SBI_LAYOUT_8, SBI_LAYOUT_9, SBI_LAYOUT_10, CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_3, CANARA_LAYOUT_4, AXIS_LAYOUT_1, AXIS_LAYOUT_2, AXIS_LAYOUT_3, AXIS_LAYOUT_4, IDFC_LAYOUT_1,
@@ -83,7 +83,7 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # onboard-all: CSB "Statement of Account" export (federal-shaped; CSB marker evidence)
                                    CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3,
                                    # onboard-all: UCO "Statement of Account" exports (with/without instrument column)
-                                   UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2,
+                                   UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2, DHANLAXMI_LAYOUT_3,
                                    # n3: FEDERAL_LAYOUT_4 = Fi/Jupiter app export (section dates, derived sides)
                                    #     FEDERAL_LAYOUT_5 = same family, "Reference ID" left column + apostrophe-year
                                    #     section labels + currency-marked cells + truncated Money out/in summary

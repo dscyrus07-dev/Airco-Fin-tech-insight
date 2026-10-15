@@ -55,3 +55,14 @@ distinct fingerprints: 4 | top share: 50.0%
   evidence, no CSB tokens) — correct routing, not CSB false accepts.
 - Cross-bank: 0 false accepts on 360+ pooled files. Status remains SHADOW_ONLY (REVIEW ceiling /
   honest FAILED dominate); not a candidate.
+
+## N5 re-check
+
+- Re-measured at N5 tip: unchanged (1 VERIFIED, 10 REVIEW, 3 FAILED, 2 bank_unconfirmed,
+  6 Federal misfiles still route correctly).
+- Re-verified `89906828`: the bad-date row is `08-Dec-` + year `2023` separated by the
+  interleaved `Closing Balance` line — a mid-cell marker interruption `date_tail_re` cannot
+  span (class F ordering), honest FAILED.
+- `e315b619`/`5b6cd1cb` re-confirmed: balance cells print on wrong visual lines in the
+  interleaved family — beyond N2 continuation semantics (class F/D).
+- No spec change this pass.

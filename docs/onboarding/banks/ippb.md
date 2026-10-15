@@ -40,3 +40,8 @@ distinct fingerprints: 2 | top share: 83.3%
 - `5128847f` is a custom-encoded-font PDF: transaction text extracts as garbage glyphs -> excluded
   as unreadable (class D), not a parser failure.
 - Status: **SHADOW_ONLY** — det 100% (6/6), yield 5/5 v2 REVIEW, VERIFIED unreachable, thin corpus.
+
+## N5 re-check
+
+- Re-measured: 4 v2 REVIEW + 1 no_layout (`5128847f`, CID-garbage font, class D) â€” unchanged.
+- No spec change; SHADOW_ONLY stands.
