@@ -109,28 +109,36 @@ for r in sample:
         rec["dated_amt_lines"] = dated_amount_lines(pages)
         if rec["dated_amt_lines"] < len(txns):
             rec["flags"].append("rows_gt_dated_lines")
-        # chain recompute
+        # chain recompute: consecutive printed balances; a row without a balance joins the
+        # flow accumulating between the nearest two printed balances (sparse/delta chain)
         breaks = 0
-        for a, b in zip(txns, txns[1:]):
-            side = (b.credit or Decimal(0)) - (b.debit or Decimal(0))
-            if abs(b.balance - a.balance - side) > Decimal("0.011"):
-                breaks += 1
+        anchor_i = next((i for i, t in enumerate(txns) if t.balance is not None), None)
+        if anchor_i is not None:
+            acc = Decimal(0)
+            prev_bal = txns[anchor_i].balance
+            for t in txns[anchor_i + 1:]:
+                acc += (t.credit or Decimal(0)) - (t.debit or Decimal(0))
+                if t.balance is not None:
+                    if abs(t.balance - prev_bal - acc) > Decimal("0.011"):
+                        breaks += 1
+                    prev_bal, acc = t.balance, Decimal(0)
         rec["chain_breaks"] = breaks
         if breaks:
             rec["flags"].append(f"chain_breaks:{breaks}")
         # anchors
         anch = anchor_values(pages)
         if txns:
-            r0, rN = txns[0], txns[-1]
-            imp_open = r0.balance - (r0.credit or Decimal(0)) + (r0.debit or Decimal(0))
+            r0 = next((t for t in txns if t.balance is not None), txns[0])
+            rN = next((t for t in reversed(txns) if t.balance is not None), txns[-1])
+            imp_open = r0.balance - (r0.credit or Decimal(0)) + (r0.debit or Decimal(0)) if r0.balance is not None else None
             imp_close = rN.balance
-            rec["implied_open"], rec["implied_close"] = str(imp_open), str(imp_close)
+            rec["implied_open"], rec["implied_close"] = (str(imp_open) if imp_open is not None else None), (str(imp_close) if imp_close is not None else None)
             opens = [v for k, _, v in anch if k == "open"]
             closes = [v for k, _, v in anch if k == "close"]
             rec["printed_open"], rec["printed_close"] = [str(v) for v in opens], [str(v) for v in closes]
-            if opens and not any(abs(v - imp_open) <= Decimal("0.011") for v in opens):
+            if opens and imp_open is not None and not any(abs(v - imp_open) <= Decimal("0.011") for v in opens):
                 rec["flags"].append("open_anchor_mismatch")
-            if closes and not any(abs(v - imp_close) <= Decimal("0.011") for v in closes):
+            if closes and imp_close is not None and not any(abs(v - imp_close) <= Decimal("0.011") for v in closes):
                 rec["flags"].append("close_anchor_mismatch")
             if not opens and not closes:
                 rec["flags"].append("no_printed_anchors_found")

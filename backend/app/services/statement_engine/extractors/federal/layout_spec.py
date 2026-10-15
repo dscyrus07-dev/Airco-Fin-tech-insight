@@ -43,6 +43,8 @@ FEDERAL_LAYOUT_1 = LayoutSpec(
     opening_balance_re=re.compile(r"OpeningBalance(-?[\d,]*\.\d{2})"),
     totals_line_re=re.compile(r"(?i)grandtotal(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{1,2})"),
     anchor_full=True,
+    balance_optional=True,      # charge-back rows print a Withdrawals amount with no restated balance
+    continuation_amounts=True,  # the Dr/Cr marker prints on the dated line; amounts arrive on the wrap line
     date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_1.validate()
@@ -134,6 +136,8 @@ FEDERAL_LAYOUT_3 = LayoutSpec(
     opening_balance_re=re.compile(r"(?i)openingbalance(-?[\d,]*\.?\d*)"),
     totals_line_re=re.compile(r"(?i)grandtotal(-?[\d,]+\.\d{2})(-?[\d,]+\.\d{1,2})"),
     anchor_full=True,
+    balance_optional=True,
+    continuation_amounts=True,
     date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_3.validate()
