@@ -210,7 +210,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N8] STEP security - CRITICAL unauth job read+download (measured 200s) + /download/{file} no-auth 200; committed KC secret+e2e pw; secrets in queue payload+redis blob+DLQ forever; history scan clean (355 commits)
 [N8] STEP hygiene - 35.7GB build cache + 2 unused onb-pr1 tags reclaimed; owner commands written
 [N8] DONE 760b563 - Track B review; reports docs/{compliance,operations,security}; tools/n8; no product fixes; nothing pushed
-[N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)
+[N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 ï¿½ all present, no wait needed)
 [N7] STEP integrate - merged n5(0ae26c7) n6(c5018a2) n8(cbe70ab); 4 conflicts: AGENT_STATE x3 (chronological union), registry.py (union of N5+N6 imports+specs incl. BoI L2)
 [N7] STEP suites - engine 508 pass; other-backend 336 pass 3 pre-existing/env fails; frontend tsc+eslint+vitest 58/58+next build; app.main import ok
 [N7] STEP regression - 1099/1099 base-vs-integ: 41 diffs, all gate-safe (boi x15 named N6, bom x5 audited VERIFIED flips, icici x13 detector-reason, pnb x5 new-layout REVIEW, misc x3)
@@ -226,3 +226,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N9] DONE bedc4bf - RELEASE: GO WITH CAVEATS; rc live :3600/:8601 20-bank serve; xcheck 0 disagree; matrix clean (8 pre-existing fails); reg 41 named diffs; confusion 0; audit 358/358; workflow 31 PASS; N8 criticals carried for Claude
 
 [AV] START 597bf64 auth-verify branch from 597bf64
+[AV] DONE 942da31 â€” auth-verify: suites 858/8 (8 pre-existing), probes 27/27 PASS, UI signin+expired+widths PASS, defect AV-1 (unsigned excel_url links 401, major) AV-2 (latent 500), deps inventoried
