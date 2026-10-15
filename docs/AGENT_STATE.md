@@ -204,4 +204,10 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N6] STEP report+regression 59ff071 - docs/onboarding/N6_LEGACY_VS_V2.md + disagreements; 1,099-file regression: 15 named boi diffs (header resolves, gate holds), 25 baseline-era non-N6; suite 425; xbank 0/345
 [N6] DONE 475479f - 8 banks h2h; SERVE_V2_WITH_LEGACY_FALLBACK: bob canara icici indian_bank karnataka kotak; KEEP_LEGACY: bank_of_india union; v2_worse=0 all banks; BoI L2 spec+tests; regression 15 named diffs 0 unexpected
 
+[N8] START 5be615d (integration/v2-waves tip; Track B compliance/robustness/secrets/hygiene, no fixes â€” tests/tools/reports only)
+[N8] STEP retention - measured ledger: source PDF + workbook deleted by sweep; raw_transactions/statement_metadata/processing_jobs/job_events/DLQ/browser-localStorage persist forever
+[N8] STEP robustness - analyze timeouts NOT REPRODUCED (2.9s/5.0s); 160p=88s 90p=110s @1.6GiB; 25-par all-client-timeout but jobs land; mid-flight kill honest-ish (retries to completed, ~min dishonest window); no page cap; no rate limit
+[N8] STEP security - CRITICAL unauth job read+download (measured 200s) + /download/{file} no-auth 200; committed KC secret+e2e pw; secrets in queue payload+redis blob+DLQ forever; history scan clean (355 commits)
+[N8] STEP hygiene - 35.7GB build cache + 2 unused onb-pr1 tags reclaimed; owner commands written
+[N8] DONE 760b563 - Track B review; reports docs/{compliance,operations,security}; tools/n8; no product fixes; nothing pushed
 [N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)
