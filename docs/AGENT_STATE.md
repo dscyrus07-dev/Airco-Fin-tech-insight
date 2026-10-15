@@ -178,3 +178,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
 
 [RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
+[N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)
