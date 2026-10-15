@@ -211,3 +211,8 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N8] STEP hygiene - 35.7GB build cache + 2 unused onb-pr1 tags reclaimed; owner commands written
 [N8] DONE 760b563 - Track B review; reports docs/{compliance,operations,security}; tools/n8; no product fixes; nothing pushed
 [N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)
+[N7] STEP integrate - merged n5(0ae26c7) n6(c5018a2) n8(cbe70ab); 4 conflicts: AGENT_STATE x3 (chronological union), registry.py (union of N5+N6 imports+specs incl. BoI L2)
+[N7] STEP suites - engine 508 pass; other-backend 336 pass 3 pre-existing/env fails; frontend tsc+eslint+vitest 58/58+next build; app.main import ok
+[N7] STEP regression - 1099/1099 base-vs-integ: 41 diffs, all gate-safe (boi x15 named N6, bom x5 audited VERIFIED flips, icici x13 detector-reason, pnb x5 new-layout REVIEW, misc x3)
+[N7] STEP onb - rebuilt backend+frontend images from tip; serve list = default 14 + bob,canara,icici,indian_bank,karnataka,kotak; catalog shows all 6 verified+v2_served
+[N7] STEP e2e - lanes running: v2 serve confirmed (engine:v2 mode:serve VERIFIED workbooks); bob/kotak low auto-detect -> BANK_REQUIRED -> override path; negatives: locked PASSWORD_REQUIRED, scanned UNSUPPORTED, UCO misfiles FAILED-refused; confusion 0 wrong accepts
