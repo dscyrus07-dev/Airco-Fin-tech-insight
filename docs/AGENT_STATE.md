@@ -226,4 +226,4 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N9] DONE bedc4bf - RELEASE: GO WITH CAVEATS; rc live :3600/:8601 20-bank serve; xcheck 0 disagree; matrix clean (8 pre-existing fails); reg 41 named diffs; confusion 0; audit 358/358; workflow 31 PASS; N8 criticals carried for Claude
 
 [AV] START 597bf64 auth-verify branch from 597bf64
-[AV] DONE 942da31 — auth-verify: suites 858/8 (8 pre-existing), probes 27/27 PASS, UI signin+expired+widths PASS, defect AV-1 (unsigned excel_url links 401, major) AV-2 (latent 500), deps inventoried
+[AV] DONE eb2bc3d — auth-verify: suites 858/8 (8 pre-existing), probes 27/27 PASS, UI signin+expired+widths PASS, defect AV-1 (unsigned excel_url links 401, major) AV-2 (latent 500), deps inventoried
