@@ -20,7 +20,7 @@ from .dbs.layout_spec import DBS_LAYOUT_1, DBS_LAYOUT_2, DBS_LAYOUT_3
 from .citibank.layout_spec import CITIBANK_LAYOUT_1
 from .kvb.layout_spec import KVB_LAYOUT_1
 from .hsbc.layout_spec import HSBC_LAYOUT_1, HSBC_LAYOUT_2
-from .indusind.layout_spec import INDUSIND_LAYOUT_1, INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3
+from .indusind.layout_spec import INDUSIND_LAYOUT_1, INDUSIND_LAYOUT_2, INDUSIND_LAYOUT_3, INDUSIND_LAYOUT_4
 from .idbi.layout_spec import IDBI_LAYOUT_1, IDBI_LAYOUT_2, IDBI_LAYOUT_3, IDBI_LAYOUT_4, IDBI_LAYOUT_5, IDBI_LAYOUT_6
 from .pnb.layout_spec import PNB_LAYOUT_1, PNB_LAYOUT_2, PNB_LAYOUT_3
 from .yes.layout_spec import YES_LAYOUT_1, YES_LAYOUT_2, YES_LAYOUT_3, YES_LAYOUT_4, YES_LAYOUT_5
@@ -87,5 +87,8 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # n3: FEDERAL_LAYOUT_4 = Fi/Jupiter app export (section dates, derived sides)
                                    #     FEDERAL_LAYOUT_5 = same family, "Reference ID" left column + apostrophe-year
                                    #     section labels + currency-marked cells + truncated Money out/in summary
-                                   FEDERAL_LAYOUT_4, FEDERAL_LAYOUT_5],
+                                   FEDERAL_LAYOUT_4, FEDERAL_LAYOUT_5,
+                                   # n5: INDUSIND_LAYOUT_4 = 'DATE|TYPE|DESCRIPTION|DEBIT|CREDIT|BALANCE'
+                                   #     two-line export (type/narration line above the dated amount line)
+                                   INDUSIND_LAYOUT_4],
                                   foreign_markers=OTHER_BANK_MARKERS)
