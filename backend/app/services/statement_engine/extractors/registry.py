@@ -31,7 +31,7 @@ from .equitas.layout_spec import EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAY
 from .city_union.layout_spec import CUB_LAYOUT_1, CUB_LAYOUT_2
 from .ujjivan.layout_spec import UJJIVAN_LAYOUT_1
 from .bom.layout_spec import BOM_LAYOUT_1, BOM_LAYOUT_2, BOM_LAYOUT_3, BOM_LAYOUT_4
-from .bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2
+from .bandhan.layout_spec import BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, BANDHAN_LAYOUT_3, BANDHAN_LAYOUT_4
 from .au_sfb.layout_spec import AU_LAYOUT_1, AU_LAYOUT_2
 from .dcb.layout_spec import DCB_LAYOUT_1
 from .apgv.layout_spec import APGV_LAYOUT_1
@@ -75,7 +75,7 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    #     (Type marker on the dated line, amount on the continuation line)
                                    IDBI_LAYOUT_6,
                                    # YES_LAYOUT_2 parked: wrapped 'Running|Balance' header routes 24% trusted (5V/16F chain+side) on fresh 97-file re-measure
-                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3, EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAYOUT_3, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, AU_LAYOUT_1,
+                                   SIB_LAYOUT_1, CBI_LAYOUT_1, CBI_LAYOUT_2, CBI_LAYOUT_3, EQUITAS_LAYOUT_1, EQUITAS_LAYOUT_2, EQUITAS_LAYOUT_3, CUB_LAYOUT_1, CUB_LAYOUT_2, UJJIVAN_LAYOUT_1, BOM_LAYOUT_1, BOM_LAYOUT_2, BANDHAN_LAYOUT_1, BANDHAN_LAYOUT_2, BANDHAN_LAYOUT_3, BANDHAN_LAYOUT_4, AU_LAYOUT_1,
                                    # promote-1: AU newer export (wrapped 2-line header, rupee-marked money cols, AUBANK.IN footer marker)
                                    AU_LAYOUT_2,
                                    DBS_LAYOUT_2, DBS_LAYOUT_3,

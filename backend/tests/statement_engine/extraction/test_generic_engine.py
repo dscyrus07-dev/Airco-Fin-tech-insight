@@ -719,7 +719,8 @@ def test_resolve_prefers_primary_header_spelling_over_a_fallback_alternative():
     assert res.status == "resolved" and res.spec.layout_id == "exact"
 
 
-_NO_TEXT_BRAND = {"pnb", "yes", "iob", "south_indian"}   # banks whose brand never prints in the text layer; routing relies on the detector
+_NO_TEXT_BRAND = {"pnb", "yes", "iob", "south_indian", "bandhan"}   # banks whose brand never prints in the text layer; routing relies on the detector
+# (bandhan's Current-and-Savings exports print no brand; the BDBL ifsc_re in the account block is the own-bank evidence)
 
 
 def test_default_registry_every_layout_names_its_bank_and_markers_do_not_collide():
