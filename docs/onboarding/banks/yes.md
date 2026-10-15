@@ -57,3 +57,19 @@ distinct fingerprints: 13 | top share: 36.8%
   - misfiled (class D): `e99c7c1d` Union Bank letterhead, `2aed793f` AU (AUBL IFSC,
     detector au_sfb VERY_HIGH). `508a9258` foreign_bank: UTIB/AXIS IFSCs on page 1 (guard kept).
   - `382d5465`: zero-transaction statement -> honest NO_ROWS.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure (92 manifest files): VERIFIED 34, REVIEW 34, FAILED 20, fallback 4.
+- `008a966b` (3-line interleaved header) now rides `yes_..._runningbalance_3l` -> VERIFIED/327
+  (N1 `header_lines` already covered it; `row_order:reversed` evidence-driven).
+- Remaining FAILED (20): two honest classes.
+  - fee+GST debit pairs share one printed running balance -> row-wise chain cannot reconcile (class D).
+  - dated `B/f` opening rows print the balance figure in the wrong money cell (`11.76` under Deposits,
+    `0.00` under Balance): `opening_row_balance_only` sees a populated amount cell so the row is not
+    consumed as the opening anchor, and `opening_row_marker` would read `0.00` as the opening -> class F
+    ordering gap (e.g. `abd98b47`). Rows read, verdict honest FAILED.
+- fallback 4: `382d5465` zero-transaction (honest NO_ROWS); `2aed793f` AU-misfile (au_sfb VERY_HIGH —
+  correct); `e99c7c1d` Union letterhead (correct); `508a9258` foreign_bank (UTIB/AXIS own-page-1
+  evidence — guard held).
+- Gates: yield 68/92 = 73.9% (<90%) -> stays **SHADOW_ONLY**. No spec/detector change this pass.
