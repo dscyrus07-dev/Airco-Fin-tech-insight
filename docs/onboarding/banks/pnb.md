@@ -27,3 +27,12 @@ distinct fingerprints: 7 | top share: 83.0%
 ## Independent audit (hold-out VERIFIED sample)
 
 - sampled: 0 of 0 VERIFIED | ok: 0 | disagreements: 0
+
+## N5 verification (layout-variant-only, restricted)
+
+- Re-measured 82 files: 81 REVIEW / 1 `no_layout`.
+- The sole `no_layout` (`4eb17de5`) is a WhatsApp Banking Terms & Conditions
+  document misfiled in the PNB folder — correct refusal, not a gap.
+- REVIEW ceiling is honest: layouts carry no printed-anchor verification for
+  these variants; no spec or marker change made (restricted bank — any change
+  needs zero-diff proof; none was warranted).

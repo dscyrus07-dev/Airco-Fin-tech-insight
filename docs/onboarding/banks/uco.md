@@ -52,3 +52,11 @@ distinct fingerprints: 3 | top share: 72.7%
   (`eb3419dc`), out-of-order multi-segment dates (`14ab1185`). No spec gap remains.
 - Status: **SHADOW_ONLY** — yield 3/9, corpus documents genuinely inconsistent; not fixable
   by spec, not an engine gap the docs evidence.
+
+## N5 re-check
+
+- Re-measured at N5 tip: 9 routed -> 3 REVIEW + 6 FAILED, identical to unblock-1; all
+  FAILEDs re-confirmed honest: printed Transaction-Summary closings (`41765.0`, `221.0`,
+  clipped one-decimal prints) contradict the file's own row chain (class B/D),
+  space-glyph missing amounts (`eb3419dc`, class D), cross-date jumbled print order
+  (`14ab1185`, class F engine ordering). No spec change warranted.

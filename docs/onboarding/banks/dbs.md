@@ -66,3 +66,20 @@ Vshare 110/114 = 96.5%. Remaining gap is entirely engine-class, not spec:
   summary), `2afd8fc8` (scanned, 1 word).
 Still **SHADOW_ONLY**; needs the balance-less and multi-account engine
 capabilities listed in ENGINE_GAPS.md.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- N2 capabilities already absorbed the known gaps: the 6 multi-account FAILEDs now read via
+  `merge_statements`/segment handling (`additional_statement_after_summary` REVIEW flags on
+  `af0a1396`, `b7f2b63c`, `c898cb0f` — honest cap), and the balance-less family rides
+  `DBS_LAYOUT_3` (`no_running_balance`) to REVIEW-with-rows.
+- Added `DBS_LAYOUT_4` (`replace` of L3): the same balance-less family with yearless `02 Jul`
+  row dates — year from the printed `Transaction History From .. To ..` period
+  (`year_from_period`). `660bdbec` -> REVIEW/196, `80f46ade` -> REVIEW/10.
+- Folder re-measure (129 readable): VERIFIED 116, REVIEW 11, FAILED 0, fallback 1
+  (`b4a408e2` CID-mojibake text layer — class D, NOT_POSSIBLE).
+- Cross-bank: 0 foreign accepts / 363 pooled routes (L4 shares the `DBSBANK` marker only).
+- Audit: REVIEW ceiling is structural for `no_running_balance` (no printed balance = no
+  independent anchor evidence); prior VERIFIED audit coverage stands (see unblock-1 section).
+- Gates: detection 128/129 = 99.2% (<100%: `b4a408e2` unparseable), yield 127/129 = 98.4% pass,
+  VERIFIED 116/129 = 89.9% pass -> stays **SHADOW_ONLY** on the detection leg.

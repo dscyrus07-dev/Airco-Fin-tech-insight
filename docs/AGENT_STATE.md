@@ -178,4 +178,25 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
 
 [RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
-[N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 â€” all present, no wait needed)
+
+[N1] START 5be615d - engine capabilities: Dr./Cr. side markers, multi-line headers, untitled date column, headerless robustness
+[N1] DONE 8e75997 - Dr./Cr. markers + header_lines/merge_tol + untitled_date_column + date_join_words; period-date '|' fix; IDBI L3 + YES L5 + CBI L4 + PNB L2/L3 registered shadow-only; implicit_header absent-col PARKED; regression 734/0 diffs; audits 32 ok; cross-bank 0
+[N2] START c352a25 - balance-less tables, per-account sub-tables, whole-doc anchors, non-row balances
+[N2] DONE f8828a0 - no_running_balance + segments (dense ids, per-seg chains/counts, pre/post checkpoints) + anchor_scan=document + checkpoints/inline/sparse balances + leading/continuation amounts + same-date reorder WARN; DBS_L3 + IDBI_L6 + DHANLAXMI_L2 + HSBC_L2 registered shadow-only; dcb counts/turnover + bom doc anchors + DBS_L1 segments; PARKED: hsbc undated sub-rows, equitas interleaved-wrap (N3); idbi L6 gated by detection (unbranded exports); regression 734/4 diffs = bom upgrades only (audit-clean); suite 472 + N2 26
+
+[N3] START edd3e36 - date-grouped app statements (federal family), section-date row grouping
+[N3] DONE 13c2dd7 - section_date_re row-grouping + derive_side_from_balance + doubled_header_glyphs + summary_truncated + totals_sum_tail + doc_counts_re + period_from_borrows_end_year + ifsc_re own-evidence; raw-fallback anchor/summary scans; implied-opening side anchor; FEDERAL_LAYOUT_4/5 registered shadow-only; federal 130->228 VERIFIED, fallback 113->15 (12 unbranded, 3 clustered); other-folder no_layout 0 family fits; 8 csb-misfiled federal still federal/REVIEW; audit 98 chain-clean; regression 734/1 diff = ed04dc45 hdfc foreign_bank->VERIFIED (own IFSC rescue, legit); suite 493
+[N5] START f81095e
+[N5] STEP indusind 9f3a252
+[N5] STEP scb d26d9e0
+[N5] STEP dbs 79f182e
+[N5] STEP idbi e81b00f
+[N5] STEP yes 7959842
+[N5] STEP central_bank 38ebc04
+[N5] STEP equitas_sfb+ujjivan_sfb fa2bde6
+[N5] STEP hsbc+kvb cbf3f14
+[N5] STEP federal 67968b6
+[N5] STEP bandhan 906688b
+[N5] STEP dcb+uco+dhanlaxmi+csb+ippb fc3c618 / dcb-doc c351a80
+[N5] STEP pnb+bom 98fe2a5
+[N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)

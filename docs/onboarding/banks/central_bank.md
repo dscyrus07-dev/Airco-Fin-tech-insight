@@ -45,3 +45,16 @@ Remaining no_layout files:
 Honest FAILED kept: `deb76171` (document prints duplicated rows mid-table),
 `26f22d59`,`98f557cb` (chain broken in the print), `fef47c0b` (no period marker,
 0 rows), `b4a408e2` handled under dbs. Regression: 650-file compare vs 54f51ab = 0 diffs.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure on N3 tip (33 readable): VERIFIED 2, REVIEW 25, FAILED 5, fallback 2.
+- `459f15b8` (15-column 3-line header, mid-word splits) now reads via `CBI_LAYOUT_4` ->
+  REVIEW/13 (no printed anchors; honest cap).
+- Still unresolved, all documented classes: `2e2f4e20`,`735d18a4` glued single-token lines
+  (class D — no space glyphs; balances can't classify positionally), `435bb0ee` family has no
+  own-bank header/footer text (class C), FAILEDs `26f22d59`/`98f557cb` (print-level chain
+  gaps, class D), `deb76171` (duplicated printed rows, class D), `fef47c0b` (no period
+  marker, class E), `0241c956` (foreign_bank on own page-1 evidence — correct).
+- No spec/detector change this pass — every residual is class C/D/E/F. **SHADOW_ONLY**
+  (VERIFIED share far under 80%; most files print no anchors at all).

@@ -51,3 +51,19 @@ distinct fingerprints: 13 | top share: 31.2%
   family (8 files), markerless/det-deep-page files (bank_unconfirmed+det_none = honest unrouteable).
 - misfiled (class D): `3fd73a3a` is an AP Mahesh Bank doc (apmaheshbank.com footer),
   `2cde3656` is a GL ledger print (not a statement). `7dd67f11` carries ICICI evidence -> routed there.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure on N3 tip (83 readable files): VERIFIED 15, REVIEW 22, FAILED 28, fallback 18
+  (14 `bank_unconfirmed`, 4 `foreign_bank`).
+- L3 `Dr.`-suffix family (18 of the FAILEDs): `row_order="auto"` cannot rescue — both directions
+  carry real print gaps with unread=0 (the statement print itself skips rows) -> class D, honest FAILED.
+- 8 files on `idbi_date_particulars_chqno_withdrawals_deposits_balance` fail `schema errors: 1`:
+  the dated `...,B/F` opening row prints `0.00` in BOTH money cells; `opening_row_balance_only` tests
+  raw amounts before `zero_amount_is_empty` empties them, so the row reaches schema with zero sides.
+  Engine-ordering gap (class F) — no spec-side fix exists.
+- 14 `bank_unconfirmed` + 4 `foreign_bank`: sampled files carry no own-bank header evidence at all
+  (`IDBI`/`IBKL` absent from issuer text; IDBI and foreign tokens appear only inside counterparty
+  narration) -> correct refusal, class C/E.
+- No spec/detector change applied this pass — every residual is class D/F/E. Folder stays
+  **SHADOW_ONLY** (detection ~78% including markerless exports).

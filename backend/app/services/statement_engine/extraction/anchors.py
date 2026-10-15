@@ -43,10 +43,12 @@ _TRAILING_COLUMN_GAP = 20.0
 _WRAPPED_AMOUNT_FRAGMENT = re.compile(r"^\d{1,3}(?:,\d{2,3})+\.?\d{0,2}$|^\.?\d{1,2}$")
 
 
-def _tokens(line: Sequence[Word]) -> List[Tuple[str, float, float]]:
+def _tokens(line: Sequence[Word], spec: LayoutSpec) -> List[Tuple[str, float, float]]:
     out = []
     for w in line:
         t = norm_token(w.text)
+        if t and spec.doubled_header_glyphs:
+            t = re.sub(r"([a-z])\1", r"\1", t)    # app exports double every glyph: "ddaattee" -> "date"
         if t:
             out.append((t, w.x0, w.x1))
     return out
@@ -56,12 +58,14 @@ def _find_sequence(tokens: Sequence[Tuple[str, float, float]], seq: Tuple[str, .
     n = len(seq)
     for i in range(len(tokens) - n + 1):
         if all(tokens[i + k][0] == seq[k] for k in range(n)):
-            return tokens[i][1], tokens[i + n - 1][2]
+            # x-range of the whole run: wrapped fragments can sit left of the last token
+            hit = tokens[i:i + n]
+            return min(t[1] for t in hit), max(t[2] for t in hit)
     return None
 
 
 def _match_spans(line: Sequence[Word], spec: LayoutSpec) -> Dict[str, Tuple[float, float]]:
-    toks = _tokens(line)
+    toks = _tokens(line, spec)
     spans: Dict[str, Tuple[float, float]] = {}
     for col, alternatives in spec.columns.items():
         for seq in alternatives:
@@ -110,6 +114,76 @@ def _merge_header_pair(upper: Sequence[Word], lower: Sequence[Word]) -> List[Wor
     return merged
 
 
+def _merge_header_lines(lines: Sequence[Sequence[Word]], tol: float) -> List[Word]:
+    """Adjacent visual lines of one wrapped header row as a single matchable stream. Unlike
+    `_merge_header_pair` (x0-proximity, two lines), words cluster by horizontal overlap: a fragment
+    joins a cluster when its x0 lands within `tol` of the cluster's right edge, so a title's pieces
+    join across non-adjacent lines (top / middle / bottom). Each cluster emits its fragments in
+    top-to-bottom line order, preserving the title's word order."""
+    line_of = {}
+    words: List[Word] = []
+    for i, line in enumerate(lines):
+        for w in line:
+            line_of[id(w)] = i
+            words.append(w)
+    words.sort(key=lambda w: w.x0)
+    clusters: List[List[Word]] = []
+    for w in words:
+        if clusters and w.x0 <= max(v.x1 for v in clusters[-1]) + tol:
+            clusters[-1].append(w)
+        else:
+            clusters.append([w])
+    merged: List[Word] = []
+    for cl in clusters:
+        merged.extend(sorted(cl, key=lambda v: (line_of[id(v)], v.x0)))
+    return merged
+
+
+def _find_untitled_date(lines: Sequence[Sequence[Word]], spec: LayoutSpec, start: int,
+                        right: float, probe: int = 12) -> Optional[Tuple[float, float]]:
+    """x-span of an untitled leading date column, read from data rows below the header: every word
+    landing left of `right` on the next `probe` lines is clustered by x-range; a cluster qualifies
+    only when it holds >= 2 cells and every cell matches the spec's date shape. Exactly one
+    qualifying cluster may exist."""
+    clusters: List[List[Word]] = []
+    started = False
+    for line in lines[start:start + probe]:
+        # a line that puts no date-shaped cell in the zone ends the data run: footers and
+        # summary blocks below the table must not poison (or fake) column membership
+        zoned = [w for w in sorted(line, key=lambda v: v.x0) if w.x1 <= right and norm_token(w.text)]
+        if started and not any(spec.date_re.match(w.text.strip()) for w in zoned):
+            break
+        for w in zoned:
+            for cl in clusters:
+                if w.x0 <= max(v.x1 for v in cl) + 4.0:
+                    cl.append(w)
+                    break
+            else:
+                clusters.append([w])
+            if spec.date_re.match(w.text.strip()):
+                started = True
+    candidates = [cl for cl in clusters
+                  if len(cl) >= 2 and all(spec.date_re.match(c.text.strip()) for c in cl)]
+    if len(candidates) != 1:
+        return None
+    cl = candidates[0]
+    return min(c.x0 for c in cl), max(c.x1 for c in cl)
+
+
+def _complete_without_date(line: Sequence[Word], spans: Dict[str, Tuple[float, float]],
+                           spec: LayoutSpec) -> bool:
+    """Every column except 'date' titled, and no token left of the first title or between titles."""
+    if len(spans) != len(spec.columns) - 1 or "date" in spans:
+        return False
+    lo, hi = min(x[0] for x in spans.values()), max(x[1] for x in spans.values())
+    for w in line:
+        if not norm_token(w.text) or w.x1 > hi:
+            continue
+        if not any(a - 0.5 <= w.x0 and w.x1 <= b + 0.5 for a, b in spans.values()):
+            return False
+    return True
+
+
 def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[Tuple[int, Dict[str, Tuple[float, float]]]]:
     """Index of the header row's last line holding every column title, and each title's x-span.
 
@@ -121,11 +195,24 @@ def find_header(lines: Sequence[Sequence[Word]], spec: LayoutSpec) -> Optional[T
         spans = _match_spans(line, spec)
         if _complete(line, spans, spec):
             return idx, spans
+        if getattr(spec, "untitled_date_column", False) and _complete_without_date(line, spans, spec):
+            # every other column titled; the date column prints no title: read its span from the data rows
+            dsp = _find_untitled_date(lines, spec, idx + 1, min(x[0] for x in spans.values()))
+            if dsp:
+                return idx, {**spans, "date": dsp}
         if getattr(spec, "header_wraps", False) and idx + 1 < len(lines) and "date" in spans and len(spans) >= 2:
             merged = _merge_header_pair(line, lines[idx + 1])
             mspans = _match_spans(merged, spec)
             if _complete(merged, mspans, spec, center_test=True):
                 return idx + 1, mspans
+        if getattr(spec, "header_lines", 1) > 1:
+            for n in range(2, spec.header_lines + 1):
+                if idx + n > len(lines):
+                    break
+                merged = _merge_header_lines(lines[idx:idx + n], spec.header_merge_tol)
+                mspans = _match_spans(merged, spec)
+                if _complete(merged, mspans, spec, center_test=True):
+                    return idx + n - 1, mspans
     return None
 
 
@@ -251,8 +338,11 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if spec.date_tail_re and spec.date_tail_re.match(text):
             return "date_tail"
         return "narration"   # undated text in the date band = narration wrap
-    # a non-amount word right of the money columns belongs to a trailing column the layout does not use (e.g. branch code)
-    if anchors.amount_edges and word.x0 > max(anchors.amount_edges.values()) + _TRAILING_COLUMN_GAP and not spec.amount_re.match(text):
+    # a non-amount word right of the money columns belongs to a trailing column the layout does not use (e.g. branch code);
+    # exempt a layout whose last text column itself sits right of the money columns: that space is declared
+    max_edge = max(anchors.amount_edges.values()) if anchors.amount_edges else None
+    if (max_edge is not None and word.x0 > max_edge + _TRAILING_COLUMN_GAP and not spec.amount_re.match(text)
+            and anchors.text_lefts.get(spec.text_columns[-1], 0.0) <= max_edge):
         return None
     band = spec.text_columns[1]
     for col in spec.text_columns[1:]:
@@ -268,6 +358,19 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if not last_band:
             return None
     elif not last_band:
+        # a money-shaped word inside a middle text band still belongs to its money column when its right edge
+        # aligns (single-amount exports print the amount under a header flanked by text columns)
+        if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
+                or (spec.wrapped_amount_tokens and _WRAPPED_AMOUNT_FRAGMENT.match(text))):
+            edges = anchors.amount_edges
+            nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
+            if not spec.left_aligned_amounts and abs(word.x1 - edges[nearest]) <= _amount_tolerance(edges, nearest):
+                return nearest
+            if spec.left_aligned_amounts:
+                lefts = anchors.amount_lefts or {c: edges[c] for c in edges}
+                for col in sorted(lefts, key=lefts.get, reverse=True):
+                    if word.x0 >= lefts[col] - 2.0:
+                        return col
         return band
     if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
             or (spec.wrapped_amount_tokens and _WRAPPED_AMOUNT_FRAGMENT.match(text))):

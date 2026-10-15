@@ -36,6 +36,7 @@ INDUSIND_LAYOUT_1 = LayoutSpec(
     closing_balance_re=re.compile(r"^\d{2}-[A-Za-z]{3}-\d{4}([\d,]+(?:\.\d{1,2})?)$"),
     header_repeats=True,
     continuation_start="top",
+    ifsc_re=re.compile(r"INDB0[0-9A-Z]{6}"),
     dates_monotonic_expected=False,
 )
 INDUSIND_LAYOUT_1.validate()
@@ -77,6 +78,7 @@ INDUSIND_LAYOUT_2 = LayoutSpec(
     header_wraps=True,
     header_repeats=True,
     continuation_start="top",
+    ifsc_re=re.compile(r"INDB0[0-9A-Z]{6}"),
     dates_monotonic_expected=False,
 )
 INDUSIND_LAYOUT_2.validate()
@@ -111,6 +113,50 @@ INDUSIND_LAYOUT_3 = LayoutSpec(
     header_repeats=True,
     continuation_start="top",
     row_order="auto",
+    ifsc_re=re.compile(r"INDB0[0-9A-Z]{6}"),
     dates_monotonic_expected=False,
 )
 INDUSIND_LAYOUT_3.validate()
+
+
+# Corporate/netbanking export family ("DATE | TYPE | DESCRIPTION | DEBIT | CREDIT | BALANCE"): the column
+# header wraps so "Balance" sits on a second header line; every record is two lines — a narration/type line
+# ("Transfer Credit | UPI/...") directly above a dated line carrying the narration tail, "-" placeholders in the
+# unused money cell and the running balance. No opening/closing/totals print anywhere: the chain is self-derived
+# and REVIEW is the honest ceiling. Facts only.
+INDUSIND_LAYOUT_4 = LayoutSpec(
+    layout_id="indusind_date_type_description_debit_credit_balance_2line",
+    bank_key="indusind",
+    bank_markers=("INDUSINDBANK", "INDUSLNDBANK", "INDUSIND.COM"),
+    bank_name="IndusInd Bank",
+    columns={
+        "date": (("date",),),
+        "type": (("type",),),
+        "narration": (("description",),),
+        "debit": (("debit",),),
+        "credit": (("credit",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "type", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    date_re=re.compile(r"^(?:\d{1,2} [A-Za-z]{3} \d{4}|[A-Za-z]{3} \d{1,2}, \d{4})$"),
+    date_format="%d %b %Y|%b %d, %Y",
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    period_re=re.compile(r"(?i)from:?(\d{2}[a-z]{3}\d{4})to(\d{2}[a-z]{3}\d{4})|from:?(\d{2} [a-z]{3} \d{4})to:?(\d{2} [a-z]{3} \d{4})|from:?([a-z]{3} \d{1,2}, \d{4})to:?([a-z]{3} \d{1,2}, \d{4})"),
+    period_date_format="%d %b %Y|%d%b%Y|%b %d, %Y",
+    row_order="auto",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_lines=2,
+    header_repeats=True,
+    leading_narration=True,
+    empty_amount_marker="-",
+    page_footer_markers=("THISISACOMPUTERGENERATED", "PAGE"),
+    continuation_start="top",
+    ifsc_re=re.compile(r"INDB0[0-9A-Z]{6}"),
+    dates_monotonic_expected=False,
+)
+INDUSIND_LAYOUT_4.validate()

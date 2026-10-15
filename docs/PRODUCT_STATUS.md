@@ -140,3 +140,18 @@ folders. All shadow or review-ceiling â€” **none enabled for serving**; the
 Cross-bank pooled check: 415 probes, zero genuine false accepts. 400-file
 regression compare vs base: 0 diffs. Full suite: 639 passed vs 519 on base,
 same 8 pre-existing failures.
+
+## N5 wave refresh (devin/n5-bank-wave, base f81095e)
+
+Shadow re-measure of the onboarded set on the N1–N3 engine. Shipped states
+unchanged; refreshed numbers in `docs/onboarding/N5_RESULTS.md`.
+
+- Improved: federal 228→232V (FAILED 13→6), scb 168→171V, indusind fallback
+  26→3 (+22 REVIEW-with-rows via L4 + INDB own-IFSC), bandhan 5→8V (fallback
+  7→0), dhanlaxmi +2 REVIEW via L3, dbs +2 REVIEW (yearless variant),
+  bom 24→25V (`dates_monotonic_expected=False` on L3; zero-diff proof +
+  audited change).
+- Unchanged with classified residuals: idbi, yes, central_bank, equitas_sfb,
+  ujjivan_sfb, hsbc, kvb, dcb, uco, csb, ippb, pnb.
+- Candidates (proposed, not shipped): none new — all remain shadow_only /
+  review_only / legacy per existing table; bom stays `verified` (served).

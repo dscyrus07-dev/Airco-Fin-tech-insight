@@ -44,3 +44,16 @@ distinct fingerprints: 3 | top share: 53.3%
   honest FAILED on missing balances — no gate improvement; not added.
 - fp-B x5 remain REVIEW via `dhanlaxmi_date_valuedate_description_chequeno_debits_credits_balance`.
 - Yield ceiling ~47% unchanged; status stays SHADOW_ONLY. No engine/spec edits this pass.
+
+## N5
+
+- fp-C (`Date|Cheque/Ref No|Description|Debit Amount|Credit Amount|Balance`, dd/mm/yyyy,
+  signed balances): the earlier "space-glyph balance" diagnosis was wrong — both files
+  extract cleanly (121 + 61 rows, chain pass). Added `DHANLAXMI_LAYOUT_3`.
+- The `B/F ...` opening prints as a dated row whose CREDIT cell repeats the balance, and the
+  printed `Total <debits> <credits>` counts it, so the row stays a transaction and the totals
+  pair verifies independently (MATCH on both files). No opening/closing labels print ->
+  `reference` skipped -> REVIEW ceiling (correct: chain is still self-derived).
+- Totals regex is `(?i)^total...` — `flat` preserves case (`Total` not `TOTAL`).
+- Result: 9 REVIEW + 2 fallback -> 11 REVIEW, 0 fallback. Yield 11/15 = 73%.
+- Cross-bank false accepts: 0. Status stays SHADOW_ONLY.

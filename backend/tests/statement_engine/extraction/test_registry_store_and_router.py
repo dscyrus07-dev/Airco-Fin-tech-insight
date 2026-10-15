@@ -23,7 +23,7 @@ def test_default_registry_round_trips_through_rows_with_identical_specs():
 def test_inactive_rows_are_skipped_and_priority_orders_the_registry():
     rows = registry_to_rows(DEFAULT_REGISTRY)
     rows[0]["active"] = False
-    rows[1]["priority"], rows[2]["priority"] = 999, 1
+    rows[1]["priority"], rows[2]["priority"] = max(r["priority"] for r in rows) + 10, 1
     reg = registry_from_rows(rows)
     ids = [s.layout_id for s in reg.specs()]
     assert rows[0]["layout_id"] not in ids and ids[0] == rows[2]["layout_id"] and ids[-1] == rows[1]["layout_id"]

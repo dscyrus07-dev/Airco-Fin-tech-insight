@@ -36,6 +36,19 @@ class LayoutSpec:
     header_repeats: bool = False               # True when every page repeats the table header
     header_wraps: bool = False                 # True when a column title may wrap onto the next visual line; the
                                                # pair is matched as one header (row scan starts after both lines)
+    header_lines: int = 1                      # opt-in: merge up to this many adjacent visual lines into one header
+                                               # stream (fragments of one column title may sit on non-adjacent lines).
+                                               # Words cluster by horizontal overlap (x-ranges within header_merge_tol);
+                                               # each cluster emits its fragments top-to-bottom. Refusal unchanged: the
+                                               # merged view must complete the column set with no unknown token inside.
+    header_merge_tol: float = 4.0              # x-gap (pt) still counted as one title cluster when merging header lines
+    date_join_words: bool = False              # opt-in: the date cell prints as several same-line words
+                                               # ("08 Aug 2021" -> three tokens): join all words of the date band
+                                               # with spaces before parsing (secondary date column already joins)
+    untitled_date_column: bool = False         # opt-in: the leftmost column prints dates but no title. The header must
+                                               # complete every other column with no token left of the first title; the
+                                               # date span is then read from the data rows below (the leftmost x-cluster
+                                               # whose cells all match date_re). Refuses when 0 or >=2 candidates exist.
     ifsc_re: Optional[Pattern[str]] = None
     account_label: str = ""                    # normalised token that precedes the account number value
     end_markers: Tuple[str, ...] = ()          # extra whitespace-free upper-case markers that end the table (footers)
@@ -94,17 +107,83 @@ class LayoutSpec:
                                             # from the document (the dated line's own cell positions), never hard-coded.
                                             # A narration-only line immediately above a dated line belongs to that row
                                             # (the printed txn-type prefix), not to the previous one.
+    anchor_scan: str = "edges"               # "edges": opening/closing/totals searched on page 1 + last page and
+                                           # the summary tail only. "document": every page's text is scanned;
+                                           # the FIRST opening and LAST closing match in statement order are used;
+                                           # two different printed values for the same anchor -> REVIEW (never
+                                           # silently pick one).
+    leading_amounts: bool = False          # like leading_narration, but the buffered leading line may carry
+                                           # any column cells (amount, side marker, ref): they merge into the
+                                           # dated row that follows instead of dropping as junk.
+    leading_narration: bool = False        # narration-band lines print immediately ABOVE the dated line of their
+                                           # own row (and below it): bind them to the dated row they precede
+                                           # (the pending-prefix rule). Independent of implicit_header.
+    balance_optional: bool = False         # the balance column exists but prints only on some rows
+                                           # (carried-forward-style sparse prints): a missing balance cell is
+                                           # allowed; the chain verifies long-range deltas between the
+                                           # printed positions instead of every adjacent pair.
+    no_running_balance: bool = False         # the table prints no running balance column: balance_column must be
+                                           # empty and is dropped from amount_columns. The chain and every
+                                           # chain-derived check are skipped; completeness (dated lines vs rows)
+                                           # and printed totals/counts still apply. Best verdict: REVIEW with code
+                                           # NO_RUNNING_BALANCE — never VERIFIED. Rows carry balance=None.
+    segment_header_re: Optional[Pattern[str]] = None   # a non-dated line matching this opens a new account segment
+                                                     # (whitespace-free match). Rows carry segment ids; the chain runs
+                                                     # per segment. Any segment that fails caps the verdict at REVIEW.
+    segment_count_re: Optional[Pattern[str]] = None    # a line carrying a segment's printed transaction count;
+                                                     # group 1 = the count (matched on the squashed line)
+    balance_checkpoint_re: Optional[Pattern[str]] = None  # a non-row line asserting the running balance at that point
+                                                        # (BALANCE CARRIED/BROUGHT FORWARD style); group 1 = amount.
+                                                        # Checkpoints verify the balance delta over the rows they
+                                                        # bracket: closing-of-segment = opening + credits - debits.
+    balance_inline_re: Optional[Pattern[str]] = None   # a continuation line that IS the preceding row's balance
+                                                     # ("Balance : 1,234.56"); group 1 = amount. The balance is
+                                                     # attached to the current row; per-row balances then work
+                                                     # normally.
+    chain_reorder_same_date: bool = False              # some banks print same-date rows out of balance order; when
+                                                       # set, chain/side breaks fully explained by a reorderable
+                                                       # same-date window downgrade FAIL->WARN (REVIEW, never silent)
+    single_amount_default_side: str = ""               # "" | "debit" | "credit": an unsigned single_amount_column cell
+                                                     # carries no Dr/Cr marker; every value is this side (e.g. an
+                                                     # all-one-side column). Without it, unsigned cells error.
+    section_date_re: Optional[Pattern[str]] = None     # date-grouped rows: a bare section-date line (every word of it
+                                                     # inside the date-column zone) opens a section; rows beneath it
+                                                     # print no date and inherit the section's. Sections persist across
+                                                     # pages. A row before any section date is a defect: skipped and
+                                                     # counted as a rows_without_section_date warning (REVIEW).
+    derive_side_from_balance: bool = False             # no printed Dr/Cr anywhere: each row's side is the direction of
+                                                     # its balance move (requires single_amount_column + balance). The
+                                                     # first row of a segment derives from the printed opening anchor;
+                                                     # without one it is flagged side_unproven (a warning, never VERIFIED
+                                                     # anyway because the independent-anchor check cannot pass).
+    doubled_header_glyphs: bool = False                # the app export prints every header letter twice ("DDaattee"):
+                                                     # collapse doubled letters before header title matching only.
+    summary_truncated: bool = False                    # the printed summary shows whole-unit amounts (rupee-truncated
+                                                     # display, e.g. "₹693" for 693.67): reference and totals compare
+                                                     # floor(derived) == printed. Counts still compare exactly.
+    totals_sum_tail: bool = False                      # the totals/counts line prints the second metric in several
+                                                     # buckets: group 1 = first metric, every further group sums into
+                                                     # the second (totals_credit_first still fixes which is credits).
+    period_from_borrows_end_year: bool = False         # the printed period's from-date carries no year
+                                                     # ("1 Dec to 31 Dec '22"): parse it by borrowing the end year
+                                                     # (a start month after the end month wraps to end_year - 1).
+    doc_counts_re: Optional[Pattern[str]] = None       # document-region line carrying printed transaction counts
+                                                     # (e.g. "186 Transactions 235 Transactions"): group order follows
+                                                     # totals_credit_first / totals_sum_tail like totals_line_re.
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
+        bal = () if (self.no_running_balance or self.balance_inline_re is not None) else (self.balance_column,)
         if self.single_amount_column:
-            return (self.single_amount_column, self.balance_column)
-        return (self.debit_column, self.credit_column, self.balance_column)
+            return (self.single_amount_column,) + bal
+        return (self.debit_column, self.credit_column) + bal
 
     def validate(self) -> None:
         if len(self.text_columns) < 2 or self.text_columns[0] != "date" or "narration" not in self.text_columns:
             raise ValueError("text_columns must start with 'date' and include 'narration'")
         for col in (*self.text_columns, *self.amount_columns):
+            if col == self.balance_column and self.balance_inline_re is not None:
+                continue                      # balances come from labelled continuation lines, not a title column
             if col not in self.columns:
                 raise ValueError(f"column {col!r} has no header token sequence")
         if self.row_order not in ("forward", "reverse", "auto"):
@@ -124,6 +203,12 @@ class LayoutSpec:
                 raise ValueError("side_marker_column requires single_amount_column")
             if self.side_marker_column not in self.columns or self.side_marker_column not in self.text_columns:
                 raise ValueError("side_marker_column must be a declared text column")
+        if self.header_lines < 1:
+            raise ValueError("header_lines must be >= 1")
+        if self.header_merge_tol < 0:
+            raise ValueError("header_merge_tol must be >= 0")
+        if self.untitled_date_column and self.implicit_header:
+            raise ValueError("untitled_date_column and implicit_header are mutually exclusive")
         if self.implicit_header:
             if "narration" not in self.implicit_header or self.implicit_header[0] != "date":
                 raise ValueError("implicit_header must start with 'date' and include 'narration'")
@@ -132,3 +217,20 @@ class LayoutSpec:
                     raise ValueError(f"implicit_header role {col!r} is not a declared column")
             if not all(c in self.implicit_header for c in (*self.text_columns, *self.amount_columns)):
                 raise ValueError("implicit_header must cover every text and amount column")
+        if self.anchor_scan not in ("edges", "document"):
+            raise ValueError("anchor_scan must be 'edges' or 'document'")
+        if self.no_running_balance and self.balance_column:
+            raise ValueError("no_running_balance requires balance_column = ''")
+        if self.derive_side_from_balance and not self.single_amount_column:
+            raise ValueError("derive_side_from_balance requires single_amount_column")
+        if self.derive_side_from_balance and self.no_running_balance:
+            raise ValueError("derive_side_from_balance requires a printed balance column")
+        # segment_header_re / segment_count_re are independent: headers without counts run the
+        # chain per segment; a count alone treats the whole document as one implicit segment
+        if self.balance_inline_re is not None and self.no_running_balance:
+            raise ValueError("balance_inline_re supplies balances; no_running_balance forbids a balance column")
+        if self.single_amount_default_side:
+            if self.single_amount_default_side not in ("debit", "credit"):
+                raise ValueError("single_amount_default_side must be '', 'debit' or 'credit'")
+            if not self.single_amount_column:
+                raise ValueError("single_amount_default_side requires single_amount_column")

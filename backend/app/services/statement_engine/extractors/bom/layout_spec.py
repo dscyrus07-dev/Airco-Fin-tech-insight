@@ -15,6 +15,8 @@ BOM_LAYOUT_1 = LayoutSpec(
     opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]+\.\d{2})"),
     closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]+\.\d{2})"),
     anchor_full=True,
+    anchor_scan="document",
+    segment_count_re=re.compile(r"(?i)TotalTransactionCount:?(\d+)"),
     bank_key="bank_of_maharashtra",
     bank_name="Bank of Maharashtra",
     bank_markers=("BANKOFMAHARASHTRA",),
@@ -99,6 +101,8 @@ BOM_LAYOUT_3 = LayoutSpec(
     opening_balance_re=re.compile(r"(?i)OpeningBalance(-?[\d,]+\.\d{2})"),
     closing_balance_re=re.compile(r"(?i)ClosingBalance(-?[\d,]+\.\d{2})"),
     anchor_full=True,
+    anchor_scan="document",
+    segment_count_re=re.compile(r"(?i)TotalTransactionCount:?(\d+)"),
     columns={
         "sr": (("srno",),),
         "date": (("date",),),
@@ -127,6 +131,7 @@ BOM_LAYOUT_3 = LayoutSpec(
     end_markers=("ENDOFSTATEMENT",),
     empty_amount_marker="-",
     row_order="auto",
+    dates_monotonic_expected=False,
 )
 BOM_LAYOUT_3.validate()
 

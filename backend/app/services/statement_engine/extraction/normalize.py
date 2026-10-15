@@ -17,6 +17,10 @@ class NormalizeError(ValueError):
     pass
 
 
+# "(cr|dr)" with optional parens and an optional trailing period: IDBI prints `Dr.`/`Cr.`.
+SIDE_MARKER_RE = re.compile(r"(?i)\(?(cr|dr)\)?\.?$")
+
+
 def _strip_drcr(text: str, spec) -> str:
     """Drop a trailing Dr/Cr word that only restates a split column ("220.00 DR" -> "220.00"); opt-in."""
     if spec.drcr_suffix_decoration:
@@ -33,7 +37,7 @@ def parse_amount(text: str, suffix_sign: bool = False, clipped_sign: bool = Fals
         return None
     t = t.replace(",", "")
     if suffix_sign:
-        m = re.search(r"(?i)\(?(cr|dr)\)?$", t)
+        m = SIDE_MARKER_RE.search(t)
         if not m and clipped_sign:
             m = re.search(r"(?<=[\d.])([cCdD])\)?$", t)
         if m:
@@ -66,38 +70,69 @@ class NormalizedRow:
     reversal: bool               # printed as a negative amount
     row_warnings: List[str] = field(default_factory=list)
     printed_kind: str = "debit"  # "debit" | "credit": which side of the statement the printed column belongs to
+    segment: int = 0             # account segment (0 when the document prints no segment headers)
 
 
-def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[NormalizedRow], List[str]]:
-    """Returns (rows, errors). Rows that cannot be normalized are reported in errors and omitted."""
+def normalize_rows(rows: List[RawRow], spec: LayoutSpec, opening: Optional[Decimal] = None) -> Tuple[List[NormalizedRow], List[str]]:
+    """Returns (rows, errors). Rows that cannot be normalized are reported in errors and omitted.
+
+    `opening` is the document's printed opening balance; only a derive_side_from_balance layout uses it
+    (the first row's side is read from the balance move off that anchor)."""
     out: List[NormalizedRow] = []
     errors: List[str] = []
+    prev_bal: Dict[int, Decimal] = {}     # segment -> last printed balance (derive_side_from_balance)
     for i, r in enumerate(rows):
         try:
             date = parse_date(r.date, spec.date_format)
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None
-            if spec.single_amount_column:
+            if spec.derive_side_from_balance:
                 cell = r.amounts.get(spec.single_amount_column, "").strip()
-                m = re.search(r"(?i)\(?(cr|dr)\)?$", cell)
+                value = parse_amount(cell) if cell else None
+                if value is None:
+                    raise NormalizeError("missing amount")
+                bal0 = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                                    clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
+                if bal0 is None:
+                    raise NormalizeError("missing balance: the side derives from the balance move")
+                base = prev_bal.get(r.segment, opening)
+                if base is None or bal0 == base:
+                    # no anchor to derive against (or a zero move): the side is unprovable; debit is the
+                    # documented fallback and the warning / missing anchor keeps the file off VERIFIED
+                    wd, dp = value, None
+                    r.warnings.append("side_unproven")
+                elif bal0 > base:
+                    wd, dp = None, value
+                else:
+                    wd, dp = value, None
+                prev_bal[r.segment] = bal0
+            elif spec.single_amount_column:
+                cell = r.amounts.get(spec.single_amount_column, "").strip()
+                m = SIDE_MARKER_RE.search(cell)
                 if m:
                     value = parse_amount(cell[:m.start()])
                     wd, dp = (value, None) if m.group(1).lower() == "dr" else (None, value)
                 elif cell[:1] in ("+", "-") and spec.merge_sign_prefix:
                     value = parse_amount(cell[1:])
                     wd, dp = (value, None) if cell[0] == "-" else (None, value)
+                elif spec.single_amount_default_side:
+                    value = parse_amount(cell)
+                    wd, dp = (value, None) if spec.single_amount_default_side == "debit" else (None, value)
                 else:
                     raise NormalizeError("amount cell carries no Dr/Cr marker")
             else:
                 wd = parse_amount(_strip_drcr(r.amounts.get(spec.debit_column, ""), spec))
                 dp = parse_amount(_strip_drcr(r.amounts.get(spec.credit_column, ""), spec))
-            bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
-                               clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
+            if spec.no_running_balance:
+                bal = None
+            else:
+                bal = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                                   clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
             if spec.zero_amount_is_empty and wd is not None and dp is not None:
                 if wd == 0 and dp != 0:
                     wd = None
                 elif dp == 0 and wd != 0:
                     dp = None
-            if bal is None:
+            if bal is None and not spec.no_running_balance and not spec.balance_optional:
                 raise NormalizeError("missing balance")
             if (wd is None) == (dp is None):
                 raise NormalizeError("row must carry exactly one of the debit/credit columns")
@@ -110,6 +145,11 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
             # canonical debit/credit are non-negative and consistent with the balance move: a negative debit-column amount
             # (reversal of a debit) is a credit, a negative credit-column amount is a debit
             is_debit = (side == spec.debit_column) != reversal
+            extras = {"page": r.page, "printed_side": side, "reversal": reversal}
+            if spec.segment_header_re is not None:
+                extras["segment"] = r.segment
+            if spec.no_running_balance:
+                extras["no_running_balance"] = True
             txn = NormalizedTransaction(
                 date=date,
                 description=r.narration,
@@ -118,10 +158,10 @@ def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[Normalize
                 balance=bal,
                 ref_no=r.ref,
                 value_date=value_date,
-                extras={"page": r.page, "printed_side": side, "reversal": reversal},
+                extras=extras,
             )
             out.append(NormalizedRow(txn=txn, page=r.page, printed_side=side, reversal=reversal, row_warnings=list(r.warnings),
-                                    printed_kind="debit" if side == spec.debit_column else "credit"))
+                                    printed_kind="debit" if side == spec.debit_column else "credit", segment=r.segment))
         except NormalizeError as exc:
             errors.append(f"row{i + 1}(page{r.page}): {exc}")
     return out, errors

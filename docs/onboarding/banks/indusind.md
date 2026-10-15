@@ -52,3 +52,26 @@ wrap (`header_wraps`), date cells on continuation pages drift ~4pt left of the a
 - cross-bank: 0 accepts / 0 detector hits on 364 pooled other-bank files
 - audit: 43 VERIFIED sampled, 0 disagreements
 - gate unchanged: stays **SHADOW_ONLY** (share of VERIFIED still below bar; unrouted families remain)
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Added `INDUSIND_LAYOUT_4` for the app/CA export family `DATE|TYPE|DESCRIPTION|DEBIT|CREDIT|BALANCE`:
+  two-line header ("Balance" on the second header line), each record = a type/narration line above the
+  dated line (`Transfer Credit | UPI/...`), `-` empty money cells (`empty_amount_marker`),
+  `header_lines=2` + `leading_narration`. No anchors print anywhere -> REVIEW ceiling by design.
+- Added `ifsc_re` (`INDB0[0-9A-Z]{6}`) to all four specs: the export prints `IFSCCODE:INDB...` in the
+  page-1 account block (header region — own-bank evidence); foreign IFSCs seen in UPI narration remain
+  non-evidence. This routed 23 previously-fallback files.
+- `row_order="auto"` on L4: a subset prints newest-first; reversal is accepted only when the balance
+  chain holds newest-first and breaks oldest-first (evidence-driven).
+- Date variants widened on L4: `Aug 1, 2022` comma form; `period_date_format` extended the same way.
+- Folder re-measure (129 files): VERIFIED 92 -> 92, REVIEW 6 -> **28**, FAILED 5 -> 6, fallback 26 -> **3**.
+  22 new REVIEWs are rows-read yield (honest: no printed anchors, class E); the one new FAILED
+  (`d602934e`) has a single real chain gap with unread=0 — the PDF itself skips rows (class D).
+- Cross-bank: 0 wrong-bank accepts / 417 pooled routes; 0 foreign files landed on indusind.
+- Audit: 40/40 VERIFIED clean (0 chain breaks); residual flags are auditor generic-scan artifacts
+  (account-number strings read as anchor amounts; B/F-C/F restate rows are the engine's true anchors).
+- Remaining fallback (3): `10973719`, `51d9158e`, `8fde16bc` — date column renders as split glyph runs
+  (`05-23` / `2026-` on adjacent lines), no complete date token anywhere (class D, NOT_POSSIBLE).
+- Gates: detection 126/129 = 97.7% (<100%), yield 120/129 = 93.0% pass, VERIFIED share 92/129 = 71.3%
+  (<80% where balances print) -> stays **SHADOW_ONLY**.
