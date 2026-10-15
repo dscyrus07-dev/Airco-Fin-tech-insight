@@ -16,7 +16,7 @@ from .scb.layout_spec import SCB_LAYOUT_1, SCB_LAYOUT_2
 from ..extraction.registry import OTHER_BANK_MARKERS
 from .indian_bank.layout_spec import INDIAN_BANK_LAYOUT_1, INDIAN_BANK_LAYOUT_2, INDIAN_BANK_LAYOUT_3
 from .karnataka.layout_spec import KARNATAKA_LAYOUT_1
-from .dbs.layout_spec import DBS_LAYOUT_1, DBS_LAYOUT_2, DBS_LAYOUT_3
+from .dbs.layout_spec import DBS_LAYOUT_1, DBS_LAYOUT_2, DBS_LAYOUT_3, DBS_LAYOUT_4
 from .citibank.layout_spec import CITIBANK_LAYOUT_1
 from .kvb.layout_spec import KVB_LAYOUT_1
 from .hsbc.layout_spec import HSBC_LAYOUT_1, HSBC_LAYOUT_2
@@ -90,5 +90,8 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    FEDERAL_LAYOUT_4, FEDERAL_LAYOUT_5,
                                    # n5: INDUSIND_LAYOUT_4 = 'DATE|TYPE|DESCRIPTION|DEBIT|CREDIT|BALANCE'
                                    #     two-line export (type/narration line above the dated amount line)
-                                   INDUSIND_LAYOUT_4],
+                                   INDUSIND_LAYOUT_4,
+                                   # n5: DBS_LAYOUT_4 = balance-less 'Details of Transaction' with yearless
+                                   #     '02 Jul' rows; year from the printed Transaction History period
+                                   DBS_LAYOUT_4],
                                   foreign_markers=OTHER_BANK_MARKERS)

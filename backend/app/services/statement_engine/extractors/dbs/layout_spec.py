@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import re
 
+from dataclasses import replace
+
 from ...extraction.layout_spec import LayoutSpec
 
 DBS_LAYOUT_1 = LayoutSpec(
@@ -121,3 +123,16 @@ DBS_LAYOUT_3 = LayoutSpec(
     dates_monotonic_expected=False,
 )
 DBS_LAYOUT_3.validate()
+
+
+# Same balance-less "Details of Transaction" export with yearless row dates ("02 Jul"); the printed
+# "Transaction History From dd-mm-yyyy To dd-mm-yyyy" line supplies the year.
+DBS_LAYOUT_4 = replace(
+    DBS_LAYOUT_3,
+    layout_id="dbs_date_detailsoftransaction_debit_credit_yearless",
+    date_re=re.compile(r"^\d{2} [A-Za-z]{3}$"),
+    date_format="%d %b %Y",
+    period_re=re.compile(r"(?i)transactionhistoryfrom(\d{2}-\d{2}-\d{4})to(\d{2}-\d{2}-\d{4})"),
+    year_from_period=True,
+)
+DBS_LAYOUT_4.validate()
