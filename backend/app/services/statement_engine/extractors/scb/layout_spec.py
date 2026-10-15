@@ -44,6 +44,8 @@ SCB_LAYOUT_1 = LayoutSpec(
     totals_credit_first=True,
     totals_accumulate=True,
     page_footer_markers=("BANKDEPOSITSARECOVERED",),
+    balance_optional=True,      # fee/charge rows print a Withdrawal without restating the running balance
+    ifsc_re=re.compile(r"SCBL0[0-9A-Z]{6}"),  # own IFSC prefix in the page-1 account block
     dates_monotonic_expected=False,
 )
 SCB_LAYOUT_1.validate()
