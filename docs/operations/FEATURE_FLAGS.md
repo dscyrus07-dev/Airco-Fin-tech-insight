@@ -80,3 +80,13 @@ Setting any behaviour flag to `off` (V2) or removing a bank from the serve
 allowlist takes effect on the next request — no rebuild required
 (env is read per-call, except the two `*_TIMEOUT_S`/mem constants which are
 read at module import).
+
+## Access control (job read / download)
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `DOWNLOAD_TOKEN_SECRET` | empty (random per process) | HMAC secret for signed download tokens. Set it in every backend replica. |
+| `DOWNLOAD_TOKEN_TTL_SECONDS` | `900` | Lifetime of a download token (min 30). |
+| `TRUST_FORWARDED_USER_HEADERS` | `false` | Honour `X-Airco-User-*` identity headers. Keep off unless a trusted gateway overwrites them. |
+
+`GET /api/jobs/{id}`, `/api/jobs/{id}/download`, `/download/{file}` and `/upload/download/{id}` require the owner's (or an admin's) bearer token, or a valid signed token for that exact job (`?t=`), otherwise 401/403.

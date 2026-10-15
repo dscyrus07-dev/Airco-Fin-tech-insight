@@ -93,6 +93,25 @@ function readSavedFormState(): SavedFormState | null {
   }
 }
 
+/** Download a report with the user's bearer token (plain links cannot send it). */
+async function downloadWithAuth(url: string, fallbackName: string): Promise<void> {
+  const token = await getValidSessionAccessToken()
+  const res = await fetch(url, { headers: token ? { Authorization: `Bearer ${token}` } : undefined })
+  if (!res.ok) {
+    window.alert('The report could not be downloaded. It may have expired.')
+    return
+  }
+  const match = /filename="?([^";]+)"?/i.exec(res.headers.get('content-disposition') || '')
+  const blobUrl = URL.createObjectURL(await res.blob())
+  const a = document.createElement('a')
+  a.href = blobUrl
+  a.download = match?.[1] || fallbackName
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(blobUrl)
+}
+
 export default function Dashboard() {
   const { user, logout } = useAuth()
   const [bankNames, setBankNames] = useState<string[]>(SUPPORTED_BANK_OPTIONS.map((b) => b.name))
@@ -695,13 +714,14 @@ export default function Dashboard() {
             </span>
           </div>
         ) : (
-          <a
-            href={`/api/jobs/${itemId}/download`}
-            download
+          <button
+            type="button"
+            aria-label="Download report"
+            onClick={() => void downloadWithAuth(`/api/jobs/${itemId}/download`, 'report.xlsx')}
             className="p-1 rounded text-neutral-400 hover:text-black transition"
           >
             <Download className="h-4 w-4" />
-          </a>
+          </button>
         )}
         <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
           <button
@@ -1276,13 +1296,14 @@ export default function Dashboard() {
                               )}
                             </div>
                             <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                              <a
-                                href={item.downloadUrl}
-                                download
+                              <button
+                                type="button"
+                                aria-label="Download report"
+                                onClick={() => void downloadWithAuth(item.downloadUrl, 'report.xlsx')}
                                 className="p-1 rounded text-neutral-400 hover:text-black transition"
                               >
                                 <Download className="h-4 w-4" />
-                              </a>
+                              </button>
                               <button
                                 onClick={async () => {
                                   const confirmed = window.confirm(

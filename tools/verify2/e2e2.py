@@ -17,8 +17,8 @@ for a in sys.argv[3:]:
 
 API = "http://127.0.0.1:8401"
 KC = "http://localhost:8080"
-SECRET = os.environ.get("KC_SECRET", "airco-frontend-secret")
-PW = os.environ.get("E2E_USER_PW", "Test123!")
+SECRET = os.environ.get("KC_SECRET", "")
+PW = os.environ.get("E2E_USER_PW", "")
 
 def login():
     r = requests.post(f"{KC}/realms/airco-insights/protocol/openid-connect/token",

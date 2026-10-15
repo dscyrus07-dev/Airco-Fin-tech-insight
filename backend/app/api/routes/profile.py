@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from ...dependencies.auth import get_current_user_optional
+from ...dependencies.auth import forwarded_header, get_current_user_optional
 from ...services.file_history_service import file_history_service
 
 router = APIRouter(prefix="/profile", tags=["profile"])
@@ -12,12 +12,12 @@ async def get_profile_history(
     current_user: dict | None = Depends(get_current_user_optional),
 ):
     resolved_user = current_user or {
-        "id": request.headers.get("X-Airco-User-Id"),
-        "email": request.headers.get("X-Airco-User-Email"),
-        "name": request.headers.get("X-Airco-User-Name"),
-        "given_name": request.headers.get("X-Airco-Given-Name"),
-        "family_name": request.headers.get("X-Airco-Family-Name"),
-        "preferred_username": request.headers.get("X-Airco-Preferred-Username"),
+        "id": forwarded_header(request, "X-Airco-User-Id"),
+        "email": forwarded_header(request, "X-Airco-User-Email"),
+        "name": forwarded_header(request, "X-Airco-User-Name"),
+        "given_name": forwarded_header(request, "X-Airco-Given-Name"),
+        "family_name": forwarded_header(request, "X-Airco-Family-Name"),
+        "preferred_username": forwarded_header(request, "X-Airco-Preferred-Username"),
         "roles": [],
     }
     user_id = resolved_user.get("id")
@@ -47,12 +47,12 @@ async def delete_file(
     current_user: dict | None = Depends(get_current_user_optional),
 ):
     resolved_user = current_user or {
-        "id": request.headers.get("X-Airco-User-Id"),
-        "email": request.headers.get("X-Airco-User-Email"),
-        "name": request.headers.get("X-Airco-User-Name"),
-        "given_name": request.headers.get("X-Airco-Given-Name"),
-        "family_name": request.headers.get("X-Airco-Family-Name"),
-        "preferred_username": request.headers.get("X-Airco-Preferred-Username"),
+        "id": forwarded_header(request, "X-Airco-User-Id"),
+        "email": forwarded_header(request, "X-Airco-User-Email"),
+        "name": forwarded_header(request, "X-Airco-User-Name"),
+        "given_name": forwarded_header(request, "X-Airco-Given-Name"),
+        "family_name": forwarded_header(request, "X-Airco-Family-Name"),
+        "preferred_username": forwarded_header(request, "X-Airco-Preferred-Username"),
         "roles": [],
     }
     user_id = resolved_user.get("id")

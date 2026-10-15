@@ -8,12 +8,16 @@ Serves generated Excel/PDF files from the application temp directory.
 import os
 import logging
 
-from fastapi import APIRouter, HTTPException, Request
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 
 from app.utils.file_handler import get_temp_dir
 from app.services.audit import AuditService, get_audit_context
 from app.database.session import get_db
+from app.dependencies.auth import check_user_ownership, get_current_user_optional
+from app.services.download_tokens import verify_download_token
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +26,41 @@ router = APIRouter()
 ALLOWED_EXTENSIONS = {".xlsx", ".pdf"}
 
 
+def _authorise_file_download(job_id: str, current_user: Optional[dict], token: Optional[str]) -> None:
+    """Gate a temp-dir file. Files not tied to a job id are admin-only."""
+    if job_id and verify_download_token(token, job_id):
+        return
+    if not current_user:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if "admin" in (current_user.get("roles") or []):
+        return
+    if not job_id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    from app.services.file_history_service import file_history_service
+
+    record = file_history_service.get_by_job_id(job_id)
+    owner = getattr(record, "user_id", None) if record else None
+    if not owner or not check_user_ownership(owner, current_user):
+        raise HTTPException(status_code=403, detail="Access denied")
+
+
 @router.get("/download/{file_id}")
-async def download_file(request: Request, file_id: str):
+async def download_file(
+    request: Request,
+    file_id: str,
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+    t: Optional[str] = Query(default=None),
+):
     """
     Download a generated report file by its ID (filename).
 
-    Only serves files from the application temp directory with allowed extensions.
+    Only serves files from the application temp directory with allowed extensions,
+    and only to the job's owner / an admin (bearer) or the holder of a signed
+    download token issued for that job.
     """
     audit_context = get_audit_context(request)
     db = next(get_db())
@@ -40,6 +73,11 @@ async def download_file(request: Request, file_id: str):
     _, ext = os.path.splitext(safe_name)
     if ext.lower() not in ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=400, detail="Invalid file type.")
+
+    name_job_id = safe_name.split("_")[0] if "_" in safe_name else ""
+    if not name_job_id.startswith("JOB"):
+        name_job_id = ""
+    _authorise_file_download(name_job_id, current_user, t)
 
     temp_dir = get_temp_dir()
     file_path = os.path.join(temp_dir, safe_name)

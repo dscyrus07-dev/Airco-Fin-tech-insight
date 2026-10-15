@@ -9,7 +9,9 @@ export async function GET(
   try {
     const { jobId } = await params
     const authorization = request.headers.get('authorization')
-    const response = await fetch(`${BACKEND_URL}/api/jobs/${jobId}/download`, {
+    const token = request.nextUrl.searchParams.get('t')
+    const query = token ? `?t=${encodeURIComponent(token)}` : ''
+    const response = await fetch(`${BACKEND_URL}/api/jobs/${encodeURIComponent(jobId)}/download${query}`, {
       headers: authorization ? { Authorization: authorization } : undefined,
     })
 

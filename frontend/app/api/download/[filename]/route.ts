@@ -14,9 +14,11 @@ export async function GET(
     }
 
     const backendUrl = `${BACKEND_URL}/download/${encodeURIComponent(filename)}`
-    console.log(`Proxying download: ${backendUrl}`)
-
-    const response = await fetch(backendUrl)
+    const token = request.nextUrl.searchParams.get('t')
+    const authorization = request.headers.get('authorization')
+    const response = await fetch(token ? `${backendUrl}?t=${encodeURIComponent(token)}` : backendUrl, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    })
 
     if (!response.ok) {
       return NextResponse.json(

@@ -8,6 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional, Dict, Any
 import base64
 import json
+import os
 
 from ..core.config import settings
 from ..services.auth_client import auth_client
@@ -16,6 +17,17 @@ from ..utils.logging import get_logger
 
 logger = get_logger(__name__)
 security = HTTPBearer(auto_error=False)
+
+
+def trust_forwarded_identity() -> bool:
+    """X-Airco-User-* identity headers are client-controlled. They are honoured
+    only when TRUST_FORWARDED_USER_HEADERS is on (deployment behind a trusted
+    gateway that overwrites them); otherwise identity comes from a verified token."""
+    return os.getenv("TRUST_FORWARDED_USER_HEADERS", "false").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def forwarded_header(request: Request, name: str) -> Optional[str]:
+    return request.headers.get(name) if trust_forwarded_identity() else None
 
 
 def _insecure_decode(token: str) -> Optional[Dict[str, Any]]:

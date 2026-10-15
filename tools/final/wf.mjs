@@ -18,8 +18,8 @@ for (const line of readFileSync('X:/Airco Projects/Airco Insights fintech/local.
   if (m) ENV[m[1]] = m[2].trim().replace(/^"|"$/g, '')
 }
 const USER = ENV.TEST_USER_EMAIL || 'test@airco.com'
-const PW = ENV.TEST_USER_PASSWORD || 'Test123!'
-const SECRET = ENV.KEYCLOAK_CLIENT_SECRET || 'airco-frontend-secret'
+const PW = ENV.TEST_USER_PASSWORD || ''
+const SECRET = ENV.KEYCLOAK_CLIENT_SECRET || ''
 
 const R = {}
 const consoleErrs = []

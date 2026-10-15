@@ -15,7 +15,8 @@ from ...services.redis_job_store import redis_job_store
 from ...services.task_processor import task_processor
 from ...services.event_publisher import event_publisher
 from ...services.file_history_service import file_history_service
-from ...dependencies.auth import get_current_user_optional
+from ...dependencies.auth import check_user_ownership, forwarded_header, get_current_user_optional
+from ...services.download_tokens import issue_download_token, verify_download_token
 from ...utils.file_handler import get_temp_dir, upload_to_storage, storage_user_folder
 from ...core.config import settings as app_settings
 
@@ -32,7 +33,7 @@ def _safe_object_name(filename: str) -> str:
     return cleaned.strip("._") or "statement.pdf"
 
 def _extract_user_id_from_request(request: Request) -> Optional[str]:
-    forwarded_user_id = request.headers.get("X-Airco-User-Id")
+    forwarded_user_id = forwarded_header(request, "X-Airco-User-Id")
     if forwarded_user_id:
         return forwarded_user_id
     try:
@@ -169,21 +170,21 @@ async def upload_bank_statement_async(
     account_type = (account_type or "").strip().lower()
     user_id = (
         (current_user or {}).get("id")
-        or request.headers.get("X-Airco-User-Id")
+        or forwarded_header(request, "X-Airco-User-Id")
         or _extract_user_id_from_request(request)
         or "anonymous"
     )
-    user_email = (current_user or {}).get("email") or request.headers.get("X-Airco-User-Email")
+    user_email = (current_user or {}).get("email") or forwarded_header(request, "X-Airco-User-Email")
     user_name = (
         (current_user or {}).get("preferred_username")
         or (current_user or {}).get("name")
-        or request.headers.get("X-Airco-Preferred-Username")
-        or request.headers.get("X-Airco-User-Name")
+        or forwarded_header(request, "X-Airco-Preferred-Username")
+        or forwarded_header(request, "X-Airco-User-Name")
     )
     full_name = (
         full_name
         or (current_user or {}).get("name")
-        or request.headers.get("X-Airco-User-Name")
+        or forwarded_header(request, "X-Airco-User-Name")
         or "anonymous"
     )
     
@@ -306,11 +307,16 @@ async def upload_bank_statement_async(
     return JSONResponse({
         "job_id": job.id,
         "status": "submitted",
-        "message": "Processing started. Check job status with /api/jobs/{job_id}"
+        "message": "Processing started. Check job status with /api/jobs/{job_id}",
+        "download_token": issue_download_token(job.id),
     })
 
 @router.get("/download/{job_id}")
-async def download_result(job_id: str):
+async def download_result(
+    job_id: str,
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+    t: Optional[str] = None,
+):
     """Download the processed Excel file when job is complete.
 
     Results live in Supabase S3 object storage so this works across workers and
@@ -319,6 +325,16 @@ async def download_result(job_id: str):
     job = await redis_job_store.get_job(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
+
+    if not verify_download_token(t, job.id):
+        if not current_user:
+            raise HTTPException(
+                status_code=401,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        if not check_user_ownership(job.user_id or "", current_user):
+            raise HTTPException(status_code=403, detail="Access denied")
 
     if job.status != JobStatus.COMPLETED:
         raise HTTPException(status_code=400, detail="Job not completed yet")

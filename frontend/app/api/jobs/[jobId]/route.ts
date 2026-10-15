@@ -9,7 +9,9 @@ export async function GET(
   try {
     const { jobId } = await params
     const authorization = request.headers.get('authorization')
-    const response = await fetch(`${BACKEND_URL}/api/jobs/${jobId}`, {
+    const token = request.nextUrl.searchParams.get('t')
+    const query = token ? `?t=${encodeURIComponent(token)}` : ''
+    const response = await fetch(`${BACKEND_URL}/api/jobs/${encodeURIComponent(jobId)}${query}`, {
       headers: authorization ? { Authorization: authorization } : undefined,
     })
 
@@ -27,7 +29,9 @@ export async function GET(
 
     const resultData = data?.result_data
     if (resultData && !resultData?.excel_url) {
-      resultData.excel_url = `/api/jobs/${encodeURIComponent(jobId)}/download`
+      // Signed, short-lived, single-job token so a plain link can download.
+      const dl = resultData.download_token ? `?t=${encodeURIComponent(resultData.download_token)}` : ''
+      resultData.excel_url = `/api/jobs/${encodeURIComponent(jobId)}/download${dl}`
     }
 
     return NextResponse.json(data)

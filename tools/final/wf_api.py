@@ -18,8 +18,8 @@ for _p in ("X:/Airco Projects/Airco Insights fintech/local.env",
             m = line.strip().split("=", 1)
             if len(m) == 2:
                 ENV.setdefault(m[0], m[1].strip('"'))
-USER, PW = ENV.get("TEST_USER_EMAIL", "test@airco.com"), ENV.get("TEST_USER_PASSWORD", "Test123!")
-SECRET = ENV.get("KEYCLOAK_CLIENT_SECRET", "airco-frontend-secret")
+USER, PW = ENV.get("TEST_USER_EMAIL", "test@airco.com"), ENV.get("TEST_USER_PASSWORD", "")
+SECRET = ENV.get("KEYCLOAK_CLIENT_SECRET", "")
 R = {}
 
 def login(u=USER, p=PW):

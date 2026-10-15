@@ -20,7 +20,7 @@ def token():
         data={
             "grant_type": "password",
             "client_id": "frontend-app",
-            "client_secret": "airco-frontend-secret",
+            "client_secret": "",
             "username": "test@airco.com",
             "password": "Test123!",
         },

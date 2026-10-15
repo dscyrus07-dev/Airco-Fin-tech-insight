@@ -2,12 +2,13 @@ import os
 from pathlib import Path
 from typing import Optional, List
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from fastapi.responses import FileResponse, Response
 
 from ...models.job import Job, JobStatus, JobUpdate, JobType
 from ...services.file_history_service import file_history_service
 from ...services.redis_job_store import redis_job_store
+from ...services.download_tokens import issue_download_token, verify_download_token
 from ...utils.correlation import get_correlation_id
 from ...utils.logging import get_logger
 from ...dependencies.auth import get_current_user, get_current_user_optional, get_admin_user, check_user_ownership
@@ -65,12 +66,27 @@ async def _get_job_or_history(job_id: str) -> Job:
     raise HTTPException(status_code=404, detail="Job not found")
 
 
-def _ensure_job_access(job: Job, current_user: Optional[dict]) -> None:
-    if current_user and not check_user_ownership(job.user_id or "", current_user):
+def _ensure_job_access(job: Job, current_user: Optional[dict], token: Optional[str] = None) -> bool:
+    """Authorise a job read. Returns True when access came from the bearer user.
+
+    Access requires either a verified bearer user who owns the job (or is admin),
+    or a valid signed download token issued for this exact job. Anything else is
+    refused: jobs are never readable anonymously.
+    """
+    if current_user:
+        if check_user_ownership(job.user_id or "", current_user):
+            return True
         raise HTTPException(
             status_code=403,
             detail="Access denied: You can only view your own jobs"
         )
+    if verify_download_token(token, job.id):
+        return False
+    raise HTTPException(
+        status_code=401,
+        detail="Not authenticated",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 
 def _download_from_storage(bucket: str, object_key: str) -> bytes:
@@ -88,25 +104,32 @@ def _download_from_storage(bucket: str, object_key: str) -> bytes:
 @router.get("/{job_id}", response_model=Job)
 async def get_job(
     job_id: str,
-    current_user: Optional[dict] = Depends(get_current_user_optional)
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+    t: Optional[str] = Query(default=None),
 ):
-    """Get job status and details."""
+    """Get job status and details (owner, admin, or valid signed token)."""
     job = await _get_job_or_history(job_id)
-    
-    _ensure_job_access(job, current_user)
-    
+
+    _ensure_job_access(job, current_user, t)
+
+    if job.status == JobStatus.COMPLETED:
+        job = job.model_copy(deep=True) if hasattr(job, "model_copy") else job.copy(deep=True)
+        job.result_data = dict(job.result_data or {})
+        job.result_data["download_token"] = issue_download_token(job.id)
+
     return job
 
 
 @router.get("/{job_id}/download")
 async def download_job_result(
     job_id: str,
-    current_user: Optional[dict] = Depends(get_current_user_optional)
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+    t: Optional[str] = Query(default=None),
 ):
     """Download the Excel generated for a completed async job."""
     job = await _get_job_or_history(job_id)
 
-    _ensure_job_access(job, current_user)
+    _ensure_job_access(job, current_user, t)
 
     if job.status != JobStatus.COMPLETED:
         raise HTTPException(status_code=400, detail="Job not completed yet")
