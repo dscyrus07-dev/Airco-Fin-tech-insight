@@ -198,3 +198,65 @@ def inline_balance_statement(spec, geom, rows, marker="N2SYNBANK"):
         ws += [w("Balance", x0, top), w(":", x0 + 40, top), w(bal, x0 + 50, top)]
         top += 16.0
     return [Page(ws, width=1200.0)]
+
+
+def grouped_statement(spec, geom, sections, marker="N3SYNBANK", page_breaks=(),
+                      doubled=False, repeated_header=True, header_top=200.0,
+                      period=None, anchors=None, summary_line=None):
+    """Date-grouped statement: each section is (label, [(narr, amount, balance), ...]); rows print
+    no date and inherit the section's. ``sections`` is a list of (label, rows); ``page_breaks`` is a
+    set of section indices that start a new page (the header re-prints when repeated_header).
+    ``doubled`` doubles every letter of the header titles (app-export look).
+    ``period`` prints the statement period text on page 1; ``anchors``=(opening, closing) prints
+    truncated whole-unit anchor lines B<opening>B ... B<closing>."""
+    """Date-grouped statement: each section is (label, [(narr, amount, balance), ...]); rows print
+    no date and inherit the section's. ``sections`` is a list of (label, rows); ``page_breaks`` is a
+    set of section indices that start a new page (the header re-prints when repeated_header).
+    ``doubled`` doubles every letter of the header titles (app-export look)."""
+    edges = title_edges(spec, geom)
+    amt_col = spec.single_amount_column or spec.debit_column
+
+    def hdr(top):
+        ws = []
+        for col, alts in spec.columns.items():
+            x0, _wd = geom[col]
+            cx = x0 + 2.0
+            for tok in alts[0]:
+                t = "".join(ch * 2 for ch in tok) if doubled else tok
+                ws.append(w(t, cx, top))
+                cx += 5.5 * len(t) + 4.0
+        return ws
+
+    pages, ws, top = [], [w(marker, 30, 40)], header_top
+    if period:
+        ws.append(w(period, 30, 60.0))
+    if anchors:
+        ws.append(w("B" + anchors[0] + "B", 30, 100.0))
+    ws += hdr(top)
+    top += 40.0
+    for si, (label, rows) in enumerate(sections):
+        if si in page_breaks:
+            pages.append(Page(ws, width=1200.0))
+            ws, top = [], 60.0
+            if repeated_header:
+                ws += hdr(top)
+                top += 40.0
+        if label is not None:
+            ws.append(w(label, geom["date"][0], top))      # section date inside the date zone
+            top += 16.0
+        for narr, amt, bal in rows:
+            x0, _wd = geom["narration"]
+            for i, t in enumerate(narr.split()):
+                ws.append(w(t, x0 + i * 45, top))
+            if amt is not None:
+                ws.append(rt(amt, edges[amt_col], top))
+            if bal is not None and spec.balance_column:
+                ws.append(rt(bal, edges[spec.balance_column], top))
+            top += 16.0
+    if anchors:
+        ws.append(w("CLOSINGB", 30, top + 10.0))
+        ws.append(w("B" + anchors[1], 900, top + 10.0))
+    if summary_line:
+        ws.append(w(summary_line, 30, top + 30.0))
+    pages.append(Page(ws, width=1200.0))
+    return pages

@@ -43,10 +43,12 @@ _TRAILING_COLUMN_GAP = 20.0
 _WRAPPED_AMOUNT_FRAGMENT = re.compile(r"^\d{1,3}(?:,\d{2,3})+\.?\d{0,2}$|^\.?\d{1,2}$")
 
 
-def _tokens(line: Sequence[Word]) -> List[Tuple[str, float, float]]:
+def _tokens(line: Sequence[Word], spec: LayoutSpec) -> List[Tuple[str, float, float]]:
     out = []
     for w in line:
         t = norm_token(w.text)
+        if t and spec.doubled_header_glyphs:
+            t = re.sub(r"([a-z])\1", r"\1", t)    # app exports double every glyph: "ddaattee" -> "date"
         if t:
             out.append((t, w.x0, w.x1))
     return out
@@ -63,7 +65,7 @@ def _find_sequence(tokens: Sequence[Tuple[str, float, float]], seq: Tuple[str, .
 
 
 def _match_spans(line: Sequence[Word], spec: LayoutSpec) -> Dict[str, Tuple[float, float]]:
-    toks = _tokens(line)
+    toks = _tokens(line, spec)
     spans: Dict[str, Tuple[float, float]] = {}
     for col, alternatives in spec.columns.items():
         for seq in alternatives:

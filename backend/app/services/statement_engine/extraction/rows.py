@@ -63,12 +63,41 @@ def _ends(text: str, markers) -> bool:
     return any((text == m[1:]) if m.startswith("=") else text.startswith(m[1:]) if m.startswith("^") else (m in text) for m in markers)
 
 
+def _line_cols(line: Sequence[Word], anchors: ColumnAnchors, spec: LayoutSpec) -> Dict[str, List[str]]:
+    cols: Dict[str, List[str]] = {}
+    for w in line:
+        c = classify_word(w, anchors, spec)
+        if c:
+            cols.setdefault(c, []).append(w.text.strip())
+    return cols
+
+
+def _is_section_date(line: Sequence[Word], anchors: ColumnAnchors, spec: LayoutSpec) -> bool:
+    """A bare section-date line: its whole text is the section-date shape and every word sits inside the date
+    column zone (x0 left of the date/narration boundary). A narration fragment that happens to look like a date
+    fails the zone test."""
+    return (spec.section_date_re is not None and line
+            and spec.section_date_re.fullmatch(squash(line)) is not None
+            and all(w.x0 < anchors.date_right for w in line))
+
+
+def _grouped_row_start(cols: Dict[str, List[str]], spec: LayoutSpec) -> bool:
+    """A section-dated statement's row trigger: an undated line carrying at least one full amount cell. Decimal
+    fragments of a wrapped amount (" .00") never qualify."""
+    return (spec.section_date_re is not None and "date" not in cols
+            and any(spec.amount_re.match(v) for cn in spec.amount_columns for v in cols.get(cn, ())))
+
+
 def _first_dated(lines: List[List[Word]], begin: int, anchors: ColumnAnchors, spec: LayoutSpec) -> int:
     """Index of the first line at or after `begin` that starts a row; lines before it are header continuation."""
     end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
     for i in range(begin, len(lines)):
         if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or _ends(squash(lines[i]).upper(), end_markers):
             return i
+        if spec.section_date_re is not None:
+            if _is_section_date(lines[i], anchors, spec) \
+                    or _grouped_row_start(_line_cols(lines[i], anchors, spec), spec):
+                return i
     return len(lines)
 
 
@@ -121,6 +150,8 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
     current: Optional[RawRow] = None
     ended = False
     seg_idx = 0
+    pending_section: Optional[str] = None        # grouped layouts: the date every following row inherits
+    pre_section = 0                              # rows seen before any section date (a document defect)
     for pno, page in enumerate(pages, start=1):
         if ended:
             if not spec.dated_rows_after_end_ok and _has_dated_row(group_lines(page.words), anchors, spec) and not any(x.startswith("additional_statement") for x in table.warnings):
@@ -139,7 +170,10 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
         if period and table.period is None:
             table.period = period
         if not marked:
-            first_dated = next((i for i, ln in enumerate(lines) if any(classify_word(w, anchors, spec) == "date" for w in ln)), None)
+            first_dated = next((i for i, ln in enumerate(lines)
+                                if any(classify_word(w, anchors, spec) == "date" for w in ln)
+                                or _is_section_date(ln, anchors, spec)
+                                or _grouped_row_start(_line_cols(ln, anchors, spec), spec)), None)
             if first_dated is None:
                 # a page without rows can still be the footer page that ends the statement
                 for li, line in enumerate(lines):
@@ -211,6 +245,10 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 break
             if any(rx.search(flat) for rx in spec.ignore_line_res):
                 continue
+            if _is_section_date(line, anchors, spec):
+                pending_section = " ".join(w.text.strip() for w in line)
+                current = None                  # the next row starts a new section; it cannot be a wrap
+                continue
             if spec.segment_header_re and spec.segment_header_re.search(flat):
                 seg_idx += 1
                 current = None
@@ -255,7 +293,11 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 mt = spec.totals_line_re.search(flat)
                 if mt:
                     g = mt.groups()
-                    pair = (g[1], g[0]) if spec.totals_credit_first else (g[0], g[1])
+                    if spec.totals_sum_tail and len(g) > 2:
+                        rest = sum((Decimal(x.replace(",", "")) for x in g[1:]), Decimal(0))
+                        pair = (str(rest), g[0]) if spec.totals_credit_first else (g[0], str(rest))
+                    else:
+                        pair = (g[1], g[0]) if spec.totals_credit_first else (g[0], g[1])
                     if spec.totals_accumulate and table.printed_totals:
                         pair = tuple(str(Decimal(a.replace(",", "")) + Decimal(b.replace(",", ""))) for a, b in zip(table.printed_totals, pair))
                     table.printed_totals = pair
@@ -310,10 +352,16 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 continue
             inherit = (spec.undated_rows_inherit_date and "date" not in cols and current is not None and spec.balance_column in cols
                        and any(c in cols for c in (spec.debit_column, spec.credit_column)))
-            if "date" in cols or inherit:
+            grouped = _grouped_row_start(cols, spec)
+            if "date" in cols or inherit or grouped:
+                if grouped and pending_section is None:
+                    pre_section += 1        # a row before any section date: a defect, not a transaction
+                    current = None
+                    continue
                 prev = current
-                date_words = " ".join(cols["date"]) if getattr(spec, "date_join_words", False) and "date" in cols \
-                    else (cols["date"][0] if "date" in cols else prev.date)
+                date_words = pending_section if grouped and "date" not in cols else \
+                    (" ".join(cols["date"]) if getattr(spec, "date_join_words", False) and "date" in cols
+                     else (cols["date"][0] if "date" in cols else prev.date))
                 current = RawRow(page=pno, top=min(w.top for w in line), date=date_words, segment=seg_idx)
                 table.rows.append(current)
                 for pc in pending_cells:           # leading lines' cells belong to this row (amount above the date)
@@ -345,8 +393,17 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     vals = [v for v in cols.get(name, []) if v.strip()
                             and not (spec.empty_amount_marker and v == spec.empty_amount_marker)]
                     if vals:
-                        current.amounts[name] = vals[0]
-                        if len(vals) > 1:
+                        cell = vals[0]
+                        merged = True
+                        for v in vals[1:]:
+                            # same-line wrapped decimals: "361" + ".63" is one amount, not two cells
+                            if spec.wrapped_amount_tokens and re.match(r"^\.\d{1,2}$", v) and "." not in cell \
+                                    and spec.amount_re.match(cell + v):
+                                cell += v
+                            else:
+                                merged = False
+                        current.amounts[name] = cell
+                        if not merged:
                             current.warnings.append(f"multiple_values:{name}")
                 if spec.side_marker_column and cols.get(spec.side_marker_column):
                     marker = next((v for v in cols[spec.side_marker_column] if re.match(r"(?i)^\(?(cr|dr)\)?\.?$", v)), "")
@@ -367,7 +424,12 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     for name in spec.amount_columns:
                         for v in cols.get(name, []):
                             prev_v = current.amounts.get(name)
-                            if prev_v and not spec.amount_re.match(prev_v) and spec.amount_re.match(prev_v + v):
+                            if not prev_v or not spec.amount_re.match(prev_v + v):
+                                continue
+                            # a lone ".dd" cell can only be a wrapped decimal tail: join it even when the
+                            # integer part alone already parses as an amount ("1,111" + ".40" = "1,111.40")
+                            if not spec.amount_re.match(prev_v) \
+                                    or (re.match(r"^\.\d{1,2}$", v) and "." not in prev_v):
                                 current.amounts[name] = prev_v + v
                                 filled = True
                 if spec.continuation_amounts:
@@ -389,6 +451,8 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     current.narration_lines.append(" ".join(cols["narration"]))
                 if "ref" in cols:
                     current.ref += "".join(cols["ref"])
+    if pre_section:
+        table.warnings.append(f"rows_without_section_date:{pre_section}")
     if spec.segment_header_re is not None and any(r.segment for r in table.rows):
         # account blocks above the header bump seg_idx before any row exists: renumber the used ids densely
         # (0..k) so consumers see stable per-segment indices; segment count maps follow the same remap

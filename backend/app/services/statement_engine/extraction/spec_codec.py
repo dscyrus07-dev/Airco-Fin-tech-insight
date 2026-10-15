@@ -42,6 +42,13 @@ def spec_to_dict(spec: LayoutSpec) -> Dict[str, Any]:
         "balance_checkpoint_re": spec.balance_checkpoint_re.pattern if spec.balance_checkpoint_re else None,
         "balance_inline_re": spec.balance_inline_re.pattern if spec.balance_inline_re else None,
         "single_amount_default_side": spec.single_amount_default_side,
+        "section_date_re": spec.section_date_re.pattern if spec.section_date_re else None,
+        "derive_side_from_balance": spec.derive_side_from_balance,
+        "doubled_header_glyphs": spec.doubled_header_glyphs,
+        "summary_truncated": spec.summary_truncated,
+        "period_from_borrows_end_year": spec.period_from_borrows_end_year,
+        "totals_sum_tail": spec.totals_sum_tail,
+        "doc_counts_re": spec.doc_counts_re.pattern if spec.doc_counts_re else None,
     }
 
 
@@ -93,6 +100,13 @@ def spec_from_dict(data: Dict[str, Any]) -> LayoutSpec:
             balance_checkpoint_re=re.compile(data["balance_checkpoint_re"]) if data.get("balance_checkpoint_re") else None,
             balance_inline_re=re.compile(data["balance_inline_re"]) if data.get("balance_inline_re") else None,
             single_amount_default_side=data.get("single_amount_default_side", ""),
+            section_date_re=re.compile(data["section_date_re"]) if data.get("section_date_re") else None,
+            derive_side_from_balance=bool(data.get("derive_side_from_balance", False)),
+            doubled_header_glyphs=bool(data.get("doubled_header_glyphs", False)),
+            summary_truncated=bool(data.get("summary_truncated", False)),
+            period_from_borrows_end_year=bool(data.get("period_from_borrows_end_year", False)),
+            totals_sum_tail=bool(data.get("totals_sum_tail", False)),
+            doc_counts_re=re.compile(data["doc_counts_re"]) if data.get("doc_counts_re") else None,
         )
     except (KeyError, re.error, TypeError) as exc:
         raise ValueError(f"invalid layout config: {exc!r}") from exc

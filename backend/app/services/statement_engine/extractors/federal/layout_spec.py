@@ -137,3 +137,101 @@ FEDERAL_LAYOUT_3 = LayoutSpec(
     date_left_pad=10.0,
 )
 FEDERAL_LAYOUT_3.validate()
+
+
+# Fi/Jupiter app export ("Account Statement" PDF): a section date ("23 Nov") prints once under the Date
+# title and the transaction rows beneath it carry no date; the record is narration + amount + running balance
+# on one line with wrapped narration / a wrapped ".dd" amount tail on the next. No Dr/Cr side prints anywhere —
+# the side is the direction of the balance move (derived, never assumed). The page-1 block prints
+# "Opening Balance + Money In - Spent = Saved + Closing Balance" as a label line, a counts/dates line and a
+# "₹open ₹in ₹out ₹saved ₹close" value line; header titles double every glyph ("DDaattee").
+FEDERAL_LAYOUT_4 = LayoutSpec(
+    layout_id="federal_date_transactiondetails_amount_balance_sectiondate",
+    bank_key="federal",
+    bank_markers=("FEDERALBANK",),
+    bank_name="Federal Bank",
+    columns={
+        "date": (("date",),),
+        "narration": (("transaction", "details"), ("transactiondetails",)),
+        "txn_amount": (("amount",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "narration"),
+    doubled_header_glyphs=True,
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    single_amount_column="txn_amount",
+    derive_side_from_balance=True,
+    date_re=re.compile(r"(?i)^\d{1,2}(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\d{0,4}$"),
+    date_format="%d %b %Y|%d%b %Y|%d %B %Y|%d%B %Y|%d%B%Y|%d%b%Y",
+    year_from_period=True,
+    section_date_re=re.compile(r"(?i)^\d{1,2}[A-Za-z]{3,9}\d{0,4}$"),
+    amount_re=re.compile(r"^-?[\d,]+(?:\.\d{1,2})?$"),
+    wrapped_amount_tokens=True,
+    period_re=re.compile(r"(?i)(\d{1,2}[a-z]+\d{4})to(\d{1,2}[a-z]+\d{4})"),
+    period_date_format="%d%B%Y",
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    page_footer_markers=("CONTACTUS",),
+    ignore_line_res=(re.compile(r"(?i)day/night"), re.compile(r"(?i)^5am-6pm")),
+    anchor_scan="document",
+    anchor_full=True,
+    opening_balance_re=re.compile(r"^₹([\d,]+)₹"),
+    closing_balance_re=re.compile(r"₹([\d,]+)$"),
+    totals_line_re=re.compile(r"₹[\d,]+₹([\d,]+)₹([\d,]+)₹([\d,]+)₹"),
+    totals_credit_first=True,
+    totals_sum_tail=True,
+    doc_counts_re=re.compile(r"(?:19|20)\d{2}(\d{1,4})Transactions(\d{1,4})Transactions(\d{1,4})Transactions"),
+    summary_truncated=True,
+    date_left_pad=10.0,
+    ifsc_re=re.compile(r"FDRL0[0-9A-Z]{6}"),
+)
+FEDERAL_LAYOUT_4.validate()
+
+
+# Same app-export family, older shape: "Reference ID | Transaction details | Amount | Balance" where the left
+# column carries S-prefixed reference ids (the zone that hosts the section labels), section dates print with an
+# apostrophe year ("1 Dec '22"), and every money cell carries a "₹" mark. The page-1 summary prints only
+# Money out / Money in / Closing balance — no opening — and the figures are truncated whole-unit displays.
+FEDERAL_LAYOUT_5 = LayoutSpec(
+    layout_id="federal_referenceid_transactiondetails_amount_balance_sectiondate",
+    bank_key="federal",
+    bank_markers=("FEDERALBANK",),
+    bank_name="Federal Bank",
+    columns={
+        "date": (("reference", "id"), ("referenceid",)),
+        "narration": (("transaction", "details"), ("transactiondetails",)),
+        "txn_amount": (("amount",),),
+        "balance": (("balance",),),
+    },
+    text_columns=("date", "narration"),
+    debit_column="debit",
+    credit_column="credit",
+    balance_column="balance",
+    single_amount_column="txn_amount",
+    derive_side_from_balance=True,
+    date_re=re.compile(r"(?i)^\d{1,2}[a-z]{3,9}'?\d{0,4}$"),
+    date_format="%d%b'%y|%d %b '%y|%d%B'%y|%d %B '%y|%d%b%Y|%d%b %Y|%d %b %Y|%d %B %Y|%d%B %Y",
+    year_from_period=True,
+    section_date_re=re.compile(r"(?i)^\d{1,2}[a-z]{3,9}(?:'\d{2}|\d{0,4})$"),
+    amount_re=re.compile(r"^-?[\d,]+(?:\.\d{1,2})?$"),
+    amount_prefix="₹",
+    wrapped_amount_tokens=True,
+    period_re=re.compile(r"(?i)(\d{1,2}[a-z]{3,9})to(\d{1,2}[a-z]{3,9}'\d{2}|\d{1,2}[a-z]{3,9}\d{4})"),
+    period_date_format="%d%b'%y",
+    period_from_borrows_end_year=True,
+    summary_marker="",
+    summary_label_text="",
+    summary_expected=False,
+    header_repeats=True,
+    page_footer_markers=("CONTACTUS",),
+    anchor_scan="document",
+    closing_balance_re=re.compile(r"^₹[\d,.]+₹[\d,.]+₹([\d,.]+)$"),
+    totals_line_re=re.compile(r"^₹([\d,.]+)₹([\d,.]+)₹[\d,.]+$"),
+    summary_truncated=True,
+    ifsc_re=re.compile(r"FDRL0[0-9A-Z]{6}"),
+)
+FEDERAL_LAYOUT_5.validate()

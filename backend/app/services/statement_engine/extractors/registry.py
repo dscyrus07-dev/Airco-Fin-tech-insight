@@ -5,7 +5,7 @@ from .canara.layout_spec import CANARA_LAYOUT_1, CANARA_LAYOUT_2, CANARA_LAYOUT_
 from .axis.layout_spec import AXIS_LAYOUT_1, AXIS_LAYOUT_2, AXIS_LAYOUT_3, AXIS_LAYOUT_4
 from .idfc.layout_spec import IDFC_LAYOUT_1
 from .kotak.layout_spec import KOTAK_LAYOUT_1, KOTAK_LAYOUT_2, KOTAK_LAYOUT_3, KOTAK_LAYOUT_4, KOTAK_LAYOUT_5, KOTAK_LAYOUT_6, KOTAK_LAYOUT_7, KOTAK_LAYOUT_8, KOTAK_LAYOUT_9
-from .federal.layout_spec import FEDERAL_LAYOUT_1, FEDERAL_LAYOUT_2, FEDERAL_LAYOUT_3
+from .federal.layout_spec import FEDERAL_LAYOUT_1, FEDERAL_LAYOUT_2, FEDERAL_LAYOUT_3, FEDERAL_LAYOUT_4, FEDERAL_LAYOUT_5
 from .bob.layout_spec import BOB_LAYOUT_1, BOB_LAYOUT_2, BOB_LAYOUT_3
 from .icici.layout_spec import ICICI_LAYOUT_1, ICICI_LAYOUT_2, ICICI_LAYOUT_3, ICICI_LAYOUT_4, ICICI_LAYOUT_5
 from .union.layout_spec import UNION_LAYOUT_1, UNION_LAYOUT_2, UNION_LAYOUT_3, UNION_LAYOUT_4, UNION_LAYOUT_5
@@ -83,5 +83,9 @@ DEFAULT_REGISTRY = LayoutRegistry([HDFC_LAYOUT_A, HDFC_LAYOUT_B, SBI_LAYOUT_1, S
                                    # onboard-all: CSB "Statement of Account" export (federal-shaped; CSB marker evidence)
                                    CSB_LAYOUT_1, CSB_LAYOUT_2, CSB_LAYOUT_3,
                                    # onboard-all: UCO "Statement of Account" exports (with/without instrument column)
-                                   UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2],
+                                   UCO_LAYOUT_1, UCO_LAYOUT_2, UCO_LAYOUT_3, UCO_LAYOUT_4, AIRTEL_LAYOUT_1, IPPB_LAYOUT_1, DHANLAXMI_LAYOUT_1, DHANLAXMI_LAYOUT_2,
+                                   # n3: FEDERAL_LAYOUT_4 = Fi/Jupiter app export (section dates, derived sides)
+                                   #     FEDERAL_LAYOUT_5 = same family, "Reference ID" left column + apostrophe-year
+                                   #     section labels + currency-marked cells + truncated Money out/in summary
+                                   FEDERAL_LAYOUT_4, FEDERAL_LAYOUT_5],
                                   foreign_markers=OTHER_BANK_MARKERS)

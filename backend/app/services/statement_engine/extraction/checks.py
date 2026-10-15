@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .normalize import NormalizedRow
@@ -259,13 +259,29 @@ def check_checkpoints(rows: Sequence[NormalizedRow], checkpoints: Sequence[Tuple
                        {"checkpoints": len(checkpoints), "verified": verified, "mismatched": bad[:5]})
 
 
-def check_reference(derived: Dict[str, Any], summary: Optional[PrintedSummary]) -> CheckResult:
+def _display(d: Decimal, truncated: bool) -> Decimal:
+    """A whole-unit display rounds toward zero ("₹693" for 693.67): compare on the displayed figure."""
+    return d.to_integral_value(rounding=ROUND_DOWN) if truncated else d
+
+
+def _matches_printed(derived: Decimal, printed: Decimal, truncated: bool) -> bool:
+    """With summary_truncated the printed figure is a truncated display: compare derived cut to the
+    same number of decimals the print carries ("124,680.8" prints one decimal; "693" prints none)."""
+    if derived == printed:
+        return True
+    if not truncated:
+        return False
+    q = Decimal(1).scaleb(printed.as_tuple().exponent)
+    return derived.quantize(q, rounding=ROUND_DOWN) == printed
+
+
+def check_reference(derived: Dict[str, Any], summary: Optional[PrintedSummary], truncated: bool = False) -> CheckResult:
     if summary is None:
         return CheckResult("reference", SKIPPED, {"reason": "no parseable printed summary"})
     if summary.opening is None and summary.closing is None:
         return CheckResult("reference", SKIPPED, {"reason": "summary prints neither opening nor closing"})
-    open_ok = summary.opening is None or derived["opening"] == summary.opening
-    close_ok = summary.closing is None or derived["closing"] == summary.closing
+    open_ok = summary.opening is None or _matches_printed(derived["opening"], summary.opening, truncated)
+    close_ok = summary.closing is None or _matches_printed(derived["closing"], summary.closing, truncated)
     return CheckResult("reference", PASS if (open_ok and close_ok) else FAIL, {
         "opening_matches": open_ok, "closing_matches": close_ok,
         "derived_opening": str(derived["opening"]), "printed_opening": str(summary.opening),
@@ -284,7 +300,8 @@ def check_delta(derived: Dict[str, Any], summary: Optional[PrintedSummary]) -> C
         "printed_delta": str(summary.closing - summary.opening), "derived_delta": str(net)})
 
 
-def check_totals(rows: Sequence[NormalizedRow], derived: Dict[str, Any], summary: Optional[PrintedSummary]) -> CheckResult:
+def check_totals(rows: Sequence[NormalizedRow], derived: Dict[str, Any], summary: Optional[PrintedSummary],
+                 truncated: bool = False) -> CheckResult:
     if summary is None:
         return CheckResult("totals", SKIPPED, {"reason": "no parseable printed summary"})
     printed = (summary.dr_count, summary.cr_count, summary.debits, summary.credits)
@@ -294,16 +311,19 @@ def check_totals(rows: Sequence[NormalizedRow], derived: Dict[str, Any], summary
         # partial summary: compare the printed fields as they are (no reversal reasoning without all four)
         pairs = [(summary.dr_count, derived["debit_rows"]), (summary.cr_count, derived["credit_rows"]),
                  (summary.debits, derived["sum_debits"]), (summary.credits, derived["sum_credits"])]
-        ok = all(a is None or a == b for a, b in pairs)
+        ok = all(a is None or (_matches_printed(b, a, truncated) if isinstance(a, Decimal) else a == b)
+                 for a, b in pairs)
         return CheckResult("totals", PASS if ok else FAIL, {"outcome": "MATCH" if ok else "MISMATCH", "partial_summary": True})
     nw = sum(1 for r in rows if r.reversal and r.printed_kind == "debit")
     nd = sum(1 for r in rows if r.reversal and r.printed_kind == "credit")
     sw = sum((abs(r.txn.credit or _ZERO) for r in rows if r.reversal and r.printed_kind == "debit"), _ZERO)
     sd = sum((abs(r.txn.debit or _ZERO) for r in rows if r.reversal and r.printed_kind == "credit"), _ZERO)
     raw = (summary.dr_count == derived["debit_rows"] and summary.cr_count == derived["credit_rows"]
-           and summary.debits == derived["sum_debits"] and summary.credits == derived["sum_credits"])
+           and _matches_printed(derived["sum_debits"], summary.debits, truncated)
+           and _matches_printed(derived["sum_credits"], summary.credits, truncated))
     adjusted = (summary.dr_count == derived["debit_rows"] + nw - nd and summary.cr_count == derived["credit_rows"] - nw + nd
-                and summary.debits == derived["sum_debits"] - sw - sd and summary.credits == derived["sum_credits"] - sw - sd)
+                and _matches_printed(derived["sum_debits"] - sw - sd, summary.debits, truncated)
+                and _matches_printed(derived["sum_credits"] - sw - sd, summary.credits, truncated))
     d_dr = summary.dr_count - derived["debit_rows"]
     d_cr = summary.cr_count - derived["credit_rows"]
     d_deb = summary.debits - derived["sum_debits"]
@@ -365,11 +385,35 @@ def parse_period_date(text: str, period_format: str) -> date:
 
 
 def check_period(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]], period_format: str = "%d/%m/%Y",
-                 tolerance_days: int = _PERIOD_TOLERANCE_DAYS) -> CheckResult:
+                 tolerance_days: int = _PERIOD_TOLERANCE_DAYS,
+                 from_borrows_end_year: bool = False) -> CheckResult:
     if period is None or not rows:
         return CheckResult("period", SKIPPED, {"reason": "no printed period or no rows"})
     try:
-        start, end = (parse_period_date(period[i], period_format) for i in (0, 1))
+        end = parse_period_date(period[1], period_format)
+        try:
+            start = parse_period_date(period[0], period_format)
+        except ValueError:
+            if not from_borrows_end_year:
+                raise
+            # "1Dec" with no year: borrow the end year, wrapping back one when the
+            # start month is later than the end month ("1Dec to 31Jan'23" -> Dec '22).
+            start = None
+            for yfmt in ("%d%b'%y", "%d %b '%y", "%d%B'%y", "%d %B '%y", "%d%b%Y", "%d%b %Y", "%d %b %Y", "%d%B %Y", "%d %B %Y"):
+                for yr in (str(end.year)[-2:], str(end.year)):
+                    try:
+                        cand = datetime.strptime(period[0] + "'" + yr if len(yr) == 2 and "'" in yfmt else period[0] + yr, yfmt).date()
+                    except ValueError:
+                        continue
+                    if cand.month > end.month:
+                        cand = cand.replace(year=cand.year - 1)
+                    if cand <= end:
+                        start = cand
+                        break
+                if start is not None:
+                    break
+            if start is None:
+                raise ValueError(f"period date {period[0]!r} matches no format")
     except ValueError:
         return CheckResult("period", WARN, {"reason": "unparseable printed period", "printed": list(period)})
     first = date.fromisoformat(rows[0].txn.date)
@@ -437,7 +481,9 @@ def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]],
                reorder_same_date: bool = False,
                segment_counts: Optional[Dict[int, int]] = None,
                segment_side_counts: Optional[Dict[int, Tuple[int, int]]] = None,
-               checkpoints: Optional[Sequence[Tuple[int, Decimal]]] = None) -> Checks:
+               checkpoints: Optional[Sequence[Tuple[int, Decimal]]] = None,
+               summary_truncated: bool = False,
+               period_from_borrows_end_year: bool = False) -> Checks:
     derived = derive(rows)
     if no_running_balance:
         c1 = CheckResult("chain", SKIPPED, {"reason": "no running balance column"})
@@ -450,10 +496,10 @@ def run_checks(rows: Sequence[NormalizedRow], period: Optional[Tuple[str, str]],
         "side": c2,
         "reference": (CheckResult("reference", SKIPPED, {"reason": "no running balance column: nothing to verify against"})
                       if no_running_balance
-                      else check_reference(derived, summary) if rows else CheckResult("reference", SKIPPED, {"reason": "no rows"})),
-        "totals": check_totals(rows, derived, summary) if rows else CheckResult("totals", SKIPPED, {"reason": "no rows"}),
+                      else check_reference(derived, summary, summary_truncated) if rows else CheckResult("reference", SKIPPED, {"reason": "no rows"})),
+        "totals": check_totals(rows, derived, summary, summary_truncated) if rows else CheckResult("totals", SKIPPED, {"reason": "no rows"}),
         "dates": check_dates(rows, dates_monotonic_expected),
-        "period": check_period(rows, period, period_format, period_tolerance_days),
+        "period": check_period(rows, period, period_format, period_tolerance_days, period_from_borrows_end_year),
         "date_outliers": check_date_outliers(rows) if rows else CheckResult("date_outliers", SKIPPED, {"reason": "no rows"}),
         "segments": check_segments(rows, segment_counts, segment_side_counts),
         "checkpoints": check_checkpoints(rows, checkpoints or ()),

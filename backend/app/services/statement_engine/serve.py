@@ -156,6 +156,9 @@ def review_codes(routed) -> List[str]:
         codes.append("OUTSIDE_PERIOD")
     if st["schema"] == "fail":
         codes.append("SCHEMA_ERRORS")
+    if routed is not None and routed.result is not None \
+            and any(str(w).startswith("rows_without_section_date") for w in (routed.result.warnings or [])):
+        codes.append("SECTION_DATE_MISSING")        # date-grouped layout: a transaction printed before any section date
     if routed is not None and routed.result is not None and routed.result.warnings:
         codes.append("EXTRACTION_WARNINGS")
     return codes

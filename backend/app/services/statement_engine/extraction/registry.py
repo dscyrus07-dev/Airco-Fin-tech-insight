@@ -114,7 +114,7 @@ def _spelling_penalty(pages: Sequence[Page], spec: LayoutSpec) -> int:
         lines = group_lines(pg.words)
         found = find_header(lines, spec)
         if found:
-            toks = _tokens(lines[found[0]])
+            toks = _tokens(lines[found[0]], spec)
             return sum(next((i for i, seq in enumerate(alts) if _find_sequence(toks, seq)), len(alts)) for alts in spec.columns.values())
     return 10 ** 6
 
@@ -188,7 +188,10 @@ class LayoutRegistry:
             wider = [o for o in others if any(m != o and m in o for m in own_markers)]
             own_region = _strip(region, wider)
             own_evidence = _strip(evidence_text, wider)
-            own = any(m in own_region for m in own_markers)
+            own = any(m in own_region for m in own_markers) \
+                or (spec.ifsc_re is not None and spec.ifsc_re.search(own_region) is not None)
+            # a layout's own IFSC family printed in the page-1 header region is own-bank evidence too
+            # (the prefix identifies the issuer; counterparty IFSCs in the body never reach this text)
             doc_own = any(m in own_evidence for m in own_markers)
             foreign = any(m in region for m in others)
             foreign_doc = any(m in furniture for m in others)

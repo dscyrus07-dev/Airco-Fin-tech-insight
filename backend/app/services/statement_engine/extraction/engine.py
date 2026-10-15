@@ -3,7 +3,7 @@ LayoutSpec. The pdfplumber glue is in pdf_extractor.py."""
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from dataclasses import dataclass, field
 from typing import List, Optional, Sequence, Tuple
@@ -132,10 +132,23 @@ def _prepare_amounts(words: Sequence[Word], spec: LayoutSpec) -> List[Word]:
     return out
 
 
-def _document_anchors(pages: Sequence[Page], spec: LayoutSpec) -> Tuple[List[Decimal], List[Decimal], List[Tuple[str, str]]]:
+def _document_anchors(pages: Sequence[Page], spec: LayoutSpec,
+                    fallback_pages: Optional[Sequence[Page]] = None) -> Tuple[List[Decimal], List[Decimal], List[Tuple[str, str]]]:
     """Whole-document anchor scan (opt-in spec.anchor_scan == "document"): every page's lines are searched for the
     layout's opening/closing/totals labels, in statement order. Returns the ordered DISTINCT printed values for
-    opening and closing plus every printed totals pair."""
+    opening and closing plus every printed totals pair. `fallback_pages` (the unpreprocessed text) is scanned only
+    for regexes that found nothing on the prepared text — specs whose regexes key on currency marks that
+    amount-prefix stripping would destroy."""
+    openings, closings, totals = _document_anchors_scan(pages, spec)
+    if fallback_pages is not None:
+        ro, rc, rt = _document_anchors_scan(fallback_pages, spec)
+        if not openings: openings = ro
+        if not closings: closings = rc
+        if not totals: totals = rt
+    return openings, closings, totals
+
+
+def _document_anchors_scan(pages: Sequence[Page], spec: LayoutSpec) -> Tuple[List[Decimal], List[Decimal], List[Tuple[str, str]]]:
     openings: List[Decimal] = []
     closings: List[Decimal] = []
     totals: List[Tuple[str, str]] = []
@@ -157,7 +170,11 @@ def _document_anchors(pages: Sequence[Page], spec: LayoutSpec) -> Tuple[List[Dec
                 mt = spec.totals_line_re.search(flat)
                 if mt:
                     g = mt.groups()
-                    pair = (g[1], g[0]) if spec.totals_credit_first and len(g) >= 2 else (g[0], g[1])
+                    if spec.totals_sum_tail and len(g) > 2:
+                        first, rest = g[0], sum((Decimal(x.replace(",", "")) for x in g[1:]), Decimal(0))
+                        pair = (str(rest), first) if spec.totals_credit_first else (first, str(rest))
+                    else:
+                        pair = (g[1], g[0]) if spec.totals_credit_first and len(g) >= 2 else (g[0], g[1])
                     if pair not in totals:
                         totals.append(pair)
         if spec.opening_balance_re is not None:
@@ -188,6 +205,7 @@ def _prepare_pages(pages: Sequence[Page], spec: LayoutSpec) -> List[Page]:
 
 def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out = V2Outcome()
+    raw_pages = pages                    # anchor/summary regexes see the text as printed (currency marks intact)
     pages = _prepare_pages(pages, spec)
     if not pages:
         out.failure, out.failure_detail = NO_TABLE_HEADER, "no pages"
@@ -204,6 +222,7 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.failure, out.failure_detail = NO_TABLE_HEADER, str(last_error)
         return out
     pages = pages[skipped:]       # pages before the header page (cover, portfolio summary) carry no table rows
+    raw_pages = raw_pages[skipped:]
     consumed_base = skipped
     out.anchors = anchors
     table = assemble(pages, anchors, spec)
@@ -213,8 +232,9 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     if spec.year_from_period:
         _add_years(table.rows, table.period, spec)
     out.warnings.extend(table.warnings)
-    page1_text = "".join(squash(line) for line in group_lines(first.words))
-    m = spec.ifsc_re.search(page1_text) if spec.ifsc_re else None
+    page1_text = "".join(squash(line) for line in group_lines(pages[0].words))
+    page1_raw = "".join(squash(line) for line in group_lines(raw_pages[0].words))
+    m = (spec.ifsc_re.search(page1_text) or spec.ifsc_re.search(page1_raw)) if spec.ifsc_re else None
     out.ifsc = m.group(0) if m else ""
     out.account_number = _account_number(first.words, spec)
     if spec.summary_label_text and spec.summary_position == "before":
@@ -224,7 +244,7 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
         out.summary = parse_summary(table.summary_lines, spec) if table.summary_lines and spec.summary_label_text else None
     doc_opening: Optional[Decimal] = None
     if spec.anchor_scan == "document":
-        doc_openings, doc_closings, doc_totals = _document_anchors(pages, spec)
+        doc_openings, doc_closings, doc_totals = _document_anchors(pages, spec, raw_pages)
         segmented = spec.segment_header_re is not None
         if len(doc_openings) > 1 and not segmented:           # multi-account docs legitimately print an opening
             out.warnings.append("anchor_conflict:opening")    # per segment; per-segment anchors are checkpointed
@@ -267,19 +287,36 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
                 table.printed_closing = mc.group(1)
                 break
         if not table.printed_closing:
-            for pt in (page1_text,) if len(pages) == 1 else (page1_text, "".join(squash(ln) for ln in group_lines(pages[-1].words))):
+            last_text = "".join(squash(ln) for ln in group_lines(pages[-1].words))
+            last_raw = "".join(squash(ln) for ln in group_lines(raw_pages[-1].words))
+            for pt in (page1_text, page1_raw) if len(pages) == 1 else (page1_text, last_text, page1_raw, last_raw):
                 mc = spec.closing_balance_re.search(pt)
                 if mc:
                     table.printed_closing = mc.group(1)
                     break
-    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re or row_opening is not None):
+    doc_dr_count = doc_cr_count = None
+    if spec.doc_counts_re is not None:
+        mk = spec.doc_counts_re.search(page1_text) or spec.doc_counts_re.search(page1_raw)
+        if mk:
+            g = mk.groups()
+            tail = sum(int(x) for x in g[1:]) if spec.totals_sum_tail and len(g) > 2 else int(g[1])
+            if spec.totals_credit_first:
+                doc_cr_count, doc_dr_count = int(g[0]), tail
+            else:
+                doc_dr_count, doc_cr_count = int(g[0]), tail
+    if out.summary is None and (spec.opening_balance_re or spec.closing_balance_re or spec.totals_line_re or row_opening is not None or doc_dr_count is not None):
         # printed opening / closing balance lines are still references to verify the derived values against
         opening = closing = debits = credits = None
         try:
             mo = spec.opening_balance_re.search(page1_text) if spec.opening_balance_re else None
+            if mo is None and spec.opening_balance_re:
+                mo = spec.opening_balance_re.search(page1_raw)
             if mo is None and spec.opening_balance_re and len(pages) > 1:
-                page_last_text = "".join(squash(ln) for ln in group_lines(pages[-1].words))
-                mo = spec.opening_balance_re.search(page_last_text)
+                for ltext in ("".join(squash(ln) for ln in group_lines(pages[-1].words)),
+                              "".join(squash(ln) for ln in group_lines(raw_pages[-1].words))):
+                    mo = spec.opening_balance_re.search(ltext)
+                    if mo:
+                        break
             if mo:
                 opening = Decimal(mo.group(1).replace(",", ""))
             elif doc_opening is not None:
@@ -292,12 +329,25 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
                 debits, credits = (Decimal(x.replace(",", "")) for x in table.printed_totals)
         except ArithmeticError:
             opening = closing = debits = credits = None
-        if any(v is not None for v in (opening, closing, debits, credits)):
+        if any(v is not None for v in (opening, closing, debits, credits, doc_dr_count, doc_cr_count)):
             if spec.anchor_full and not (opening is not None and (closing is not None or debits is not None or credits is not None)):
                 pass  # single-ended anchor: far end of the chain stays self-derived -> treat as no summary (REVIEW cap)
             else:
-                out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits)
-    rows, errors = normalize_rows(table.rows, spec)
+                out.summary = PrintedSummary(opening=opening, closing=closing, debits=debits, credits=credits,
+                                             dr_count=doc_dr_count, cr_count=doc_cr_count)
+    opening_for_sides = (out.summary.opening if out.summary is not None else None) or doc_opening
+    if opening_for_sides is None and out.summary is not None:
+        s = out.summary
+        if s.closing is not None and s.debits is not None and s.credits is not None:
+            # no printed opening: the printed identity opening = closing + debits - credits
+            # implies it. Independent evidence only for the first row's side derivation;
+            # the totals/chain checks still verify the whole statement against print.
+            opening_for_sides = s.closing + s.debits - s.credits
+    rows, errors = normalize_rows(table.rows, spec, opening=opening_for_sides)
+    if spec.derive_side_from_balance:
+        unproven = sum(1 for r in rows if "side_unproven" in r.row_warnings)
+        if unproven:
+            out.warnings.append(f"side_unproven_rows:{unproven}")
     if spec.row_order == "reverse":
         rows.reverse()
     elif spec.row_order == "auto" and len(rows) > 1:
@@ -319,7 +369,8 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
     out.checks = run_checks(rows, out.period, out.summary, errors, out.warnings, spec.period_date_format, spec.summary_expected,
                           spec.dates_monotonic_expected, spec.period_tolerance_days,
                           spec.side_flip_policy, spec.no_running_balance, spec.chain_reorder_same_date,
-                          table.segment_counts or None, table.segment_side_counts or None, _checkpoint_amounts(table))
+                          table.segment_counts or None, table.segment_side_counts or None, _checkpoint_amounts(table),
+                          spec.summary_truncated, getattr(spec, 'period_from_borrows_end_year', False))
     return out
 
 
@@ -369,7 +420,9 @@ def _merge(o1: V2Outcome, o2: V2Outcome, spec: LayoutSpec) -> Optional[V2Outcome
     merged.schema_errors = o1.schema_errors + o2.schema_errors
     merged.notes = o1.notes + o2.notes + [f"merged_statement:overlap_rows={start if start else 0}"]
     merged.checks = run_checks(merged.rows, merged.period, merged.summary, merged.schema_errors, merged.warnings, spec.period_date_format,
-                               spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy, spec.no_running_balance, spec.chain_reorder_same_date)
+                               spec.summary_expected, spec.dates_monotonic_expected, spec.period_tolerance_days, spec.side_flip_policy, spec.no_running_balance, spec.chain_reorder_same_date,
+                               summary_truncated=spec.summary_truncated,
+                               period_from_borrows_end_year=getattr(spec, 'period_from_borrows_end_year', False))
     return merged
 
 
@@ -384,8 +437,14 @@ def _add_years(rows, period, spec) -> None:
         return
     years = list(range(start.year, end.year + 1))
     formats = spec.date_format.split("|")
+    tol = timedelta(days=getattr(spec, "period_tolerance_days", 1))
+    # grouped layouts print section dates in chronological order: when more than one year places a yearless date
+    # inside (or just past the end of) the printed period, the order of the sections resolves the ambiguity
+    ordered = getattr(spec, "section_date_re", None) is not None
+    prev_d: Optional[date] = None
 
-    def fix(text: str) -> str:
+    def fix(text: str, track: bool = True) -> str:
+        nonlocal prev_d
         text = text.strip()
         if not text:
             return text
@@ -395,20 +454,29 @@ def _add_years(rows, period, spec) -> None:
                 return text
             except ValueError:
                 continue
+        cands: List[Tuple[date, int]] = []
         for y in years:
             for one in formats:
                 try:
                     d = datetime.strptime(f"{text} {y}", one).date()
                 except ValueError:
                     continue
-                if start <= d <= end:
-                    return f"{text} {y}"
+                if start <= d <= end or (ordered and end < d <= end + tol):
+                    cands.append((d, y))
                 break           # parsed but outside the period: wrong year, try the next one
+        if ordered and prev_d is not None and len(cands) > 1:
+            after = [c for c in cands if c[0] >= prev_d]
+            if after:
+                cands = after
+        if cands:
+            if ordered and track:
+                prev_d = cands[0][0]
+            return f"{text} {cands[0][1]}"
         return f"{text} {years[0]}"
 
     for r in rows:
         r.date = fix(r.date)
-        r.value_date = fix(r.value_date)
+        r.value_date = fix(r.value_date, track=False)
 
 
 _TXN_AMOUNT = re.compile(r"\d[\d,]*\.\d{2}")
@@ -446,12 +514,17 @@ def _unread_transaction_lines(pages: Sequence[Page], spec: LayoutSpec, rows: Seq
                 continue
             first = ln[0].text.strip()
             head3 = " ".join(w.text for w in ln[:3]).strip()
-            if not (spec.date_re.fullmatch(first) or spec.date_re.fullmatch(head3)):
-                continue
             text = "".join(w.text for w in ln).upper()
+            amounts = [k for k in (_amount_key(w.text) for w in ln[1:]) if k is not None]
+            if spec.section_date_re is not None:
+                # date-grouped rows carry no date: the row signature is a narration+amount+balance line,
+                # i.e. at least two amount-shaped tokens; a bare section date / narration wrap has none
+                if spec.section_date_re.fullmatch(squash(ln)) or len(amounts) < 2:
+                    continue
+            elif not (spec.date_re.fullmatch(first) or spec.date_re.fullmatch(head3)):
+                continue
             if _CARRY_LINE.search(text) or "%" in text:
                 continue                        # opening / brought-forward / totals / rate lines are not transactions
-            amounts = [k for k in (_amount_key(w.text) for w in ln[1:]) if k is not None]
             if amounts:
                 keys.append(amounts[-1])
     if spec.no_running_balance:
@@ -477,7 +550,9 @@ def extract_pages(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
                                 spec.no_running_balance, spec.chain_reorder_same_date,
                                 out.table.segment_counts if out.table is not None else None,
                                 out.table.segment_side_counts if out.table is not None else None,
-                                _checkpoint_amounts(out.table) if out.table is not None else None)
+                                _checkpoint_amounts(out.table) if out.table is not None else None,
+                                summary_truncated=spec.summary_truncated,
+                                period_from_borrows_end_year=getattr(spec, 'period_from_borrows_end_year', False))
     return out
 
 
@@ -498,7 +573,9 @@ def _extract_pages_core(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
                                     spec.no_running_balance, spec.chain_reorder_same_date,
                                     out.table.segment_counts if out.table is not None else None,
                                     out.table.segment_side_counts if out.table is not None else None,
-                                    _checkpoint_amounts(out.table) if out.table is not None else None)
+                                    _checkpoint_amounts(out.table) if out.table is not None else None,
+                                    summary_truncated=spec.summary_truncated,
+                                    period_from_borrows_end_year=getattr(spec, 'period_from_borrows_end_year', False))
             break
         if nxt.failure:
             break

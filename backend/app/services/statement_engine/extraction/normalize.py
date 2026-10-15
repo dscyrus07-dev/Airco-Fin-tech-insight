@@ -73,15 +73,39 @@ class NormalizedRow:
     segment: int = 0             # account segment (0 when the document prints no segment headers)
 
 
-def normalize_rows(rows: List[RawRow], spec: LayoutSpec) -> Tuple[List[NormalizedRow], List[str]]:
-    """Returns (rows, errors). Rows that cannot be normalized are reported in errors and omitted."""
+def normalize_rows(rows: List[RawRow], spec: LayoutSpec, opening: Optional[Decimal] = None) -> Tuple[List[NormalizedRow], List[str]]:
+    """Returns (rows, errors). Rows that cannot be normalized are reported in errors and omitted.
+
+    `opening` is the document's printed opening balance; only a derive_side_from_balance layout uses it
+    (the first row's side is read from the balance move off that anchor)."""
     out: List[NormalizedRow] = []
     errors: List[str] = []
+    prev_bal: Dict[int, Decimal] = {}     # segment -> last printed balance (derive_side_from_balance)
     for i, r in enumerate(rows):
         try:
             date = parse_date(r.date, spec.date_format)
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None
-            if spec.single_amount_column:
+            if spec.derive_side_from_balance:
+                cell = r.amounts.get(spec.single_amount_column, "").strip()
+                value = parse_amount(cell) if cell else None
+                if value is None:
+                    raise NormalizeError("missing amount")
+                bal0 = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                                    clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
+                if bal0 is None:
+                    raise NormalizeError("missing balance: the side derives from the balance move")
+                base = prev_bal.get(r.segment, opening)
+                if base is None or bal0 == base:
+                    # no anchor to derive against (or a zero move): the side is unprovable; debit is the
+                    # documented fallback and the warning / missing anchor keeps the file off VERIFIED
+                    wd, dp = value, None
+                    r.warnings.append("side_unproven")
+                elif bal0 > base:
+                    wd, dp = None, value
+                else:
+                    wd, dp = value, None
+                prev_bal[r.segment] = bal0
+            elif spec.single_amount_column:
                 cell = r.amounts.get(spec.single_amount_column, "").strip()
                 m = SIDE_MARKER_RE.search(cell)
                 if m:

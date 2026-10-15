@@ -146,6 +146,30 @@ class LayoutSpec:
     single_amount_default_side: str = ""               # "" | "debit" | "credit": an unsigned single_amount_column cell
                                                      # carries no Dr/Cr marker; every value is this side (e.g. an
                                                      # all-one-side column). Without it, unsigned cells error.
+    section_date_re: Optional[Pattern[str]] = None     # date-grouped rows: a bare section-date line (every word of it
+                                                     # inside the date-column zone) opens a section; rows beneath it
+                                                     # print no date and inherit the section's. Sections persist across
+                                                     # pages. A row before any section date is a defect: skipped and
+                                                     # counted as a rows_without_section_date warning (REVIEW).
+    derive_side_from_balance: bool = False             # no printed Dr/Cr anywhere: each row's side is the direction of
+                                                     # its balance move (requires single_amount_column + balance). The
+                                                     # first row of a segment derives from the printed opening anchor;
+                                                     # without one it is flagged side_unproven (a warning, never VERIFIED
+                                                     # anyway because the independent-anchor check cannot pass).
+    doubled_header_glyphs: bool = False                # the app export prints every header letter twice ("DDaattee"):
+                                                     # collapse doubled letters before header title matching only.
+    summary_truncated: bool = False                    # the printed summary shows whole-unit amounts (rupee-truncated
+                                                     # display, e.g. "₹693" for 693.67): reference and totals compare
+                                                     # floor(derived) == printed. Counts still compare exactly.
+    totals_sum_tail: bool = False                      # the totals/counts line prints the second metric in several
+                                                     # buckets: group 1 = first metric, every further group sums into
+                                                     # the second (totals_credit_first still fixes which is credits).
+    period_from_borrows_end_year: bool = False         # the printed period's from-date carries no year
+                                                     # ("1 Dec to 31 Dec '22"): parse it by borrowing the end year
+                                                     # (a start month after the end month wraps to end_year - 1).
+    doc_counts_re: Optional[Pattern[str]] = None       # document-region line carrying printed transaction counts
+                                                     # (e.g. "186 Transactions 235 Transactions"): group order follows
+                                                     # totals_credit_first / totals_sum_tail like totals_line_re.
 
     @property
     def amount_columns(self) -> Tuple[str, ...]:
@@ -197,6 +221,10 @@ class LayoutSpec:
             raise ValueError("anchor_scan must be 'edges' or 'document'")
         if self.no_running_balance and self.balance_column:
             raise ValueError("no_running_balance requires balance_column = ''")
+        if self.derive_side_from_balance and not self.single_amount_column:
+            raise ValueError("derive_side_from_balance requires single_amount_column")
+        if self.derive_side_from_balance and self.no_running_balance:
+            raise ValueError("derive_side_from_balance requires a printed balance column")
         # segment_header_re / segment_count_re are independent: headers without counts run the
         # chain per segment; a count alone treats the whole document as one implicit segment
         if self.balance_inline_re is not None and self.no_running_balance:
