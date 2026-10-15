@@ -173,3 +173,89 @@ ONB_SERVE_BANKS=hdfc,sbi,axis,idfc,paytm,citibank,city_union docker compose -p o
 | `onb_*` (:8401/:3400) | 14 banks above (compose default) |
 | `ue_*` (:8101/:3000) | own env — 7-bank list unless `STATEMENT_ENGINE_V2_SERVE_BANKS` was overridden |
 | `demo_*` / `airco_*` (wt-demo :8000/:3000) | `hdfc,sbi,axis,idfc,paytm,citibank,city_union` in `wt-demo/local.env` (DEMO_READINESS.md) |
+
+## Reading a job's `statement_engine` block
+
+`GET /api/jobs/{id}` → `result_data.statement_engine` (also persisted on the
+`user_file_records` row). Fields:
+
+| field | meaning |
+|---|---|
+| `mode` | engine mode that ran: `off` / `shadow` / `serve` |
+| `engine` | who produced the workbook: `v2`, `legacy`, `universal` |
+| `verdict` | independent audit verdict: `VERIFIED` (math clean), `REVIEW` (parsed but unproven), `FAILED` (refused), `null` (not run) |
+| `layout_id` | which registered layout spec served, e.g. `HDFC_LAYOUT_1` |
+| `detected_bank` | detector's bank id for the file |
+| `anchored` | extraction bound to a printed anchor (open/close balance) |
+| `needs_review` | operator flag: a human should look at this job |
+| `review_codes` | plain-machine reasons — full glossary below |
+| `advisory` | shadow-only comparison note (v2 vs legacy disagreement) |
+
+## Review codes — complete glossary
+
+Codes derive from per-check statuses only (`serve.py:review_codes`).
+
+| code | plain meaning |
+|---|---|
+| `NO_INDEPENDENT_ANCHOR` | no printed opening/closing figure to verify against — the math can't be independently proven, so the file can never reach VERIFIED. Expected on summary-style exports. |
+| `REFERENCE_MISMATCH` | a printed anchor exists but disagrees with the extracted math — treat output as wrong until investigated. |
+| `CHAIN_BREAK` | running balances don't reconcile (balance[i] ≠ balance[i−1] ± amount) at ≥1 row — rows are missing, duplicated or mis-ordered. |
+| `SIDE_MISMATCH` | an amount landed on the wrong debit/credit side somewhere. |
+| `TOTALS_MISMATCH` | printed statement totals don't match the sum of extracted rows. |
+| `DATE_ORDER` | transaction dates aren't monotonic where this layout promised they would be. |
+| `DATE_OUTLIER` | a transaction date falls far outside the statement period or is implausible. |
+| `OUTSIDE_PERIOD` | rows dated outside the declared from/to range. |
+| `SCHEMA_ERRORS` | ≥1 row failed the per-row schema (missing date/amount/balance or unparseable shape). |
+| `EXTRACTION_WARNINGS` | engine emitted warnings (e.g. lines after summary, skipped regions) — inspect the warnings list in the audit row. |
+
+Other operator-visible verdict/audit signals (not `review_codes` but seen in
+logs/audit): `UNSUPPORTED_BANK` (no parser and no spec), `NOT_A_PDF`,
+`FILE_TOO_LARGE` (>20MB), `PDF_PASSWORD_INVALID`, `PDF_UNLOCK_FAILED`,
+`SCANNED`/`MIXED` capability (image-only pages), `bank_unconfirmed` /
+`foreign_bank` routing states (detector evidence insufficient/contradictory),
+`ROWS_SUSPECT` (legacy integrity guard), `TIME_BUDGET` (universal reader cap).
+
+## Finding a failed job's cause (recipe)
+
+1. `GET /api/jobs/{id}` → `status` + `error_message`. Stage tag `[bank_routing]`
+   = no bank accepted the file; `PDF_*`/`validation` = input rejected;
+   `extract`/`parse` = bank matched, rows didn't.
+2. `docker logs onb_backend --since <window> | grep <job_id>` — the
+   `correlation_id` equals the job id. Look for the last `stage`/`verdict`
+   line before failure.
+3. DB audit (Postgres): `processing_jobs` row (verdict metrics,
+   `validation_errors/warnings`), `job_events` rows (stage timeline, error
+   strings), `statement_metadata` if present.
+4. Sinks to check when a completed job lacks a workbook: report object in
+   `airco-reports`, report file in `/app/tmp` (deleted by the retention sweep
+   after 7 days), `excel_url` field in `result_data`.
+5. Stuck `running`/`pending` after a backend restart: known gap — killed
+   in-flight jobs keep `running` forever; pending jobs do resume. Resubmit the
+   file (new job id). See `docs/operations/N8_ROBUSTNESS.md`.
+
+## Rotating the Keycloak client secret (`frontend-app`)
+
+Realm `airco-insights`, client `frontend-app` (confidential). Rotate whenever
+the secret may have leaked (it currently sits as a default literal in
+`tools/verify2/e2e2.py` — treat as compromised until rotated).
+
+```bash
+# 1. new secret
+docker exec keycloak /opt/keycloak/bin/kcadm.sh config credentials \
+  --server http://localhost:8080 --realm master \
+  --user <admin> --password <admin_pw>
+docker exec keycloak /opt/keycloak/bin/kcadm.sh \
+  update clients/<frontend-app-uuid> -r airco-insights \
+  -s secret=<new-secret>
+```
+
+2. Update every consumer: `KC_SECRET` for e2e tooling, `frontend`'s env
+   (keycloak client config in `frontend/lib/keycloak.ts` reads env),
+   any deploy scripts, and the backend's `KEYCLOAK_CLIENT_SECRET` if set.
+3. Recreate the services that read it (`up -d --no-deps backend frontend`).
+4. Verify: request a token
+   `POST /realms/airco-insights/protocol/openid-connect/token` with the new
+   secret → 200; old secret → 401.
+5. What breaks if forgotten: frontend login loop (token exchange 401),
+   e2e tooling login failure, backend JWKS validation unaffected (public
+   keys, not the secret).

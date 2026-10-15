@@ -178,3 +178,8 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RO] START 411f6ca - rollout 14-bank onb list; integrity-flag proof; docs/status alignment
 
 [RO] DONE f2b7dd8 - 42/42 v2 integrity_passed=true; 0 false alarms; 2 legacy falses=real defects; 734-file regression 0 diffs; UI 14/14 flows + panel/mixed PASS; docs aligned
+[N8] START 5be615d (integration/v2-waves tip; Track B compliance/robustness/secrets/hygiene, no fixes — tests/tools/reports only)
+[N8] STEP retention - measured ledger: source PDF + workbook deleted by sweep; raw_transactions/statement_metadata/processing_jobs/job_events/DLQ/browser-localStorage persist forever
+[N8] STEP robustness - analyze timeouts NOT REPRODUCED (2.9s/5.0s); 160p=88s 90p=110s @1.6GiB; 25-par all-client-timeout but jobs land; mid-flight kill honest-ish (retries to completed, ~min dishonest window); no page cap; no rate limit
+[N8] STEP security - CRITICAL unauth job read+download (measured 200s) + /download/{file} no-auth 200; committed KC secret+e2e pw; secrets in queue payload+redis blob+DLQ forever; history scan clean (355 commits)
+[N8] STEP hygiene - 35.7GB build cache + 2 unused onb-pr1 tags reclaimed; owner commands written
