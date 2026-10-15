@@ -28,10 +28,17 @@ export async function GET(
     }
 
     const resultData = data?.result_data
-    if (resultData && !resultData?.excel_url) {
+    if (resultData) {
       // Signed, short-lived, single-job token so a plain link can download.
+      // The backend persists an unsigned excel_url, so always (re)sign ours.
       const dl = resultData.download_token ? `?t=${encodeURIComponent(resultData.download_token)}` : ''
-      resultData.excel_url = `/api/jobs/${encodeURIComponent(jobId)}/download${dl}`
+      const canonical = `/api/jobs/${encodeURIComponent(jobId)}/download`
+      const existing: string = typeof resultData.excel_url === 'string' ? resultData.excel_url : ''
+      if (!existing || existing.split('?')[0].replace(/\/+$/, '') === canonical || /^\/api\/jobs\/[^/]+\/download$/.test(existing.split('?')[0])) {
+        resultData.excel_url = `${canonical}${dl}`
+      } else if (dl && existing.startsWith('/') && !/[?&]t=/.test(existing)) {
+        resultData.excel_url = `${existing}${existing.includes('?') ? '&' : '?'}${dl.slice(1)}`
+      }
     }
 
     return NextResponse.json(data)

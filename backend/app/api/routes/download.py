@@ -113,22 +113,26 @@ async def download_file(
             job_id = possible_job_id
 
     if job_id:
-        from app.database.audit_models import DownloadLog
-        existing_downloads = db.query(DownloadLog).filter(
-            DownloadLog.job_id == audit_service.get_processing_job(job_id).id if audit_service.get_processing_job(job_id) else None
-        ).count()
-        download_number = existing_downloads + 1
-        audit_service.create_download_log(
-            job_id=job_id,
-            user_id=audit_context.user_id,
-            filename=safe_name,
-            ip_address=audit_context.ip_address,
-            download_number=download_number,
-            file_size_bytes=file_size,
-            user_agent=audit_context.user_agent,
-            browser=audit_context.browser,
-            os=audit_context.os
-        )
+        try:
+            from app.database.audit_models import DownloadLog
+            processing_job = audit_service.get_processing_job(job_id)
+            if processing_job is not None:
+                existing_downloads = db.query(DownloadLog).filter(
+                    DownloadLog.job_id == processing_job.id
+                ).count()
+                audit_service.create_download_log(
+                    job_id=job_id,
+                    user_id=audit_context.user_id,
+                    filename=safe_name,
+                    ip_address=audit_context.ip_address,
+                    download_number=existing_downloads + 1,
+                    file_size_bytes=file_size,
+                    user_agent=audit_context.user_agent,
+                    browser=audit_context.browser,
+                    os=audit_context.os
+                )
+        except Exception as exc:  # audit must never break an authorised download
+            logger.warning("Download audit log skipped: %s", type(exc).__name__)
 
     audit_service.create_audit_log(
         tenant_id=audit_context.tenant_id,
