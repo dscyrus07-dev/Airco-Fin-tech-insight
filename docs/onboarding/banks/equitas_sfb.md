@@ -43,3 +43,12 @@ Still **SHADOW_ONLY**: VERIFIED share 4/27 = 15% (gate >=80%).
   FAILED `608ebbdd`,`a3a7a374`,`a69ef389`,`db2e6852`,`fe78429e`;
   no_layout `d13fe8d1`,`ea54c3b1`,`f98de911`.
 - Engine gap: `baf15ad9` single `Withdrawal(INR)` column, no balance column.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure (36 files): VERIFIED 4, REVIEW 23, FAILED 5, fallback 4 — unchanged vs unblock-1.
+- Residuals all previously-documented classes: FAILED `608ebbdd`/`a69ef389`/`db2e6852` (money cells absent
+  from text layer — class D), `a3a7a374`/`fe78429e` (`schema errors: 2` — same missing-cell family);
+  no_layout `d13fe8d1`/`ea54c3b1`/`f98de911` (class D); `baf15ad9` single `Withdrawal(INR)` column with
+  no side markers and no balance — dr/cr unprintable, class F/D, NOT_POSSIBLE.
+- No spec/detector change. Stays **SHADOW_ONLY** (Vshare 4/27 = 15%).

@@ -42,3 +42,14 @@ Re-measure (33 files): 24 v2 (20 REVIEW + 4 FAILED), 9 no_layout.
   longer reproduces at tip (UNKNOWN/no_layout).
 - FAILED `a08627e2`,`c7f7cb38`,`793b0633`,`0197b955`: real printed chain
   discontinuities (balance jumps across page boundaries) - honest.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure (32 files): REVIEW 20, FAILED 4, fallback 8 (7 `bank_unconfirmed` + 1 `no_layout`).
+- The Human-Verification detector false-accept (`f3105a96`) does not reproduce at tip.
+- 7 `bank_unconfirmed` files carry zero Ujjivan tokens in header/footer (unbranded exports;
+  UJVN appears nowhere) -> correct refusal, class C.
+- `91db325d` fully monospace-glued (one word per line): registry header detection runs pre-split,
+  so `monospace_text` can never route it — class F engine gap.
+- FAILEDs `0197b955`/`793b0633`/`a08627e2`/`c7f7cb38`: real printed balance discontinuities (class D).
+- No spec/detector change. **SHADOW_ONLY** (VERIFIED share ~0% — statements print no anchors, class E).
