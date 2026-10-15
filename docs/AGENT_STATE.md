@@ -199,4 +199,9 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N5] STEP bandhan 906688b
 [N5] STEP dcb+uco+dhanlaxmi+csb+ippb fc3c618 / dcb-doc c351a80
 [N5] STEP pnb+bom 98fe2a5
+[N6] START 5be615d (integration/v2-waves tip; Track B, no engine branches)
+[N6] STEP boi-spec+h2h 5be615d - BoI L2 spec built+synth-tested (27/73 REVIEW audited clean, branch-print family parked as engine gap); all 8 banks h2h run w/ production-parity legacy leg; v2_worse=0 on all banks
+[N6] STEP report+regression 59ff071 - docs/onboarding/N6_LEGACY_VS_V2.md + disagreements; 1,099-file regression: 15 named boi diffs (header resolves, gate holds), 25 baseline-era non-N6; suite 425; xbank 0/345
+[N6] DONE 475479f - 8 banks h2h; SERVE_V2_WITH_LEGACY_FALLBACK: bob canara icici indian_bank karnataka kotak; KEEP_LEGACY: bank_of_india union; v2_worse=0 all banks; BoI L2 spec+tests; regression 15 named diffs 0 unexpected
+
 [N7] START 5be615d (integration/v2-waves tip; gate: N4 DONE 5f6c237 all-ACCEPT 0 reverts, N5 DONE 37f970f, N6 DONE 475479f, N8 DONE 760b563 — all present, no wait needed)
