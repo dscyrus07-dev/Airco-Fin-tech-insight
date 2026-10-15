@@ -32,3 +32,12 @@ distinct fingerprints: 1 | top share: 100.0%
 - VERIFIED subset audited clean (7/7): rows match dated amount lines, chain intact,
   anchors verified independently.
 - Gate misses: VERIFIED 7/15 = 47% (<80%) despite 100% detection and zero false accepts.
+
+## N5 re-check
+
+- Re-verified `1142a050`: page 2 is a `GST INVOICE DETAILS` annexure; the doc holds two
+  accounts (printed txn counts 10+5=15 = rows read). The `Operative Accounts` summary
+  lists a linked account's closing (179.88) while the parsed statement section closes at
+  59.88 — an anchor-association ambiguity (class B) that needs per-segment doc anchors.
+  No spec change; `merge_statements` absent and unfixable at spec level.
+- Status stays SHADOW_ONLY (VERIFIED 7/15).
