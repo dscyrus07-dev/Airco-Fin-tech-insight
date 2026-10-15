@@ -92,3 +92,29 @@ Not repairable — the document contradicts itself:
 - `airtel_pb` 3 unrouted: postpaid/fiber billing statements (non-bank).
 - `idbi` `2cde3656`: GL ledger report, not a statement.
 - `apgb`: NOT_POSSIBLE — no running-balance column (see `banks/apgb.md`).
+
+## N5 refresh (devin/n5-bank-wave)
+
+Newly confirmed engine-level gaps (no spec fix possible):
+
+- **Anchor association in multi-account docs** (`dcb`): printed summary
+  opening/closing belongs to a different sub-account than the parsed section;
+  needs per-segment anchor binding (class B).
+- **Continuation swallow before date-inherit** (`scb`): an undated `9,608`
+  withdrawal line is consumed as continuation narration before
+  `undated_rows_inherit_date` can promote it (class F ordering).
+- **Detector head-scan terminator** (`scb`): `_head_lines` stops at the first
+  date-like line; a street address `6-3-1090,` cuts the scan before
+  `IFSC: SCBL…`, leaving weak evidence vs narration-leak counterparty marks.
+- **All-zero B/F ordering** (`idbi`): `opening_row_balance_only` rejects a dated
+  `0.00 / 0.00` carry-forward row before `zero_amount_is_empty` can clear it.
+- **5-value summary rows** (`ippb`): label:value summary includes a
+  `No.ofTransactions` field; `parse_summary` expects exactly the configured
+  numeric count — ambiguous squash, REVIEW ceiling stands.
+- **Clipped GRAND TOTAL decimals** (`federal`): `6149602.0`/`6106586.94` print
+  glued; the boundary is ambiguous at text level → honest FAILED (class D).
+- **Shared/misplaced balance cells** (`yes`, `idbi`): B/F balance printed in
+  the wrong money cell; charge pairs share one balance print (class D/F).
+- **Jumbled print order** (`uco` `14ab1185`): rows print out of date order and
+  cannot chain (class F).
+- **Non-statement misfiles confirmed refused**: `pnb` `4eb17de5` (WhatsApp T&C).

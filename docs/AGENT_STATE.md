@@ -195,3 +195,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [N5] STEP central_bank 38ebc04
 [N5] STEP equitas_sfb+ujjivan_sfb fa2bde6
 [N5] STEP hsbc+kvb cbf3f14
+[N5] STEP federal 67968b6
+[N5] STEP bandhan 906688b
+[N5] STEP dcb+uco+dhanlaxmi+csb+ippb fc3c618 / dcb-doc c351a80
+[N5] STEP pnb+bom 98fe2a5
