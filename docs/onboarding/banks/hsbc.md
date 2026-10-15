@@ -39,3 +39,14 @@ sparse-balance layout is an engine gap (F): `6792a91d`,`dec6e727`,`33b3a7cd`,
 NO_ROWS `f06eb015`,`84f8564e` are app-screenshot-style docs (Available balance /
 Date range, no transaction table) - not statement layouts.
 Still **SHADOW_ONLY**: no printed anchors (E) + sparse-balance variant (F).
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure (33 readable text files): REVIEW 22, FAILED 9, NO_ROWS 2.
+- The UK sparse-balance family now reads rows under `hsbc_..._paidout_paidin_balance`
+  (`balance_optional`): `6792a91d` et al extract cleanly but stay FAILED — page-boundary
+  `BALANCE CARRIED FORWARD` figures disagree with derived cumulative totals
+  (e.g. printed 2384.16 vs derived 2348.61; one row also fails the one-side schema).
+  Printed evidence is inconsistent -> honest FAILED, class D.
+- `f06eb015`/`84f8564e`: app-screenshot docs with no transaction table -> NO_ROWS, correct.
+- No spec/detector change. **SHADOW_ONLY** (0 VERIFIED — pages print no anchors, class E).

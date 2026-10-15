@@ -28,3 +28,11 @@ distinct fingerprints: 3 | top share: 94.9%
 - Remaining no_layout are misfiled documents: `bc4fdbb2`,`6854f7b0` are Canara e-Pass sheets
   (`CANARA SB GENERAL`), `d86f615e` is a chit-fund agreement (Bilva Chits). Correctly unrouted.
 - Gates unchanged: 4 valid routed files, 3 VERIFIED + 1 honest FAILED. No spec/detector change made.
+
+## N5 pass (branch devin/n5-bank-wave)
+
+- Re-measure confirms unblock state: ~1 VERIFIED, ~19+ `bank_unconfirmed` (cid-garbage text
+  layer — transaction rows are `(cid:NN)` tokens; `KVBL` IFSC prints only in the last-page
+  branch address beyond the detector's scope). Class D, NOT_POSSIBLE.
+- No header/footer carries the bank name in the garbage files -> no detector entry possible
+  per the wave's own-evidence rule. No spec/detector change. **SHADOW_ONLY**.
