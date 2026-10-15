@@ -1,0 +1,113 @@
+# Release-candidate verification stack — SEPARATE from demo (airco_*), onb_*,
+# finrc_*, ue_*, demo_*.
+#
+# Run (from infra/docker):
+#   docker compose -p rc \
+#     -f docker-compose.yml -f docker-compose.rc.yml \
+#     --env-file <path-to-.env> up -d --build backend frontend redis rabbitmq
+#
+# Distinct container names (rc_*), image tags (rc-*), host ports 8501/3500 and
+# a project-scoped network; never `down` or retag the other stacks.
+# Keycloak (8080) + auth-service (8001) are reused read-only via
+# host.docker.internal, same as the onb stack.
+#
+# Serve allowlist comes from RC_SERVE_BANKS — set it to the verified release
+# list (default 14 + banks independently marked GO/GO_REVIEW_ONLY, nothing
+# else). The shipped default in code/compose is unchanged by this file.
+services:
+  backend:
+    image: rc-backend
+    container_name: rc_backend
+    restart: "no"
+    depends_on: !reset
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports: !override
+      - "${RC_BACKEND_PORT:-8501}:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SERVICE_URL: http://host.docker.internal:8001
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-ap-southeast-2}
+      S3_ADDRESSING_STYLE: ${S3_ADDRESSING_STYLE:-path}
+      S3_SKIP_CREATE_BUCKET: ${S3_SKIP_CREATE_BUCKET:-true}
+      S3_BUCKET: ${S3_BUCKET:-airco-files}
+      S3_BUCKET_REPORTS: ${S3_BUCKET_REPORTS:-airco-reports}
+      STORAGE_TYPE: ${STORAGE_TYPE:-supabase-s3}
+      SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL}
+      KEYCLOAK_URL: http://localhost:8080
+      KEYCLOAK_INTERNAL_URL: http://host.docker.internal:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-airco-insights}
+      KEYCLOAK_ALLOWED_AZP: ${KEYCLOAK_ALLOWED_AZP:-frontend-app}
+      API_KEY_ENVIRONMENT: ${API_KEY_ENVIRONMENT:-test}
+      API_KEY_RATE_LIMIT_DEFAULT: ${API_KEY_RATE_LIMIT_DEFAULT:-60}
+      DATA_RETENTION_DAYS: ${DATA_RETENTION_DAYS:-7}
+      RETENTION_ENABLED: ${RETENTION_ENABLED:-false}
+      STATEMENT_ENGINE_V2_MODE: ${RC_V2_MODE:-serve}
+      STATEMENT_ENGINE_V2_SERVE_BANKS: ${RC_SERVE_BANKS:?set RC_SERVE_BANKS to the verified release list}
+      STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
+      STATEMENT_ENGINE_UNIVERSAL_MODE: ${STATEMENT_ENGINE_UNIVERSAL_MODE:-off}
+      STATEMENT_ENGINE_MISMATCH_GUARD: ${STATEMENT_ENGINE_MISMATCH_GUARD:-1}
+      TEMP_DIR: /app/tmp
+      PYTHONUNBUFFERED: "1"
+
+  frontend:
+    image: rc-frontend
+    container_name: rc_frontend
+    restart: "no"
+    build:
+      context: ../../frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:${RC_BACKEND_PORT:-8501}
+        NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+        NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
+        NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+        NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
+    ports: !override
+      - "${RC_FRONTEND_PORT:-3500}:3000"
+    environment:
+      BACKEND_URL: http://backend:8000
+      AUTH_SERVICE_URL: http://host.docker.internal:8001
+      NEXT_PUBLIC_API_URL: http://localhost:${RC_BACKEND_PORT:-8501}
+      NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+      NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+      NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
+
+  auth-service:
+    container_name: rc_auth_service
+    ports: !override []
+    profiles: ["rc-disabled"]
+
+  keycloak-postgres:
+    container_name: rc_keycloak_postgres
+    ports: !override []
+    profiles: ["rc-disabled"]
+
+  keycloak:
+    container_name: rc_keycloak
+    ports: !override []
+    profiles: ["rc-disabled"]
+
+  nginx:
+    container_name: rc_nginx
+    ports: !override []
+    profiles: ["rc-disabled"]
+
+  redis:
+    container_name: rc_redis
+    restart: "no"
+    ports: !override []
+    volumes: !override []
+
+  rabbitmq:
+    container_name: rc_rabbitmq
+    restart: "no"
+    ports: !override []
+    volumes: !override []

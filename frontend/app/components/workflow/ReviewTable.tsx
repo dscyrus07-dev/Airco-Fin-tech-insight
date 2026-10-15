@@ -227,10 +227,10 @@ export default function ReviewTable({
                   <input
                     value={statementLabel}
                     onChange={(e) => onStatementLabel(d.document_id, e.target.value)}
+                    aria-label={`Statement label for ${d.filename}`}
                     maxLength={120}
                     placeholder="Statement label (optional)"
                     className="mt-2 w-full min-w-0 rounded border px-2 py-1 text-sm"
-                    aria-label={`Statement label for ${d.filename}`}
                   />
                 </>
               )}

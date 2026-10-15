@@ -201,3 +201,6 @@ tools/n1/.local/
 tools/n2/.local/
 tools/n7/.local/
 e2e/shots_n7/
+tools/final/.local/
+tools/final/node_modules/
+e2e/shots_n9/

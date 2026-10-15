@@ -8,6 +8,17 @@
 > still reflects the final-rc measurement wave; banks whose state changed are
 > re-stated in the next section.
 
+> **N9 update (`devin/n9-final`, measured on the `rc` release-candidate stack):**
+> the N5–N7 night wave verified six more banks end to end (`docs/onboarding/
+> N7_REPORT.md`): `bob` (Bank of Baroda), `canara`, `icici`, `indian_bank`,
+> `karnataka`, `kotak` — each `SERVE_V2_WITH_LEGACY_FALLBACK`, each GO after
+> independent e2e verification (36 jobs, 0 flags). Proposed served list =
+> the 14-bank default **plus those six** (20 banks). The proposal is not yet
+> shipped — the `rc` stack carries it via env var; the shipped default is
+> unchanged. Everything below the N9 banner reflects pre-wave measurements;
+> rows marked superseded have newer truth in `N7_REPORT.md` /
+> `N6_LEGACY_VS_V2.md`.
+
 ## Rolled-out serve list (`411f6ca`)
 
 | Bank | State | Caveats |
@@ -24,6 +35,8 @@
 
 8 legacy-only banks remain on the legacy parser: icici, kotak, canara,
 karnataka, union, bank_of_baroda, bank_of_india, indian_bank.
+**[N9: superseded — six of these are now v2-verified; only `union` and
+`bank_of_india` remain legacy-only.]**
 
 Numbers come from the final-wave runs only:
 `comparison/final/after_*.jsonl` (14,445-file router probe at this branch),
@@ -39,16 +52,16 @@ don't serve Â· **legacy-only** = legacy parser path, no v2 claims Â·
 | HDFC | T2 (spec `hdfc_*`) | VERIFIED, REVIEW | probe VERIFIED count below; e2e completed VERIFIED + Statement Check; mutation caught | none known | **serve** |
 | SBI | T2 (`sbi_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | none known | **serve** |
 | Axis | T2 (`axis_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | **spec truncates rows above period-marker footers â€” audit-WRONG `000df35f` reproduced 1,141 of 1,147 rows as VERIFIED. Current tip: completeness guard now lands that file REVIEW (`unread_transaction_lines:6`)** | **serve** (rolled out on `onb`; caveat stands â€” keep demo-flagged) |
-| ICICI | T1 legacy (+T3 REVIEW when legacy fails) | no VERIFIED claim | e2e UNKNOWNâ†’overrideâ†’legacy completed | **audit-WRONG**: legacy fabricates amounts on 2/3 audited files; detector often UNKNOWN â†’ manual pick | **legacy-only** â€” do not demo as verified |
+| ICICI **[N9: v2-verified, superseded]** | ~~T1 legacy~~ v2 (+T3 REVIEW when legacy fails) | no VERIFIED claim | e2e UNKNOWNâ†’overrideâ†’legacy completed | **audit-WRONG**: legacy fabricates amounts on 2/3 audited files; detector often UNKNOWN â†’ manual pick | **legacy-only** â€” do not demo as verified |
 | IDFC First | T2 (`idfc_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | duplicate printed rows can break the chain check (audit TRUE-WITH-GAPS) | **serve** |
 | Paytm Payments | T2 (`paytm_*`) | VERIFIED, REVIEW | e2e completed VERIFIED | ~30% of rows print no balance â†’ unverifiable (audit TRUE-WITH-GAPS) | **serve** |
 | Citibank | T2 (`citi*`) | VERIFIED | e2e file honest-failed (layout family unmatched); matrix citi file VERIFIED | coverage gap: some citi layouts don't match spec â†’ honest fail | **serve** (partial coverage) |
 | City Union | T2 (`city_union_*`) | VERIFIED, REVIEW | e2e REVIEW completed; matrix VERIFIED + REVIEW | most files land REVIEW (honest) | **serve** |
-| Kotak Mahindra | none (spec exists, not allowlisted) | REVIEW only if T3 | matrix: legacy failed; T3 shadow tier; audit-WRONG legacy merging | **audit-WRONG** legacy; spec shares axis-class truncation | **not supported** (honest fail today) |
+| Kotak Mahindra **[N9: v2-verified, superseded]** | v2+legacy fallback | REVIEW only if T3 | matrix: legacy failed; T3 shadow tier; audit-WRONG legacy merging | **audit-WRONG** legacy; spec shares axis-class truncation | **not supported** (honest fail today) |
 | IndusInd | none (spec exists, NOT allowlisted) | REVIEW only if T3 | matrix: honest fail | first-row amount mutation stays VERIFIED â†’ excluded from allowlist by wave11 | **not supported** |
 | Union Bank | T1 legacy | no VERIFIED claim | matrix: 1 legacy success, 1 T3 REVIEW under u-serve | â€” | **legacy-only** |
 | Bank of India | T1 legacy (added post-880b5e2) | no VERIFIED claim | matrix: legacy success | â€” | **legacy-only** |
-| Canara | none usable (legacy fails; spec not allowlisted) | REVIEW only if T3 | matrix: legacy failed; T3 honest fail | â€” | **not supported** |
+| Canara **[N9: v2-verified, superseded]** | v2+legacy fallback | REVIEW only if T3 | matrix: legacy failed; T3 honest fail | â€” | **not supported** |
 | Bandhan | none | REVIEW only if T3 | matrix: honest fail | â€” | **not supported** |
 | Punjab National | T2 (`pnb_*`, review-only) | REVIEW only | V3: 3 real files REVIEW + `NO_INDEPENDENT_ANCHOR`; 1,171-row file extracts | VERIFIED impossible (no printed anchors) | **serve review-only** (rolled out) |
 | Bank of Maharashtra | T2 (`bom*` / `bank_of_maharashtra_*`) | VERIFIED, REVIEW | V3: 7 e2e files, 4 VERIFIED + 3 REVIEW | â€” | **serve** (rolled out, VERIFIED-capable) |

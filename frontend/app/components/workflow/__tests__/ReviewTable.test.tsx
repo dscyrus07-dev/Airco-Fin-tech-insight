@@ -166,4 +166,14 @@ describe('ReviewTable bank selection', () => {
     expect(sel.querySelector('option[value="hdfc"]')).not.toBeDisabled()
     expect(sel.textContent).not.toContain('RBL Bank')
   })
+
+  it('statement-label input carries an accessible name (a11y)', () => {
+    renderRow(
+      wf({
+        state: 'DETECTED',
+        bank: { id: 'hdfc', name: 'HDFC Bank', confidence: 'VERY_HIGH', score: 1, supported: true },
+      })
+    )
+    expect(screen.getByLabelText('Statement label for a.pdf')).toBeTruthy()
+  })
 })

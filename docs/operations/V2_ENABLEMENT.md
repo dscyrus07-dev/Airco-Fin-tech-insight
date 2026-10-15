@@ -1,5 +1,15 @@
 # V2 enablement — candidate table (E1)
 
+> **[N9 update — `devin/n9-final`]** This document predates the N5–N7 night
+> wave. Where it says a bank is "legacy", "not eligible", "fails honestly", or
+> "not supported" for `bob` (Bank of Baroda), `canara`, `icici`,
+> `indian_bank`, `karnataka`, or `kotak`, that is now stale: all six are
+> v2-VERIFIED-capable (SERVE_V2_WITH_LEGACY_FALLBACK, GO per
+> `docs/onboarding/N7_REPORT.md`). The proposed served list is the 14-bank
+> default plus those six (carried on the `rc` stack via env var; the shipped
+> default is unchanged). Statements about `union`, `bank_of_india`, IndusInd,
+> and the other unlisted banks still stand.
+
 Computed from `comparison/phase8c/after_{0,1,2}.jsonl` (14,445 corpus files at
 AFTER pin `89c7b21`) + `c5_forced.jsonl` (9,522 forced cross-bank outcomes over
 3,148 sha-sorted files, 7 specs swept). No corpus re-run.

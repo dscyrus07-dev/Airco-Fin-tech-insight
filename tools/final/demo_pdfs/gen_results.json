@@ -1,0 +1,208 @@
+{
+ "hdfc": {
+  "file": "tools/final/demo_pdfs\\demo_hdfc.pdf",
+  "spec": "hdfc_srno_date_particulars_chqref_debit_credit_closingbalance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "sbi": {
+  "file": "tools/final/demo_pdfs\\demo_sbi.pdf",
+  "spec": "sbi_txndate_valuedate_description_refcheque_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "axis": {
+  "file": "tools/final/demo_pdfs\\demo_axis.pdf",
+  "spec": "axis_trandate_chqno_particulars_debit_credit_balance_initbr",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no printed summary to verify against"
+  ],
+  "fallback_reason": ""
+ },
+ "idfc": {
+  "file": "tools/final/demo_pdfs\\demo_idfc.pdf",
+  "spec": "idfc_transactiondate_valuedate_particulars_cheque_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no printed summary to verify against"
+  ],
+  "fallback_reason": ""
+ },
+ "paytm": {
+  "file": "tools/final/demo_pdfs\\demo_paytm.pdf",
+  "spec": "paytm_datetime_transactiondetails_amount_availablebalance",
+  "verdict": "FAILED",
+  "status": "v2",
+  "rows": 0,
+  "warnings": [
+   "schema errors: 12"
+  ],
+  "fallback_reason": ""
+ },
+ "citibank": {
+  "file": "tools/final/demo_pdfs\\demo_citibank.pdf",
+  "spec": "citibank_date_transactiondetails_withdrawals_deposits_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "city_union": {
+  "file": "tools/final/demo_pdfs\\demo_city_union.pdf",
+  "spec": "city_union_date_particulars_chqno_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "au_sfb": {
+  "file": "tools/final/demo_pdfs\\demo_au_sfb.pdf",
+  "spec": "au_date_descriptionnarration_valuedate_chqrefno_debitdr_creditcr_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "bank_of_maharashtra": {
+  "file": "tools/final/demo_pdfs\\demo_bank_of_maharashtra.pdf",
+  "spec": "bom_srno_date_particulars_chequereferenceno_debit_credit_balance_channel",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "airtel_pb": {
+  "file": "tools/final/demo_pdfs\\demo_airtel_pb.pdf",
+  "spec": "airtelpb_date_transactiontype_particulars_withdrawal_deposit_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "iob": {
+  "file": "tools/final/demo_pdfs\\demo_iob.pdf",
+  "spec": "iob_date_chq_naration_cod_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "apgv": {
+  "file": "tools/final/demo_pdfs\\demo_apgv.pdf",
+  "spec": "apgv_postdate_valuedate_narration_chequedetails_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "south_indian": {
+  "file": "tools/final/demo_pdfs\\demo_south_indian.pdf",
+  "spec": "south_indian_date_particulars_chqno_withdrawals_deposits_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "pnb": {
+  "file": "tools/final/demo_pdfs\\demo_pnb.pdf",
+  "spec": "pnb_transactiondate_chequenumber_withdrawal_deposit_balance_narration_2l",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "bob": {
+  "file": "tools/final/demo_pdfs\\demo_bob.pdf",
+  "spec": "bob_serial_transactiondate_valuedate_description_cheque_debit_credit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "canara": {
+  "file": "tools/final/demo_pdfs\\demo_canara.pdf",
+  "spec": "canara_date_particulars_deposits_withdrawals_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "icici": {
+  "file": "tools/final/demo_pdfs\\demo_icici.pdf",
+  "spec": "icici_sno_valuedate_transactiondate_chequenumber_remarks_withdrawal_deposit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "indian_bank": {
+  "file": "tools/final/demo_pdfs\\demo_indian_bank.pdf",
+  "spec": "indianbank_transactiondate_particulars_withdrawals_deposit_balance",
+  "verdict": "REVIEW",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [
+   "no independent opening/closing anchor: balance chain is self-derived"
+  ],
+  "fallback_reason": ""
+ },
+ "karnataka": {
+  "file": "tools/final/demo_pdfs\\demo_karnataka.pdf",
+  "spec": "karnataka_date_particulars_instrumentno_withdrawals_deposits_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ },
+ "kotak": {
+  "file": "tools/final/demo_pdfs\\demo_kotak.pdf",
+  "spec": "kotak_date_narration_chqrefno_withdrawaldr_depositcr_balance",
+  "verdict": "VERIFIED",
+  "status": "v2",
+  "rows": 12,
+  "warnings": [],
+  "fallback_reason": ""
+ }
+}
