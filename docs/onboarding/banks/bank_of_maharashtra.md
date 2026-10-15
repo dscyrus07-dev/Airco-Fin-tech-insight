@@ -46,3 +46,14 @@ keep honest REVIEW (opening anchor out of page1/last scan — engine gap).
 `904ca49e` parked: pathological extract (dates split over 3 lines, fused amounts) — engine gap.
 Audit: 21 VERIFIED audited, 19 clean, 2 false-positive sign-regex artifacts
 (anchors verified to match exactly, e.g. -3,91,483.45 opening).
+
+## N5 verification (layout-variant-only, zero-diff proof)
+
+- `BOM_LAYOUT_3` += `dates_monotonic_expected=False`: the bank prints value-dated
+  rows out of order in posting order (03-29 rows between 03-30/03-31; balances
+  chain perfectly in print order).
+- Zero-diff proof on current folder: 25 files, **1 named diff** —
+  `6f062db1` REVIEW -> VERIFIED; all 24 other outcomes byte-identical.
+- Independent audit of the changed file: 281/281 dated lines read, 0 chain
+  breaks, implied opening 373.42 / closing 15.04 match printed anchors exactly.
+- After: 25/25 routed VERIFIED on the measured corpus.

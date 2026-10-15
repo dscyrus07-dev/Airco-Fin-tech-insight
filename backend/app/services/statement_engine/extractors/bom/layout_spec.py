@@ -131,6 +131,7 @@ BOM_LAYOUT_3 = LayoutSpec(
     end_markers=("ENDOFSTATEMENT",),
     empty_amount_marker="-",
     row_order="auto",
+    dates_monotonic_expected=False,
 )
 BOM_LAYOUT_3.validate()
 
