@@ -1,0 +1,25 @@
+# N7 proposed bank_status.json change — NOT APPLIED to the shipped table.
+#
+# Verdicts (see docs/onboarding/N7_REPORT.md): all six N6 SERVE_V2_WITH_LEGACY_FALLBACK
+# candidates verified end-to-end on the rebuilt onb stack. For a GO bank the table
+# needs NO row: bank_status.py derives `verified` directly from the serve allowlist.
+# The only required rollout change is infra-side (the serve env list), shown below
+# as the canonical diff to reproduce; it is config, not the shipped table.
+#
+# --- infra/docker/docker-compose.onboard.yml (documentation diff only) ---
+#  STATEMENT_ENGINE_V2_SERVE_BANKS:
+#    ${ONB_SERVE_BANKS:-hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb}
+#    ${ONB_EXTRA_SERVE_BANKS:+,$ONB_EXTRA_SERVE_BANKS}
+#  Proposed default change (owner applies):
+# -  hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb
+# +  hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb,bob,canara,icici,indian_bank,karnataka,kotak
+#
+# bank_status.json hunks: NONE REQUIRED (six GO banks derive `verified`).
+# If a bank is downgraded to GO_REVIEW_ONLY later, add:
+# --- a/backend/app/services/statement_engine/bank_status.json
+# +++ b/backend/app/services/statement_engine/bank_status.json
+#  "banks": {
+# +   "<bank>": {
+# +     "state": "review_required",
+# +     "reason": "<one plain sentence shown to users>"
+# +   },
