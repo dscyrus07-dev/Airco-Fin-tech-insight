@@ -243,3 +243,15 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [FN] START 2a7f0c3 final-2: rebuild rc, full suites, saturation re-test, 1k corpus regression vs bedc4bf, N9 workflow + extras, live stack + USER_TEST_GUIDE
 
 [FN] DONE ee7f12b final-2: rc rebuilt on 2a7f0c3, suites clean, regression 1099/1099 zero-downward, stack live for user test
+
+[V4] START 74968f0 verify-4: dbs/federal/dhanlaxmi GO check + 17-bank recount
+
+[V4] BANK dbs NO-GO — gates pass (97.7%R det/yield, 89.9% V-share, 0 xbank accepts, audit 40) but blocked by V4-3: null-balance REVIEW rows crash float() at serve.py:383/models.py:50 (sha8 4b87612b, 4e83e770)
+
+[V4] BANK federal GO — 94.9%R det, 92.8%R yield, 85.6% V-share, 0 xbank accepts, audit 40, 15 unbranded exports refused, e2e parity + anchors clean
+
+[V4] BANK dhanlaxmi GO (review_required) — 11/11 REVIEW, totals reconcile, REVIEW-only ceiling; no VERIFIED corpus exists
+
+[V4] BANK indusind INFORMATIONAL NO-GO — 76.7% V-share < 80 gate (det 96.9%R, yield 92.3%R)
+
+[V4] DONE b692b59 — GO federal(verified)+dhanlaxmi(review_required); NO-GO dbs (V4-3 null-balance float() crash, REVIEW rows); indusind informational short (76.7%<80). Recount 1450 fresh; regression 1099/1099 zero-downward; confusion 0 accepts x3; mutation 9/9 honest; UI flows 3/3; audits 40/40/40+11R. Defects V4-3(major,dbs), V4-4(major,idbi non-candidate), V4-1(minor,label). Nothing pushed.
