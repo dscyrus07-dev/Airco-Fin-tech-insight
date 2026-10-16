@@ -239,3 +239,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [HD] START 2d80ae7 hard-1: verify PyJWT swap, rate limit, page cap, saturation re-test, security re-scan
 
 [HD] DONE 8abd0a6 hard-1: PyJWT verified, rate limit + page cap proven, saturation re-tested, security re-scan; nothing pushed
+
+[FN] START 2a7f0c3 final-2: rebuild rc, full suites, saturation re-test, 1k corpus regression vs bedc4bf, N9 workflow + extras, live stack + USER_TEST_GUIDE
