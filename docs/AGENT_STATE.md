@@ -233,3 +233,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [DP] DONE 61bbf01 — lockfile regen (audit 6->0, nanoid 3.3.20/sharp 0.35.5/next 16.4.2); suites: fe 59/59+build, be 858/8 identical; probes 25/25 + AV-2 200; pypdf legs 5/5; retention inventory written (no-expiry: DB tables, job:user index, RMQ queues+DLQ, S3 buckets, /app/tmp)
 
 [RT] START bae88c2 ret-1: prove retention enforcement (dry-run on rc, destructive on throwaway pg)
+
+[RT] DONE fad42e8 — dry-run sweep counts match inventory (159/322/159/0/158/172/15657/0), 0 rows deleted; throwaway-pg purge: >7d gone, 6d23h kept, children-first, fail-table->-1+continue; Redis new indexes 8d TTL (pre-fix keys still -1); pdf_password=None in job blob, absent in logs; RMQ policy 604800000 applied+consumed; S3 lifecycle not supported on Supabase (app-side sweep stays); probes 25/25; suite 860/8 identical; defects: RT-1 temp_files not dry-gated (85 deleted), RT-2 old index keys no TTL, RT-3 lifecycle-7d.json inert on Supabase
