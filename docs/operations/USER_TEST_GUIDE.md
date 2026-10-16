@@ -37,20 +37,31 @@ Synthetic demo PDFs live in `tools/final/demo_pdfs/` — upload via the Analyze 
 | A PDF over 500 pages | 413 `PDF_TOO_MANY_PAGES`, nothing stored |
 | Open another user's job URL | 403; open without login | 401 |
 
-## Bank serve list (20)
+## Bank serve list (22)
 
 `hdfc sbi axis idfc paytm citibank city_union au_sfb bank_of_maharashtra
-airtel_pb iob apgv south_indian pnb bob canara icici indian_bank karnataka kotak`
+airtel_pb iob apgv south_indian pnb bob canara icici indian_bank karnataka kotak
+federal dhanlaxmi`
+
+New in this rollout — what to expect:
+
+| Bank | State | Expected behaviour |
+|---|---|---|
+| `federal` | verified | Detect → categorized → VERIFIED or REVIEW → Download Excel. Unbranded Federal exports (no logo/name) land on REVIEW and are refused honestly at processing — never a clean workbook. |
+| `dhanlaxmi` | review_required | Detect → REVIEW every time ("always needs review"); confirm → processes → workbook served under the review cap. No VERIFIED path exists yet. |
+| `dbs` | coming_soon (NOT served) | Greyed in the bank list. DBS files refuse honestly; do not expect a workbook — blocked by the null-balance render defect (R3-1). |
 
 Banks not in the list (e.g. `bank_of_india`, `union`) process via the legacy
-pipeline or fallback — never silently through V2.
+pipeline or fallback — never silently through V2. The catalog shows 44 bank
+ids total: 24 in the supported panel (22 served + Bank of India + Union Bank
+legacy), the rest greyed with reasons.
 
 ## Stop / restart
 
 ```bash
 cd "X:/Airco Projects/Airco Insights fintech" && set -a && source .env && set +a
 export RETENTION_DRY_RUN=true DOWNLOAD_TOKEN_SECRET="<fresh 64-hex>" \
-  RC_SERVE_BANKS="hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb,bob,canara,icici,indian_bank,karnataka,kotak" \
+  RC_SERVE_BANKS="hdfc,sbi,axis,idfc,paytm,citibank,city_union,au_sfb,bank_of_maharashtra,airtel_pb,iob,apgv,south_indian,pnb,bob,canara,icici,indian_bank,karnataka,kotak,federal,dhanlaxmi" \
   RC_BACKEND_PORT=8601 RC_FRONTEND_PORT=3600
 cd ../wt-fn
 docker compose -p rc -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.rc.yml up -d

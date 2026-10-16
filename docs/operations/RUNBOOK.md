@@ -81,6 +81,12 @@ curl http://localhost:8000/health
 Always tag a known-good image before rebuilding (`docker tag <img>:latest
 <img>:stable-<date>`).
 
+Served-list rollback (rc): to revert the 22-bank rollout-3 list to the prior
+20-bank list, drop `federal,dhanlaxmi` from `RC_SERVE_BANKS` and recreate the
+backend — `docker compose -p rc -f infra/docker/docker-compose.yml
+-f infra/docker/docker-compose.rc.yml up -d --no-deps backend`. No rebuild
+needed; `dbs` was never rolled (R3-1, see ENGINE_GAPS.md §6).
+
 ## What to watch
 
 - `GET /health` → `{"status":"ok"}`; `docker compose ps` all `healthy`.
