@@ -259,3 +259,17 @@ docker exec keycloak /opt/keycloak/bin/kcadm.sh \
 5. What breaks if forgotten: frontend login loop (token exchange 401),
    e2e tooling login failure, backend JWKS validation unaffected (public
    keys, not the secret).
+
+## Retention enforcement (7-day promise)
+
+Enforced in code by `RetentionService` (hourly): S3 objects + file history (existing), and now
+`retention_purge.purge_database` (hard-deletes `raw_transactions`, `job_events`, `report_generation_logs`,
+`download_logs`, `statement_metadata`, `processing_jobs`, `api_request_logs`, `error_logs` older than
+`DATA_RETENTION_DAYS`) and `purge_temp_dir` (files older than `TEMP_FILE_MAX_AGE_HOURS`, default 24).
+Redis job index/status sets now expire after 8 days. The PDF password is no longer stored in the job blob.
+
+Operator steps (not code):
+- RabbitMQ: `docker exec <rabbitmq> sh /path/apply_retention_policy.sh` (see `infra/rabbitmq/`), adds a 7-day message TTL to both queues.
+- S3: apply `infra/s3/lifecycle-7d.json` to `airco-files` and `airco-reports` if the provider supports lifecycle rules (Supabase may not; the in-app sweep covers file-history objects).
+- Docker logs: set `max-size`/`max-file` on the backend logging driver.
+- `audit_logs` (event names + filenames) is intentionally kept; decide separately.

@@ -257,7 +257,8 @@ async def upload_bank_statement_async(
             "upload_object_key": upload_object_key,
             "batch_id": batch_id,
             "statement_label": statement_label,
-            "pdf_password": pdf_password,
+            # never persist the PDF password with the job; the file is already decrypted
+            "pdf_password": None,
         }
     )
     

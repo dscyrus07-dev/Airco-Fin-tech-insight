@@ -33,6 +33,10 @@ def deserialize_job(job_json: str) -> Job:
         return Job.parse_raw(job_json)
 
 
+# Index sets hold job ids only; keep them just past the 7-day retention window.
+INDEX_TTL_SECONDS = 8 * 86400
+
+
 class RedisJobStore:
     """Redis-based job storage with connection pooling and JSON serialization."""
 
@@ -79,9 +83,11 @@ class RedisJobStore:
             # Add to user's job list
             if job.user_id:
                 await self._redis_client.sadd(f"{self.key_prefix}user:{job.user_id}", job.id)
+                await self._redis_client.expire(f"{self.key_prefix}user:{job.user_id}", INDEX_TTL_SECONDS)
 
             # Add to status index
             await self._redis_client.sadd(f"{self.key_prefix}status:{job.status.value}", job.id)
+            await self._redis_client.expire(f"{self.key_prefix}status:{job.status.value}", INDEX_TTL_SECONDS)
 
             logger.info("Job created in Redis", job_id=job.id, job_type=job.type)
             return job
@@ -146,7 +152,9 @@ class RedisJobStore:
             # Add to indexes
             if job.user_id:
                 await self._redis_client.sadd(f"{self.key_prefix}user:{job.user_id}", job.id)
+                await self._redis_client.expire(f"{self.key_prefix}user:{job.user_id}", INDEX_TTL_SECONDS)
             await self._redis_client.sadd(f"{self.key_prefix}status:{job.status.value}", job_id)
+            await self._redis_client.expire(f"{self.key_prefix}status:{job.status.value}", INDEX_TTL_SECONDS)
 
             logger.info("Job updated in Redis", job_id=job_id, status=job.status)
             return job

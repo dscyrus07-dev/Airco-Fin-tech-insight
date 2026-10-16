@@ -1,0 +1,10 @@
+{
+  "Rules": [
+    {
+      "ID": "expire-after-7-days",
+      "Status": "Enabled",
+      "Filter": {"Prefix": "users/"},
+      "Expiration": {"Days": 7}
+    }
+  ]
+}

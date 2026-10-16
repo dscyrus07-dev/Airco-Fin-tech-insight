@@ -64,6 +64,16 @@ class RetentionService:
         except Exception as exc:
             logger.warning("Analysis purge failed", error=str(exc))
 
+        try:
+            from . import retention_purge
+
+            db_removed = await asyncio.to_thread(retention_purge.purge_database)
+            temp_removed = await asyncio.to_thread(retention_purge.purge_temp_dir)
+            if any(v > 0 for v in db_removed.values()) or temp_removed:
+                logger.info("Retention sweep purged data", tables=db_removed, temp_files=temp_removed)
+        except Exception as exc:
+            logger.warning("Retention data purge failed", error=type(exc).__name__)
+
         if deleted_count:
             logger.info("Retention sweep deleted expired files", deleted_count=deleted_count)
         return deleted_count
