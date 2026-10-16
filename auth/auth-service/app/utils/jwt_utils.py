@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional, Any
 from fastapi import HTTPException
 from passlib.context import CryptContext
-from jose import jwt
-from jose.exceptions import ExpiredSignatureError, JWTError
+import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError as JWTError
 
 from ..config import settings
 

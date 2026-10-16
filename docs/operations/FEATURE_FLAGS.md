@@ -99,3 +99,12 @@ read at module import).
 | `RETENTION_ENABLED` | `true` | Run the hourly sweeper. |
 | `RETENTION_DRY_RUN` | `false` | DB purge only counts what it would delete (logged by the test tooling, no deletes). |
 | `TEMP_FILE_MAX_AGE_HOURS` | `24` | Age limit for files in the temp dir. |
+
+## Upload limits
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `UPLOAD_RATE_LIMIT_PER_MINUTE` | `30` | Per user (or per IP when anonymous), per backend process. `0` disables. Returns 429 + `Retry-After`. |
+| `MAX_PDF_PAGES` | `200` | Larger PDFs are refused with 413 `PDF_TOO_MANY_PAGES` before storage. `0` disables. |
+
+JWT verification now uses PyJWT (python-jose removed from backend and auth-service).

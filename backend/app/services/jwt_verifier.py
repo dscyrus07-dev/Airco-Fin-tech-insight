@@ -15,13 +15,15 @@ unsigned token payloads.
 
 from __future__ import annotations
 
+import json
 import threading
 import time
 from typing import Any, Dict, Optional
 
 import httpx
-from jose import jwt
-from jose.exceptions import ExpiredSignatureError, JWTClaimsError, JWTError
+import jwt
+from jwt.algorithms import RSAAlgorithm
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 
 from ..core.config import settings
 from ..utils.logging import get_logger
@@ -78,7 +80,7 @@ class KeycloakJWTVerifier:
 
         try:
             header = jwt.get_unverified_header(token)
-        except JWTError as exc:
+        except InvalidTokenError as exc:
             logger.warning("Malformed JWT header", error=str(exc))
             return None
 
@@ -94,9 +96,10 @@ class KeycloakJWTVerifier:
 
         audience = [a.strip() for a in settings.KEYCLOAK_AUDIENCE.split(",") if a.strip()]
         try:
+            public_key = RSAAlgorithm.from_jwk(json.dumps(key))
             claims = jwt.decode(
                 token,
-                key,
+                public_key,
                 algorithms=["RS256"],
                 issuer=settings.keycloak_issuer,
                 audience=audience or None,
@@ -105,7 +108,7 @@ class KeycloakJWTVerifier:
         except ExpiredSignatureError:
             logger.info("Rejected expired token")
             return None
-        except (JWTClaimsError, JWTError) as exc:
+        except (InvalidTokenError, ValueError) as exc:
             logger.warning("JWT verification failed", error=str(exc))
             return None
 

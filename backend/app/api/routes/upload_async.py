@@ -16,6 +16,7 @@ from ...services.task_processor import task_processor
 from ...services.event_publisher import event_publisher
 from ...services.file_history_service import file_history_service
 from ...dependencies.auth import check_user_ownership, forwarded_header, get_current_user_optional
+from ...services.rate_limit import check_rate_limit, max_pdf_pages
 from ...services.download_tokens import issue_download_token, verify_download_token
 from ...utils.file_handler import get_temp_dir, upload_to_storage, storage_user_folder
 from ...core.config import settings as app_settings
@@ -85,6 +86,20 @@ def _prepare_pdf_for_processing(file_path: str, password: Optional[str] = None) 
 
     try:
         with pikepdf.open(file_path, password=password or "") as pdf:
+            page_cap = max_pdf_pages()
+            if page_cap > 0 and len(pdf.pages) > page_cap:
+                try:
+                    os.unlink(file_path)
+                except OSError:
+                    pass
+                raise HTTPException(
+                    status_code=413,
+                    detail={
+                        "error": f"This PDF has more than {page_cap} pages, which is over the supported limit.",
+                        "code": "PDF_TOO_MANY_PAGES",
+                        "stage": "validation",
+                    },
+                )
             if not password:
                 return file_path
 
@@ -174,6 +189,8 @@ async def upload_bank_statement_async(
         or _extract_user_id_from_request(request)
         or "anonymous"
     )
+    client_ip = request.client.host if request.client else "unknown"
+    check_rate_limit(f"upload:{user_id}" if user_id != "anonymous" else f"upload-ip:{client_ip}")
     user_email = (current_user or {}).get("email") or forwarded_header(request, "X-Airco-User-Email")
     user_name = (
         (current_user or {}).get("preferred_username")
