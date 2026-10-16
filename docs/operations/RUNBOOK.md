@@ -273,3 +273,5 @@ Operator steps (not code):
 - S3: apply `infra/s3/lifecycle-7d.json` to `airco-files` and `airco-reports` if the provider supports lifecycle rules (Supabase may not; the in-app sweep covers file-history objects).
 - Docker logs: set `max-size`/`max-file` on the backend logging driver.
 - `audit_logs` (event names + filenames) is intentionally kept; decide separately.
+
+Notes: `infra/s3/lifecycle-7d.json` only applies to AWS-style S3; Supabase Storage has no S3 lifecycle operations, so the in-app sweeper is the enforcement there. `RETENTION_DRY_RUN=true` also skips the temp-dir purge. Existing Redis index keys are given a TTL once at startup.

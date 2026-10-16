@@ -21,6 +21,15 @@ class RetentionService:
         if self._task and not self._task.done():
             return
 
+        try:
+            from .redis_job_store import redis_job_store
+
+            backfilled = await redis_job_store.backfill_index_ttls()
+            if backfilled:
+                logger.info("Backfilled TTL on Redis index keys", keys=backfilled)
+        except Exception as exc:
+            logger.warning("Index TTL backfill failed", error=type(exc).__name__)
+
         self._stop_event = asyncio.Event()
         self._task = asyncio.create_task(self._run_loop())
         logger.info(
@@ -68,7 +77,9 @@ class RetentionService:
             from . import retention_purge
 
             db_removed = await asyncio.to_thread(retention_purge.purge_database)
-            temp_removed = await asyncio.to_thread(retention_purge.purge_temp_dir)
+            temp_removed = (
+                0 if retention_purge._dry_run() else await asyncio.to_thread(retention_purge.purge_temp_dir)
+            )
             if any(v > 0 for v in db_removed.values()) or temp_removed:
                 logger.info("Retention sweep purged data", tables=db_removed, temp_files=temp_removed)
         except Exception as exc:

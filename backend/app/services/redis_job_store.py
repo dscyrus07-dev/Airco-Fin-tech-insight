@@ -61,6 +61,20 @@ class RedisJobStore:
             )
         return self._loop_clients[loop_id]
     
+    async def backfill_index_ttls(self) -> int:
+        """One-time sweep: give pre-existing index sets (written before EXPIRE-on-write)
+        a TTL so they cannot outlive the retention window. Returns keys updated."""
+        updated = 0
+        try:
+            for pattern in (f"{self.key_prefix}user:*", f"{self.key_prefix}status:*"):
+                async for key in self._redis_client.scan_iter(match=pattern, count=200):
+                    if await self._redis_client.ttl(key) == -1:
+                        await self._redis_client.expire(key, INDEX_TTL_SECONDS)
+                        updated += 1
+        except redis.RedisError as exc:
+            logger.warning("Index TTL backfill skipped", error=type(exc).__name__)
+        return updated
+
     async def disconnect(self):
         """Disconnect from Redis."""
         try:
