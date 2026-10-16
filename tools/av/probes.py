@@ -238,14 +238,22 @@ def main():
     rec("anon job no-auth", 401, s)
 
     # --- 8. restart persistence ---
-    s, j = req("GET", f"/api/jobs/{jobX}", token=tokA)
-    tok_persist = (j.get("result_data") or {}).get("download_token")
+    # mint a token inside the container (download_token lives only in the
+    # Next-proxy response, not in the backend's stored result_data)
+    mint = subprocess.run(
+        ["docker", "exec", "rc_backend", "python", "-c",
+         f"from app.services.download_tokens import issue_download_token; print(issue_download_token('{jobX}'))"],
+        capture_output=True, text=True)
+    tok_persist = mint.stdout.strip()
     subprocess.run(["docker", "restart", "rc_backend"], capture_output=True)
     time.sleep(3)
-    for _ in range(30):
-        s, _ = req("GET", "/health")
-        if s == 200:
-            break
+    for _ in range(45):
+        try:
+            s, _ = req("GET", "/health")
+            if s == 200:
+                break
+        except Exception:
+            pass
         time.sleep(2)
     s, _ = req("GET", f"/api/jobs/{jobX}?t={tok_persist}")
     rec("token survives backend restart (secret set)", 200, s)

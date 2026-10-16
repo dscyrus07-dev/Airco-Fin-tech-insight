@@ -227,3 +227,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 
 [AV] START 597bf64 auth-verify branch from 597bf64
 [AV] DONE eb2bc3d — auth-verify: suites 858/8 (8 pre-existing), probes 27/27 PASS, UI signin+expired+widths PASS, defect AV-1 (unsigned excel_url links 401, major) AV-2 (latent 500), deps inventoried
+
+[DP] START e54043d deps-1: lockfile regen + retention inventory
+
+[DP] DONE 61bbf01 — lockfile regen (audit 6->0, nanoid 3.3.20/sharp 0.35.5/next 16.4.2); suites: fe 59/59+build, be 858/8 identical; probes 25/25 + AV-2 200; pypdf legs 5/5; retention inventory written (no-expiry: DB tables, job:user index, RMQ queues+DLQ, S3 buckets, /app/tmp)
