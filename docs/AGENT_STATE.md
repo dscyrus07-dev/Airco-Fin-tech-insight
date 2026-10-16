@@ -243,3 +243,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [FN] START 2a7f0c3 final-2: rebuild rc, full suites, saturation re-test, 1k corpus regression vs bedc4bf, N9 workflow + extras, live stack + USER_TEST_GUIDE
 
 [FN] DONE ee7f12b final-2: rc rebuilt on 2a7f0c3, suites clean, regression 1099/1099 zero-downward, stack live for user test
+
+[V4] START 74968f0 verify-4: dbs/federal/dhanlaxmi GO check + 17-bank recount
