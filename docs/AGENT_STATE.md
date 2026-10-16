@@ -235,3 +235,7 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [RT] START bae88c2 ret-1: prove retention enforcement (dry-run on rc, destructive on throwaway pg)
 
 [RT] DONE fad42e8 — dry-run sweep counts match inventory (159/322/159/0/158/172/15657/0), 0 rows deleted; throwaway-pg purge: >7d gone, 6d23h kept, children-first, fail-table->-1+continue; Redis new indexes 8d TTL (pre-fix keys still -1); pdf_password=None in job blob, absent in logs; RMQ policy 604800000 applied+consumed; S3 lifecycle not supported on Supabase (app-side sweep stays); probes 25/25; suite 860/8 identical; defects: RT-1 temp_files not dry-gated (85 deleted), RT-2 old index keys no TTL, RT-3 lifecycle-7d.json inert on Supabase
+
+[HD] START 2d80ae7 hard-1: verify PyJWT swap, rate limit, page cap, saturation re-test, security re-scan
+
+[HD] DONE 8abd0a6 hard-1: PyJWT verified, rate limit + page cap proven, saturation re-tested, security re-scan; nothing pushed
