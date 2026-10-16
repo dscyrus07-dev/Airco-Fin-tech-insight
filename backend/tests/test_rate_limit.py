@@ -32,4 +32,4 @@ def test_limit_zero_disables():
 def test_env_defaults(monkeypatch):
     monkeypatch.delenv("MAX_PDF_PAGES", raising=False)
     monkeypatch.delenv("UPLOAD_RATE_LIMIT_PER_MINUTE", raising=False)
-    assert rl.max_pdf_pages() == 200 and rl.upload_limit_per_minute() == 30
+    assert rl.max_pdf_pages() == 500 and rl.upload_limit_per_minute() == 30

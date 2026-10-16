@@ -105,6 +105,6 @@ read at module import).
 | Variable | Default | Meaning |
 |---|---|---|
 | `UPLOAD_RATE_LIMIT_PER_MINUTE` | `30` | Per user (or per IP when anonymous), per backend process. `0` disables. Returns 429 + `Retry-After`. |
-| `MAX_PDF_PAGES` | `200` | Larger PDFs are refused with 413 `PDF_TOO_MANY_PAGES` before storage. `0` disables. |
+| `MAX_PDF_PAGES` | `500` | Larger PDFs are refused with 413 `PDF_TOO_MANY_PAGES` before storage. `0` disables. |
 
 JWT verification now uses PyJWT (python-jose removed from backend and auth-service).

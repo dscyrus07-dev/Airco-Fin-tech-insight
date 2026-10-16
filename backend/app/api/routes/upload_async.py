@@ -5,6 +5,7 @@ Returns job IDs instead of processing synchronously.
 
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
+import asyncio
 import tempfile
 import os
 from pathlib import Path
@@ -207,12 +208,13 @@ async def upload_bank_statement_async(
     
     # Save uploaded file
     file_path = await _save_upload_file(file)
-    processing_file_path = _prepare_pdf_for_processing(file_path, pdf_password)
+    processing_file_path = await asyncio.to_thread(_prepare_pdf_for_processing, file_path, pdf_password)
     output_dir = get_temp_dir()
     original_filename = _safe_object_name(file.filename or "statement.pdf")
     storage_folder = storage_user_folder(user_email=user_email, user_name=user_name, user_id=user_id)
     upload_object_key = f"users/{storage_folder}/uploads/{Path(original_filename).stem}_{Path(file_path).name}"
-    if not upload_to_storage(
+    if not await asyncio.to_thread(
+        upload_to_storage,
         file_path,
         bucket=app_settings.S3_BUCKET_UPLOADS,
         object_key=upload_object_key,

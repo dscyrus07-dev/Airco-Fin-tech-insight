@@ -27,9 +27,9 @@ def upload_limit_per_minute() -> int:
 
 def max_pdf_pages() -> int:
     try:
-        return int(os.getenv("MAX_PDF_PAGES", "200"))
+        return int(os.getenv("MAX_PDF_PAGES", "500"))
     except ValueError:
-        return 200
+        return 500
 
 
 def check_rate_limit(key: str, limit: Optional[int] = None, window_seconds: int = 60) -> None:
