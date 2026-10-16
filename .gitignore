@@ -205,3 +205,4 @@ tools/final/.local/
 tools/av/.local/
 tools/final/node_modules/
 e2e/shots_n9/
+tools/dp/.local/
