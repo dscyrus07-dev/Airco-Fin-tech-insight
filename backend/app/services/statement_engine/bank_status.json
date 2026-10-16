@@ -35,8 +35,8 @@
       "reason": "Most Karur Vysya samples store digits as image data that cannot be read, so only a subset can be supported."
     },
     "dhanlaxmi": {
-      "state": "coming_soon",
-      "reason": "Most Dhanlaxmi samples are missing readable balance digits; support would be partial and is not enabled."
+      "state": "review_required",
+      "reason": "Rows are read and totals reconcile, but the corpus lacks printed balance anchors, so output is always labelled needs-review."
     },
     "csb": {
       "state": "coming_soon",

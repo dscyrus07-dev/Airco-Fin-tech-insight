@@ -47,7 +47,7 @@ class NormalizedTransaction:
             "description": self.description,
             "debit": float(self.debit) if self.debit is not None else None,
             "credit": float(self.credit) if self.credit is not None else None,
-            "balance": float(self.balance),
+            "balance": float(self.balance) if self.balance is not None else None,
             "ref_no": self.ref_no,
             "value_date": self.value_date,
             "is_recurring": self.is_recurring,
