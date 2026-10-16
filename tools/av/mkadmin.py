@@ -6,7 +6,7 @@ KC = "http://localhost:8080"
 REALM = "airco-insights"
 CLIENT = "frontend-app"
 EMAIL = "avadmin@airco.com"
-PW = "AvTest!234"  # synthetic local fixture, recorded in README
+PW = os.environ.get("AV_FIXTURE_PW") or __import__("secrets").token_urlsafe(18)  # random per run unless provided
 
 
 def call(method, path, tok=None, body=None):

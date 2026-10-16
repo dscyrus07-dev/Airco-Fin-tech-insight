@@ -9,7 +9,7 @@ const KIT = 'X:/Airco Projects/wt-av/tools/final/demo_pdfs'
 mkdirSync(OUT, { recursive: true })
 
 const USER = process.env.TEST_USER_EMAIL || 'test@airco.com'
-const PW = process.env.TEST_USER_PASSWORD || 'Test123!'
+const PW = process.env.TEST_USER_PASSWORD || ''
 const SECRET = process.env.KC_FE_SECRET || '' // fetched externally; fallback: script arg
 
 const R = {}
