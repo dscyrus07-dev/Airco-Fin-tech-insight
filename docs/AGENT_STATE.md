@@ -231,3 +231,5 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [DP] START e54043d deps-1: lockfile regen + retention inventory
 
 [DP] DONE 61bbf01 — lockfile regen (audit 6->0, nanoid 3.3.20/sharp 0.35.5/next 16.4.2); suites: fe 59/59+build, be 858/8 identical; probes 25/25 + AV-2 200; pypdf legs 5/5; retention inventory written (no-expiry: DB tables, job:user index, RMQ queues+DLQ, S3 buckets, /app/tmp)
+
+[RT] START bae88c2 ret-1: prove retention enforcement (dry-run on rc, destructive on throwaway pg)
