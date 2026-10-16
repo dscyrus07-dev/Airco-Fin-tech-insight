@@ -50,6 +50,14 @@ class RetentionService:
         logger.info("Retention service stopped")
 
     async def sweep_once(self) -> int:
+        from . import retention_purge
+
+        if retention_purge._dry_run():
+            # Dry run: report what the DB purge would remove, delete nothing anywhere.
+            counts = await asyncio.to_thread(retention_purge.purge_database)
+            logger.info("Retention dry run: nothing deleted", would_delete=counts)
+            return 0
+
         expired_records = file_history_service.list_expired_records()
         deleted_count = 0
 
