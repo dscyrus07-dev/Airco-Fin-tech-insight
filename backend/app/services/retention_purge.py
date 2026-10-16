@@ -12,7 +12,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from typing import Dict
 
-from sqlalchemy import delete
+from sqlalchemy import delete, func, select
 
 from ..core.config import settings
 from ..database.audit_models import (
@@ -43,8 +43,14 @@ _PURGE_ORDER = (
 )
 
 
-def purge_database(retention_days: int | None = None) -> Dict[str, int]:
-    """Delete rows older than the retention window. Returns table -> rows removed."""
+def _dry_run() -> bool:
+    return os.getenv("RETENTION_DRY_RUN", "false").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def purge_database(retention_days: int | None = None, dry_run: bool | None = None) -> Dict[str, int]:
+    """Delete rows older than the retention window. Returns table -> rows removed
+    (or rows that WOULD be removed when RETENTION_DRY_RUN / dry_run is on)."""
+    dry = _dry_run() if dry_run is None else dry_run
     days = retention_days if retention_days is not None else settings.DATA_RETENTION_DAYS
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     removed: Dict[str, int] = {}
@@ -53,9 +59,14 @@ def purge_database(retention_days: int | None = None) -> Dict[str, int]:
         for model, column in _PURGE_ORDER:
             col = getattr(model, column)
             try:
-                result = db.execute(delete(model).where(col < cutoff))
-                db.commit()
-                removed[model.__tablename__] = int(result.rowcount or 0)
+                if dry:
+                    removed[model.__tablename__] = int(
+                        db.execute(select(func.count()).select_from(model).where(col < cutoff)).scalar() or 0
+                    )
+                else:
+                    result = db.execute(delete(model).where(col < cutoff))
+                    db.commit()
+                    removed[model.__tablename__] = int(result.rowcount or 0)
             except Exception as exc:  # one table failing must not stop the rest
                 db.rollback()
                 removed[model.__tablename__] = -1

@@ -90,3 +90,12 @@ read at module import).
 | `TRUST_FORWARDED_USER_HEADERS` | `false` | Honour `X-Airco-User-*` identity headers. Keep off unless a trusted gateway overwrites them. |
 
 `GET /api/jobs/{id}`, `/api/jobs/{id}/download`, `/download/{file}` and `/upload/download/{id}` require the owner's (or an admin's) bearer token, or a valid signed token for that exact job (`?t=`), otherwise 401/403.
+
+## Retention
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `DATA_RETENTION_DAYS` | `7` | Age after which statement-derived rows/objects are deleted. |
+| `RETENTION_ENABLED` | `true` | Run the hourly sweeper. |
+| `RETENTION_DRY_RUN` | `false` | DB purge only counts what it would delete (logged by the test tooling, no deletes). |
+| `TEMP_FILE_MAX_AGE_HOURS` | `24` | Age limit for files in the temp dir. |
