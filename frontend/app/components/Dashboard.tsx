@@ -149,7 +149,7 @@ export default function Dashboard() {
   const [currentBatchIndex, setCurrentBatchIndex] = useState(0)
   const [activeBatchFile, setActiveBatchFile] = useState<BankStatementFileItem | null>(null)
   const [mode, setMode] = useState<ProcessingMode>(savedForm?.mode || 'free')
-  const [apiKey, setApiKey] = useState(savedForm?.apiKey || '')
+  const [apiKey, setApiKey] = useState('') // never restored from storage: API keys stay in memory only
   const [jobId, setJobId] = useState<string | null>(null)
   const [result, setResult] = useState<ProcessingResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -219,12 +219,11 @@ export default function Dashboard() {
     const dataToSave = {
       userDetails,
       mode,
-      apiKey,
       step,
       timestamp: Date.now(),
     }
     localStorage.setItem('airco-form-data', JSON.stringify(dataToSave))
-  }, [userDetails, mode, apiKey, step])
+  }, [userDetails, mode, step])
 
   // Named function expression so the retry path can safely reference itself.
   const loadProfileHistory = useCallback(async function loadProfileHistory(isRetried = false) {
