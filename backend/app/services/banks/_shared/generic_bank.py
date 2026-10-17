@@ -329,8 +329,26 @@ class GenericClassifier:
                         "debit_cat": debit_cat,
                         "priority": priority,
                         "group": group,
+                        "src_group": group_name,
                     }
-        self._sorted_aliases: List[str] = sorted(self._entity_lookup.keys(), key=len, reverse=True)
+        # Specific merchants first; then banks / payment rails (they only say HOW money moved);
+        # generic business-suffix tokens ("limited", "enterprises") last. Longest alias first inside a tier.
+        _rails = {"BANKS", "PAYMENT_PLATFORMS", "UPI_HANDLES", "PAYMENT_GATEWAYS"}
+        _generic = {"BUSINESS_ENTITIES", "GENERIC_LENDER_TOKENS", "BUSINESS_VENDORS"}
+
+        def _tier(alias: str) -> int:
+            g = self._entity_lookup[alias].get("src_group")
+            return 2 if g in _generic else 1 if g in _rails else 0
+
+        self._sorted_aliases: List[str] = sorted(
+            self._entity_lookup.keys(), key=lambda a: (_tier(a), -len(a))
+        )
+        # Short aliases ("atm", "sbi", "lic", "sip", "ola") are matched as whole tokens so they do not
+        # fire inside longer words ("payment", "classic"); longer aliases keep plain substring matching.
+        self._alias_boundary: Dict[str, "re.Pattern"] = {
+            a: re.compile(r"(?<![a-z0-9])" + re.escape(a) + r"(?![a-z0-9])")
+            for a in self._sorted_aliases if len(a) <= 4 and a[:1].isalnum() and a[-1:].isalnum()
+        }
 
     def _build_pattern_sets(self, pd_cfg: Dict[str, Any]) -> None:
         def ll(key: str) -> List[str]:
@@ -359,6 +377,36 @@ class GenericClassifier:
         self._refund_tokens: List[str] = list({*self._refund_patterns, "refund", "reversal", "chargeback", "cashback", "cash back"})
         self._salary_tokens: List[str] = ["salary", "payroll", "wages", "sal credit", "sal cr", "monthly salary"]
         self._ach_tokens: List[str] = ["ach d", "ach debit", "nach", "ecs ", "auto debit", "standing instruction"]
+
+    _GENERIC_ENTITY_GROUPS = frozenset({"BUSINESS_ENTITIES", "GENERIC_LENDER_TOKENS", "BUSINESS_VENDORS"})
+
+    def _entity_hit(self, description: str, is_debit: bool, *, generic_tokens: bool):
+        """words.json entity lookup. generic_tokens=False scans merchants and rails;
+        generic_tokens=True scans only the generic business-suffix tokens ("limited", "services")."""
+        for alias in self._sorted_aliases:
+            entry = self._entity_lookup[alias]
+            is_generic = entry.get("src_group") in self._GENERIC_ENTITY_GROUPS
+            if is_generic != generic_tokens:
+                continue
+            _b = self._alias_boundary.get(alias)
+            if (_b.search(description) if _b is not None else alias in description):
+                raw_cat = entry["debit_cat"] if is_debit else entry["credit_cat"]
+                return raw_cat, 0.82, "entity_lookup", "words_json", alias
+        return None
+
+    _KW_CACHE: Dict[str, "re.Pattern"] = {}
+
+    @classmethod
+    def _kw_in(cls, keyword: str, text: str) -> bool:
+        """Substring match, but short tokens (<=4 chars: "atm", "gas", "upi") must be whole words so
+        they do not fire inside longer words or inside the normaliser's "@" -> "at" rewrite."""
+        if len(keyword) > 4 or not (keyword[:1].isalnum() and keyword[-1:].isalnum()):
+            return keyword in text
+        pat = cls._KW_CACHE.get(keyword)
+        if pat is None:
+            pat = cls._KW_CACHE[keyword] = re.compile(
+                r"(?<![a-z0-9])" + re.escape(keyword) + r"(?![a-z0-9])")
+        return pat.search(text) is not None
 
     def _normalize(self, text: str) -> str:
         if not text:
@@ -397,24 +445,36 @@ class GenericClassifier:
         return classified, unclassified
 
     def _classify_single(self, txn: Dict[str, Any]) -> Tuple[str, float, str, Optional[str], Optional[str]]:
-        description = self._normalize(str(txn.get("description") or txn.get("narration") or ""))
+        _raw = str(txn.get("description") or txn.get("narration") or "")
+        description = self._normalize(_raw)
+        # Handles / VPAs are matched on the raw text: the normaliser rewrites "@" to "at", which made
+        # every "@ybl"-style handle in words.json unmatchable.
+        raw_lower = _raw.lower()
         is_debit = float(txn.get("debit") or 0) > 0
         rules = self._debit_rules() if is_debit else self._credit_rules()
         default_category = "Others Debit" if is_debit else "Others Credit"
 
+        # Broad "Transfer" rules (upi / neft / imps ...) describe the channel, not the purpose, so they
+        # are tried last - after merchants and words.json entities - instead of shadowing them.
+        transfer_rule = None
         for category, compiled in rules.items():
+            if category in ("Transfer", "Transfer In"):
+                transfer_rule = compiled
+                continue
             for keyword in compiled["exact"]:
-                if keyword in description:
+                if self._kw_in(keyword, description):
                     return category, 0.99, "rule_engine", "exact_keyword", keyword
 
         for category, compiled in rules.items():
+            if category in ("Transfer", "Transfer In"):
+                continue
             for pattern in compiled["patterns"]:
                 if pattern.search(description):
                     return category, 0.95, "rule_engine", "pattern_match", pattern.pattern
 
         if is_debit and "upi" in description:
             for merchant, category in self._upi_merchant_map().items():
-                if merchant in description:
+                if self._kw_in(merchant, description) and not category.startswith("Others"):
                     return category, 0.85, "rule_engine", "upi_merchant", merchant
 
         if any(token in description for token in self._salary_tokens):
@@ -426,11 +486,9 @@ class GenericClassifier:
 
         # ── Entity lookup from words.json ─────────────────────────────────────
         # Walk longest-first aliases so "bajaj finance" beats "bajaj"
-        for alias in self._sorted_aliases:
-            if alias in description:
-                entry = self._entity_lookup[alias]
-                raw_cat = entry["debit_cat"] if is_debit else entry["credit_cat"]
-                return raw_cat, 0.82, "entity_lookup", "words_json", alias
+        hit = self._entity_hit(description, is_debit, generic_tokens=False)
+        if hit:
+            return hit
 
         # ── Pattern sets from words.json ──────────────────────────────────────
         if any(p in description for p in self._loan_patterns):
@@ -445,8 +503,24 @@ class GenericClassifier:
             return ("Transfer", 0.80, "pattern_set", "transfer_pattern", None)
         if any(p in description for p in self._settlement_patterns):
             return ("Transfer", 0.80, "pattern_set", "settlement_pattern", None)
-        if any(h in description for h in self._upi_handles):
-            return ("Transfer" if is_debit else "Others Credit", 0.78, "pattern_set", "upi_handle", None)
+        if transfer_rule is not None:
+            for keyword in transfer_rule["exact"]:
+                if self._kw_in(keyword, description):
+                    return "Transfer", 0.90, "rule_engine", "transfer_channel", keyword
+            for pattern in transfer_rule["patterns"]:
+                if pattern.search(description):
+                    return "Transfer", 0.90, "rule_engine", "transfer_channel", pattern.pattern
+        hit = self._entity_hit(description, is_debit, generic_tokens=True)
+        if hit:
+            return hit
+        if any(h in raw_lower for h in self._upi_handles):
+            return ("Transfer", 0.78, "pattern_set", "upi_handle", None)
+        # Any VPA (name@handle) or "from/to VPA" / RRN-tagged UPI narration is a UPI person/merchant
+        # transfer even when the statement never prints the word "UPI" or uses a handle we do not list.
+        if re.search(r"[a-z0-9._-]+@[a-z]{2,}", raw_lower) and (
+            "vpa" in raw_lower or "rrn" in raw_lower or "upi" in raw_lower
+        ):
+            return ("Transfer", 0.76, "pattern_set", "upi_vpa", None)
 
         return default_category, 0.5, "rule_engine", "default", None
 

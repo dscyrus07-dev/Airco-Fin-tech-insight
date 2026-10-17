@@ -11,6 +11,13 @@ import ProcessingStep from './processing/ProcessingStep'
 import ResultStep from './results/ResultStep'
 import StatementWorkflow from './workflow/StatementWorkflow'
 import { unifiedEntry } from '@/lib/flags'
+import StatsStrip from './experience/StatsStrip'
+import ProgressPanel from './experience/ProgressPanel'
+import HelpCenter from './experience/HelpCenter'
+import {
+  EMPTY_LOCAL, computeXp, countBanks, dayKey, levelFor, readLocal, streakFrom, writeLocal,
+} from '@/lib/gamification'
+import type { LocalState, ProgressInput } from '@/lib/gamification'
 import {
   FileText,
   FileSpreadsheet,
@@ -164,6 +171,22 @@ export default function Dashboard() {
   })
   const [historyUser, setHistoryUser] = useState<ProfileHistoryResponse['user'] | null>(null)
   const [historyBatches, setHistoryBatches] = useState<NonNullable<ProfileHistoryResponse['batches']>>([])
+
+  const [local, setLocal] = useState<LocalState>(EMPTY_LOCAL)
+  useEffect(() => {
+    const l = readLocal()
+    const today = dayKey()
+    const next = l.visitDays.includes(today) ? l : { ...l, visitDays: [...l.visitDays, today].slice(-30) }
+    setLocal(next)
+    if (next !== l) writeLocal(next)
+  }, [])
+  const updateLocal = useCallback((patch: Partial<LocalState>) => {
+    setLocal((prev) => {
+      const next = { ...prev, ...patch }
+      writeLocal(next)
+      return next
+    })
+  }, [])
 
   const handleLogout = useCallback(async () => {
     const confirmed = window.confirm(
@@ -580,6 +603,22 @@ export default function Dashboard() {
     [historySummary.total_batches, historyBatches.length]
   )
 
+  const progress = useMemo(() => {
+    const input: ProgressInput = {
+      uploads: historySummary.total_uploads ?? 0,
+      processed: historySummary.processed_files ?? 0,
+      reports: historySummary.generated_reports ?? 0,
+      batches: profileBatchCount ?? 0,
+      banksUsed: countBanks(historyBatches.flatMap((b) => b.bank_names ?? [])),
+      verifiedReports: 0,
+      guideOpened: local.guideOpened,
+      limitsOpened: local.limitsOpened,
+      streakDays: streakFrom(local.visitDays),
+    }
+    const lv = levelFor(computeXp(input))
+    return { input, levelLabel: `Lv ${lv.level.index} \u00b7 ${lv.level.name}` }
+  }, [historySummary, profileBatchCount, historyBatches, local])
+
   const getVisibleHistoryIds = useCallback((tab: 'uploaded' | 'reports') => {
     if (historyBatches.length > 0) {
       if (tab === 'uploaded') {
@@ -766,11 +805,23 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-[1440px] px-4 pb-10 pt-6 sm:px-6 lg:px-8">
-        <Header onProfileClick={() => setIsProfilePanelOpen(true)} />
+    <main className="bg-app min-h-screen">
+      <div className="mx-auto max-w-[1440px] px-4 pb-16 sm:px-6 lg:px-8">
+        <Header onProfileClick={() => setIsProfilePanelOpen(true)} levelLabel={progress.levelLabel} />
 
-        <div className="max-w-3xl mx-auto">
+        {unifiedEntry() && (
+          <div className="mb-6">
+            <StatsStrip
+              uploads={historySummary.total_uploads}
+              processed={historySummary.processed_files}
+              reports={historySummary.generated_reports}
+              batches={profileBatchCount}
+            />
+          </div>
+        )}
+
+        <div className={unifiedEntry() ? 'grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]' : ''}>
+        <div className={unifiedEntry() ? 'min-w-0' : 'max-w-3xl mx-auto'}>
           {unifiedEntry() ? (
             <StatementWorkflow
               profileName={profileName}
@@ -874,7 +925,7 @@ export default function Dashboard() {
               <p className="mx-auto max-w-lg text-[11px] leading-relaxed text-neutral-400">
                 Upload one or more bank statement PDFs and get fully categorized, structured Excel reports -
                 with monthly summaries, category breakdowns, recurring transaction detection, and weekly analysis.
-                No data is stored. Processing happens in real time.
+                Files are deleted automatically after 7 days.
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
@@ -901,6 +952,30 @@ export default function Dashboard() {
             </footer>
           </section>
           )}
+        </div>
+        {unifiedEntry() && (
+          <div className="lg:sticky lg:top-24">
+            <ProgressPanel
+              input={progress.input}
+              seenBadges={local.seenBadges}
+              baselined={local.baselined}
+              onSeen={(ids) => updateLocal({ seenBadges: ids, baselined: true })}
+              onQuestClick={(t) => {
+                if (t === 'guide' || t === 'limits') document.getElementById('help-center')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            />
+          </div>
+        )}
+        </div>
+
+        <div className="mx-auto mt-10 max-w-4xl">
+          <HelpCenter
+            onGuideOpened={() => updateLocal({ guideOpened: true })}
+            onLimitsOpened={() => updateLocal({ limitsOpened: true })}
+          />
+          <p className="mt-8 text-center text-[11px] leading-relaxed text-slate-400">
+            Airco Insights organises transaction data. It does not provide financial advice. Uploaded files are deleted automatically after 7 days.
+          </p>
         </div>
       </div>
 

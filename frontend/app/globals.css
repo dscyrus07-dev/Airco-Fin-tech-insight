@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,8 +7,8 @@
 html,
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #f8fafc;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -19,15 +19,21 @@ body {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::selection {
-  background-color: #000000;
+  background-color: #4f46e5;
   color: #ffffff;
 }
 
 input:focus,
 select:focus,
-button:focus-visible {
-  outline: 2px solid #000000;
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #6366f1;
   outline-offset: 2px;
 }
 
@@ -57,7 +63,8 @@ button:focus-visible {
 }
 
 @keyframes pulse-text {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -67,4 +74,91 @@ button:focus-visible {
 
 .animate-pulse-text {
   animation: pulse-text 2s ease-in-out infinite;
+}
+
+/* ---------- App shell ---------- */
+
+.bg-app {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(1000px 420px at 12% -6%, rgba(99, 102, 241, 0.13), transparent 60%),
+    radial-gradient(900px 380px at 92% -4%, rgba(168, 85, 247, 0.10), transparent 60%),
+    radial-gradient(700px 320px at 50% 105%, rgba(16, 185, 129, 0.07), transparent 60%);
+  background-attachment: fixed;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+}
+
+.card-surface {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.9), 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px -12px rgba(15, 23, 42, 0.1);
+}
+
+.text-gradient {
+  background-image: linear-gradient(90deg, #4f46e5, #7c3aed 55%, #db2777);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  background-image: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(79, 70, 229, 0.6);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 22px -8px rgba(79, 70, 229, 0.7);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  background-image: none;
+  background-color: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.skeleton-shimmer {
+  background-image: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+}
+
+/* Accordion: animates height with grid rows (no measuring, no layout jump). */
+.accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.accordion-body[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.accordion-body > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Users who ask for less motion get none of the decorative animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

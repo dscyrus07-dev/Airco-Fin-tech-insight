@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "version": "4.0",
-    "description": "Banking-grade transaction intelligence configuration with entity normalization, fuzzy matching, and confidence scoring",
-    "last_updated": "2026-02-17",
+    "version": "5.0",
+    "description": "Banking-grade transaction intelligence configuration with entity normalization, fuzzy matching, and confidence scoring. v5.0 adds CURATED_* Indian merchant/utility/tax/insurance/charge groups and extended UPI handles.",
+    "last_updated": "2026-10-17",
     "total_keywords": 4262,
     "total_categories": 145,
     "total_entities": 512,
@@ -911,7 +911,50 @@
       "@pingpay",
       "@fbl",
       "@ibl",
-      "@apl"
+      "@apl",
+      "@okhdfcbank",
+      "@okbizaxis",
+      "@axl",
+      "@pty",
+      "@ptys",
+      "@pthdfc",
+      "@ptsbi",
+      "@fbpe",
+      "@unitype",
+      "@mbk",
+      "@axisbank",
+      "@hdfcbank",
+      "@idfcbank",
+      "@yesbank",
+      "@yesbankltd",
+      "@upi",
+      "@jio",
+      "@postbank",
+      "@indus",
+      "@sc",
+      "@aubank",
+      "@cnrb",
+      "@pnb",
+      "@boi",
+      "@barodampay",
+      "@ezetap",
+      "@abfspay",
+      "@payzapp",
+      "@freecharge",
+      "@slc",
+      "@tapicici",
+      "@timecosmos",
+      "@waicici",
+      "@wahdfcbank",
+      "@waaxis",
+      "@wasbi",
+      "@ikwik",
+      "@naviaxis",
+      "@jupiteraxis",
+      "@superyes",
+      "@gocash",
+      "@cmsidfc",
+      "@lime"
     ],
     "loan_patterns": [
       "loan",
@@ -6677,6 +6720,5190 @@
           "priority": 85,
           "confidence": "high"
         }
+      }
+    },
+    "CURATED_GROCERIES": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "swiggy instamart": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "big basket": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "d mart": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "avenue supermarts": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jio mart": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "reliance smart": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "more retail": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nature basket": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "spencers": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "star bazaar": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "licious": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "milkbasket": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "country delight": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "supr daily": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "freshtohome": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dunzo daily": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Groceries",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_FOOD": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "domino's": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mcdonald": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "starbucks": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "barbeque nation": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "haldiram": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "chaayos": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "eatsure": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "box8": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "faasos": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "behrouz": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "wendys": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cafe coffee day": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "third wave coffee": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "blue tokri": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "restaurant": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cafe ": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cafe": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bakery": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dhaba": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "biryani": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Food",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_SHOPPING": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "purchase subject": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mcupos": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "urban company": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bata": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "lifestyle stores": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "amazon.in": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "amzn": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "shopsy": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Shopping",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_TRAVEL": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "interglobe aviation": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Travel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "yatra.com": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Travel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "taj hotels": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Travel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "marriott": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Travel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_TRANSPORT": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "olacabs": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "ola cabs": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "ola money": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "meru cabs": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "blusmart": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fastag": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "paytm fastag": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nhai": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "netc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "delhi metro": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dmrc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bmrc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bmtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "ksrtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "msrtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tsrtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "upsrtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gsrtc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "parkplus": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "toll plaza": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "toll": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Transport",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_FUEL": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "indianoil": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "iocl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bharat petroleum": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hindustan petroleum": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "reliance bp": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jio-bp": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jio bp": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nayara": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "essar oil": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "shell": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "petrol pump": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "filling station": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fuel station": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "filling": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fillin": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fuels": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "petro": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "service station": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fuel",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_BILLS": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "bescom": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "msedcl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mseb": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tneb": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tangedco": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cesc": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bses": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tata power": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "adani electricity": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "torrent power": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mahanagar gas": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "indraprastha gas": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "adani gas": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "reliance jio": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jio prepaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jio postpaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jiofiber": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "airtel prepaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "airtel postpaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "airtel xstream": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "airtel digital": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "vodafone idea": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "vi prepaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "vi postpaid": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bsnl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mtnl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "act fibernet": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hathway": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "excitel": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tata play": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tata sky": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dish tv": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sun direct": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "videocon d2h": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "d2h": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bharat bill": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bbps": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "water board": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jal board": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "municipal corp": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gas cylinder": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "indane": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bharatgas": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hp gas": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "recharge": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dth": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Bill Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_SUBSCRIPTIONS": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "netflix": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hotstar": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "disney+": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "spotify": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "youtube premium": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "youtubepremium": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "google play": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "googleplay": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "apple.com": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "itunes": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "apple services": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "prime video": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "amazon prime": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sonyliv": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "zee5": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "jiocinema": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "linkedin": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "microsoft": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "adobe": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "canva": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "openai": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "chatgpt": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "anthropic": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "notion": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dropbox": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "github": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "zoom": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "google one": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "google cloud": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "aws": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "digitalocean": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "godaddy": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hostinger": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "namecheap": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Subscription",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_ENTERTAINMENT": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "bookmyshow": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "book my show": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "pvr": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "inox": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cinepolis": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dream11": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mpl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "my11circle": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "paytm insider": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "wonderla": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "imagica": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Entertainment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_MEDICAL": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "apollo": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tata 1mg": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "medplus": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "practo": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hospital": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "clinic": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "diagnostic": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "pathlab": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "path lab": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "lal path": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "thyrocare": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "metropolis": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "max healthcare": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fortis": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "manipal": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "medical store": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "pharmacy": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "chemist": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "dental": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "eye care": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_EDUCATION": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "byju": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "unacademy": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "vedantu": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "coursera": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "udemy": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "upgrad": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "school fee": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "college fee": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "university": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tuition": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nptel": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "physics wallah": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "physicswallah": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "allen career": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "aakash": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Education",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_FITNESS": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "cult fit": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gold's gym": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "golds gym": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "anytime fitness": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gym ": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gym": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "fitness": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Fitness",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_INVESTMENT": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "zerodha": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "upstox": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "angel one": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "angel broking": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "5paisa": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "icici securities": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "icicidirect": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hdfc securities": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "kotak securities": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "motilal oswal": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sharekhan": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "paytm money": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "kuvera": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "indian clearing corp": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nse clearing": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "icclltd": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bse ltd": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bse limited": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nsdl": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cdsl": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "mutual fund": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "systematic invest": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sip ": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sip": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "ppf": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "nps trust": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "national pension": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "smallcase": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "et money": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "coin by zerodha": {
+        "credit": {
+          "category": "Investment Returns",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Investment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_TAX": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "income tax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "incometax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "cbdt": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tds ": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tds": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gstn": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "gst payment": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "advance tax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tin nsdl": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "challan": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "professional tax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "property tax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "pr tax": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "e-filing": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "traces": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Tax Payment",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_INSURANCE": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "lic of india": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "life insurance corp": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "hdfc life": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "sbi life": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "icici prudential": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "icici lombard": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "max life": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "bajaj allianz": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "star health": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "care health": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "niva bupa": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "tata aia": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "new india assurance": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "digit insurance": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "acko": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "policybazaar": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "policy bazaar": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "reliance general": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "oriental insurance": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "united india insurance": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "national insurance": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "kotak life": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "pnb metlife": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "aditya birla sun life": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "aviva": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "insurance premium": {
+        "credit": {
+          "category": "Insurance Claim",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Insurance",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CURATED_FIXED": {
+      "_description": "Curated Indian coverage (v5.0) - fills gaps, never overrides",
+      "sms cha": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sms chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sms charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sms alert": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "amc charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "annual maintenance": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm charges": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm fee": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "min bal": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "minimum balance": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "non maintenance": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "nmab": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "imps chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "rtgs chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "imps charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "rtgs charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "gst on": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cgst": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sgst": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "igst": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "chq book": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cheque book": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "debit card fee": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "debit card annual": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "locker rent": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "stamp duty": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "dd commission": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "demand draft comm": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "penal charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "penalty": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "processing fee": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "service charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "bank charges": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "chq return chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cheque return chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "ecs return chg": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "folio charge": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "card replacement": {
+        "category": "Bank Charges",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "self csh": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "self cash": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "csh wdl": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "csh withdrawal": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash wdl": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash withdrawal": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "self wdl": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "self withdrawal": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm wdl": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm withdrawal": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm-wdl": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm-withdrawal": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atm cash": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "nwd-": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "nwd/": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "awb/": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atw-": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "atw/": {
+        "category": "ATM Withdrawal",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "by intt": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "intt": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sbint": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "credit interest": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "interest capitalised": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "interest capitalized": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "int.pd": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "int pd": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "int. pd": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "interest paid": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "interest credit": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sb int": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "savings interest": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "interest cr": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "int cr": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "int credit": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "fd interest": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "rd interest": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "tdint": {
+        "category": "Interest Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cashback": {
+        "category": "Cashback",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash back": {
+        "category": "Cashback",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "reward points": {
+        "category": "Cashback",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "chq dep": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cheque deposit": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cheque dep": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "by clg": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "clg cr": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "clg credit": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "clearing": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "to clg": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "chq paid": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cheque paid": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "self cheque": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "by transfer": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "to transfer": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "trf to": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "transfer to": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "trf from": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "transfer from": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "fund transfer": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "own account": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sweep": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "mob bk": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "mobile banking": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "net banking": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "inb/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "imb/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "dr self": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "debit self": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cr self": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "credit self": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "dr by": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "debit by": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cr from": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "credit from": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "dr to:": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "debit to:": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cr by:": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "credit by:": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "money added": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "money sent": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "fund added": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "wallet topup": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "wallet top up": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "top up": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "trf ": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "transfer": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "trf-": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "transfer-": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "tfr": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "by trf": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "to trf": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "mob/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "mmt/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "tpt/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "transfer/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "clg/": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "rtgs dr": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "rtgs debit": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft dr": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft debit": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft cr": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "neft credit": {
+        "category": "Transfer",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "dividend": {
+        "category": "Dividend",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "div-": {
+        "category": "Dividend",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "divd": {
+        "category": "Dividend",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "sal for": {
+        "category": "Salary",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "payroll": {
+        "category": "Salary",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "wages": {
+        "category": "Salary",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "stipend": {
+        "category": "Salary",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "csh dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "csh deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cemtex dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cemtex deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cem dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cem deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cdm dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cdm deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cdm/": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "by cash": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash-dep": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cash-deposit": {
+        "category": "Business Income",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "emi": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "loan repay": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "loan instalment": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "loan installment": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "nach debit": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "ecs debit": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "si debit loan": {
+        "category": "Loan Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cardbill": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "credit card bill": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cc bill": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "billdesk cc": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cred club": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "cred.club": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
+      },
+      "paid via cred": {
+        "category": "Credit Card Payment",
+        "group": "CURATED",
+        "priority": 60,
+        "confidence": "medium"
       }
     }
   }

@@ -24,18 +24,33 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
 
   return (
     <section className="w-full min-w-0">
-      <div className="mb-8 flex items-center justify-center gap-1.5">
+      <ol className="mb-6 flex items-center" aria-label="Progress">
         {STEPS.map((label, i) => (
-          <div key={label} className="flex items-center gap-1.5">
+          <li key={label} className={`flex items-center ${i < STEPS.length - 1 ? 'flex-1' : ''}`}>
             <div className="flex flex-col items-center">
-              <div className={`h-1 w-10 rounded-full transition-colors ${i <= stepIdx ? 'bg-black' : 'bg-neutral-200'}`} />
-              <span className={`mt-1 text-[9px] ${i <= stepIdx ? 'text-neutral-600' : 'text-neutral-300'}`}>{label}</span>
+              <span
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-all duration-300 ${
+                  i < stepIdx
+                    ? 'bg-emerald-500 text-white'
+                    : i === stepIdx
+                      ? 'bg-indigo-600 text-white ring-4 ring-indigo-100'
+                      : 'bg-slate-100 text-slate-400'
+                }`}
+              >
+                {i < stepIdx ? '\u2713' : i + 1}
+              </span>
+              <span className={`mt-1.5 text-[11px] font-medium ${i <= stepIdx ? 'text-slate-700' : 'text-slate-400'}`}>{label}</span>
             </div>
-          </div>
+            {i < STEPS.length - 1 && (
+              <div className="mx-2 mb-5 h-0.5 flex-1 rounded-full bg-slate-100">
+                <div className={`h-full rounded-full bg-emerald-400 transition-all duration-500 ${i < stepIdx ? 'w-full' : 'w-0'}`} />
+              </div>
+            )}
+          </li>
         ))}
-      </div>
+      </ol>
 
-      <div className="rounded-2xl border border-border p-4 shadow-sm sm:p-6 lg:p-10">
+      <div className="card-surface animate-fade-up p-5 sm:p-7 lg:p-9">
         {wf.error && wf.step !== 'upload' && (
           <div role="alert" className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3">
             <p className="text-sm text-red-700">{wf.error}</p>
@@ -84,7 +99,7 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
             <div className="mt-6 flex items-center justify-end border-t border-neutral-100 pt-4">
               <button
                 onClick={wf.reset}
-                className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+                className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
               >
                 New Statement
               </button>

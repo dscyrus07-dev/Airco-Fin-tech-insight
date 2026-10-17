@@ -96,6 +96,22 @@ class JsonRuleEngine:
 
         self._debit_compiled = self._compile_block(rules.get("debit_rules") or {})
         self._credit_compiled = self._compile_block(rules.get("credit_rules") or {})
+        # transfer_last: broad channel rules ("UPI/", "IMPS/") describe HOW money moved, not WHAT it
+        # was for, so they are evaluated only after every specific rule and words.json (merchant /
+        # entity / pattern) has had a chance. Opt-in per rules.json (match_semantics.transfer_last).
+        self._transfer_last = bool(sem.get("transfer_last", False))
+        self._debit_transfer: Dict[str, Dict[str, Any]] = {}
+        self._credit_transfer: Dict[str, Dict[str, Any]] = {}
+        if self._transfer_last:
+            for compiled, held in ((self._debit_compiled, self._debit_transfer),
+                                   (self._credit_compiled, self._credit_transfer)):
+                for cat in [c for c in compiled if c.lower() == "transfer"]:
+                    held[cat] = compiled.pop(cat)
+            if "transfer_rules" not in self._layers:
+                if "default" in self._layers:
+                    self._layers.insert(self._layers.index("default"), "transfer_rules")
+                else:
+                    self._layers.append("transfer_rules")
         self._generic_engine = None
         if self._generic_fallback:
             try:
@@ -206,6 +222,11 @@ class JsonRuleEngine:
                     return hit
             elif layer == "generic_fallback":
                 hit = self._classify_generic(txn)
+                if hit:
+                    return hit
+            elif layer == "transfer_rules":
+                held = self._debit_transfer if is_debit else self._credit_transfer
+                hit = self._match_exact(description, held) or self._match_pattern(description, held)
                 if hit:
                     return hit
             elif layer == "default":

@@ -42,5 +42,6 @@ APGV_LAYOUT_1 = LayoutSpec(
     merge_drcr_suffix=True,
     ignore_line_res=(re.compile(r".*(?:CRRTCHG|ACCOUNTMAI)[\d.]+|.*LOANACCEPTED"),),   # dated memo lines carry no money cells at all
     row_order="auto",
+    band_left_pad={"narration": 46.0},   # narration text starts ~45pt left of its (centred) header; without this it fell into the value-date band and every row lost its description
 )
 APGV_LAYOUT_1.validate()

@@ -90,6 +90,7 @@ BOM_LAYOUT_2 = LayoutSpec(
     end_markers=("ENDOFSTATEMENT",),
     empty_amount_marker="-",
     row_order="auto",
+    band_left_pad={"narration": 118.0},   # particulars text starts ~117pt left of its centred header on app-generated statements; it fell into the Type band and the description was lost
 )
 BOM_LAYOUT_2.validate()
 

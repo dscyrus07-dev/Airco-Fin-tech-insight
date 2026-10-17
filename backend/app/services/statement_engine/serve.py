@@ -370,6 +370,22 @@ class V2RowSource:
     ifsc: Optional[str] = None
 
 
+def _recover_narration(rows: List[Dict[str, Any]]) -> None:
+    """Some layouts print the narration under a column the spec reads as `ref`
+    (e.g. Airtel "Transaction ID/Particulars"), leaving `description` empty, so the
+    classifier saw nothing and every row fell to "Others". When the description is
+    blank (or only stray digits) and ref_no is real text (>=3 letters, not a bare cheque number) use it as the
+    narration. ref_no itself is left untouched."""
+    import re as _re
+    for r in rows:
+        desc = str(r.get("description") or "").strip()
+        if len(_re.findall(r"[A-Za-z]", desc)) >= 3:
+            continue  # real narration already present
+        ref = str(r.get("ref_no") or "").strip()
+        if len(_re.findall(r"[A-Za-z]", ref)) >= 3:
+            r["description"] = ref  # blank / stray wrap digits -> real text from ref
+
+
 def row_source_from_routed(routed) -> Optional[V2RowSource]:
     """v2 result -> V2RowSource; None when there is no served row data."""
     if routed is None or routed.result is None:
@@ -381,6 +397,7 @@ def row_source_from_routed(routed) -> Optional[V2RowSource]:
     extras = (meta.extras or {}) if meta else {}
     printed = extras.get("printed_summary") or {}
     rows = [t.to_dict() if hasattr(t, "to_dict") else dict(t) for t in txns]
+    _recover_narration(rows)
     opening = printed.get("opening") or getattr(meta, "opening_balance", None)
     closing = printed.get("closing") or getattr(meta, "closing_balance", None)
 

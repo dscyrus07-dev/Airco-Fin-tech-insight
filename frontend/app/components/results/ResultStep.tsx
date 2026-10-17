@@ -222,14 +222,20 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
           <BankStateNotice catalog={catalog.all_banks} bankKey={engine?.detected_bank?.key} />
           {activeResult.stats && (
             <>
-              <span className="text-xs text-neutral-500 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-full">
+              <span className="text-xs font-medium text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
                 {activeResult.stats.total_transactions} transactions
               </span>
-              <span className="text-xs text-neutral-500 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-full">
+              <span
+                className={`text-xs font-semibold border px-3 py-1.5 rounded-full ${
+                  activeResult.stats.coverage_percent >= 90
+                    ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                    : 'text-amber-700 bg-amber-50 border-amber-200'
+                }`}
+              >
                 {activeResult.stats.coverage_percent}% categorized
               </span>
               {activeResult.stats.ai_classified > 0 && (
-                <span className="text-xs text-neutral-500 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-full">
+                <span className="text-xs font-medium text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
                   {activeResult.stats.ai_classified} AI classified
                 </span>
               )}

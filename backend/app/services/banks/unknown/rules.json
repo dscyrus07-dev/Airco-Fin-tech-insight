@@ -15,7 +15,8 @@
     "upi_gate": "upi_or_at",
     "upi_debit_only": true,
     "return_mode": "split",
-    "generic_fallback": true
+    "generic_fallback": true,
+    "transfer_last": true
   },
   "confidence": {
     "exact": 0.99,
@@ -160,7 +161,7 @@
     },
     "Shopping": {
       "exact": ["AMAZON", "FLIPKART", "MYNTRA", "MEESHO", "SNAPDEAL"],
-      "patterns": ["\\bPOS\\s+\\d{6}"]
+      "patterns": ["\\bPOS\\s+\\d{6}", "\\bPOS[/:\\s-]"]
     },
     "Transport": {
       "exact": ["UBER", "OLA", "FASTAG", "RAPIDO"],

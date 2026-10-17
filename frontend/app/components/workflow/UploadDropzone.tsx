@@ -40,7 +40,7 @@ export default function UploadDropzone({
 
   return (
     <div className="w-full max-w-2xl min-w-0">
-      <h1 className="text-2xl font-bold">Analyze statements</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Analyze statements</h1>
       <p className="mt-1 text-sm text-gray-600">
         Upload one or more bank statement PDFs. We detect the bank and layout first; nothing is processed until you
         confirm.
@@ -67,11 +67,13 @@ export default function UploadDropzone({
           setDragOver(false)
           onFiles(e.dataTransfer.files)
         }}
-        className={`mt-6 cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
-          dragOver ? 'border-black bg-neutral-50' : 'border-neutral-300 hover:border-neutral-400'
+        className={`mt-6 cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-all duration-300 ${
+          dragOver
+            ? 'scale-[1.01] border-indigo-500 bg-indigo-50'
+            : 'border-slate-300 bg-slate-50/60 hover:border-indigo-400 hover:bg-indigo-50/50'
         }`}
       >
-        <p className="text-sm font-medium">Drop up to 20 PDF statements here</p>
+        <p className="text-base font-semibold text-slate-800">Drop up to 20 PDF statements here</p>
         <p className="mt-1 text-xs text-neutral-500">or click to choose files</p>
         <input
           ref={inputRef}
