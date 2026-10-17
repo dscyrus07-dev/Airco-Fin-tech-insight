@@ -118,3 +118,29 @@ Newly confirmed engine-level gaps (no spec fix possible):
 - **Jumbled print order** (`uco` `14ab1185`): rows print out of date order and
   cannot chain (class F).
 - **Non-statement misfiles confirmed refused**: `pnb` `4eb17de5` (WhatsApp T&C).
+
+## 5. Wrong-bank layout accept (V4-4, non-candidate)
+
+Corpus file `0e8ceb69` — a **Visakhapatnam Co-operative Bank** statement filed
+under the `ujjivan_sfb` folder — routes to an `idbi` layout and is marked
+**VERIFIED** (85 rows) in shadow. This is a true cross-bank accept: the idbi
+spec's header/column match is loose enough to accept the foreign layout.
+`idbi` is **not** in any served list (coming_soon), so nothing ships, but the
+layout or the bank-mismatch guard must be tightened before any future idbi
+serve. Repro: shadow `route_pdf` on `0e8ceb69` -> `status=v2, layout=<idbi>,
+verdict=VERIFIED`. (verify-4, base `74968f0`.)
+
+## 6. Null-balance rows render as 0.00 (R3-1)
+
+`pipeline/models.py` `to_dict` now serializes `balance=None` as null (V4-3 fix).
+Downstream, `pipeline/reporting/lite_metrics.py:414` coerces that null to `0.0`
+via `_to_float`, so on layouts with **no** balance column (engine reason
+`NO_RUNNING_BALANCE`) the Transactions sheet writes a literal `0` in every
+Balance cell and Summary/Monthly sheets report all-zero balance metrics
+(`currentBalance 0.00`, Avg/Min/Max/EOD = 0). The file is REVIEW-gated and the
+Statement Check sheet honestly flags `NO_RUNNING_BALANCE`, but the sheet's
+figures themselves are fabricated. Repro: dbs sha8 `4b87612b` (363 rows) and
+`4e83e770` (850 rows) — job completes post-fix, Balance column all-zero.
+Recommendation: preserve `None` through lite normalization for the Balance
+column (blank cell) or suppress balance metrics entirely when no row carries a
+balance. Described, not fixed (no product-code changes allowed in rollout-3).

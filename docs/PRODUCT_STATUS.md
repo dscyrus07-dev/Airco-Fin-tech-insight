@@ -19,6 +19,17 @@
 > rows marked superseded have newer truth in `N7_REPORT.md` /
 > `N6_LEGACY_VS_V2.md`.
 
+> **V4/R3 update (`devin/verify-4` + `devin/rollout-3`, measured 2026-10-17):**
+> `federal` is GO as `verified` (94.9% readable detection, 85.6% VERIFIED share,
+> 0 cross-bank accepts, 40-file independent audit clean) and `dhanlaxmi` is GO
+> as `review_required` (11/11 REVIEW, totals reconcile — REVIEW-only ceiling).
+> `dbs` is **NO-GO**: its no-balance-column layouts render a literal `0`
+> Balance column and all-zero balance metrics in the workbook
+> (`lite_metrics._to_float` coerces null→0.0; see `docs/onboarding/
+> ENGINE_GAPS.md` §6) — REVIEW-gated but misleading; hold until blank-write
+> lands. `indusind` stays `coming_soon` (VERIFIED share 76.7% < 80 gate).
+> Served list on `rc` = the 20-bank list **+ federal + dhanlaxmi** (22 banks).
+
 ## Rolled-out serve list (`411f6ca`)
 
 | Bank | State | Caveats |

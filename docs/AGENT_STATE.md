@@ -255,3 +255,12 @@ All checks green: tsc (pre-existing err only), eslint, vitest 38/38, next build,
 [V4] BANK indusind INFORMATIONAL NO-GO — 76.7% V-share < 80 gate (det 96.9%R, yield 92.3%R)
 
 [V4] DONE b692b59 — GO federal(verified)+dhanlaxmi(review_required); NO-GO dbs (V4-3 null-balance float() crash, REVIEW rows); indusind informational short (76.7%<80). Recount 1450 fresh; regression 1099/1099 zero-downward; confusion 0 accepts x3; mutation 9/9 honest; UI flows 3/3; audits 40/40/40+11R. Defects V4-3(major,dbs), V4-4(major,idbi non-candidate), V4-1(minor,label). Nothing pushed.
+
+[R3] START 76c5364 rollout-3: dbs re-verify post V4-3 fix, serve-list roll to 22-23, rc rebuild
+
+[R3] BANK dbs NO-GO — V4-3 crash fix verified (repros 4b87612b/4e83e770 complete, REVIEW, 363/850 rows wb=engine, dl 200, 0 ferr) but R3-1: null balances render literal 0 in Transactions + all-zero balance metrics (lite_metrics._to_float:414); blank-not-0 criterion fails. e2e 12 clean +12 honest refusals; confusion 0 accepts x3; mutation 5 honest (4 routing-fail, 1 V->R); integrity 11T/1F classified; audit 40 unchanged.
+
+[R3] BANK federal GO (verified) — carried from V4; served on rc; catalog verified.
+[R3] BANK dhanlaxmi GO (review_required) — carried from V4; served on rc; UI review-only confirmed.
+
+[R3] DONE 015ab11 — final serve list 22 banks (20 + federal + dhanlaxmi; dbs omitted). Regression 1099/1099 ZERO diffs vs V4-tip (V4-3 fix invisible). Catalog: all_banks=44, panel=24 consistent, dbs/idbi/indusind coming_soon greyed. UI: flows 3/3 @360+1280, mixed batch PASS (dhanlaxmi REVIEW-confirmable, bandhan UNSUPPORTED, federal unbranded REVIEW->routing-refused). Probes 23/25 (2 token-expiry tooling flakes; manual repro = correct 403/401). Over-cap 413 + 429 verified on guarded path. Defects: R3-1 major (null->0 workbook render), R3-2 major (/api/statements/analyze lacks 500-page cap + rate limit; 501p upload restarted worker), V4-4 major non-candidate (idbi layout accepts 0e8ceb69 VERIFIED; idbi unserved), V4-1 minor (UNSUPPORTED_BANK label while awaiting confirm). Nothing pushed.
