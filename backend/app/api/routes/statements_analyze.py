@@ -78,6 +78,9 @@ async def analyze_statements(
     passwords: Optional[str] = Form(None, description="JSON object {filename: password}; used in memory only"),
     user: Dict[str, Any] = Depends(get_current_user),
 ):
+    from ...services.rate_limit import check_rate_limit
+
+    check_rate_limit(f"analyze:{user.get('id') or 'unknown'}")
     if not files:
         raise HTTPException(status_code=400, detail={"code": "NO_FILES", "error": "Upload at least one PDF"})
     if len(files) > ANALYZE_MAX_FILES:

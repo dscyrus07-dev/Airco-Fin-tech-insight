@@ -276,7 +276,7 @@ def _write_top_sheet(ws, rows: Sequence[Dict[str, Any]], amount_key: str) -> Non
             row.get("description", ""),
             row.get("category", ""),
             row.get(amount_key, 0.0),
-            row.get("balance", 0.0),
+            row.get("balance", 0.0) if row.get("balance_present", True) else None,
             row.get("month", ""),
         ]
         for c_idx, value in enumerate(values, start=1):
@@ -317,7 +317,7 @@ def _write_txn_sheet(
                 row.get("ref_no", ""),
                 row.get("debit", 0.0),
                 row.get("credit", 0.0),
-                row.get("balance", 0.0),
+                row.get("balance", 0.0) if row.get("balance_present", True) else None,
                 row.get("category", ""),
                 row.get("month", ""),
             ]
@@ -329,7 +329,7 @@ def _write_txn_sheet(
                 row.get("category", ""),
                 row.get("debit", 0.0),
                 row.get("credit", 0.0),
-                row.get("balance", 0.0),
+                row.get("balance", 0.0) if row.get("balance_present", True) else None,
                 row.get("month", ""),
             ]
             money_cols = {4, 5, 6}

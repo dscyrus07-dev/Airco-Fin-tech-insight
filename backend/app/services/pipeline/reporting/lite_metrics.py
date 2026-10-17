@@ -411,7 +411,9 @@ def normalize_transactions(transactions: Sequence[Dict[str, Any]]) -> List[Dict[
     for idx, raw in enumerate(transactions or []):
         debit = _to_float(raw.get("debit") if raw.get("debit") is not None else raw.get("Debit"))
         credit = _to_float(raw.get("credit") if raw.get("credit") is not None else raw.get("Credit"))
-        balance = _to_float(raw.get("balance") if raw.get("balance") is not None else raw.get("Balance"))
+        _raw_balance = raw.get("balance") if raw.get("balance") is not None else raw.get("Balance")
+        balance_present = _raw_balance not in (None, "")
+        balance = _to_float(_raw_balance)
         description = str(
             raw.get("description")
             or raw.get("Description")
@@ -443,6 +445,7 @@ def normalize_transactions(transactions: Sequence[Dict[str, Any]]) -> List[Dict[
                 "debit": round(debit, 2),
                 "credit": round(credit, 2),
                 "balance": round(balance, 2),
+                "balance_present": balance_present,
                 "category": category,
                 "month": _month_key(txn_date) if txn_date else "",
                 "seq": idx,
@@ -874,6 +877,29 @@ def _coerce_txn_dicts(transactions: Sequence[Any]) -> List[Dict[str, Any]]:
     return out
 
 
+_BALANCE_METRIC_KEYS = {
+    "monthlyAvgBal", "maxBalance", "minBalance",
+    "Avg Balance", "Min Balance", "Max Balance",
+    "Start of Month Balance", "End of Month Balance",
+    "Min EOD Balance", "Max EOD Balance", "Average EOD Balance",
+    "Balance on 1st", "Balance on 5th", "Balance on 10th", "Balance on 15th",
+    "Balance on 20th", "Balance on 25th", "Balance on Last Day",
+    "avg_bal", "min_bal", "max_bal", "start", "end", "min_eod", "max_eod", "avg_eod",
+    "d1", "d5", "d10", "d15", "d20", "d25", "dlast",
+}
+
+
+def _blank_balance_metrics(node: Any) -> None:
+    """Replace balance-derived metric values with "" in place (nested dicts)."""
+    if not isinstance(node, dict):
+        return
+    for key, value in list(node.items()):
+        if key in _BALANCE_METRIC_KEYS:
+            node[key] = {m: "" for m in value} if isinstance(value, dict) else ""
+        elif isinstance(value, dict):
+            _blank_balance_metrics(value)
+
+
 def build_lite_report_model(
     transactions: Sequence[Any],
     metadata: Optional[Dict[str, Any]] = None,
@@ -898,6 +924,13 @@ def build_lite_report_model(
     account_info = compute_account_info(meta, rows)
     summary = compute_summary_stats(rows, eod, months)
     monthly = compute_monthly_analysis(rows, eod, months)
+    if rows and not any(r.get("balance_present") for r in rows):
+        # No printed balances anywhere: never present balance figures derived from
+        # placeholder zeros. Blank them and say so rather than fabricate numbers.
+        _blank_balance_metrics(summary)
+        _blank_balance_metrics(monthly)
+        if not (meta.get("currentBalance") or meta.get("closing_balance") or meta.get("closingBalance")):
+            account_info["currentBalance"] = ""
     return {
         "account_info": account_info,
         "summary_stats": summary,

@@ -363,6 +363,14 @@ class AnalysisService:
         try:
             tmp.write(f.content)
             tmp.close()
+            from .rate_limit import max_pdf_pages
+
+            page_cap = max_pdf_pages()
+            pages = self._page_count(tmp.name, password)
+            if page_cap > 0 and pages is not None and pages > page_cap:
+                return self._error_doc(
+                    f, f"This PDF has more than {page_cap} pages, which is over the supported limit.", "PDF_TOO_MANY_PAGES"
+                )
             cap, texts = check_pdf(tmp.name, password=password)
             analysis = analyze_text_pages(name, cap, texts, user_hint=bank_hint)
             det = analysis.detection
@@ -388,6 +396,17 @@ class AnalysisService:
                         os.unlink(p)
                     except OSError:
                         pass
+
+    @staticmethod
+    def _page_count(path: str, password: Optional[str]) -> Optional[int]:
+        """Cheap page count (no text extraction); None when it cannot be read (e.g. locked)."""
+        try:
+            import pikepdf
+
+            with pikepdf.open(path, password=password or "") as pdf:
+                return len(pdf.pages)
+        except Exception:
+            return None
 
     @staticmethod
     def _folder(user: Dict[str, Any]) -> str:
