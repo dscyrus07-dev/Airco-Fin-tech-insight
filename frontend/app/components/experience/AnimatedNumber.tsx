@@ -22,9 +22,11 @@ export default function AnimatedNumber({ value, duration = 900, className, suffi
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce || duration <= 0 || typeof requestAnimationFrame !== 'function') {
-      from.current = target
-      setShown(target)
-      return
+      const id = setTimeout(() => {
+        from.current = target
+        setShown(target)
+      }, 0)
+      return () => clearTimeout(id)
     }
     const start = from.current
     const t0 = performance.now()

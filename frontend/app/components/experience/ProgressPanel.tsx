@@ -29,13 +29,17 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
 
   useEffect(() => {
     if (fresh.length === 0) return
+    let id: ReturnType<typeof setTimeout> | undefined
     if (baselined) {
-      setBurst((n) => n + 1)
-      setToast(`Badge unlocked: ${fresh[0].title}`)
-      if (timer.current) clearTimeout(timer.current)
-      timer.current = setTimeout(() => setToast(null), 4000)
+      id = setTimeout(() => {
+        setBurst((n) => n + 1)
+        setToast(`Badge unlocked: ${fresh[0].title}`)
+        if (timer.current) clearTimeout(timer.current)
+        timer.current = setTimeout(() => setToast(null), 4000)
+      }, 0)
     }
     onSeen(unlockedIds)
+    return () => { if (id) clearTimeout(id) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fresh.map((b) => b.id).join('|'), baselined])
 
