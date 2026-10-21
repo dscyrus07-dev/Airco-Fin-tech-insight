@@ -1,0 +1,5 @@
+# Pinned for the first GPU run; confirm against the official PaddleOCR-VL image before building.
+fastapi==0.136.0
+uvicorn==0.44.0
+pymupdf==1.27.2.3
+paddleocr[doc-parser]==3.7.0

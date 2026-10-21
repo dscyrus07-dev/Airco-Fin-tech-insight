@@ -1,0 +1,30 @@
+# Optional override: adds the GPU ocr-service and (off by default) points the backend at it.
+#   docker compose -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.ocr.yml up --build
+# Requires a CUDA GPU (>= 8 GB) and the NVIDIA container toolkit. Not used on Railway/Vercel until a GPU host is chosen.
+services:
+  ocr-service:
+    build:
+      context: ../../ocr-service
+    environment:
+      OCR_DPI: "200"
+      OCR_PAGE_TIMEOUT_S: "20"
+    networks:
+      - airco-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,json,sys;sys.exit(0 if json.load(urllib.request.urlopen('http://localhost:8090/health')).get('status')=='ok' else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 180s
+    # no published ports: reachable from the backend over the internal network only
+  backend:
+    environment:
+      STATEMENT_ENGINE_OCR_MODE: ${STATEMENT_ENGINE_OCR_MODE:-off}
+      STATEMENT_ENGINE_OCR_URL: ${STATEMENT_ENGINE_OCR_URL:-http://ocr-service:8090}

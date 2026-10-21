@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 
 class Capability(str, Enum):
-    """Can AirCo read this PDF at all? Text layer only: there is no OCR."""
+    """Can AirCo read this PDF at all? Text layer only (OCR for SCANNED/MIXED is the optional T4 tier)."""
 
     TEXT = "TEXT"            # usable text layer
     MIXED = "MIXED"          # some pages have text, some are image-only

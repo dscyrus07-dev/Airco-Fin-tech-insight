@@ -73,6 +73,15 @@ def _universal_servable() -> bool:
         return False
 
 
+def _ocr_servable() -> bool:
+    """T4 OCR reads scanned files (STATEMENT_ENGINE_OCR_MODE=serve and an ocr-service is configured)."""
+    try:
+        from .statement_engine.ocr import serve as _oserve
+        return _oserve.mode() == "serve" and _oserve.enabled()
+    except Exception:
+        return False
+
+
 def _registry_cfg_for(bank_or_spec_id: Optional[str]):
     """BankConfig for a detector id, or for a v2-only SPEC key
     (/api/statements/banks emits spec keys for banks with no legacy id)."""
@@ -372,13 +381,24 @@ class AnalysisService:
                     f, f"This PDF has more than {page_cap} pages, which is over the supported limit.", "PDF_TOO_MANY_PAGES"
                 )
             cap, texts = check_pdf(tmp.name, password=password)
-            analysis = analyze_text_pages(name, cap, texts, user_hint=bank_hint)
+            if cap.capability == Capability.SCANNED and _ocr_servable():
+                from .statement_engine.analyzer import analyze_scanned_with_ocr
+                from .statement_engine.ocr import serve as _oserve
+
+                ocr_src = tmp.name
+                if password:
+                    decrypted = self._decrypt_copy(tmp.name, password)
+                    ocr_src = decrypted or tmp.name
+                ocr_texts, _ocr_info = _oserve.detection_texts(ocr_src)
+                analysis = analyze_scanned_with_ocr(name, cap, ocr_texts, user_hint=bank_hint)
+            else:
+                analysis = analyze_text_pages(name, cap, texts, user_hint=bank_hint)
             det = analysis.detection
             layout = detect_layout(texts, det.bank_id if det else None) if det and cap.capability in (Capability.TEXT, Capability.MIXED) else None
 
             store_path = tmp.name
             if password and cap.capability in (Capability.TEXT, Capability.MIXED, Capability.SCANNED):
-                decrypted = self._decrypt_copy(tmp.name, password)  # None if the file was not encrypted
+                decrypted = decrypted or self._decrypt_copy(tmp.name, password)  # None if the file was not encrypted
                 store_path = decrypted or tmp.name
 
             storable = analysis.state not in (DocumentState.FAILED,)
@@ -455,12 +475,26 @@ class AnalysisService:
         needs_password = analysis.state == DocumentState.PASSWORD_REQUIRED
         workflow = "AWAITING_CONFIRMATION" if state in ("DETECTED", "REVIEW", "UNKNOWN") else "BLOCKED"
         message = analysis.message
-        if analysis.state == DocumentState.UNSUPPORTED_BANK or (state == "DETECTED" and bank and not bank["supported"]):
+        _scan_ocr_unsupported = bool(
+            bank and not bank["supported"] and _ocr_servable()
+            and analysis.capability.capability == Capability.SCANNED
+        )
+        if analysis.state == DocumentState.UNSUPPORTED_BANK or (state == "DETECTED" and bank and not bank["supported"]) or _scan_ocr_unsupported:
             # a v2-servable bank is not "unsupported": keep it confirmable
             if bank and _v2_servable(bank["id"]):
                 if state != "DETECTED":
                     state = "REVIEW"
                 message = f"This looks like a {bank['name']} statement. Please confirm to continue."
+            elif _ocr_servable() and analysis.capability.capability == Capability.SCANNED:
+                # T4 OCR: confirmable, verdict capped at REVIEW, figures must be checked by the user.
+                state = "REVIEW"
+                if bank:
+                    bank["supported"] = True
+                    message = (f"We recognised this as a {bank['name']} statement from a scan. "
+                               "We'll read it with OCR; please check the figures.")
+                else:
+                    message = ("This bank isn't fully supported yet. "
+                               "We'll read the scan with OCR; please check the figures.")
             elif _universal_servable() and analysis.capability.capability in (Capability.TEXT, Capability.MIXED):
                 # T3 general reader: confirmable, but the verdict is capped at
                 # REVIEW and the figures must be checked by the user.
@@ -595,7 +629,7 @@ class AnalysisService:
             doc["selection"] = {"action": "CONFIRM", "bank_id": bank["id"], "by": actor, "at": _now()}
             doc["events"].append({"event": "USER_CONFIRM", "at": _now(), "by": actor, "bank_id": bank["id"]})
         elif action == "OVERRIDE":
-            if bank_id == "other" and _universal_servable():
+            if bank_id == "other" and (_universal_servable() or (_ocr_servable() and (doc.get("capability") or {}).get("capability") == "SCANNED")):
                 # "Other bank / not listed": auto-detect downstream, T3 reads it.
                 doc["effective_bank"] = {"id": "other", "name": "Other bank / not listed"}
                 doc["selection"] = {"action": "OVERRIDE", "bank_id": "other", "by": actor, "at": _now()}

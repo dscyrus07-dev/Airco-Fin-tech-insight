@@ -467,6 +467,24 @@ def append_statement_check_sheet(excel_path: str, block: Dict[str, Any]) -> bool
             ws.append(["Note", "The statement engine could not reconcile this statement's balances. The figures in this "
                                "workbook come from the legacy parser and may be incomplete: check the transaction count "
                                "against the PDF before relying on it."])
+        ocr = block.get("ocr")
+        if isinstance(ocr, dict):
+            ws.append([])
+            ws.append(["OCR (scanned statement)"])
+            ws.append(["Read with", f"{ocr.get('ocr_engine') or 'OCR'}" + (f" + {ocr.get('verifier')}" if ocr.get("verifier") else "")])
+            ws.append(["Pages read", ", ".join(str(p) for p in ocr.get("pages_ok") or []) or "none"])
+            failed = ocr.get("failed_pages") or {}
+            ws.append(["Pages NOT read", ", ".join(f"{k} ({v})" for k, v in failed.items()) if failed else "none"])
+            if failed:
+                ws.append(["Note", "Some pages could not be read. This workbook does NOT contain every transaction in the "
+                                   "statement: check the missing pages in the PDF."])
+            ver = ocr.get("verification") or {}
+            ws.append(["Second-reader amount check", ver.get("status", "not_run")])
+            if ver.get("amounts_checked"):
+                ws.append(["Amounts confirmed / low confidence / not confirmed",
+                           f"{ver.get('confirmed', 0)} / {ver.get('low_confidence', 0)} / {ver.get('unconfirmed', 0)}"])
+            ws.append(["Note", "Figures were read from an image. OCR can misread digits, so every figure must be checked "
+                               "against the original statement. This result is never marked as verified."])
         ws.append(["Generated", datetime.now(timezone.utc).isoformat(timespec="seconds")])
         wb.save(excel_path)
         return True

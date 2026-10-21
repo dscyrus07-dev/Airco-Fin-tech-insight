@@ -1,7 +1,8 @@
 """PDF capability check: can AirCo read this file at all?
 
-Text layer only. There is no OCR and none is planned: an image-only PDF is reported as SCANNED
-and the user is told it is not supported.
+Text layer only. This module never runs OCR: an image-only PDF is reported as SCANNED. With
+STATEMENT_ENGINE_OCR_MODE off (default) the user is told it is not supported; with the optional T4 OCR tier
+enabled (see statement_engine/ocr), SCANNED/MIXED files are routed there instead.
 
 `classify_pages` is pure (testable without a PDF). `check_pdf` opens a file with pdfplumber and
 also returns the extracted text of the pages it read, so the bank detector does not open the file again.

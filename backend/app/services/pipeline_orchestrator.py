@@ -66,7 +66,11 @@ class UnsupportedBankError(PipelineError):
 # ---------------------------------------------------------------------------
 
 VALID_MODES = ("free", "hybrid")
-MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # 20 MB
+try:  # one source of truth with the analysis stage (core.config.settings.MAX_FILE_SIZE_MB)
+    from app.core.config import settings as _settings
+    MAX_FILE_SIZE_BYTES = int(_settings.MAX_FILE_SIZE_BYTES)
+except Exception:  # pragma: no cover - config import problem must not break the pipeline
+    MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # 20 MB
 ALLOWED_EXTENSIONS = (".pdf",)
 
 # Supported banks with their processor modules
@@ -484,6 +488,23 @@ def process_statement(
     _u_mode = _userv.mode()
     _u_block = None
 
+    # T4 OCR tier (flag STATEMENT_ENGINE_OCR_MODE, default off). With the flag off nothing below runs and the
+    # text path is untouched: not even the capability check is performed.
+    from app.services.statement_engine.ocr import serve as _oserve
+    _o_mode = _oserve.mode() if _oserve.enabled() else "off"
+    _o_block = None
+    _o_cap = None
+    _o_pages = None
+    if _o_mode != "off":
+        try:
+            from app.services.statement_engine.capability import check_pdf as _check_pdf
+            _cap_res, _ = _check_pdf(file_path, max_pages=12)
+            _o_cap, _o_pages = _cap_res.capability.value, _cap_res.page_count
+        except Exception:
+            _o_cap = None
+    _o_active = _o_mode != "off" and _oserve.wants(_o_cap)
+    _o_serving = _o_active and _o_mode == "serve"
+
     if _v2_mode == "serve" and _v2serve.serving_enabled_for(bank_key):
         _spec_key = _v2serve.spec_key_for(bank_key)
         try:
@@ -507,7 +528,7 @@ def process_statement(
     # =================================================================
     ProcessorClass = _get_bank_processor(bank_key)
 
-    if ProcessorClass is None and v2_plan is None and _u_mode != "serve":
+    if ProcessorClass is None and v2_plan is None and _u_mode != "serve" and not _o_serving:
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -526,7 +547,7 @@ def process_statement(
         _serve_key = _v2serve.pipeline_key_for(v2_plan.v2_spec_key)
         ProcessorClass = _get_bank_processor(_serve_key) or _get_bank_processor("unknown")
 
-    if ProcessorClass is None and _u_mode != "serve":
+    if ProcessorClass is None and _u_mode != "serve" and not _o_serving:
         raise UnsupportedBankError(
             f"Bank '{bank_name}' is not yet supported. "
             f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -577,8 +598,8 @@ def process_statement(
                         file_path=file_path, user_info=user_info, output_dir=output_dir,
                     )
         elif ProcessorClass is not None:
-            if _u_mode == "serve":
-                # T2 failure must not abort before the T3 attempt below.
+            if _u_mode == "serve" or _o_serving:
+                # T2 failure must not abort before the T3/T4 attempt below.
                 try:
                     result = processor.process(
                         file_path=file_path, user_info=user_info, output_dir=output_dir,
@@ -593,7 +614,7 @@ def process_statement(
                     user_info=user_info,
                     output_dir=output_dir,
                 )
-        elif _u_mode == "off":
+        elif _u_mode == "off" and not _o_serving:
             raise UnsupportedBankError(
                 f"Bank '{bank_name}' is not yet supported. "
                 f"Supported banks: {', '.join(SUPPORTED_BANKS.values())}",
@@ -636,6 +657,36 @@ def process_statement(
             and getattr(result, "status", "") == "success"
             and getattr(getattr(result, "metrics", None), "transaction_count", 0) or 0
         ) > 0
+        # T4 OCR: scanned/mixed files only. When T4 is serving and cannot produce rows the job fails honestly with
+        # the OCR code: T3 is NOT tried afterwards, because on a MIXED file it would silently read only the text pages.
+        if _o_active and not _served:
+            _o_res, _o_rs = _oserve.attempt(
+                file_path,
+                bank_hint=(v2_block.get("detected_bank") and v2_block["detected_bank"].get("name")) or bank_name or "Unknown bank",
+                page_count=_o_pages,
+            )
+            _o_block = _oserve.block_for(_o_res, served=False, o_mode=_o_mode)
+            if _o_serving:
+                if _o_res.ok:
+                    _o_class = _get_bank_processor("unknown")
+                    _o_result = _o_class(
+                        strict_mode=False, enable_ai=enable_ai,
+                        api_key=api_key if enable_ai else None,
+                        audit_service=audit_service, job_id=job_id,
+                    )._run_pipeline(file_path, user_info, output_dir, row_source=_o_rs) if (_o_class and _o_rs) else None
+                    if getattr(_o_result, "status", "") == "success":
+                        result = _o_result
+                        _o_block = _oserve.block_for(_o_res, served=True, o_mode=_o_mode)
+                        v2_block = _oserve.engine_block_for(_o_res, _o_mode, detected_bank=v2_block.get("detected_bank"))
+                        _served = True
+                if not _served:
+                    _oserve.audit_attempt(audit_service, job_id, _o_block)
+                    raise PipelineAbortError(
+                        f"Scanned statement could not be read ({_o_res.code or _o_res.verdict})",
+                        stage="ocr_reader",
+                        error_code=_o_res.code or "OCR_FAILED",
+                    )
+
         if _u_mode != "off" and not _served:
             _u_res, _u_rs = _userv.attempt(file_path, bank_hint=v2_block.get("detected_bank") and
                                            v2_block["detected_bank"].get("name") or bank_name or "Unknown bank")
@@ -718,6 +769,10 @@ def process_statement(
     if _u_block is not None and "universal" not in v2_block:
         v2_block["universal"] = _u_block
         _userv.audit_attempt(audit_service, job_id, _u_block)
+    if _o_block is not None and "ocr" not in v2_block:
+        v2_block["ocr"] = _o_block
+    if _o_block is not None:
+        _oserve.audit_attempt(audit_service, job_id, _o_block)
     response["statement_engine"] = v2_block
     _v2serve.audit_serve_decision(audit_service, job_id, v2_block)
     if _v2serve.wants_statement_check(v2_block):
