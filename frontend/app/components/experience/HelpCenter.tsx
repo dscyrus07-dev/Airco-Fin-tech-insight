@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import Accordion from './Accordion'
 import Icon from './Icon'
 import type { IconName } from './Icon'
-import { useBankCatalog } from '@/hooks/useBankCatalog'
+import { useBankCatalog } from '@/app/hooks/useBankCatalog'
 import { groupByState } from '@/lib/bankSupport'
 
 const STEPS: Array<{ icon: IconName; title: string; body: string }> = [
