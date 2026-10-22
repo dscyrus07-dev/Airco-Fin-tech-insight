@@ -1,0 +1,16 @@
+# GPU test variant for THIS machine (RTX 3060, driver 13.3/CUDA-13 UMD, sm_86).
+# The committed Dockerfile uses the vendor VL base image; its registry is unreachable
+# from this network, and the Dockerfile itself invites replacing BASE with a validated
+# image. This variant installs paddlepaddle-gpu from the official cu126 index instead.
+FROM nvidia/cuda:12.6.2-runtime-ubuntu22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip python3-dev libglib2.0-0 libgl1 libsm6 libxext6 libxrender1 libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /srv
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir --timeout 120       -i https://www.paddlepaddle.org.cn/packages/stable/cu126/       --extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple       paddlepaddle-gpu==3.3.1 "paddleocr[doc-parser]==3.7.0"       pymupdf==1.27.2.3 fastapi==0.136.0 uvicorn==0.44.0
+COPY app.py .
+ENV OCR_SERVICE_AUTOSTART=1 PYTHONUNBUFFERED=1
+EXPOSE 8090
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8090"]

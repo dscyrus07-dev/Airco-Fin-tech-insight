@@ -97,3 +97,30 @@ Fixtures generated with `tests/statement_engine/ocr/synthetic.py` (image-only PD
 
 **OCR T4 (486fb9c): no regressions, honest failure modes verified end-to-end in mock mode — ready for the GPU-host phase behind the flag (off by default).**
 **Frontend (830d161): NOT mergeable as-is** — the HelpCenter import breaks `next build` (fix applied on this branch; the same fix exists on `devin/r5-verify` as `abfd5aa`).
+
+---
+
+## Addendum — real GPU run on this machine (RTX 3060 12GB, driver 13.3/CUDA-13 UMD)
+
+The committed Dockerfile could not build here (vendor registry DNS-unreachable), so a variant was
+built per the Dockerfile's own "replace BASE" note: `nvidia/cuda:12.6.2-runtime-ubuntu22.04` +
+`paddlepaddle-gpu==3.3.1` (official cu126 index) + `paddleocr[doc-parser]==3.7.0` + pymupdf/fastapi/uvicorn
+(`ocr-service/Dockerfile.gpu-test`, harness only). PyPI was throttled from this network; the Tsinghua
+mirror unblocked the build. Image builds PASS (~2GB paddle wheel + ~1GB CUDA deps).
+
+| step | result |
+|---|---|
+| service start (unpatched app.py) | **CRASH — first error line**: `ImportError: libgomp.so.1: cannot open shared object file` (missing OS lib in the CUDA base; fixed in the variant by adding `libgomp1`) followed by `ERROR: Application startup failed. Exiting.` — live confirmation of F3's failure mode (unguarded startup; /health unreachable) |
+| service start (with libgomp1) | PASS — models auto-download (PP-LCNet doc-ori, UVDoc, PP-DocLayoutV3, PaddleOCR-VL-1.6, PP-OCRv6 det/rec), `/health` → `{"status":"ok","engine":"PaddleOCR-VL-1.6","verifier":"PP-OCRv5"}`, **5.0 GB VRAM** resident |
+| POST /v1/ocr (unpatched) | **422 on EVERY call — new bug F7 (critical)**: `{"detail":[{"type":"missing","loc":["query","request"],"msg":"Field required"}]}` — `app.py` has `from __future__ import annotations` while `Request` is imported only INSIDE `create_app()`; FastAPI resolves the string annotation against module globals, fails, and demotes `request: Request` to a required query param. The service's only endpoint can never serve. Reproduced with TestClient. Fix: move `from fastapi import Request` to module level (verified: endpoint then resolves; 422 → normal handling). NOT applied to the repo (Claude's file). |
+| real OCR call (runtime-patched copy, harness only) | PASS — blank-page PDF: 200, 0 blocks (correct); statement-image PDF: 200 in 40.6s — page 2 ok (7 blocks incl. the full table HTML + 72 verifier lines, 17.2s), **page 1 failed OCR_TIMEOUT at 23.2s** (default 20s page budget; cold first pass) |
+| real OCR doc → backend engine | honest refusal: `LOW_CONFIDENCE_COLUMNS` (direct `infer()` on the same pages: `NO_DATED_ROWS — fewer than 4 dated lines on first page`) — the failed page 1 (0 words) breaks the reader's first-page column inference; the VLM also prints dates without leading zeros (`3/04/2026`). No garbage served. **First real integration gap for the GPU phase.** |
+
+Measured (single RTX 3060, 2-page synthetic): ~17-23 s/page — the p95 <= 4 s/page target is NOT met on
+this hardware; page-1 cold passes exceed the default 20 s `OCR_PAGE_TIMEOUT_S`. Accuracy targets still
+NOT verified (no ground-truth comparison run).
+
+GPU-run checklist for the first real deployment (from this run): add `libgomp1` (or use a base that has
+it), move the `Request` import to module level (F7), expect ~20 s/page on consumer GPUs and size
+`OCR_PAGE_TIMEOUT_S` accordingly, and expect the universal reader to refuse when page 1 fails OCR
+(needs a partial-tolerant inference path or a page-1 retry).
