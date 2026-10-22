@@ -23,7 +23,7 @@ page; every printed amount must appear in its output (`ocr/verify.py`). Disagree
 | `STATEMENT_ENGINE_OCR_MODE` | `off` | `off` / `shadow` (record block, serve nothing) / `serve` |
 | `STATEMENT_ENGINE_OCR_URL` | unset | `http://ocr-service:8090`, or `mock:<dir>` for fixtures |
 | `STATEMENT_ENGINE_OCR_MAX_PAGES` | 60 | refuse OCR above this page count |
-| `STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S` | 8 | sizes the request timeout (15 s + 8 s per page) |
+| `STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S` | 45 | sizes the request timeout (15 s + 45 s per page; measured ~17-23 s/page on an RTX 3060) |
 | `STATEMENT_ENGINE_OCR_DETECT_TIMEOUT_S` | 5 | analysis-time OCR of pages 1-2 for bank detection |
 | `STATEMENT_ENGINE_OCR_LOOP_RATIO` | 4.0 | compression-ratio threshold for repetition loops |
 | `STATEMENT_ENGINE_OCR_MIN_SCORE` | 0.90 | PP-OCR line score needed to confirm an amount |

@@ -19,12 +19,19 @@ import threading
 import time
 from typing import Any, Dict, List, Optional
 
+try:    # module level on purpose: with `from __future__ import annotations` FastAPI resolves the endpoint's
+        # `request: Request` annotation against THIS module's globals (a function-local import made /v1/ocr 422).
+    from fastapi import FastAPI, HTTPException, Request
+    from fastapi.responses import JSONResponse
+except ImportError:                                   # helpers/tests run without fastapi installed
+    FastAPI = HTTPException = Request = JSONResponse = None
+
 ENGINE = "PaddleOCR-VL-1.6"
 VERIFIER = "PP-OCRv5"
 DPI = int(os.environ.get("OCR_DPI", "200"))
 MAX_PAGES = int(os.environ.get("OCR_MAX_PAGES", "60"))
 MAX_BODY_BYTES = int(os.environ.get("OCR_MAX_BODY_MB", "40")) * 1024 * 1024
-PAGE_TIMEOUT_S = float(os.environ.get("OCR_PAGE_TIMEOUT_S", "20"))
+PAGE_TIMEOUT_S = float(os.environ.get("OCR_PAGE_TIMEOUT_S", "90"))
 VL_SERVER_URL = os.environ.get("OCR_VL_SERVER_URL", "")          # e.g. http://vllm:8118/v1 (recommended); empty = in-process
 
 
@@ -87,6 +94,7 @@ class _Models:
         self.lock = threading.Lock()           # one GPU job at a time: predictable latency and memory
         self.vl = None
         self.ocr = None
+        self.error = ""                          # class name of the load failure, "" when fine
 
     def load(self) -> None:
         from paddleocr import PaddleOCR, PaddleOCRVL   # imported lazily so helpers/tests need no Paddle
@@ -97,6 +105,35 @@ class _Models:
         self.vl = PaddleOCRVL(**kwargs)
         self.ocr = PaddleOCR(use_doc_orientation_classify=False, use_doc_unwarping=False,
                              use_textline_orientation=False)
+
+    def load_guarded(self) -> None:
+        """Load + warm up. A failure is recorded (class name only) instead of killing the process, so /health can
+        say why the service is not ready and the backend fails jobs with a clean OCR code."""
+        try:
+            self.load()
+            self.warm_up()
+            self.error = ""
+        except Exception as exc:
+            self.vl = self.ocr = None
+            self.error = type(exc).__name__
+
+    def warm_up(self) -> None:
+        """First real call pays kernel/graph initialisation (~tens of seconds). Pay it at startup, not on page 1."""
+        try:
+            import numpy as np
+            import cv2
+            img = np.full((200, 600, 3), 255, dtype="uint8")
+            cv2.putText(img, "warm up 1,234.56", (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as fh:
+                path = fh.name
+            try:
+                cv2.imwrite(path, img)
+                self.vl_page(path)
+                self.lines_page(path)
+            finally:
+                os.unlink(path)
+        except Exception:
+            pass                                       # warm-up is best effort; real requests report their own errors
 
     def vl_page(self, png_path: str) -> List[Dict[str, Any]]:
         res = self.vl.predict(png_path)
@@ -151,21 +188,25 @@ def ocr_pdf(pdf_path: str, pages_param: Optional[str], verify: bool) -> Dict[str
 # ---------------------------------------------------------------- HTTP ----------
 
 def create_app():
-    from fastapi import FastAPI, HTTPException, Request
-
     app = FastAPI(title="airco-ocr-service")
 
     @app.on_event("startup")
     def _startup() -> None:
-        MODELS.load()
+        MODELS.load_guarded()
 
     @app.get("/health")
     def health():
         ready = MODELS.vl is not None
-        return {"status": "ok" if ready else "loading", "engine": ENGINE, "verifier": VERIFIER}
+        body = {"status": "ok" if ready else ("error" if MODELS.error else "loading"),
+                "engine": ENGINE, "verifier": VERIFIER}
+        if MODELS.error:
+            body["error"] = MODELS.error
+        return body if ready else JSONResponse(body, status_code=503)
 
     @app.post("/v1/ocr")
     async def ocr(request: Request, pages: Optional[str] = None, verify: int = 1):
+        if MODELS.vl is None:
+            raise HTTPException(503, "OCR_MODELS_NOT_READY")
         body = await request.body()
         if not body.startswith(b"%PDF"):
             raise HTTPException(400, "body must be a PDF")

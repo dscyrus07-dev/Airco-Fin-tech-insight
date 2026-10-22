@@ -7,7 +7,7 @@ services:
       context: ../../ocr-service
     environment:
       OCR_DPI: "200"
-      OCR_PAGE_TIMEOUT_S: "20"
+      OCR_PAGE_TIMEOUT_S: "90"
     networks:
       - airco-network
     deploy:

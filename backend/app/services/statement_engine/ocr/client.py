@@ -2,7 +2,7 @@
 
 Configuration (environment only; no secrets involved):
     STATEMENT_ENGINE_OCR_URL            http://ocr-service:8090   or   mock:<dir>  (local fixtures, see below)
-    STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S per-page budget used to size the request timeout (default 8)
+    STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S per-page budget used to size the request timeout (default 45; ~20 s/page measured on an RTX 3060)
     STATEMENT_ENGINE_OCR_MAX_PAGES      pages per document OCR will accept (default 60)
     STATEMENT_ENGINE_OCR_DETECT_TIMEOUT_S  analysis-time budget for pages 1-2 (default 5)
 
@@ -48,7 +48,7 @@ def max_pages() -> int:
 
 
 def page_timeout_s() -> float:
-    return _env_float("STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S", 8.0)
+    return _env_float("STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S", 45.0)
 
 
 def detect_timeout_s() -> float:
