@@ -91,17 +91,42 @@ def test_runaway_page_is_killed_and_worker_respawns():
     assert ok is False or s.state == "ready"           # fake worker reloads instantly in tests
 
 
+def _flaky_worker(job_conn, evt_conn, hang_flag):
+    """Sends ready, then hangs forever on the FIRST page job; every later job answers.
+
+    The flag is shared memory, so the respawned worker (same target, same flag) is healthy:
+    deterministic recovery without racing the spawn thread to swap _target."""
+    evt_conn.send({"event": "ready"})
+    while True:
+        try:
+            job = job_conn.recv()
+        except (EOFError, KeyboardInterrupt):
+            break
+        if job.get("cmd") == "shutdown":
+            break
+        if job.get("cmd") == "warmup":
+            job_conn.send({"ok": True})
+            continue
+        if hang_flag.value:
+            hang_flag.value = 0
+            time.sleep(3600)
+            continue
+        time.sleep(0.01)
+        job_conn.send({"ok": True, "blocks": [{"label": "text", "bbox": [0, 0, 1, 1], "content": "x"}],
+                       "lines": [{"text": "x", "box": [0, 0, 1, 1], "score": 0.9}]})
+    job_conn.close()
+
+
 def test_worker_comes_back_after_kill():
-    """After a kill+respawn the next job succeeds (fake worker reloads instantly)."""
-    s = m._Supervisor(target=lambda j, e: _fake_worker(j, e, hang=True), ctx=_mp.get_context("fork"))
+    """After a kill+respawn the next job succeeds (the respawned worker is healthy)."""
+    ctx = _mp.get_context("fork")
+    hang_flag = ctx.Value("i", 1)
+    s = m._Supervisor(target=lambda j, e: _flaky_worker(j, e, hang_flag), ctx=ctx)
     s.start()
     assert s._await_ready(60)
     s._warmup_attempted = True
     kind, _ = s.run_page("/x.png", False, budget_s=1.0)
     assert kind == "timeout"
-    # swap to a healthy fake worker for the respawn: supervisor re-spawns the same target;
-    # emulate recovery by replacing the target before the next job
-    s._target = lambda j, e: _fake_worker(j, e, page_delay=0.01)
     kind, res = s.run_page("/x.png", True, budget_s=10.0)
     assert kind == "ok" and res["blocks"]
 

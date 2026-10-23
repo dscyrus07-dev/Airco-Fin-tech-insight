@@ -40,6 +40,7 @@ WARMUP_BUDGET_S = float(os.environ.get("OCR_WARMUP_BUDGET_S", "60"))     # best-
 MAX_INFLIGHT = int(os.environ.get("OCR_MAX_INFLIGHT", "2"))              # documents; beyond -> 503 OCR_BUSY
 MAX_RESPAWNS = int(os.environ.get("OCR_MAX_RESPAWNS", "6"))              # flapping worker -> permanent failure
 VL_MAX_NEW_TOKENS = int(os.environ.get("OCR_VL_MAX_NEW_TOKENS", "2048"))  # bounds one generation; 0 = paddlex default
+SKIP_VL = os.environ.get("OCR_SKIP_VL", "") == "1"                        # opt-in: lines-only mode, no VLM at all
 PROBE_TTL_S = float(os.environ.get("OCR_VL_PROBE_TTL_S", "5"))           # health probe cache for the VL server
 
 
@@ -103,7 +104,7 @@ def _worker_main(job_conn, evt_conn) -> None:
         kwargs: Dict[str, Any] = {"use_doc_orientation_classify": True}
         if VL_SERVER_URL:
             kwargs.update(vl_rec_backend="vllm-server", vl_rec_server_url=VL_SERVER_URL)
-        vl = PaddleOCRVL(**kwargs)
+        vl = None if SKIP_VL else PaddleOCRVL(**kwargs)
         ocr = PaddleOCR(use_doc_orientation_classify=False, use_doc_unwarping=False,
                         use_textline_orientation=False)
     except Exception as exc:
@@ -141,13 +142,14 @@ def _worker_main(job_conn, evt_conn) -> None:
                     path = fh.name
                 try:
                     cv2.imwrite(path, img)
-                    vl_page(path)
+                    if not SKIP_VL:
+                        vl_page(path)
                     lines_page(path)
                 finally:
                     os.unlink(path)
                 job_conn.send({"ok": True})
             else:
-                out = {"ok": True, "blocks": vl_page(job["path"])}
+                out = {"ok": True, "blocks": [] if SKIP_VL else vl_page(job["path"])}
                 out["lines"] = lines_page(job["path"]) if job.get("verify") else []
                 job_conn.send(out)
         except Exception as exc:
@@ -339,7 +341,7 @@ class _Supervisor:
     # ----- health -----
     def vl_server_probe(self) -> Tuple[bool, str]:
         """Probe the configured VL server (cheap, cached PROBE_TTL_S). F12: health must reflect the real path."""
-        if not VL_SERVER_URL:
+        if not VL_SERVER_URL or SKIP_VL:
             return True, ""
         now = time.monotonic()
         ts, ok, why = self._probe_cache
@@ -357,6 +359,7 @@ class _Supervisor:
 
     def health_body(self) -> Tuple[dict, bool]:
         body: Dict[str, Any] = {"engine": ENGINE, "verifier": VERIFIER, "worker": self.state,
+                                "vl": "disabled" if SKIP_VL else ("vllm-server" if VL_SERVER_URL else "in-process"),
                                 "warmup": self.warmup, "respawns": self.respawns}
         if self.state == "ready":
             ok, why = self.vl_server_probe()
