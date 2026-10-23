@@ -478,6 +478,12 @@ def append_statement_check_sheet(excel_path: str, block: Dict[str, Any]) -> bool
             if failed:
                 ws.append(["Note", "Some pages could not be read. This workbook does NOT contain every transaction in the "
                                    "statement: check the missing pages in the PDF."])
+            missed = ocr.get("rows_dropped_total") or 0
+            if missed:
+                ws.append(["Rows that could not be placed", f"{missed} "
+                           + ", ".join(f"page {k}: {v}" for k, v in (ocr.get("rows_dropped") or {}).items())])
+                ws.append(["Note", f"{missed} table row(s) were read in a broken shape and could NOT be placed in a "
+                                   "column safely, so they are NOT in this workbook. Check those rows in the PDF."])
             ver = ocr.get("verification") or {}
             ws.append(["Second-reader amount check", ver.get("status", "not_run")])
             if ver.get("amounts_checked"):

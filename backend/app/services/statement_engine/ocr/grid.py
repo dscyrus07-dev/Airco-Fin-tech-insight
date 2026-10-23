@@ -18,12 +18,13 @@ Text is never altered here beyond whitespace normalisation: no digit "correction
 from __future__ import annotations
 
 import re
-from typing import List, Sequence
+from collections import Counter
+from typing import Dict, List, Optional, Sequence
 
 from ..extraction.rows import Page
 from ..extraction.words import Word
 from .contracts import OcrPage
-from .html_table import parse_tables
+from .html_table import parse_tables, parse_tables_shaped
 
 MARGIN = 20.0
 COL_W = 150.0
@@ -81,14 +82,39 @@ def table_words(grid: Sequence[Sequence[str]], top: float) -> List[Word]:
     return words
 
 
-def page_from_ocr(op: OcrPage) -> Page:
-    """One engine Page from one OCR page, blocks in the order the layout model returned (its reading order)."""
+def _well_shaped(grid: Sequence[Sequence[str]], counts: Sequence[int]):
+    """Rows whose real cell count matches the table's prevailing one, plus how many were dropped.
+
+    A row the recogniser emitted short cannot be placed: its cells sit one column left of where they belong, so
+    an amount would land under the wrong heading. There is no way to tell WHICH cell was dropped (the HTML
+    carries no coordinates), and guessing would move money between debit and credit. Such rows are left out and
+    counted; the caller reports the count, and the balance chain then fails rather than passing on shifted
+    values. Tables too small for a prevailing shape are kept as they are."""
+    if len(grid) < 3:
+        return list(grid), 0
+    # A table's first row is its header and its titles are never empty, so when that row is the widest it
+    # states the true column count; otherwise fall back to the prevailing one. Taking the majority alone
+    # would discard the header whenever the recogniser shortens every data row.
+    expected = counts[0] if counts[0] == max(counts) else Counter(counts).most_common(1)[0][0]
+    keep = [row for row, n in zip(grid, counts) if n == expected]
+    return keep, len(grid) - len(keep)
+
+
+def page_from_ocr(op: OcrPage, stats: Optional[Dict[str, int]] = None) -> Page:
+    """One engine Page from one OCR page, blocks in the order the layout model returned (its reading order).
+
+    `stats`, when given, collects "rows_dropped": rows the recogniser emitted mis-shaped (see _well_shaped)."""
     words: List[Word] = []
     y = MARGIN
     max_cols = 0
     for b in op.blocks:
         if b.is_table:
-            for grid in parse_tables(b.content):
+            for grid, counts in parse_tables_shaped(b.content):
+                if not grid:
+                    continue
+                grid, dropped = _well_shaped(grid, counts)
+                if dropped and stats is not None:
+                    stats["rows_dropped"] = stats.get("rows_dropped", 0) + dropped
                 if not grid:
                     continue
                 max_cols = max(max_cols, max(len(r) for r in grid))
@@ -103,10 +129,20 @@ def page_from_ocr(op: OcrPage) -> Page:
     return Page(words=words, width=width)
 
 
-def pages_from_ocr(pages: Sequence[OcrPage]) -> List[Page]:
+def pages_from_ocr(pages: Sequence[OcrPage], dropped: Optional[Dict[int, int]] = None) -> List[Page]:
     """Engine pages for the OCR pages that succeeded, in page order. Failed pages are NOT represented here;
-    the caller reports them (a failed page is never silently treated as empty)."""
-    return [page_from_ocr(p) for p in sorted(pages, key=lambda p: p.page) if p.ok]
+    the caller reports them (a failed page is never silently treated as empty).
+
+    `dropped`, when given, is filled with source page number -> mis-shaped rows left out on that page."""
+    out: List[Page] = []
+    for p in sorted(pages, key=lambda p: p.page):
+        if not p.ok:
+            continue
+        stats: Dict[str, int] = {}
+        out.append(page_from_ocr(p, stats))
+        if dropped is not None and stats.get("rows_dropped"):
+            dropped[p.page] = stats["rows_dropped"]
+    return out
 
 
 def page_text(op: OcrPage) -> str:

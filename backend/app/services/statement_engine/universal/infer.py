@@ -421,10 +421,14 @@ def _spec_from_header(pages, hit: HeaderHit, header_repeats: bool, date_re, date
                       texts, furn, notes) -> Inference:
     spec, err, n2 = _build_spec(pages, hit, header_repeats, date_re, date_fmt, tail_re, texts, furn)
     notes.extend(n2)
+    # column titles only (no transaction data): without them a header mis-read is undiagnosable
+    diag = {"header_titles": " | ".join(f"{r}:{' '.join(t)}" for r, (_x0, _x1, t)
+                                        in sorted(hit.spans.items(), key=lambda kv: kv[1][0]))[:300],
+            "header_aux": " | ".join(" ".join(t) for _x0, _x1, t in hit.aux)[:160]}
     if err:
-        return _fail(*err)
+        return _fail(err[0], err[1], meta=dict(diag, header=True))
     return _check_margin(spec, pages, date_re, hit, notes,
-                         meta_extra={"header": True,
+                         meta_extra={"header": True, **diag,
                                      "header_tokens": " ".join(sorted(hit.spans))[:300],
                                      "money": "/".join(sorted(r for r in hit.spans if r in ("debit", "credit", "amount", "balance")))[:80],
                                      "date_shape": date_fmt,
@@ -464,7 +468,15 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
     if "narration" not in text_columns:
         text_columns = ("date", "narration") + tuple(r for r in text_roles if r not in ("date", "narration"))
 
-    single_amount = "amount" in spans and "debit" not in spans
+    has_amt, has_dr, has_cr = "amount" in spans, "debit" in spans, "credit" in spans
+    if has_amt and has_dr != has_cr:
+        # One side is titled and the other was read as a bare "Amount" (a mis-read header, typically OCR).
+        # Which side that column carries is unprovable from the header, and assuming it would invent
+        # debits or credits, so the document is refused instead.
+        return None, ("AMBIGUOUS_MONEY_COLUMNS",
+                      f"header titles {'debit' if has_dr else 'credit'} and a generic amount column "
+                      f"but no {'credit' if has_dr else 'debit'} column"), notes
+    single_amount = has_amt and not has_dr and not has_cr
     type_col = "type" if "type" in text_roles else ""
     # single_amount_column makes debit/credit purely virtual names for normalize's side
     # bookkeeping: they must be distinct and must NOT coincide with the amount column name.
@@ -548,6 +560,10 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
         # was silently popped — leave it off for single-amount layouts.
         opening_row_balance_only=not single_amount,
     )
+    try:
+        spec.validate()           # backstop: a spec that declares an unlocated column must never reach
+    except ValueError as exc:     # the engine, where it surfaces as a raw KeyError (bug F11)
+        return None, ("INVALID_SPEC", str(exc)[:120]), notes
     return spec, None, notes
 
 
@@ -571,8 +587,10 @@ def _infer_implicit(pages, date_re, date_fmt, tail_re, texts, furn, notes) -> In
 
     margin = _implicit_margin(lines, idxs, edges, date_re)
     if margin is None or margin["score"] < 0.85 or margin["score"] - margin["runner_up"] < 0.15:
+        best = f"{margin['score']:.2f}" if margin else "n/a"
+        nxt = f"{margin['runner_up']:.2f}" if margin else "n/a"
         return _fail("LOW_CONFIDENCE_COLUMNS",
-                     f"chain margin unclear best={margin and margin['score']:.2f} next={margin and margin['runner_up']:.2f}",
+                     f"chain margin unclear best={best} next={nxt}",
                      meta={"margin": margin})
 
     # build implicit role order: date, [secondary date], narration, <money roles>, balance last
@@ -613,6 +631,10 @@ def _infer_implicit(pages, date_re, date_fmt, tail_re, texts, furn, notes) -> In
     summ = infer_summary_lines([texts[0], texts[-1]])
     if summ:
         spec = _respec(spec, summ)
+    try:
+        spec.validate()                                    # same backstop on the headerless path
+    except ValueError as exc:
+        return _fail("INVALID_SPEC", str(exc)[:120], meta={"header": False, "margin": margin})
     notes.append(f"implicit_margin:{margin['score']:.2f}/{margin['runner_up']:.2f}")
     return Inference(spec=spec, notes=notes, meta={"header": False, "margin": margin})
 

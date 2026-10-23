@@ -9,7 +9,7 @@ from __future__ import annotations
 import html
 import re
 from html.parser import HTMLParser
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 _WS = re.compile(r"\s+")
 
@@ -82,6 +82,14 @@ def _int(v) -> int:
 
 def parse_tables(markup: str) -> List[List[List[str]]]:
     """Every top-level <table> in `markup` as a rectangular grid of strings."""
+    return [grid for grid, _counts in parse_tables_shaped(markup)]
+
+
+def parse_tables_shaped(markup: str) -> List[Tuple[List[List[str]], List[int]]]:
+    """As parse_tables, plus each row's real cell count BEFORE padding.
+
+    The recogniser drops empty cells instead of emitting them, which shifts every later cell of that row one
+    column left; padding hides the shift. The counts let the caller see which rows are mis-shaped."""
     p = _TableParser()
     try:
         p.feed(markup or "")
@@ -111,5 +119,6 @@ def parse_tables(markup: str) -> List[List[List[str]]]:
                 col += 1
             grid.append(row)
         width = max((len(r) for r in grid), default=0)
-        out.append([[c or "" for c in r] + [""] * (width - len(r)) for r in grid])
+        out.append(([[c or "" for c in r] + [""] * (width - len(r)) for r in grid],
+                    [len(r) for r in grid]))
     return out
