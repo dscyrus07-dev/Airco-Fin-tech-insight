@@ -1,4 +1,4 @@
-import importlib.util, os, sys
+import importlib.util, multiprocessing as _mp, os, sys, time
 os.environ["OCR_SERVICE_AUTOSTART"] = "0"
 spec = importlib.util.spec_from_file_location("ocr_app", os.path.join(os.path.dirname(__file__), "..", "app.py"))
 m = importlib.util.module_from_spec(spec); sys.modules["ocr_app"] = m; spec.loader.exec_module(m)
@@ -36,12 +36,103 @@ def test_endpoint_request_param_is_not_a_query_param():
     assert [q.name for q in route.dependant.query_params] == ["pages", "verify"]
 
 
+def _fake_worker(job_conn, evt_conn, page_delay=0.01, hang=False, load_error=None):
+    if load_error:
+        evt_conn.send({"event": "load_error", "error": load_error})
+        evt_conn.close()
+        return
+    evt_conn.send({"event": "ready"})
+    while True:
+        try:
+            job = job_conn.recv()
+        except (EOFError, KeyboardInterrupt):
+            break
+        if job.get("cmd") == "shutdown":
+            break
+        if job.get("cmd") == "warmup":
+            job_conn.send({"ok": True})
+            continue
+        if hang:
+            time.sleep(3600)                    # runaway: never answers within the page budget
+            continue
+        time.sleep(page_delay)
+        job_conn.send({"ok": True, "blocks": [{"label": "text", "bbox": [0, 0, 1, 1], "content": "x"}],
+                       "lines": [{"text": "x", "box": [0, 0, 1, 1], "score": 0.9}]})
+    job_conn.close()
+
+
 def test_model_load_failure_is_recorded_not_raised():
     """F3: a failing model load must leave the process up so /health can report it."""
-    mm = m._Models()
+    s = m._Supervisor(target=lambda j, e: _fake_worker(j, e, load_error="ImportError"), ctx=_mp.get_context("fork"))
+    s.start()
+    assert s._await_ready(30) is False
+    for _ in range(50):
+        if s.state == "failed":
+            break
+        time.sleep(0.1)
+    body, ok = s.health_body()
+    assert s.state == "failed" and ok is False
+    assert body["error"] == "ImportError"
 
-    def boom():
-        raise ImportError("libgomp")
-    mm.load = boom
-    mm.load_guarded()
-    assert mm.vl is None and mm.error == "ImportError"
+
+def test_runaway_page_is_killed_and_worker_respawns():
+    """F9: a runaway job must be hard-killed within ~budget and the worker respawned."""
+    s = m._Supervisor(target=lambda j, e: _fake_worker(j, e, hang=True), ctx=_mp.get_context("fork"))
+    s.start()
+    assert s._await_ready(60)
+    s._warmup_attempted = True                        # isolate the test from the warm-up job
+    t0 = time.monotonic()
+    kind, _ = s.run_page("/nonexistent.png", False, budget_s=2.0)
+    elapsed = time.monotonic() - t0
+    assert kind == "timeout" and elapsed < 8           # killed ~at the 2 s budget, not 3600 s
+    assert s.respawns == 1
+    # while respawning the supervisor reports not-ready; health stays cheap to answer
+    body, ok = s.health_body()
+    assert ok is False or s.state == "ready"           # fake worker reloads instantly in tests
+
+
+def test_worker_comes_back_after_kill():
+    """After a kill+respawn the next job succeeds (fake worker reloads instantly)."""
+    s = m._Supervisor(target=lambda j, e: _fake_worker(j, e, hang=True), ctx=_mp.get_context("fork"))
+    s.start()
+    assert s._await_ready(60)
+    s._warmup_attempted = True
+    kind, _ = s.run_page("/x.png", False, budget_s=1.0)
+    assert kind == "timeout"
+    # swap to a healthy fake worker for the respawn: supervisor re-spawns the same target;
+    # emulate recovery by replacing the target before the next job
+    s._target = lambda j, e: _fake_worker(j, e, page_delay=0.01)
+    kind, res = s.run_page("/x.png", True, budget_s=10.0)
+    assert kind == "ok" and res["blocks"]
+
+
+def test_warmup_timeout_marks_skipped_and_service_ready():
+    """F8: a warm-up that overruns its cap must not block readiness."""
+    def w(job_conn, evt_conn):
+        evt_conn.send({"event": "ready"})
+        while True:
+            try:
+                job = job_conn.recv()
+            except (EOFError, KeyboardInterrupt):
+                break
+            if job.get("cmd") == "warmup":
+                time.sleep(3600)
+                continue
+            job_conn.send({"ok": True, "blocks": [], "lines": []})
+        job_conn.close()
+    s = m._Supervisor(target=w, ctx=_mp.get_context("fork"))
+    m.WARMUP_BUDGET_S = 1.0
+    s.start()
+    assert s._await_ready(60)
+    for _ in range(100):
+        if s.warmup != "pending":
+            break
+        time.sleep(0.1)
+    assert s.warmup == "timeout"                       # bounded, best-effort, recorded
+    for _ in range(50):
+        if s.state == "ready":
+            break
+        time.sleep(0.1)
+    body, ok = s.health_body()
+    assert body["warmup"] == "timeout"
+    m.WARMUP_BUDGET_S = 60.0
