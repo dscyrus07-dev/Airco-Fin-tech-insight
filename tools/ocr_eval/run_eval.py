@@ -60,13 +60,18 @@ def run_one(entry, corpus, use_oracle, perturb):
         for nr in res.universal.outcome.rows:
             t = nr.txn
             ext.append({"date": t.date, "debit": t.debit, "credit": t.credit, "balance": t.balance})
-    cr = (res.universal.meta.get("check_results") if res.universal else None) or {}
+    meta = (res.universal.meta if res.universal else None) or {}
+    cr = meta.get("check_results") or {}
     item = scoring.score_statement(entry["rows"], ext)
     item.update(id=entry["id"], category=entry["category"], served=res.ok, verdict=res.verdict, code=res.code,
                 pre_cap=(res.universal.meta.get("checks_verdict") if res.universal else None),
                 chain_pass=cr.get("chain") == "pass", reference_pass=cr.get("reference") == "pass",
                 page_seconds=[p.elapsed_s for p in doc.pages if p.elapsed_s], failed_pages=len(res.failed_pages),
-                review_codes=list(res.review_codes))
+                review_codes=list(res.review_codes),
+                # what the recogniser actually printed as column titles, and rows too mis-shaped to place:
+                # without these a refusal cannot be told apart from a model that simply cannot read the page
+                header_titles=meta.get("header_titles", ""), header_aux=meta.get("header_aux", ""),
+                rows_dropped=sum(res.rows_dropped.values()), detail=(res.detail or "")[:120])
     return item
 
 
@@ -110,6 +115,11 @@ def main():
         g = report["categories"][c]["aggregate"]
         md.append(f"| {c} | {g['statements']} | {g['served']} | {f(g['exact_amount_rate'],2)} | {g['side_flips']} | "
                   f"{g['invented_in_chain_passing']} | {f(g['chain_and_reference_pass_rate'],0)} | {sec(g['seconds_per_page_p95'])} |")
+    bad = [i for i in items if not i["served"]]
+    if bad:
+        md += ["", "## Not served (first 25) — code, dropped rows, and the column titles the recogniser read", "",
+               "| id | code | dropped | header titles |", "|---|---|---|---|"]
+        md += [f"| {i['id']} | {i['code']} | {i['rows_dropped']} | {(i['header_titles'] or '-').replace('|', '/')[:90]} |" for i in bad[:25]]
     md += ["", "Targets are release gates, not proven capabilities. Passing them would not lift the REVIEW cap."]
     print("\n".join(md))
     if a.out:
