@@ -83,29 +83,31 @@ def draw_pdf(opening, rows, layout: str) -> bytes:
             c.drawString(40, y, f"Opening Balance {indian(opening)}"); y -= 16
         else:
             y -= 10
-        cols = ([("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 290), ("Withdrawal Amt.", 370),
-                 ("Deposit Amt.", 450), ("Closing Balance", 520)] if layout == "split" else
-                [("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 300), ("Amount", 400), ("Balance", 500)])
-        c.setFont("Helvetica-Bold", 7.5)
+        # balance column ends 55pt from the right edge (18mm): edge-tight columns were dropped by the
+        # VLM's table reading (R6 finding F10); margins here match real statements
+        cols = ([("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 270), ("Withdrawal Amt.", 350),
+                 ("Deposit Amt.", 420), ("Closing Balance", 480)] if layout == "split" else
+                [("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 280), ("Amount", 370), ("Balance", 460)])
+        c.setFont("Helvetica-Bold", 9)
         for name, x in cols:
             c.drawString(x if name in ("Date", "Narration", "Chq./Ref.No.") else x - 20, y, name)
         y -= 6; c.line(36, y, W - 30, y); y -= 12
-        c.setFont("Helvetica", 7.5)
+        c.setFont("Helvetica", 9)
         for r in chunk:
             dd = f"{r['date'][8:]}/{r['date'][5:7]}/{r['date'][:4]}"
-            c.drawString(40, y, dd); c.drawString(100, y, r["narr"]); c.drawString(300 if layout == "signed" else 290, y, r["ref"])
+            c.drawString(40, y, dd); c.drawString(100, y, r["narr"]); c.drawString(300 if layout == "signed" else 270, y, r["ref"])
             if layout == "split":
-                if r["debit"]: c.drawRightString(440, y, indian(Decimal(r["debit"])))
-                if r["credit"]: c.drawRightString(520, y, indian(Decimal(r["credit"])))
-                c.drawRightString(W - 35, y, indian(Decimal(r["balance"])))
+                if r["debit"]: c.drawRightString(420, y, indian(Decimal(r["debit"])))
+                if r["credit"]: c.drawRightString(490, y, indian(Decimal(r["credit"])))
+                c.drawRightString(545, y, indian(Decimal(r["balance"])))
             else:
                 amt = f"-{indian(Decimal(r['debit']))}" if r["debit"] else indian(Decimal(r["credit"]))
-                c.drawRightString(480, y, amt); c.drawRightString(W - 35, y, indian(Decimal(r["balance"])))
+                c.drawRightString(480, y, amt); c.drawRightString(545, y, indian(Decimal(r["balance"])))
             y -= 15
         if pi == len(chunks) - 1:
             y -= 14
             dr = sum(Decimal(r["debit"]) for r in rows if r["debit"]); cr = sum(Decimal(r["credit"]) for r in rows if r["credit"])
-            c.setFont("Helvetica-Bold", 7.5)
+            c.setFont("Helvetica-Bold", 9)
             c.drawString(40, y, f"Debits {indian(dr)}   Credits {indian(cr)}   Closing Balance {indian(Decimal(rows[-1]['balance']))}")
         c.showPage()
     c.save()

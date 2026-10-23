@@ -1,0 +1,983 @@
+{
+ "synthetic": true,
+ "oracle": true,
+ "gates": {
+  "exact_amount_rate_min": 0.995,
+  "side_flip_rate_max": 0.001,
+  "invented_in_chain_passing_max": 0,
+  "chain_and_reference_pass_rate_min": 0.8,
+  "p95_seconds_per_page_max": 4.0
+ },
+ "categories": {
+  "blur": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "clean_200": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    },
+    "chain_and_reference_pass_rate": {
+     "value": 1.0,
+     "threshold": 0.8,
+     "result": "PASS"
+    }
+   }
+  },
+  "dpi_150": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "dpi_300": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "jpeg": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "low_contrast": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "noise": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "rotated_180": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  },
+  "skew": {
+   "aggregate": {
+    "statements": 3,
+    "served": 3,
+    "amounts_total": 240,
+    "exact_amount_rate": 1.0,
+    "side_flip_rate": 0.0,
+    "side_flips": 0,
+    "invented_rows_total": 0,
+    "invented_in_chain_passing": 0,
+    "missing_rows_total": 0,
+    "chain_pass_rate": 1.0,
+    "chain_and_reference_pass_rate": 1.0,
+    "failed_pages": 0,
+    "pages_timed": 6,
+    "seconds_per_page_p50": 0.5,
+    "seconds_per_page_p95": 0.5,
+    "never_verified": true
+   },
+   "gates": {
+    "exact_amounts": {
+     "value": 1.0,
+     "threshold": 0.995,
+     "result": "PASS"
+    },
+    "side_flips": {
+     "value": 0.0,
+     "threshold": 0.001,
+     "result": "PASS"
+    },
+    "invented_in_chain_passing": {
+     "value": 0,
+     "threshold": 0,
+     "result": "PASS"
+    },
+    "p95_seconds_per_page": {
+     "value": 0.5,
+     "threshold": 4.0,
+     "result": "PASS"
+    }
+   }
+  }
+ },
+ "overall": {
+  "statements": 27,
+  "served": 27,
+  "amounts_total": 2160,
+  "exact_amount_rate": 1.0,
+  "side_flip_rate": 0.0,
+  "side_flips": 0,
+  "invented_rows_total": 0,
+  "invented_in_chain_passing": 0,
+  "missing_rows_total": 0,
+  "chain_pass_rate": 1.0,
+  "chain_and_reference_pass_rate": 1.0,
+  "failed_pages": 0,
+  "pages_timed": 54,
+  "seconds_per_page_p50": 0.5,
+  "seconds_per_page_p95": 0.5,
+  "never_verified": true
+ },
+ "statements": [
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "clean_200_00",
+   "category": "clean_200",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "clean_200_01",
+   "category": "clean_200",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "clean_200_02",
+   "category": "clean_200",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_150_00",
+   "category": "dpi_150",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_150_01",
+   "category": "dpi_150",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_150_02",
+   "category": "dpi_150",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_300_00",
+   "category": "dpi_300",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_300_01",
+   "category": "dpi_300",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "dpi_300_02",
+   "category": "dpi_300",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "skew_00",
+   "category": "skew",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "skew_01",
+   "category": "skew",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "skew_02",
+   "category": "skew",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "noise_00",
+   "category": "noise",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "noise_01",
+   "category": "noise",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "noise_02",
+   "category": "noise",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "blur_00",
+   "category": "blur",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "blur_01",
+   "category": "blur",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "blur_02",
+   "category": "blur",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "jpeg_00",
+   "category": "jpeg",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "jpeg_01",
+   "category": "jpeg",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "jpeg_02",
+   "category": "jpeg",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "low_contrast_00",
+   "category": "low_contrast",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "low_contrast_01",
+   "category": "low_contrast",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "low_contrast_02",
+   "category": "low_contrast",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "rotated_180_00",
+   "category": "rotated_180",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "rotated_180_01",
+   "category": "rotated_180",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  },
+  {
+   "gt_rows": 40,
+   "ext_rows": 40,
+   "amounts_total": 80,
+   "amounts_exact": 80,
+   "side_flips": 0,
+   "invented": 0,
+   "missing_rows": 0,
+   "id": "rotated_180_02",
+   "category": "rotated_180",
+   "served": true,
+   "verdict": "REVIEW",
+   "code": "OCR_READER",
+   "pre_cap": "VERIFIED",
+   "chain_pass": true,
+   "reference_pass": true,
+   "failed_pages": 0,
+   "review_codes": [
+    "OCR_READER"
+   ]
+  }
+ ]
+}

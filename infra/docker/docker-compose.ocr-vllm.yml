@@ -1,0 +1,60 @@
+# Opt-in override: vLLM-served PaddleOCR-VL recognition (R6 Part 3 experiment).
+# The default stays in-process (docker-compose.ocr.yml). This file adds the vLLM
+# server container and points the backend's ocr-service at it.
+#
+#   docker compose -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.ocr.yml \
+#     -f infra/docker/docker-compose.ocr-vllm.yml up ocr-service ocr-vllm-server
+#
+# Validated on an RTX 3060 12 GB (see docs/ocr/R6_DEVIN_REPORT.md):
+# - vLLM needs vLLM >= 0.11.1 for PaddleOCR-VL (0.10.2 fails weight mapping: "no module or
+#   parameter named 'mlp_AR'"); validated on v0.32.0.
+# - --served-model-name must be PaddleOCR-VL-1.6-0.9B (what paddlex's client requests).
+# - --trust-request-mm-kwargs is required: paddlex sends per-request mm_processor_kwargs
+#   (vLLM 0.32 rejects them otherwise -> every page fails OCR_PAGE_ERROR:RuntimeError).
+# - --max-model-len 16384: the model's default 131072 context needs 2.25 GiB KV cache and
+#   does not fit next to the verifier at 0.45 utilization.
+# - gpu-memory-utilization 0.45: at 0.6 the verifier + layout models do not fit
+#   (11.2 GiB used with vLLM alone; total must stay under ~11.5 GiB).
+services:
+  ocr-vllm-server:
+    image: vllm/vllm-openai:v0.32.0
+    container_name: ocr_vllm_server
+    command:
+      - --model
+      - PaddlePaddle/PaddleOCR-VL
+      - --served-model-name
+      - PaddleOCR-VL-1.6-0.9B
+      - --trust-remote-code
+      - --trust-request-mm-kwargs
+      - --max-num-batched-tokens
+      - "16384"
+      - --no-enable-prefix-caching
+      - --mm-processor-cache-gb
+      - "0"
+      - --gpu-memory-utilization
+      - "0.45"
+      - --max-model-len
+      - "16384"
+      - --port
+      - "8080"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: 2g
+    networks:
+      - airco-network
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8080/v1/models',timeout=4).status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 300s
+    # no published ports: reachable from the ocr-service over the internal network only
+
+  ocr-service:
+    environment:
+      OCR_VL_SERVER_URL: http://ocr-vllm-server:8080/v1

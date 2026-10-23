@@ -1,0 +1,9 @@
+# R6 Part 3 experiment: vLLM server for the PaddleOCR-VL recognition step.
+# Reuses the r6-ocr-service image (paddle + paddleocr already installed) and adds
+# the paddlex-pinned vLLM stack. Run: paddleocr genai_server --backend vllm.
+FROM r6-ocr-service
+RUN pip3 install --no-cache-dir --timeout 120 \
+      --extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+      "vllm==0.10.2" "torch==2.8.0" safetensors
+ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
+EXPOSE 8080
