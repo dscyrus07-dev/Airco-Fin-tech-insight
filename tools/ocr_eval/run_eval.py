@@ -71,7 +71,8 @@ def run_one(entry, corpus, use_oracle, perturb):
                 # what the recogniser actually printed as column titles, and rows too mis-shaped to place:
                 # without these a refusal cannot be told apart from a model that simply cannot read the page
                 header_titles=meta.get("header_titles", ""), header_aux=meta.get("header_aux", ""),
-                rows_dropped=sum(res.rows_dropped.values()), detail=(res.detail or "")[:120])
+                rows_dropped=sum(res.rows_dropped.values()), fused_amounts=res.fused_amounts,
+                detail=(res.detail or "")[:120])
     return item
 
 
@@ -80,11 +81,18 @@ def main():
     ap.add_argument("--corpus", required=True)
     ap.add_argument("--url", default="")
     ap.add_argument("--oracle", action="store_true")
+    ap.add_argument("--layer", choices=("blocks", "lines"), default="",
+                    help="text layer feeding the engine: blocks = the VL model's table markup (default), "
+                         "lines = the recogniser's own text boxes. Run both to compare them on one corpus.")
     ap.add_argument("--perturb-side", type=int, default=0)
     ap.add_argument("--categories", default="")
     ap.add_argument("--limit", type=int, default=0, help="statements per category (0 = all)")
     ap.add_argument("--out", default="")
     a = ap.parse_args()
+    if a.oracle and a.layer == "lines":
+        sys.exit("--oracle builds table markup, not text boxes: --layer lines needs a real --url run")
+    if a.layer:
+        os.environ["STATEMENT_ENGINE_OCR_TEXT_LAYER"] = a.layer
     if not a.oracle:
         if not a.url:
             sys.exit("give --url (service or mock:<dir>) or --oracle")
@@ -100,13 +108,16 @@ def main():
         seen[e["category"]] = seen.get(e["category"], 0) + 1
         items.append(run_one(e, a.corpus, a.oracle, a.perturb_side))
     cats = sorted({i["category"] for i in items})
-    report = {"synthetic": True, "oracle": a.oracle, "gates": scoring.GATES, "categories": {}}
+    from app.services.statement_engine.ocr.reader import text_layer
+    report = {"synthetic": True, "oracle": a.oracle, "text_layer": text_layer(),
+              "gates": scoring.GATES, "categories": {}}
     for c in cats:
         agg = scoring.aggregate([i for i in items if i["category"] == c])
         report["categories"][c] = {"aggregate": agg, "gates": scoring.gate_report(agg, c == "clean_200")}
     report["overall"] = scoring.aggregate(items)
     report["statements"] = [{k: v for k, v in i.items() if k != "page_seconds"} for i in items]
     md = ["# OCR evaluation (SYNTHETIC scans)" + (" - ORACLE SELF-CHECK, not a model result" if a.oracle else ""), "",
+          f"Text layer: **{report['text_layer']}**", "",
           "| category | n | served | exact amounts | side flips | invented (chain-pass) | chain+ref pass | p95 s/page |",
           "|---|---|---|---|---|---|---|---|"]
     f = lambda v, p=1: "n/a" if v is None else f"{v*100:.{p}f}%"

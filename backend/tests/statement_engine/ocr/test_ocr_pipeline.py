@@ -94,9 +94,26 @@ def test_repetition_loop_page_is_failed_not_repaired():
 
 
 def test_empty_page_is_failed():
+    """Nothing read by EITHER reader. Clearing the markup alone no longer empties a page: the line boxes are a
+    text layer of their own (ocr/line_layer.py), so a page only one reader saw is still readable."""
     doc, _ = make_document()
     doc.pages[0].blocks = []
+    doc.pages[0].lines = []
     assert apply_guards(doc) == [1] and doc.pages[0].error == OCR_EMPTY and doc.pages[0].status == PAGE_FAILED
+
+
+def test_page_with_only_line_boxes_is_not_empty():
+    """The VL model returning nothing for a page does not condemn it while the line recogniser read it."""
+    doc, _ = make_document()
+    doc.pages[0].blocks = []
+    assert apply_guards(doc) == [] and doc.pages[0].ok
+
+
+def test_a_loop_in_the_line_reader_still_condemns_the_page():
+    doc, _ = make_document()
+    doc.pages[0].blocks = []
+    doc.pages[0].lines = [OcrLine("x" * 40, [0.0, float(i), 100.0, float(i) + 9], 0.99) for i in range(60)]
+    assert apply_guards(doc) == [1] and doc.pages[0].error == OCR_LOOP
 
 
 def test_partial_statement_never_looks_complete():

@@ -1,4 +1,4 @@
-"""T4 OCR reader: OcrDocument -> guarded pages -> synthetic text layer -> T3 inference + engine + checks ->
+"""T4 OCR reader: OcrDocument -> guarded pages -> text layer -> T3 inference + engine + checks ->
 independent amount verification -> verdict capped at REVIEW.
 
 Policy (docs/ocr/UNIVERSAL_OCR_PHASE1.md, Part F decisions of 2026-10-21):
@@ -12,6 +12,7 @@ Never raises.
 """
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
@@ -19,6 +20,7 @@ from typing import Any, Dict, List, Optional
 from ..universal import reader as _u
 from .contracts import OcrDocument
 from .grid import pages_from_ocr
+from .line_layer import page_from_lines
 from .guards import apply_guards
 from .verify import NOT_RUN, VerifyReport, verify_rows
 
@@ -27,6 +29,22 @@ OCR_PARTIAL_PAGES = "OCR_PARTIAL_PAGES"
 OCR_UNCONFIRMED_AMOUNTS = "OCR_UNCONFIRMED_AMOUNTS"
 OCR_NO_USABLE_PAGES = "OCR_NO_USABLE_PAGES"
 OCR_TABLE_ROWS_DROPPED = "OCR_TABLE_ROWS_DROPPED"
+OCR_FUSED_AMOUNTS = "OCR_FUSED_AMOUNTS"
+OCR_NO_TEXT_BOXES = "OCR_NO_TEXT_BOXES"
+
+TEXT_LAYER_ENV = "STATEMENT_ENGINE_OCR_TEXT_LAYER"
+LAYERS = ("blocks", "lines")
+
+
+def text_layer() -> str:
+    """Which text layer feeds the engine.
+
+    blocks (default) — coordinates invented from the VL model's table markup (ocr/grid.py).
+    lines            — the recogniser's own text boxes (ocr/line_layer.py). Candidate replacement: the first
+                       real-GPU run found the markup misstates the column structure on every split-layout
+                       statement. Kept opt-in until measured against blocks on the same corpus."""
+    v = (os.environ.get(TEXT_LAYER_ENV) or "blocks").strip().lower()
+    return v if v in LAYERS else "blocks"
 
 BUDGET_S = 30.0          # inference + extraction on the synthetic layer (OCR time is separate)
 
@@ -42,6 +60,8 @@ class OcrResult:
     pages_ok: List[int] = field(default_factory=list)
     failed_pages: Dict[int, str] = field(default_factory=dict)    # page -> failure code
     rows_dropped: Dict[int, int] = field(default_factory=dict)    # page -> mis-shaped table rows left out
+    fused_amounts: int = 0            # boxes holding two amounts: their split is estimated, not measured
+    layer: str = "blocks"
     verification: VerifyReport = field(default_factory=VerifyReport)
     engine: str = ""
     verifier: str = ""
@@ -78,6 +98,8 @@ class OcrResult:
             "failed_pages": {str(k): v for k, v in sorted(self.failed_pages.items())},
             "rows_dropped": {str(k): v for k, v in sorted(self.rows_dropped.items())},
             "rows_dropped_total": sum(self.rows_dropped.values()),
+            "text_layer": self.layer,
+            "fused_amounts": self.fused_amounts,
             "partial": self.partial,
             "verification": self.verification.to_dict(),
             "ocr_elapsed_ms": round(self.ocr_elapsed_s * 1000, 1),
@@ -112,7 +134,26 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
         if not ok_pages:
             res.code, res.detail = OCR_NO_USABLE_PAGES, "no page could be read"
             return res
-        engine_pages = pages_from_ocr(ok_pages, res.rows_dropped)
+        res.layer = text_layer()
+        if res.layer == "lines":
+            used, engine_pages = [], []
+            for p in ok_pages:
+                per: Dict[str, int] = {}
+                page = page_from_lines(p, per)
+                res.fused_amounts += per.get("fused_amounts", 0)
+                if page is None:
+                    # reported like any unread page, never treated as an empty one
+                    res.failed_pages[p.page] = OCR_NO_TEXT_BOXES
+                else:
+                    used.append(p)
+                    engine_pages.append(page)
+            ok_pages = used
+            res.pages_ok = [p.page for p in ok_pages]
+            if not engine_pages:
+                res.code, res.detail = OCR_NO_USABLE_PAGES, "no page carried a text box"
+                return res
+        else:
+            engine_pages = pages_from_ocr(ok_pages, res.rows_dropped)
         u = _u.read(pages=engine_pages, bank_hint=res.bank_hint, budget_s=budget_s)
         res.universal = u
         if not u.ok:
@@ -140,6 +181,8 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
             codes.append(OCR_PARTIAL_PAGES)
         if res.rows_dropped:
             codes.append(OCR_TABLE_ROWS_DROPPED)
+        if res.fused_amounts:
+            codes.append(OCR_FUSED_AMOUNTS)
         if res.verification.unconfirmed or res.verification.low_confidence:
             codes.append(OCR_UNCONFIRMED_AMOUNTS)
         if res.verification.status != "ran":

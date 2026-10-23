@@ -31,10 +31,17 @@ def compression_ratio(text: str) -> float:
 
 
 def page_problem(p: OcrPage) -> str:
-    """'' when the page looks sane, else a failure code."""
+    """'' when the page looks sane, else a failure code.
+
+    Both readers count: the line boxes are a text layer in their own right (ocr/line_layer.py), so a page the
+    VL model returned nothing for is not empty when the line recogniser read it, and a loop in either
+    reader's output condemns the page."""
     text = "\n".join(b.content or "" for b in p.blocks)
-    if not text.strip():
+    line_text = "\n".join(ln.text or "" for ln in (p.lines or []))
+    if not text.strip() and not line_text.strip():
         return OCR_EMPTY
+    if not text.strip():
+        text = line_text
     if len(text) > MAX_PAGE_CHARS:
         return OCR_OVERSIZE
     if len(text) >= LOOP_MIN_CHARS and compression_ratio(text) > LOOP_RATIO:
@@ -50,6 +57,6 @@ def apply_guards(doc: OcrDocument) -> List[int]:
             continue
         code = page_problem(p)
         if code:
-            p.status, p.error, p.blocks = PAGE_FAILED, code, []
+            p.status, p.error, p.blocks, p.lines = PAGE_FAILED, code, [], []
             newly.append(p.page)
     return newly
