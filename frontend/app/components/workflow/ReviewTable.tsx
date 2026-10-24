@@ -1,6 +1,6 @@
 'use client'
 
-import { AnalyzedDocument, BankCatalogEntry, BankOption } from '@/lib/statementsApi'
+import { AnalyzedDocument, BankCatalogEntry, BankOption, OcrCatalog, OcrReading, isScanned } from '@/lib/statementsApi'
 import { catalogFromBanks, findCatalogEntry, isSelectable } from '@/lib/bankSupport'
 import BankSelect from '@/app/components/bank/BankSelect'
 import type { WorkflowDoc } from '@/app/hooks/useStatementWorkflow'
@@ -11,6 +11,71 @@ const STATE_STYLE: Record<string, string> = {
   UNKNOWN: 'bg-gray-200 text-gray-800',
   UNSUPPORTED: 'bg-orange-100 text-orange-800',
   ERROR: 'bg-red-100 text-red-800',
+}
+
+// Measured on synthetic scans (docs/ocr/R11_DEVIN_REPORT.md): both readings put every amount on the right
+// side; they differ in speed, in rotated/skewed pages, and in whether a second reader checks the amounts.
+const READING_COPY: Record<OcrReading, { title: string; body: string }> = {
+  thorough: {
+    title: 'Thorough',
+    body: 'Reads rotated and skewed pages, and a second reader checks every amount. About 6 seconds a page.',
+  },
+  fast: {
+    title: 'Fast',
+    body: 'About 1 second a page. No second check on the amounts, and rotated or skewed pages may not be read.',
+  },
+}
+
+function OcrReadingChoice({
+  doc,
+  value,
+  ocr,
+  disabled,
+  onChange,
+}: {
+  doc: AnalyzedDocument
+  value: OcrReading | ''
+  ocr: OcrCatalog
+  disabled: boolean
+  onChange: (documentId: string, value: OcrReading) => void
+}) {
+  const modes: OcrReading[] = ocr.reading_modes.length ? ocr.reading_modes : ['thorough', 'fast']
+  const current: OcrReading = value || ocr.default_reading || modes[0]
+  return (
+    <fieldset className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3" disabled={disabled}>
+      <legend className="px-1 text-xs font-semibold text-amber-900">Scanned statement: read with OCR</legend>
+      <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-2" role="radiogroup" aria-label={`OCR reading for ${doc.filename}`}>
+        {modes.map((m) => (
+          <label
+            key={m}
+            className={`flex min-w-0 cursor-pointer items-start gap-2 rounded border bg-white p-2 text-sm ${
+              current === m ? 'border-amber-500 ring-1 ring-amber-400' : 'border-slate-200'
+            }`}
+          >
+            <input
+              type="radio"
+              name={`ocr-reading-${doc.document_id}`}
+              value={m}
+              checked={current === m}
+              onChange={() => onChange(doc.document_id, m)}
+              className="mt-1 shrink-0"
+            />
+            <span className="min-w-0">
+              <span className="font-medium text-slate-900">
+                {READING_COPY[m].title}
+                {m === ocr.default_reading ? ' (default)' : ''}
+              </span>
+              <span className="block text-xs text-slate-600">{READING_COPY[m].body}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+      <p className="mt-2 text-xs text-amber-900">
+        Figures read from a scan are always marked for review, so check them against the statement.
+        {ocr.max_pages ? ` Scans can be up to ${ocr.max_pages} pages.` : ''}
+      </p>
+    </fieldset>
+  )
 }
 
 const ACCOUNT_TYPES = [
@@ -29,6 +94,9 @@ interface ReviewTableProps {
   onOverride: (documentId: string, bankId: string) => void
   onAccountType: (documentId: string, value: string) => void
   onStatementLabel: (documentId: string, value: string) => void
+  /** present only when the backend reads scanned statements */
+  ocr?: OcrCatalog | null
+  onOcrReading?: (documentId: string, value: OcrReading) => void
   onPassword: (documentId: string, value: string) => void
   onConfirmOne: (doc: AnalyzedDocument, accountType?: string) => Promise<void>
   onConfirmAll: () => Promise<void>
@@ -45,6 +113,8 @@ export default function ReviewTable({
   onOverride,
   onAccountType,
   onStatementLabel,
+  ocr,
+  onOcrReading,
   onPassword,
   onConfirmOne,
   onConfirmAll,
@@ -85,7 +155,7 @@ export default function ReviewTable({
       </div>
 
       <ul className="mt-4 space-y-3">
-        {docs.map(({ document: d, override, accountType, statementLabel }) => {
+        {docs.map(({ document: d, override, accountType, statementLabel, ocrReading }) => {
           const selectable = d.state !== 'ERROR' && d.state !== 'UNSUPPORTED' && !d.requires_password && d.workflow_status === 'AWAITING_CONFIRMATION'
           const detectedListed = Boolean(
             d.bank && d.bank.supported && banks.some((b) => b.id === d.bank!.id)
@@ -238,6 +308,19 @@ export default function ReviewTable({
               {d.workflow_status === 'CONFIRMED' && (
                 <p className="mt-2 text-sm text-green-800">Confirmed as {d.effective_bank?.name}. Ready to process.</p>
               )}
+
+              {ocr?.enabled &&
+                onOcrReading &&
+                isScanned(d) &&
+                (d.workflow_status === 'AWAITING_CONFIRMATION' || d.workflow_status === 'CONFIRMED') && (
+                  <OcrReadingChoice
+                    doc={d}
+                    value={ocrReading || ''}
+                    ocr={ocr}
+                    disabled={!!busy}
+                    onChange={onOcrReading}
+                  />
+                )}
             </li>
           )
         })}

@@ -54,7 +54,9 @@ export default function HelpCenter({ onGuideOpened, onLimitsOpened }: HelpCenter
         </ol>
         <p className="mt-4 flex items-start gap-2 rounded-xl bg-indigo-50 p-3 text-sm text-indigo-900">
           <Icon name="lightbulb" size={18} className="mt-0.5 shrink-0" />
-          Tip: use the original PDF downloaded from your bank. Photos, scans and screenshots cannot be read.
+          {catalog.ocr?.enabled
+            ? 'Tip: the original PDF downloaded from your bank gives the best result. Scanned statements can be read too: they take longer and are always marked for review.'
+            : 'Tip: use the original PDF downloaded from your bank. Photos, scans and screenshots cannot be read.'}
         </p>
       </Accordion>
 
@@ -83,7 +85,9 @@ export default function HelpCenter({ onGuideOpened, onLimitsOpened }: HelpCenter
         <h4 className="mb-2 text-sm font-semibold text-slate-900">Good to know</h4>
         <ul className="space-y-2 text-sm text-slate-600">
           {[
-            'Only text-based PDFs are supported. Scanned or photographed statements cannot be read (no OCR).',
+            catalog.ocr?.enabled
+              ? `Scanned statements are read with OCR${catalog.ocr.max_pages ? ` (up to ${catalog.ocr.max_pages} pages)` : ''}. Figures read from an image can be misread, so these results are always marked “needs review”; check them against the statement.`
+              : 'Only text-based PDFs are supported. Scanned or photographed statements cannot be read (no OCR).',
             'Up to 20 statements per batch, up to 500 pages per PDF, and 30 uploads per minute.',
             'Files and reports are deleted automatically after 7 days.',
             'Some banks do not print running balances, so their totals cannot be independently proven. These are marked “needs review”.',

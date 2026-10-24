@@ -177,3 +177,44 @@ describe('ReviewTable bank selection', () => {
     expect(screen.getByLabelText('Statement label for a.pdf')).toBeTruthy()
   })
 })
+
+// ---------------------------------------------------------------- OCR reading choice (scanned statements)
+describe('ReviewTable OCR reading choice', () => {
+  const OCR = { enabled: true, reading_modes: ['thorough', 'fast'] as const, default_reading: 'thorough' as const, max_pages: 60 }
+  const scanned = (over: Partial<AnalyzedDocument> = {}) =>
+    wf({ capability: { capability: 'SCANNED' }, state: 'REVIEW', ...over })
+  const base = {
+    banks: BANKS, catalog: CATALOG, busy: null, passwords: {},
+    onOverride: vi.fn(), onAccountType: vi.fn(), onStatementLabel: vi.fn(), onPassword: vi.fn(),
+    onConfirmOne: vi.fn(), onConfirmAll: vi.fn(), onUnlock: vi.fn(), onProcess: vi.fn(),
+  }
+
+  it('offers both readings for a scanned statement, with the default selected', () => {
+    render(<ReviewTable {...base} docs={[scanned()]} ocr={{ ...OCR, reading_modes: [...OCR.reading_modes] }} onOcrReading={vi.fn()} />)
+    const thorough = screen.getByRole('radio', { name: /Thorough/ }) as HTMLInputElement
+    const fast = screen.getByRole('radio', { name: /Fast/ }) as HTMLInputElement
+    expect(thorough.checked).toBe(true)
+    expect(fast.checked).toBe(false)
+    expect(screen.getByText(/always marked for review/)).toBeTruthy()
+  })
+
+  it('reports the choice', async () => {
+    const onOcrReading = vi.fn()
+    const { default: userEvent } = await import('@testing-library/user-event')
+    render(<ReviewTable {...base} docs={[scanned()]} ocr={{ ...OCR, reading_modes: [...OCR.reading_modes] }} onOcrReading={onOcrReading} />)
+    await userEvent.click(screen.getByRole('radio', { name: /Fast/ }))
+    expect(onOcrReading).toHaveBeenCalledWith('d1', 'fast')
+  })
+
+  it('is not offered for a text PDF', () => {
+    render(<ReviewTable {...base} docs={[wf({ capability: { capability: 'TEXT' } })]} ocr={{ ...OCR, reading_modes: [...OCR.reading_modes] }} onOcrReading={vi.fn()} />)
+    expect(screen.queryByRole('radio', { name: /Thorough/ })).toBeNull()
+  })
+
+  it('is not offered when the backend cannot read scans', () => {
+    render(<ReviewTable {...base} docs={[scanned()]} ocr={{ enabled: false, reading_modes: [], default_reading: null, max_pages: null }} onOcrReading={vi.fn()} />)
+    expect(screen.queryByRole('radio', { name: /Thorough/ })).toBeNull()
+    render(<ReviewTable {...base} docs={[scanned()]} />)          // older callers pass no OCR props at all
+    expect(screen.queryByRole('radio', { name: /Fast/ })).toBeNull()
+  })
+})

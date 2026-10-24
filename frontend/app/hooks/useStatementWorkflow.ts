@@ -12,9 +12,12 @@ import {
   confirmDocuments,
   getJob,
   listBankCatalog,
+  isScanned,
   processConfirmed,
   unlockDocument,
   BankCatalogEntry,
+  OcrCatalog,
+  OcrReading,
 } from '@/lib/statementsApi'
 import { FALLBACK_BANK_LIST } from '@/lib/banks'
 import { catalogFromBanks } from '@/lib/bankSupport'
@@ -27,6 +30,8 @@ export interface WorkflowDoc {
   accountType: string
   statementLabel: string
   override: string
+  /** scanned statements only: how OCR should read it ('' = the deployment default) */
+  ocrReading?: OcrReading | ''
 }
 
 export interface StatementWorkflowState {
@@ -44,6 +49,9 @@ export interface StatementWorkflowState {
   setOverride: (documentId: string, bankId: string) => void
   setAccountType: (documentId: string, value: string) => void
   setStatementLabel: (documentId: string, value: string) => void
+  /** null until the catalog loads, or when the backend cannot read scanned statements */
+  ocr: OcrCatalog | null
+  setOcrReading: (documentId: string, value: OcrReading) => void
   setPassword: (documentId: string, value: string) => void
   passwords: Record<string, string>
   confirmOne: (doc: AnalyzedDocument, accountType?: string) => Promise<void>
@@ -72,6 +80,8 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
   const [overrides, setOverrides] = useState<Record<string, string>>({})
   const [accountTypes, setAccountTypes] = useState<Record<string, string>>({})
   const [labels, setLabels] = useState<Record<string, string>>({})
+  const [ocr, setOcr] = useState<OcrCatalog | null>(null)
+  const [ocrReadings, setOcrReadings] = useState<Record<string, OcrReading>>({})
   const [passwords, setPasswords] = useState<Record<string, string>>({})
   const [jobs, setJobs] = useState<Record<string, JobStatus | null>>({})
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -82,7 +92,8 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
 
   useEffect(() => {
     listBankCatalog()
-      .then(({ banks: list, all_banks }) => {
+      .then(({ banks: list, all_banks, ocr: ocrInfo }) => {
+        setOcr(ocrInfo ?? null)
         const usable = list?.length ? list : FALLBACK_BANK_LIST
         setBanks(usable)
         setCatalog(all_banks.length ? all_banks : catalogFromBanks(usable))
@@ -206,11 +217,18 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
       run('Starting processing…', async () => {
         if (!analysis) return
         const confirmed = analysis.documents.filter((d) => d.workflow_status === 'CONFIRMED')
-        const perDocument: Record<string, { account_type?: string; statement_label?: string }> = {}
+        const perDocument: Record<string, { account_type?: string; statement_label?: string; ocr_reading?: OcrReading }> = {}
         confirmed.forEach((d) => {
           const at = accountTypes[d.document_id]
           const lb = labels[d.document_id]
-          if (at || lb) perDocument[d.document_id] = { ...(at ? { account_type: at } : {}), ...(lb ? { statement_label: lb } : {}) }
+          // the reading shown selected is the one that runs, so send it even when it is the default
+          const rd = ocr?.enabled && isScanned(d) ? ocrReadings[d.document_id] || ocr.default_reading || undefined : undefined
+          if (at || lb || rd)
+            perDocument[d.document_id] = {
+              ...(at ? { account_type: at } : {}),
+              ...(lb ? { statement_label: lb } : {}),
+              ...(rd ? { ocr_reading: rd } : {}),
+            }
         })
         const res = await processConfirmed(analysis.analysis_id, {
           fullName: opts?.fullName,
@@ -229,7 +247,7 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
           poll(res.started.map((s) => s.job_id))
         }
       }),
-    [run, analysis, accountTypes, labels, poll]
+    [run, analysis, accountTypes, labels, ocr, ocrReadings, poll]
   )
 
   const allDone = docs.length > 0 && docs.every((d) => !d.job_id || TERMINAL.includes(jobs[d.job_id]?.status || ''))
@@ -254,6 +272,7 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
     accountType: accountTypes[d.document_id] || '',
     statementLabel: labels[d.document_id] || '',
     override: overrides[d.document_id] || '',
+    ocrReading: ocrReadings[d.document_id] || '',
   }))
 
   return {
@@ -271,6 +290,8 @@ export function useStatementWorkflow(onJobsSettled?: () => void): StatementWorkf
     setOverride: (id, bankId) => setOverrides((o) => ({ ...o, [id]: bankId })),
     setAccountType: (id, v) => setAccountTypes((a) => ({ ...a, [id]: v })),
     setStatementLabel: (id, v) => setLabels((l) => ({ ...l, [id]: v })),
+    ocr,
+    setOcrReading: (id, v) => setOcrReadings((r) => ({ ...r, [id]: v })),
     setPassword: (id, v) => setPasswords((p) => ({ ...p, [id]: v })),
     passwords,
     confirmOne,

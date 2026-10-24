@@ -83,6 +83,8 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
             onOverride={wf.setOverride}
             onAccountType={wf.setAccountType}
             onStatementLabel={wf.setStatementLabel}
+            ocr={wf.ocr}
+            onOcrReading={wf.setOcrReading}
             onPassword={wf.setPassword}
             onConfirmOne={wf.confirmOne}
             onConfirmAll={wf.confirmAllDetected}
