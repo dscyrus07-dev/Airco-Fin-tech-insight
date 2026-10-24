@@ -130,6 +130,15 @@ Side effects to know:
   frontend container, which reach `backend:8000` over the Docker network. Direct
   `curl http://localhost:8000` from the host is flaky — use `http://127.0.0.1:8000`.
 
+**Cookie/header fix applied after the first report:** browsers share cookies across every
+`localhost:*` port, so a long-lived dev browser can exceed nginx's default 8 KB request
+header limit (`400 Request Header Or Cookie Too Large`) and Node's ~16 KB limit (`431`).
+Fixed in both places: `large_client_header_buffers 4 32k` on the relay
+(`tmp/r12/kc_relay.conf`, bind-mounted) and `NODE_OPTIONS=--max-http-header-size=32768`
+on `airco_frontend`. Verified end-to-end with ~20 KB of cookies: `:3000` → relay →
+dashboard. Note `proxy_buffer_size` must NOT be raised while `proxy_buffering off` is set —
+nginx 1.31.6 treats the single buffer as the whole pool and fails config validation.
+
 ## Changes made this round (all committed on `devin/r12-live`)
 
 | File | Change | Reason |
