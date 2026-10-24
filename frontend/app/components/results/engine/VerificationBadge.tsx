@@ -1,3 +1,4 @@
+import { ocrIncompleteness } from '@/lib/statementEngine'
 import { StatementEngineBlock } from '@/types'
 
 const check = (
@@ -36,6 +37,23 @@ export default function VerificationBadge({
         {warn}Read by general reader
         <span className="font-normal text-amber-700">
           {"· This statement's layout was read with our general reader, so please check the figures against your statement."}
+        </span>
+      </span>
+    )
+  }
+
+  if (engine.engine === 'ocr') {
+    // T4: read from an image. The backend caps this at REVIEW, so the badge never makes a verification claim,
+    // and when pages or rows are missing the badge says so rather than leaving it to the workbook.
+    const missing = ocrIncompleteness(engine)
+    return (
+      <span role="status" aria-label={`Scanned statement, needs review${missing ? `. ${missing}` : ''}${suffix}`}
+        className="inline-flex max-w-full items-center gap-1.5 flex-wrap rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-medium text-amber-800">
+        {warn}{missing ? 'Scanned · incomplete · needs review' : 'Scanned · needs review'}
+        <span className="font-normal text-amber-700">
+          {missing
+            ? `· ${missing}`
+            : '· This statement was read from an image, so please check every figure against your statement.'}
         </span>
       </span>
     )

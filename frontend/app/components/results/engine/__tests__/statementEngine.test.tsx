@@ -5,6 +5,7 @@ import {
   REVIEW_REASON_LABELS,
   engineBadgeLabel,
   engineNeedsAttention,
+  ocrIncompleteness,
   parseStatementEngine,
   reviewReasonLabel,
 } from '@/lib/statementEngine'
@@ -310,5 +311,82 @@ describe('VerificationBadge — T3 general reader', () => {
 
   it('badge label maps the universal engine', () => {
     expect(engineBadgeLabel(asBlock(UNIVERSAL_REVIEW))).toBe('Read by general reader')
+  })
+})
+
+
+// ---------------------------------------------------------------------------------------------------
+// T4 OCR blocks. A scanned statement is capped at REVIEW by the backend; the screen must never contradict
+// the workbook, which names the pages that could not be read.
+// ---------------------------------------------------------------------------------------------------
+
+const OCR_COMPLETE = {
+  engine: 'ocr',
+  mode: 'serve',
+  layout_id: 'ocr_auto',
+  verdict: 'REVIEW',
+  needs_review: true,
+  review_codes: ['OCR_READER'],
+  anchored: false,
+  ocr: { pages_total: 3, pages_ok: [1, 2, 3], failed_pages: {}, rows_dropped_total: 0,
+         verification: { status: 'ran' } },
+}
+
+const OCR_PARTIAL = {
+  ...OCR_COMPLETE,
+  review_codes: ['OCR_READER', 'OCR_PARTIAL_PAGES', 'OCR_TABLE_ROWS_DROPPED'],
+  ocr: { pages_total: 3, pages_ok: [1, 3], failed_pages: { '2': 'OCR_TIMEOUT' }, rows_dropped_total: 4,
+         verification: { status: 'partial' } },
+}
+
+describe('OCR (scanned) results', () => {
+  it('parses the ocr sub-block', () => {
+    const b = parseStatementEngine(OCR_PARTIAL)
+    expect(b?.engine).toBe('ocr')
+    expect(b?.ocr?.failed_pages).toEqual({ '2': 'OCR_TIMEOUT' })
+    expect(b?.ocr?.rows_dropped_total).toBe(4)
+    expect(b?.ocr?.verification_status).toBe('partial')
+  })
+
+  it('always needs attention, even when every page was read', () => {
+    expect(engineNeedsAttention(parseStatementEngine(OCR_COMPLETE))).toBe(true)
+    expect(engineNeedsAttention(parseStatementEngine(OCR_PARTIAL))).toBe(true)
+  })
+
+  it('never labels a scanned statement as verified', () => {
+    for (const block of [OCR_COMPLETE, OCR_PARTIAL]) {
+      const label = engineBadgeLabel(parseStatementEngine(block))
+      expect(label).toBeTruthy()
+      expect(label!.toLowerCase()).not.toContain('verified')
+      expect(label!.toLowerCase()).toContain('scanned')
+    }
+  })
+
+  it('names the unread pages and unplaceable rows', () => {
+    const msg = ocrIncompleteness(parseStatementEngine(OCR_PARTIAL))
+    expect(msg).toContain('2')
+    expect(msg).toContain('4 rows')
+    expect(msg).toContain('NOT in this report')
+  })
+
+  it('says nothing is missing when nothing is', () => {
+    expect(ocrIncompleteness(parseStatementEngine(OCR_COMPLETE))).toBeNull()
+    expect(engineBadgeLabel(parseStatementEngine(OCR_COMPLETE))).toBe('Scanned · needs review')
+  })
+
+  it('renders a review badge, not a completion claim', () => {
+    render(<VerificationBadge engine={parseStatementEngine(OCR_PARTIAL)} />)
+    const el = screen.getByRole('status')
+    expect(el.textContent!.toLowerCase()).toContain('needs review')
+    expect(el.textContent!.toLowerCase()).not.toContain('verified')
+    expect(el.textContent).toContain('could not be read')
+  })
+
+  it('has wording for every OCR review code the backend can emit', () => {
+    for (const code of ['OCR_READER', 'OCR_PARTIAL_PAGES', 'OCR_TABLE_ROWS_DROPPED', 'OCR_FUSED_AMOUNTS',
+                        'OCR_UNCONFIRMED_AMOUNTS', 'OCR_VERIFIER_NOT_RUN']) {
+      expect(REVIEW_REASON_LABELS[code]).toBeTruthy()
+      expect(reviewReasonLabel(code)).not.toBe(code)
+    }
   })
 })

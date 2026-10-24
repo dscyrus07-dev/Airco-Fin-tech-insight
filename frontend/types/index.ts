@@ -146,8 +146,17 @@ export interface StatementEngineAdvisory {
 }
 
 /** Additive contract block (docs/engine/V2_API_CONTRACT.md §3). */
+/** Additive `ocr` sub-block, present only when a scanned statement was read by the OCR tier. */
+export interface StatementEngineOcr {
+  pages_total: number
+  pages_ok: number[]
+  failed_pages: Record<string, string>
+  rows_dropped_total: number
+  verification_status: string | null
+}
+
 export interface StatementEngineBlock {
-  engine: 'legacy' | 'v2' | string
+  engine: 'legacy' | 'v2' | 'ocr' | string
   mode: 'off' | 'shadow' | 'serve' | string
   layout_id: string | null
   verdict: StatementEngineVerdict | null
@@ -156,6 +165,8 @@ export interface StatementEngineBlock {
   anchored: boolean
   detected_bank: StatementEngineDetectedBank | null
   advisory: StatementEngineAdvisory | null
+  /** present only for a scanned (OCR) result; absent on every other engine */
+  ocr?: StatementEngineOcr | null
 }
 
 export interface ProcessingResult {

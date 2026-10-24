@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { ProcessingResult, SheetPreview } from '@/types'
 import CollapsiblePreview from './CollapsiblePreview'
 import DownloadButtons from './DownloadButtons'
-import { CheckCircle2, Eye, FileSpreadsheet, Download, Archive } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Eye, FileSpreadsheet, Download, Archive } from 'lucide-react'
 import SpreadsheetEditor from '../spreadsheet/SpreadsheetEditor'
 import { SpreadsheetProvider } from '../spreadsheet/SpreadsheetContext'
-import { engineNeedsAttention, parseStatementEngine } from '@/lib/statementEngine'
+import { engineNeedsAttention, ocrIncompleteness, parseStatementEngine } from '@/lib/statementEngine'
 import VerificationBadge from './engine/VerificationBadge'
 import EngineDetails from './engine/EngineDetails'
 import BankStateNotice from './engine/BankStateNotice'
@@ -97,7 +97,9 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
 
   const engine = parseStatementEngine(activeResult.statement_engine)
   const catalog = useBankCatalog()
-  const showEnginePanel = !!engine && (engine.engine === 'v2' || !!engine.advisory)
+  // a scanned statement must show the panel too: it is the only place the unread pages are named on screen
+  const showEnginePanel = !!engine && (engine.engine === 'v2' || engine.engine === 'ocr' || !!engine.advisory)
+  const ocrMissing = ocrIncompleteness(engine)
   const needsReviewCount = batchResults.filter(
     (item) => engineNeedsAttention(parseStatementEngine(item.result.statement_engine))
   ).length
@@ -115,15 +117,23 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
   return (
     <div className="animate-fade-in">
       <div className="flex items-center gap-2 mb-1">
-        <CheckCircle2 className="w-6 h-6 text-black" />
+        {ocrMissing
+          ? <AlertTriangle className="w-6 h-6 text-amber-600" aria-hidden="true" />
+          : <CheckCircle2 className="w-6 h-6 text-black" aria-hidden="true" />}
         <h2 className="text-xl font-semibold text-black">
-          Categorization Complete
+          {ocrMissing ? 'Categorization Complete — Partial' : 'Categorization Complete'}
         </h2>
       </div>
       <p className="text-base text-neutral-500 mb-4">
         {batchResults.length > 1
           ? 'Your statements have been categorized and structured. Select a statement below to preview or download its report.'
           : 'Your statement has been categorized and structured. Preview or download below.'}
+        {ocrMissing && (
+          <span className="mt-2 block rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
+            <strong>This report is incomplete.</strong> {ocrMissing} The figures were read from an image, so
+            check them against your statement — see the Statement Check sheet in the workbook.
+          </span>
+        )}
       </p>
 
       {batchOverview && (
@@ -233,6 +243,7 @@ export default function ResultStep({ result, batchResults = [] }: ResultStepProp
                 }`}
               >
                 {activeResult.stats.coverage_percent}% categorized
+                {ocrMissing && ' of rows read'}
               </span>
               {activeResult.stats.ai_classified > 0 && (
                 <span className="text-xs font-medium text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">

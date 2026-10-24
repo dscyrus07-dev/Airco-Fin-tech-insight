@@ -1,5 +1,6 @@
 import {
   StatementEngineBlock,
+  StatementEngineOcr,
   StatementEngineVerdict,
 } from '@/types'
 
@@ -26,6 +27,15 @@ export const REVIEW_REASON_LABELS: Record<string, string> = {
   SECTION_DATE_MISSING: 'Transactions printed before any section date — the date each row belongs to is unprovable',
   BANK_MISMATCH: 'Detected bank differs from the selected bank',
   GENERAL_READER: 'Layout read by the general reader — check the figures',
+  // OCR tier: a scanned statement is read from an image and is never a verification claim
+  OCR_READER: 'Read from a scanned image — every figure must be checked against the statement',
+  OCR_PARTIAL_PAGES: 'Some pages could not be read — transactions from them are missing',
+  OCR_TABLE_ROWS_DROPPED: 'Some rows were read in a broken shape and could not be placed in a column',
+  OCR_FUSED_AMOUNTS: 'Two amounts were read as one — the split between them is estimated',
+  OCR_UNCONFIRMED_AMOUNTS: 'The second reader did not confirm every amount',
+  OCR_VERIFIER_NOT_RUN: 'No second reader ran on this statement',
+  OCR_AMOUNT_UNCONFIRMED: 'An amount was not confirmed by the second reader',
+  OCR_AMOUNT_LOW_CONFIDENCE: 'An amount was read with low confidence',
 }
 
 export function reviewReasonLabel(code: string): string {
@@ -57,7 +67,23 @@ export function parseStatementEngine(raw: unknown): StatementEngineBlock | null 
   const det = (b.detected_bank && typeof b.detected_bank === 'object' ? b.detected_bank : null) as
     | Record<string, unknown>
     | null
+  const o = (b.ocr && typeof b.ocr === 'object' ? b.ocr : null) as Record<string, unknown> | null
   return {
+    ocr: o
+      ? {
+          pages_total: typeof o.pages_total === 'number' ? o.pages_total : 0,
+          pages_ok: Array.isArray(o.pages_ok) ? o.pages_ok.filter((x): x is number => typeof x === 'number') : [],
+          failed_pages:
+            o.failed_pages && typeof o.failed_pages === 'object'
+              ? (o.failed_pages as Record<string, string>)
+              : {},
+          rows_dropped_total: typeof o.rows_dropped_total === 'number' ? o.rows_dropped_total : 0,
+          verification_status:
+            o.verification && typeof o.verification === 'object'
+              ? String((o.verification as Record<string, unknown>).status ?? '')
+              : null,
+        }
+      : null,
     engine: typeof b.engine === 'string' ? b.engine : 'legacy',
     mode: typeof b.mode === 'string' ? b.mode : 'off',
     layout_id: typeof b.layout_id === 'string' ? b.layout_id : null,
@@ -83,15 +109,39 @@ export function parseStatementEngine(raw: unknown): StatementEngineBlock | null 
   }
 }
 
-/** True when the block carries anything the user should notice. */
+/** True when the block carries anything the user should notice. A scanned statement always does. */
 export function engineNeedsAttention(b: StatementEngineBlock | null): boolean {
-  return !!b && (b.needs_review || !!b.advisory?.verdict || b.review_codes.includes('BANK_MISMATCH'))
+  return (
+    !!b &&
+    (b.engine === 'ocr' || b.needs_review || !!b.advisory?.verdict || b.review_codes.includes('BANK_MISMATCH'))
+  )
+}
+
+/**
+ * What is missing from a scanned statement, in one sentence, or null when nothing is.
+ * The workbook's Statement Check sheet says this too, but a user who never opens it must still be told.
+ */
+export function ocrIncompleteness(b: StatementEngineBlock | null): string | null {
+  const o: StatementEngineOcr | null | undefined = b && b.engine === 'ocr' ? b.ocr : null
+  if (!o) return null
+  const failed = Object.keys(o.failed_pages || {})
+  const parts: string[] = []
+  if (failed.length) {
+    parts.push(`${failed.length === 1 ? 'Page' : 'Pages'} ${failed.join(', ')} could not be read`)
+  }
+  if (o.rows_dropped_total > 0) {
+    parts.push(`${o.rows_dropped_total} row${o.rows_dropped_total === 1 ? '' : 's'} could not be placed`)
+  }
+  if (!parts.length) return null
+  return `${parts.join('; ')} — transactions from ${failed.length ? 'those pages' : 'those rows'} are NOT in this report.`
 }
 
 /** Short badge label for a job/result; null when nothing should be shown. */
 export function engineBadgeLabel(b: StatementEngineBlock | null): string | null {
   if (!b) return null
   if (b.engine === 'universal') return 'Read by general reader'
+  // A scanned statement is capped at REVIEW by the backend and must never read as a verification claim.
+  if (b.engine === 'ocr') return ocrIncompleteness(b) ? 'Scanned · incomplete · needs review' : 'Scanned · needs review'
   if (b.engine !== 'v2') return null
   if (b.verdict === 'VERIFIED') return b.anchored ? 'Verified · independently checked' : 'Verified'
   if (b.verdict === 'REVIEW' || b.needs_review) return 'Needs review'
