@@ -7,6 +7,8 @@ from __future__ import annotations
 import asyncio
 import inspect
 import json
+import os
+import random
 import threading
 import time
 from datetime import datetime, timezone
@@ -26,6 +28,17 @@ logger = get_logger(__name__)
 # failure before it is routed to the dead-letter queue.
 MAX_DELIVERY_ATTEMPTS = 3
 DEAD_LETTER_QUEUE = "dead_letter_queue"
+# DLQ bounds: hold at most this many poison messages, and expire each one with the
+# data-retention window so a poisoned job's metadata cannot outlive the promise.
+DLQ_MAX_MESSAGES = int(os.getenv("RABBITMQ_DLQ_MAX_MESSAGES", "10000"))
+
+
+def _dlq_message_ttl_ms() -> int:
+    return max(1, int(getattr(settings, "DATA_RETENTION_DAYS", 7))) * 86400 * 1000
+
+
+def _dlq_arguments() -> Dict[str, Any]:
+    return {"x-max-length": DLQ_MAX_MESSAGES, "x-message-ttl": _dlq_message_ttl_ms()}
 
 
 class MessageQueue:
@@ -90,7 +103,10 @@ class MessageQueue:
             channel.queue_bind(queue=queue_name, exchange=exchange, routing_key=routing_key)
 
         # Dead-letter queue for messages that exhaust their retry budget.
-        channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True)
+        # Bounded: oldest is dead-headed when full, every message expires with the
+        # retention window. An existing queue declared without these args raises
+        # 406 PRECONDITION_FAILED on redeclare — delete it once to migrate.
+        channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True, arguments=_dlq_arguments())
 
     def _ensure_publisher_channel(self):
         if pika is None:
@@ -157,6 +173,13 @@ class MessageQueue:
                     headers=dead_headers,
                 ),
             )
+            # Keep the DLQ depth visible every time it grows.
+            try:
+                depth = ch.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True,
+                                         arguments=_dlq_arguments(), passive=True).method.message_count
+            except Exception:
+                depth = None
+            logger.warning("Message dead-lettered", reason=reason[:200], dlq_depth=depth)
         except Exception as exc:  # noqa: BLE001
             logger.error("Failed to route message to dead-letter queue", error=str(exc))
 
@@ -215,9 +238,15 @@ class MessageQueue:
             logger.warning("RabbitMQ unavailable; consumer loop will not start")
             return
 
+        # Reconnect policy: retries are unbounded — a consumer that gives up leaves
+        # queued jobs pending forever, which is exactly the R10 failure. The delay
+        # is bounded instead: exponential backoff with jitter, capped at 60 s, and
+        # the attempt counter is logged each cycle so a dead consumer is visible.
+        attempt = 0
         while not self._stop_event.is_set():
             connection = None
             channel = None
+            connected_at = None
             # Fresh loop each reconnect cycle so _message_callback never holds a closed loop.
             self._loop = asyncio.new_event_loop()
             try:
@@ -242,6 +271,7 @@ class MessageQueue:
                     )
 
                 logger.info("RabbitMQ consumer loop starting", queues=list(self._consumers.keys()))
+                connected_at = time.monotonic()
                 channel.start_consuming()
             except pika.exceptions.ConnectionClosedByBroker:
                 logger.warning("RabbitMQ broker closed consumer connection; retrying")
@@ -256,7 +286,15 @@ class MessageQueue:
                 self._connected = False
 
             if not self._stop_event.is_set():
-                time.sleep(5)
+                # A session that stayed up >=30s was healthy: reset backoff so a
+                # real broker outage doesn't inherit a stale delay.
+                if connected_at and time.monotonic() - connected_at >= 30:
+                    attempt = 0
+                attempt += 1
+                delay = min(60, 5 * (2 ** min(attempt - 1, 4))) + random.uniform(0, 2)
+                logger.warning("RabbitMQ consumer retry scheduled",
+                               attempt=attempt, retry_in_s=round(delay, 1))
+                time.sleep(delay)
 
     async def start_consuming(self):
         """Start consuming messages in a background thread."""

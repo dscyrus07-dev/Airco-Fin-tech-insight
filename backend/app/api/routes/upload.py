@@ -13,6 +13,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+from ...core.config import settings
 from ...dependencies.auth import get_current_user, require_user_role
 from ...utils.logging import get_logger
 
@@ -123,8 +124,8 @@ async def _process_bank_pdf(
         raise HTTPException(status_code=400, detail="Only PDF files are accepted")
 
     content = await file.read()
-    if len(content) > 20 * 1024 * 1024:
-        raise HTTPException(status_code=400, detail="File size exceeds 20MB limit")
+    if len(content) > settings.MAX_FILE_SIZE_BYTES:
+        raise HTTPException(status_code=400, detail=f"File is larger than {settings.MAX_FILE_SIZE_MB} MB.")
 
     with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as pdf_temp:
         pdf_temp.write(content)
