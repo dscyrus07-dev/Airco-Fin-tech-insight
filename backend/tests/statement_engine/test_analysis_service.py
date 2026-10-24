@@ -356,3 +356,41 @@ def test_expired_unconfirmed_analyses_are_purged_with_their_files():
 
     assert run(svc.purge_expired(now_ts=time.time() + 10 * 24 * 3600)) == 1
     assert svc.storage.objects == {} and run(svc.store.get(view["analysis_id"])) is None
+
+
+# ---------------------------------------------------------------- R10-B3: OCR page cap at the first door
+def _image_only_pages(n):
+    """An n-page PDF with no text layer at all, so it is classified SCANNED."""
+    import io as _io
+    from PIL import Image as _Image
+    img = _Image.new("RGB", (400, 560), "white")
+    buf = _io.BytesIO()
+    img.save(buf, "PDF", resolution=72.0, save_all=True, append_images=[img] * (n - 1))
+    return buf.getvalue()
+
+
+def _ocr_serving(monkeypatch, tmp_path, cap):
+    monkeypatch.setenv("STATEMENT_ENGINE_OCR_MODE", "serve")
+    monkeypatch.setenv("STATEMENT_ENGINE_OCR_URL", f"mock:{tmp_path}")
+    monkeypatch.setenv("STATEMENT_ENGINE_OCR_MAX_PAGES", str(cap))
+
+
+def test_scanned_statement_over_the_ocr_page_cap_is_refused_at_analysis(monkeypatch, tmp_path):
+    """It used to be accepted here and fail only after the user confirmed the bank (OCR_TOO_MANY_PAGES)."""
+    _ocr_serving(monkeypatch, tmp_path, cap=3)
+    from app.services.statement_engine.ocr import serve as _oserve
+    calls = []
+    monkeypatch.setattr(_oserve, "detection_texts", lambda *a, **k: calls.append(a) or ([], {}))
+    svc, _ = make_service()
+    view = run(svc.analyze(ALICE, [UploadedPdf("long-scan.pdf", _image_only_pages(4))]))
+    doc = view["documents"][0]
+    assert doc["state"] == "ERROR" and doc["error_code"] == "OCR_TOO_MANY_PAGES"
+    assert "4 pages" in doc["message"] and "3" in doc["message"]
+    assert calls == []                      # no OCR spent on a document that cannot be processed
+
+
+def test_scanned_statement_within_the_ocr_page_cap_is_not_refused_for_length(monkeypatch, tmp_path):
+    _ocr_serving(monkeypatch, tmp_path, cap=3)
+    svc, _ = make_service()
+    view = run(svc.analyze(ALICE, [UploadedPdf("short-scan.pdf", _image_only_pages(3))]))
+    assert view["documents"][0].get("error_code") != "OCR_TOO_MANY_PAGES"

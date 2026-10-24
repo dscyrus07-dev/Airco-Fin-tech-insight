@@ -43,6 +43,7 @@ class PipelineError(Exception):
     def __init__(self, message: str, stage: str = "unknown", error_code: str = "UNKNOWN"):
         self.stage = stage
         self.error_code = error_code
+        self.message = message          # without the "[stage]" prefix str() adds, so re-wrapping cannot repeat it
         super().__init__(f"[{stage}] {message}")
 
 
@@ -59,6 +60,22 @@ class PipelineAbortError(PipelineError):
 class UnsupportedBankError(PipelineError):
     """Bank not supported in new architecture."""
     pass
+
+
+def _as_abort(e: BaseException) -> "PipelineAbortError":
+    """The one exception a failed processing step surfaces as.
+
+    A PipelineError's str() already carries its "[stage]" prefix, so re-wrapping one with str(e) printed the
+    stage twice — "[ocr_reader] [ocr_reader] Scanned statement could not be read" (R10-B5), on every staged
+    failure that passed through process_statement's handler. An abort now passes through untouched, and any
+    other staged error is converted from its own message."""
+    if isinstance(e, PipelineAbortError):
+        return e
+    if isinstance(e, PipelineError):
+        return PipelineAbortError(e.message, stage=e.stage, error_code=e.error_code)
+    if hasattr(e, "stage") and hasattr(e, "error_code"):
+        return PipelineAbortError(str(e), stage=e.stage, error_code=e.error_code)
+    return PipelineAbortError(f"Processing failed: {str(e)}", stage="bank_processor", error_code="PROCESSOR_ERROR")
 
 
 # ---------------------------------------------------------------------------
@@ -718,20 +735,10 @@ def process_statement(
 
     except Exception as e:
         logger.error("Bank processor failed: %s", str(e), exc_info=True)
-        
-        # Convert to pipeline error
-        if hasattr(e, 'stage') and hasattr(e, 'error_code'):
-            raise PipelineAbortError(
-                str(e),
-                stage=e.stage,
-                error_code=e.error_code
-            )
-        else:
-            raise PipelineAbortError(
-                f"Processing failed: {str(e)}",
-                stage="bank_processor",
-                error_code="PROCESSOR_ERROR"
-            )
+        err = _as_abort(e)
+        if err is e:
+            raise
+        raise err from e
     
     # =================================================================
     # STEP 4b: v2 shadow (flag-gated; never changes the legacy response)

@@ -383,7 +383,18 @@ class AnalysisService:
             cap, texts = check_pdf(tmp.name, password=password)
             if cap.capability == Capability.SCANNED and _ocr_servable():
                 from .statement_engine.analyzer import analyze_scanned_with_ocr
+                from .statement_engine.ocr import client as _oclient
                 from .statement_engine.ocr import serve as _oserve
+
+                # OCR is the only reader a scanned file has, and it refuses a document over its own page cap.
+                # Say so here: accepting the file only for it to fail after the user has confirmed the bank
+                # (R10-B3) wastes their time and reads as a crash.
+                ocr_cap = _oclient.max_pages()
+                if pages is not None and ocr_cap > 0 and pages > ocr_cap:
+                    return self._error_doc(
+                        f, f"This scanned statement has {pages} pages. Scanned statements can be at most "
+                           f"{ocr_cap} pages.", "OCR_TOO_MANY_PAGES"
+                    )
 
                 ocr_src = tmp.name
                 if password:
