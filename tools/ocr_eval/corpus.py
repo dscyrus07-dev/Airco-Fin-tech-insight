@@ -65,7 +65,12 @@ def make_rows(n: int, seed: int):
     return opening, rows
 
 
-def draw_pdf(opening, rows, layout: str) -> bytes:
+COL_HALF = 30.0          # half a money column's printed width, for centred titles
+HEAD_PT = 8.0            # money titles must FIT their column: at 9pt "Closing Balance" overlapped its
+                         # neighbour, and overlapping glyphs are read as one text region
+
+
+def draw_pdf(opening, rows, layout: str, head_align: str = "R") -> bytes:
     from reportlab.lib.pagesizes import A4
     from reportlab.pdfgen import canvas
     buf = io.BytesIO()
@@ -85,24 +90,35 @@ def draw_pdf(opening, rows, layout: str) -> bytes:
             y -= 10
         # balance column ends 55pt from the right edge (18mm): edge-tight columns were dropped by the
         # VLM's table reading (R6 finding F10); margins here match real statements
-        cols = ([("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 270), ("Withdrawal Amt.", 350),
-                 ("Deposit Amt.", 420), ("Closing Balance", 480)] if layout == "split" else
-                [("Date", 40), ("Narration", 100), ("Chq./Ref.No.", 280), ("Amount", 370), ("Balance", 460)])
-        c.setFont("Helvetica-Bold", 9)
-        for name, x in cols:
-            c.drawString(x if name in ("Date", "Narration", "Chq./Ref.No.") else x - 20, y, name)
+        # A money column's title sits over its OWN column, as every real statement prints it: either flush with
+        # the column's right edge or centred on it. Drawing the title to the LEFT of its data (as this file did
+        # until 2026-10-24) puts each title above the PREVIOUS column's figures — a layout no human could read
+        # either, and one that made the whole corpus unreadable for reasons that have nothing to do with OCR.
+        cols = ([("Date", 40, "L"), ("Narration", 95, "L"), ("Chq./Ref.No.", 250, "L"),
+                 ("Withdrawal Amt.", 395, head_align), ("Deposit Amt.", 470, head_align),
+                 ("Closing Balance", 550, head_align)] if layout == "split" else
+                [("Date", 40, "L"), ("Narration", 95, "L"), ("Chq./Ref.No.", 280, "L"),
+                 ("Amount", 470, head_align), ("Balance", 550, head_align)])
+        c.setFont("Helvetica-Bold", HEAD_PT)
+        for name, x, align in cols:
+            if align == "L":
+                c.drawString(x, y, name)
+            elif align == "R":
+                c.drawRightString(x, y, name)          # flush right, the commonest convention
+            else:
+                c.drawCentredString(x - COL_HALF, y, name)   # centred over the column
         y -= 6; c.line(36, y, W - 30, y); y -= 12
         c.setFont("Helvetica", 9)
         for r in chunk:
             dd = f"{r['date'][8:]}/{r['date'][5:7]}/{r['date'][:4]}"
-            c.drawString(40, y, dd); c.drawString(100, y, r["narr"]); c.drawString(300 if layout == "signed" else 270, y, r["ref"])
+            c.drawString(40, y, dd); c.drawString(95, y, r["narr"]); c.drawString(280 if layout == "signed" else 250, y, r["ref"])
             if layout == "split":
-                if r["debit"]: c.drawRightString(420, y, indian(Decimal(r["debit"])))
-                if r["credit"]: c.drawRightString(490, y, indian(Decimal(r["credit"])))
-                c.drawRightString(545, y, indian(Decimal(r["balance"])))
+                if r["debit"]: c.drawRightString(395, y, indian(Decimal(r["debit"])))
+                if r["credit"]: c.drawRightString(470, y, indian(Decimal(r["credit"])))
+                c.drawRightString(550, y, indian(Decimal(r["balance"])))
             else:
                 amt = f"-{indian(Decimal(r['debit']))}" if r["debit"] else indian(Decimal(r["credit"]))
-                c.drawRightString(480, y, amt); c.drawRightString(545, y, indian(Decimal(r["balance"])))
+                c.drawRightString(470, y, amt); c.drawRightString(550, y, indian(Decimal(r["balance"])))
             y -= 15
         if pi == len(chunks) - 1:
             y -= 14
@@ -147,8 +163,58 @@ def save_image_pdf(images, path: str, dpi: int):
     images[0].save(path, "PDF", resolution=float(dpi), save_all=True, append_images=images[1:])
 
 
+def check_header_geometry(pdf_bytes: bytes, layout: str) -> None:
+    """Refuse to build a corpus whose column titles are unreadable.
+
+    Two rendering faults made every statement in this corpus unreadable for reasons that had nothing to do
+    with OCR, and both were invisible until the output was inspected: money titles drawn to the LEFT of their
+    own column (so each title sat above the previous column's figures), and titles so wide for their column
+    that neighbours overlapped glyph-on-glyph (which a recogniser reads as one text region). A corpus that
+    cannot be read by a human cannot measure a model, so the geometry is asserted at build time."""
+    import pdfplumber
+    key = "Withdrawal" if layout == "split" else "Amount"
+    with pdfplumber.open(io.BytesIO(pdf_bytes)) as doc:
+        words = doc.pages[0].extract_words()
+    head = [w for w in words if w["text"].startswith(key)]
+    if not head:
+        raise AssertionError(f"{layout}: no money title found on page 1")
+    top = head[0]["top"]
+    titles = sorted((w for w in words if abs(w["top"] - top) < 2 and w["x0"] > 240), key=lambda w: w["x0"])
+    for a, b in zip(titles, titles[1:]):
+        if a["x1"] > b["x0"] + 0.5:
+            raise AssertionError(f"{layout}: titles overlap: {a['text']!r}[{a['x0']:.0f}-{a['x1']:.0f}] "
+                                 f"{b['text']!r}[{b['x0']:.0f}-{b['x1']:.0f}]")
+    # group title words into whole titles ("Closing" + "Balance"), then require each money figure to sit
+    # nearer its OWN title than any other: that is what "the title is over its column" means
+    runs = []
+    for w in titles:
+        if runs and w["x0"] - runs[-1][-1]["x1"] < 8:
+            runs[-1].append(w)
+        else:
+            runs.append([w])
+    money_titles = [(min(r[0]["x0"] for r in [run]), max(w["x1"] for w in run)) for run in runs][-(3 if layout == "split" else 2):]
+    figures = [w for w in words if w["top"] > top + 10 and "/" not in w["text"]
+               and any(c.isdigit() for c in w["text"]) and w["x0"] > 300]
+    if figures and len(money_titles) == (3 if layout == "split" else 2):
+        y0 = min(f["top"] for f in figures)
+        row = sorted((f for f in figures if abs(f["top"] - y0) < 2), key=lambda f: f["x0"])
+        if len(row) == len(money_titles):          # a row printing every money column
+            centres = [(a + b) / 2 for a, b in money_titles]
+            for k, f in enumerate(row):
+                mid = (f["x0"] + f["x1"]) / 2
+                nearest = min(range(len(centres)), key=lambda i: abs(mid - centres[i]))
+                if nearest != k:
+                    raise AssertionError(
+                        f"{layout}: figure {f['text']!r} at x={f['x0']:.0f}-{f['x1']:.0f} sits under title "
+                        f"#{nearest} not #{k}: a title does not sit over its own column")
+
+
 def build(out: str, per_category: int, rows_n: int = 40):
     os.makedirs(out, exist_ok=True)
+    _o, _r = make_rows(6, 1)
+    for _layout in LAYOUTS:
+        for _align in ("R", "C"):
+            check_header_geometry(draw_pdf(_o, _r, _layout, _align), _layout)
     manifest = []
     for cat, (dpi, kind) in CATEGORIES.items():
         os.makedirs(os.path.join(out, cat), exist_ok=True)
@@ -157,10 +223,13 @@ def build(out: str, per_category: int, rows_n: int = 40):
             sid = f"{cat}_{k:02d}"
             opening, rows = make_rows(rows_n, seed)
             layout = LAYOUTS[k % 2]
-            imgs = [degrade(im, kind, random.Random(seed + j)) for j, im in enumerate(render(draw_pdf(opening, rows, layout), dpi))]
+            head_align = "R" if (k % 4) < 2 else "C"      # both real conventions appear in the corpus
+            imgs = [degrade(im, kind, random.Random(seed + j))
+                    for j, im in enumerate(render(draw_pdf(opening, rows, layout, head_align), dpi))]
             path = os.path.join(out, cat, sid + ".pdf")
             save_image_pdf(imgs, path, dpi)
-            manifest.append({"id": sid, "category": cat, "dpi": dpi, "layout": layout, "pages": len(imgs),
+            manifest.append({"id": sid, "category": cat, "dpi": dpi, "layout": layout,
+                             "header_align": head_align, "pages": len(imgs),
                              "pdf": os.path.join(cat, sid + ".pdf"), "opening": str(opening),
                              "rows": [{k2: r[k2] for k2 in ("date", "narr", "ref", "debit", "credit", "balance")} for r in rows]})
     with open(os.path.join(out, "manifest.json"), "w") as fh:

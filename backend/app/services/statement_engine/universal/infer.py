@@ -739,6 +739,23 @@ def _check_margin(spec: LayoutSpec, pages, date_re, hit, notes, meta_extra) -> I
             retry.notes.insert(0, "left_aligned_amounts")
             return retry
         meta["left_aligned_frac"] = retry.meta.get("chain_frac")
+    if (n < 3 or frac < 0.80) and spec.single_amount_column and not spec.single_amount_default_side:
+        # An unsigned cell in a single-amount column states no side of its own: normalize refuses it
+        # ("amount cell carries no Dr/Cr marker") and the row is lost, which is why a statement printing
+        # "-1,200.00" for debits and a bare "3,400.00" for credits reads only half its rows. Which side the
+        # bare cells carry is not assumed here — both readings are tested against the PRINTED BALANCES, and
+        # only a reading the arithmetic proves, and that beats the other clearly, is accepted.
+        from dataclasses import replace
+        scored = []
+        for side in ("credit", "debit"):
+            r = _check_margin(replace(spec, single_amount_default_side=side), pages, date_re, hit, [], meta_extra)
+            scored.append((r.meta.get("chain_frac") or 0.0, side, r))
+        scored.sort(key=lambda t: t[0], reverse=True)
+        (best_frac, best_side, best_inf), (next_frac, _ns, _ni) = scored[0], scored[1]
+        if best_frac >= 0.80 and best_frac - next_frac >= 0.15 and best_inf.failure is None:
+            best_inf.notes.insert(0, f"single_amount_default_side:{best_side}")
+            return best_inf
+        meta["default_side_frac"] = {sd: round(f, 3) for f, sd, _ in scored}
     if n < 3:
         return Inference(spec=spec, failure="TOO_FEW_ROWS", detail=f"only {n} rows extracted", meta=meta)
     if frac < 0.80:

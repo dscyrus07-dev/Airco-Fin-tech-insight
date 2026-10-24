@@ -134,3 +134,61 @@ def test_failed_result_no_rows_served(tmp_path):
     assert res.ok is False
     block = userv.block_for(res, served=False, u_mode="serve")
     assert block["served"] is False
+
+
+# ---- single amount column whose bare cells carry no printed side -------------------------------------
+
+def _signed_single_amount_pdf(path, n=14, unsigned_side="credit"):
+    """A statement printing one money column: debits carry a '-', credits print bare (or the reverse).
+
+    The bare cells state no side of their own, so the reading has to be proved against the balances.
+    """
+    from decimal import Decimal
+    bal = Decimal("50000.00")
+    signed_side = "debit" if unsigned_side == "credit" else "credit"
+    sign = "-" if signed_side == "debit" else "+"
+    head = [(40, 760, "Date"), (130, 760, "Narration"), (390, 760, "Amount"), (500, 760, "Balance")]
+    rows, y = [], 740
+    for i in range(n):
+        amt = Decimal(500 + i * 137) + Decimal("0.25")
+        bare = (i % 3 == 1)                                # most rows signed, the rest bare
+        side = unsigned_side if bare else signed_side
+        bal = bal - amt if side == "debit" else bal + amt
+        printed = f"{amt:,.2f}" if bare else f"{sign}{amt:,.2f}"
+        rows += [(40, y, f"{(i % 28) + 1:02d}/04/2026"), (130, y, f"NEFT TXN {i}"),
+                 (430 - len(printed) * 6.7, y, printed), (500, y, f"{bal:,.2f}")]
+        y -= 16
+    return _pdf([head + rows], path)
+
+
+def test_bare_cells_in_a_single_amount_column_are_read_by_proving_the_side(tmp_path):
+    """Previously every bare row was dropped ('amount cell carries no Dr/Cr marker') and the statement
+    reconciled on only the signed half."""
+    res = univ.read(_signed_single_amount_pdf(tmp_path / "s.pdf"), bank_hint="Unknown bank")
+    assert res.verdict == "REVIEW", f"{res.code}: {res.detail}"
+    assert len(res.outcome.rows) == 14                      # not just the signed ones
+    assert any(n.startswith("single_amount_default_side:") for n in res.notes)
+
+
+def test_the_proved_side_follows_the_balances_not_a_default(tmp_path):
+    """Flip which side the bare cells carry; the reading must follow the arithmetic."""
+    out = {}
+    for side in ("credit", "debit"):
+        res = univ.read(_signed_single_amount_pdf(tmp_path / f"{side}.pdf", unsigned_side=side),
+                        bank_hint="Unknown bank")
+        note = [n for n in res.notes if n.startswith("single_amount_default_side:")]
+        out[side] = note[0].split(":")[1] if note else None
+    assert out["credit"] == "credit" and out["debit"] == "debit", out
+
+
+def test_an_unprovable_side_is_still_refused(tmp_path):
+    """Balances that fit neither reading must not be rescued by picking one."""
+    from decimal import Decimal
+    head = [(40, 760, "Date"), (130, 760, "Narration"), (390, 760, "Amount"), (500, 760, "Balance")]
+    rows, y = [], 740
+    for i in range(12):                                     # balances unrelated to the amounts
+        rows += [(40, y, f"{i + 1:02d}/04/2026"), (130, y, f"NEFT TXN {i}"),
+                 (370, y, f"{500 + i * 37}.25"), (500, y, f"{Decimal(90000 + i * 11):,.2f}")]
+        y -= 16
+    res = univ.read(_pdf([head + rows], tmp_path / "bad.pdf"), bank_hint="Unknown bank")
+    assert res.verdict == "FAILED"
