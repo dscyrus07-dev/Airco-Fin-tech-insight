@@ -104,9 +104,25 @@ class MessageQueue:
 
         # Dead-letter queue for messages that exhaust their retry budget.
         # Bounded: oldest is dead-headed when full, every message expires with the
-        # retention window. An existing queue declared without these args raises
-        # 406 PRECONDITION_FAILED on redeclare — delete it once to migrate.
-        channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True, arguments=_dlq_arguments())
+        # retention window. Queue args are immutable once the queue exists, so a
+        # bounded declare against an older unbounded DLQ raises 406 and kills the
+        # channel. Probe on a side channel first; if the broker rejects the args,
+        # fall back to a passive declare and log once — consuming still works, the
+        # queue just stays unbounded until an admin deletes and recreates it.
+        probe = channel.connection.channel()
+        try:
+            probe.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True, arguments=_dlq_arguments())
+            bounded = True
+        except Exception:
+            bounded = False
+        if bounded:
+            channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True, arguments=_dlq_arguments())
+        else:
+            channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True, passive=True)
+            logger.warning(
+                "dead_letter_queue exists without bounds; leaving it unbounded "
+                "(delete the queue once to apply x-max-length/x-message-ttl)"
+            )
 
     def _ensure_publisher_channel(self):
         if pika is None:

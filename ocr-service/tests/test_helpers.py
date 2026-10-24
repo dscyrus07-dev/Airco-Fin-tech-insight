@@ -33,7 +33,7 @@ def test_endpoint_request_param_is_not_a_query_param():
     __import__("pytest").importorskip("fastapi")
     app = m.create_app()
     route = [r for r in app.routes if getattr(r, "path", "") == "/v1/ocr"][0]
-    assert [q.name for q in route.dependant.query_params] == ["pages", "verify"]
+    assert [q.name for q in route.dependant.query_params] == ["pages", "verify", "vl"]
 
 
 def _fake_worker(job_conn, evt_conn, page_delay=0.01, hang=False, load_error=None):
