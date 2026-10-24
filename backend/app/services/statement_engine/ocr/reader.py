@@ -24,6 +24,8 @@ from .line_layer import page_from_lines
 from .guards import apply_guards
 from .verify import NOT_RUN, VerifyReport, verify_rows
 
+NOT_RUN_STATUS = "not_run"
+
 OCR_READER = "OCR_READER"
 OCR_PARTIAL_PAGES = "OCR_PARTIAL_PAGES"
 OCR_UNCONFIRMED_AMOUNTS = "OCR_UNCONFIRMED_AMOUNTS"
@@ -62,6 +64,8 @@ class OcrResult:
     rows_dropped: Dict[int, int] = field(default_factory=dict)    # page -> mis-shaped table rows left out
     fused_amounts: int = 0            # boxes holding two amounts: their split is estimated, not measured
     layer: str = "blocks"
+    reading: str = ""                 # thorough | fast, as requested for this job
+    layer_note: str = ""              # why the layer used differs from the one requested, if it does
     verification: VerifyReport = field(default_factory=VerifyReport)
     engine: str = ""
     verifier: str = ""
@@ -99,6 +103,8 @@ class OcrResult:
             "rows_dropped": {str(k): v for k, v in sorted(self.rows_dropped.items())},
             "rows_dropped_total": sum(self.rows_dropped.values()),
             "text_layer": self.layer,
+            "reading": self.reading or None,
+            "layer_note": self.layer_note or None,
             "fused_amounts": self.fused_amounts,
             "partial": self.partial,
             "verification": self.verification.to_dict(),
@@ -118,7 +124,9 @@ def _row_amounts(nrow) -> List[Any]:
     return vals
 
 
-def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: float = BUDGET_S) -> OcrResult:
+def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: float = BUDGET_S,
+                  layer: Optional[str] = None) -> OcrResult:
+    """`layer` (blocks | lines) overrides STATEMENT_ENGINE_OCR_TEXT_LAYER for this one document."""
     t0 = time.monotonic()
     res = OcrResult(bank_hint=bank_hint or "Unknown bank", engine=doc.engine, verifier=doc.verifier,
                     ocr_elapsed_s=doc.elapsed_s)
@@ -134,7 +142,11 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
         if not ok_pages:
             res.code, res.detail = OCR_NO_USABLE_PAGES, "no page could be read"
             return res
-        res.layer = text_layer()
+        res.layer = layer if layer in LAYERS else text_layer()
+        if res.layer == "blocks" and not any(p.blocks for p in ok_pages) and any(p.lines for p in ok_pages):
+            # the VL model did not run (the service is in lines-only mode): there is no markup to read, but the
+            # line boxes are a text layer in their own right, so read those instead of refusing the document
+            res.layer, res.layer_note = "lines", "VL_UNAVAILABLE"
         if res.layer == "lines":
             used, engine_pages = [], []
             for p in ok_pages:
@@ -165,7 +177,13 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
         # provenance: engine page k (1-based over the usable pages) -> source page number
         src = {i + 1: p.page for i, p in enumerate(ok_pages)}
         rows = u.outcome.rows if u.outcome else []
-        res.verification = verify_rows([(src.get(r.page, r.page), _row_amounts(r)) for r in rows], ok_pages)
+        if res.layer == "lines":
+            # The rows were READ FROM these lines, so checking their amounts against the same lines would confirm
+            # every one of them and claim a second reading that never happened. There is no independent reader
+            # on this path: say so (OCR_VERIFIER_NOT_RUN) instead of reporting a check that is circular.
+            res.verification = VerifyReport(status=NOT_RUN_STATUS, pages_without_verifier=[p.page for p in ok_pages])
+        else:
+            res.verification = verify_rows([(src.get(r.page, r.page), _row_amounts(r)) for r in rows], ok_pages)
         for i, codes in res.verification.row_flags.items():
             rows[i].row_warnings.extend(c for c in codes if c not in rows[i].row_warnings)
         for i, r in enumerate(rows):

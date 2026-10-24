@@ -100,8 +100,10 @@ def health(timeout_s: float = 2.0) -> bool:
 
 
 def ocr_pdf(pdf_path: str, pages: Optional[Sequence[int]] = None, *, verify: bool = True,
-            page_count: Optional[int] = None, timeout_s: Optional[float] = None) -> OcrDocument:
-    """OCR `pages` (1-based; None = all) of a PDF. The PDF must already be decrypted."""
+            page_count: Optional[int] = None, timeout_s: Optional[float] = None, vl: bool = True) -> OcrDocument:
+    """OCR `pages` (1-based; None = all) of a PDF. The PDF must already be decrypted.
+
+    vl=False is the fast reading: the service skips the VL model and returns text lines only."""
     url = service_url()
     if not url:
         return OcrDocument(error=OCR_UNCONFIGURED)
@@ -109,12 +111,18 @@ def ocr_pdf(pdf_path: str, pages: Optional[Sequence[int]] = None, *, verify: boo
     if n > max_pages():
         return OcrDocument(error=OCR_TOO_MANY_PAGES)
     if url.startswith("mock:"):
-        return _from_mock(url[5:], pdf_path, pages)
+        doc = _from_mock(url[5:], pdf_path, pages)
+        if not vl and not doc.error:         # a fixture answers as the service would for the fast reading
+            for p in doc.pages:
+                p.blocks = []
+            doc.engine, doc.verifier = "PP-OCRv5", ""
+        return doc
     budget = timeout_s if timeout_s is not None else 15.0 + page_timeout_s() * max(1, n or 1)
     q = []
     if pages:
         q.append("pages=" + ",".join(str(int(p)) for p in pages))
     q.append("verify=" + ("1" if verify else "0"))
+    q.append("vl=" + ("1" if vl else "0"))
     endpoint = url.rstrip("/") + "/v1/ocr?" + "&".join(q)
     t0 = time.monotonic()
     try:

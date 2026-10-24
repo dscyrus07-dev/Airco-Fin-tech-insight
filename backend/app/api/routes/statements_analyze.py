@@ -56,6 +56,16 @@ def _norm_full_name(value: Any) -> Optional[str]:
     return v or None
 
 
+def _norm_ocr_reading(value: Any) -> Optional[str]:
+    """thorough | fast | absent. Anything else is a client bug, so it is refused rather than ignored."""
+    if value is None or value == "":
+        return None
+    if not isinstance(value, str) or value.strip().lower() not in ("thorough", "fast"):
+        raise HTTPException(status_code=400, detail={"code": "BAD_OCR_READING",
+                                                     "error": "ocr_reading must be 'thorough' or 'fast'"})
+    return value.strip().lower()
+
+
 def _norm_statement_label(value: Any) -> Optional[str]:
     if value is None:
         return None
@@ -171,7 +181,13 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
             "v2_served": False,
         })
 
-    return {"banks": banks, "all_banks": _bank_status.support_states()}
+    try:
+        from ...services.statement_engine.ocr import serve as _ocr_serve
+        ocr = _ocr_serve.catalog_info()
+    except Exception:
+        ocr = {"enabled": False, "reading_modes": [], "default_reading": None, "max_pages": None}
+    # additive: tells the UI whether scanned statements will be read, so it never offers what will fail
+    return {"banks": banks, "all_banks": _bank_status.support_states(), "ocr": ocr}
 
 
 @router.get("/{analysis_id}")
@@ -238,6 +254,7 @@ async def process_confirmed(
             doc_fields[did] = {
                 "account_type": _norm_account_type(d.get("account_type")) or None,
                 "statement_label": _norm_statement_label(d.get("statement_label")),
+                "ocr_reading": _norm_ocr_reading(d.get("ocr_reading")),
             }
     try:
         return await analysis_service.process_confirmed(

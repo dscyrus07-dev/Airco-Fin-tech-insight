@@ -39,12 +39,39 @@ def wants(capability: Optional[str]) -> bool:
     return enabled() and (capability or "") in OCR_CAPABILITIES
 
 
+READINGS = ("thorough", "fast")
+
+
+def reading_for(choice: Optional[str]) -> str:
+    """The reading a job gets: the user's choice when valid, else the deployment default.
+
+    thorough — the VL model reads the tables and the line recogniser checks the amounts independently. Reads
+               rotated and skewed pages. ~6 s/page on an RTX 3060.
+    fast     — the line recogniser alone. ~1 s/page, but no second reader, and rotated or skewed pages may
+               not be read (R11: 21 of 27 synthetic statements vs 27 of 27)."""
+    c = (choice or "").strip().lower()
+    if c in READINGS:
+        return c
+    from .reader import text_layer
+    return "fast" if text_layer() == "lines" else "thorough"
+
+
+def catalog_info() -> Dict[str, Any]:
+    """What the UI may offer. `enabled` is true only when scanned statements will actually be processed."""
+    on = mode() == "serve" and enabled()
+    return {"enabled": on, "reading_modes": list(READINGS) if on else [],
+            "default_reading": reading_for(None) if on else None,
+            "max_pages": _client.max_pages() if on else None}
+
+
 def attempt(pdf_path: str, bank_hint: str = "Unknown bank",
-            page_count: Optional[int] = None) -> Tuple[OcrResult, Optional[V2RowSource]]:
+            page_count: Optional[int] = None, reading: Optional[str] = None) -> Tuple[OcrResult, Optional[V2RowSource]]:
     """OCR every page (MIXED files too: one coordinate system per document), then read. Never raises."""
+    r = reading_for(reading)
     try:
-        doc = _client.ocr_pdf(pdf_path, None, verify=True, page_count=page_count)
-        res = read_document(doc, bank_hint=bank_hint)
+        doc = _client.ocr_pdf(pdf_path, None, verify=True, page_count=page_count, vl=(r == "thorough"))
+        res = read_document(doc, bank_hint=bank_hint, layer="blocks" if r == "thorough" else "lines")
+        res.reading = r
         return res, (row_source_from_outcome(res.universal) if res.ok else None)
     except Exception as exc:                                    # defence in depth
         r = OcrResult(code="OCR_CRASH", detail=type(exc).__name__, bank_hint=bank_hint)
@@ -62,7 +89,9 @@ def detection_texts(pdf_path: str, pages: Tuple[int, ...] = (1, 2)) -> Tuple[Lis
         info["code"] = "OCR_DISABLED"
         return [], info
     info["attempted"] = True
-    doc = _client.ocr_pdf(pdf_path, list(pages), verify=False, timeout_s=_client.detect_timeout_s())
+    # bank detection only needs the words on pages 1-2, so it uses the fast reading: with the VL model the
+    # call took ~7.6 s on an RTX 3060 and always overran this 5 s budget, so the user always had to pick the bank
+    doc = _client.ocr_pdf(pdf_path, list(pages), verify=True, vl=False, timeout_s=_client.detect_timeout_s())
     if doc.error:
         info["code"] = doc.error
         return [], info

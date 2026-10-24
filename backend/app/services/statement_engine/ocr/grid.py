@@ -154,4 +154,9 @@ def page_text(op: OcrPage) -> str:
                 parts.extend(" ".join(c for c in row if c) for row in grid)
         else:
             parts.extend(_text_lines(b.content))
+    if not any(x.strip() for x in parts) and op.lines:
+        # fast reading: no markup at all, so the page's text is its recognised lines in reading order
+        ordered = sorted((ln for ln in op.lines if (ln.text or "").strip()),
+                         key=lambda ln: (round(float(list(ln.box)[1]) / 10.0), float(list(ln.box)[0])))
+        parts = [ln.text.strip() for ln in ordered]
     return "\n".join(parts)

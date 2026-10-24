@@ -686,7 +686,8 @@ class AnalysisService:
                 job_id = await submit(rec, doc, user,
                                       full_name=full_name,
                                       account_type=extra.get("account_type") or doc.get("account_type"),
-                                      statement_label=extra.get("statement_label"))
+                                      statement_label=extra.get("statement_label"),
+                                      ocr_reading=extra.get("ocr_reading"))
             except Exception as exc:
                 logger.error("Could not start processing", error=type(exc).__name__)
                 skipped.append({"document_id": doc["document_id"], "reason": "START_FAILED"})
@@ -701,7 +702,8 @@ class AnalysisService:
     async def _submit_existing_pipeline(self, rec: Dict[str, Any], doc: Dict[str, Any], user: Dict[str, Any],
                                        *, full_name: Optional[str] = None,
                                        account_type: Optional[str] = None,
-                                       statement_label: Optional[str] = None) -> str:
+                                       statement_label: Optional[str] = None,
+                                       ocr_reading: Optional[str] = None) -> str:
         """Same job/queue path as /upload/bank-statement-async, fed from the stored (unlocked) copy."""
         from ..models.job import Job, JobType
         from ..utils.correlation import generate_job_id, get_correlation_id
@@ -722,6 +724,8 @@ class AnalysisService:
         account_type = account_type or ""
         output_dir = get_temp_dir()
         user_info = {"full_name": full_name, "account_type": account_type, "bank_name": bank_name, "batch_id": rec["analysis_id"], "statement_label": statement_label}
+        if ocr_reading:
+            user_info["ocr_reading"] = ocr_reading          # thorough | fast; only read for scanned statements
         job = Job(
             id=generate_job_id(), type=JobType.PDF_PROCESSING, correlation_id=get_correlation_id(), user_id=user_id, bank_name=bank_name,
             input_data={

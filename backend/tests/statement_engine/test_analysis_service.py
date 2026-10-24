@@ -394,3 +394,17 @@ def test_scanned_statement_within_the_ocr_page_cap_is_not_refused_for_length(mon
     svc, _ = make_service()
     view = run(svc.analyze(ALICE, [UploadedPdf("short-scan.pdf", _image_only_pages(3))]))
     assert view["documents"][0].get("error_code") != "OCR_TOO_MANY_PAGES"
+
+
+def test_ocr_reading_choice_travels_to_the_job():
+    """The per-document reading chosen in the UI must reach process_statement via user_info."""
+    seen = []
+    async def capture(rec, doc, user, **kw):
+        seen.append(kw)
+        return "job-1"
+    svc = AnalysisService(store=MemoryAnalysisStore(), storage=make_service()[0].storage, submit_job=capture)
+    view = run(svc.analyze(ALICE, [UploadedPdf("hdfc.pdf", pdf_bytes(HDFC))]))
+    d = view["documents"][0]
+    run(svc.confirm(view["analysis_id"], ALICE, [{"document_id": d["document_id"], "action": "CONFIRM"}]))
+    run(svc.process_confirmed(view["analysis_id"], ALICE, doc_fields={d["document_id"]: {"ocr_reading": "fast"}}))
+    assert seen and seen[0]["ocr_reading"] == "fast"

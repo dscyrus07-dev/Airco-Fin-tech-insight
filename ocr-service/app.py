@@ -4,7 +4,8 @@ Separate from the CPU-only backend by design: this is the only component that ne
 internal Docker network only; documents are processed in memory/temp files and never leave the machine.
 
     GET  /health                       -> {"status": "ok", "engine": ..., "verifier": ...}  (503 until ready)
-    POST /v1/ocr?pages=1,2&verify=1    body: raw PDF bytes (already decrypted)  -> OcrDocument JSON
+    POST /v1/ocr?pages=1,2&verify=1&vl=1  body: raw PDF bytes (already decrypted)  -> OcrDocument JSON
+                                       vl=0 = fast reading: text lines only, no VL model call
                                        (same shape as backend/app/services/statement_engine/ocr/contracts.py)
 
 R7 hardening (F8/F9/F12): the models live in a PERSISTENT WORKER PROCESS (spawned once, models loaded once).
@@ -149,8 +150,11 @@ def _worker_main(job_conn, evt_conn) -> None:
                     os.unlink(path)
                 job_conn.send({"ok": True})
             else:
-                out = {"ok": True, "blocks": [] if SKIP_VL else vl_page(job["path"])}
-                out["lines"] = lines_page(job["path"]) if job.get("verify") else []
+                # vl=False is the fast reading: no VL call, and the text lines become the page's ONLY text, so
+                # they are read even when the caller did not ask for a verifier
+                use_vl = job.get("vl", True) and not SKIP_VL
+                out = {"ok": True, "blocks": vl_page(job["path"]) if use_vl else []}
+                out["lines"] = lines_page(job["path"]) if (job.get("verify") or not use_vl) else []
                 job_conn.send(out)
         except Exception as exc:
             try:
@@ -321,12 +325,13 @@ class _Supervisor:
         if self.respawns <= MAX_RESPAWNS:
             threading.Thread(target=self._spawn, daemon=True).start()
 
-    def run_page(self, png_path: str, verify: bool, budget_s: float = PAGE_TIMEOUT_S) -> Tuple[str, Any]:
+    def run_page(self, png_path: str, verify: bool, budget_s: float = PAGE_TIMEOUT_S,
+                 vl: bool = True) -> Tuple[str, Any]:
         """Returns ("ok", {"blocks":..,"lines":..}) | ("timeout",None) | ("error",class) | ("down",None).
         Waits for readiness so pages queued behind a respawn still get served (within the load budget)."""
         if not self._await_ready(LOAD_BUDGET_S):
             return ("down", None)
-        return self._submit({"cmd": "page", "path": png_path, "verify": verify}, budget_s)
+        return self._submit({"cmd": "page", "path": png_path, "verify": verify, "vl": vl}, budget_s)
 
     def _await_ready(self, timeout_s: float) -> bool:
         end = time.monotonic() + timeout_s
@@ -378,7 +383,8 @@ class _Supervisor:
 SUPERVISOR = _Supervisor()
 
 
-def ocr_pdf(pdf_path: str, pages_param: Optional[str], verify: bool) -> Dict[str, Any]:
+def ocr_pdf(pdf_path: str, pages_param: Optional[str], verify: bool, vl: bool = True) -> Dict[str, Any]:
+    """vl=False is the fast reading (text lines only, no VL model call)."""
     import fitz
 
     t0 = time.monotonic()
@@ -395,7 +401,7 @@ def ocr_pdf(pdf_path: str, pages_param: Optional[str], verify: bool) -> Dict[str
             fh.write(png)
             path = fh.name
         try:
-            kind, res = SUPERVISOR.run_page(path, verify)
+            kind, res = SUPERVISOR.run_page(path, verify, vl=vl)
             if kind == "ok":
                 page["blocks"], page["lines"] = res.get("blocks", []), res.get("lines", [])
             elif kind == "timeout":
@@ -411,8 +417,11 @@ def ocr_pdf(pdf_path: str, pages_param: Optional[str], verify: bool) -> Dict[str
                 pass
         page["elapsed_s"] = round(time.monotonic() - p0, 3)
         out_pages.append(page)
-    return {"engine": ENGINE, "verifier": VERIFIER if verify else "", "dpi": DPI,
-            "elapsed_s": round(time.monotonic() - t0, 3), "error": "", "pages": out_pages}
+    ran_vl = vl and not SKIP_VL
+    # say which model produced the text: in the fast reading the line recogniser IS the reader, so it cannot
+    # also be reported as an independent verifier
+    return {"engine": ENGINE if ran_vl else VERIFIER, "verifier": VERIFIER if (verify and ran_vl) else "",
+            "vl": ran_vl, "dpi": DPI, "elapsed_s": round(time.monotonic() - t0, 3), "error": "", "pages": out_pages}
 
 
 # ---------------------------------------------------------------- HTTP ----------
@@ -431,12 +440,13 @@ def create_app():
         return body if ok else JSONResponse(body, status_code=503)
 
     @app.post("/v1/ocr")
-    async def ocr(request: Request, pages: Optional[str] = None, verify: int = 1):
+    async def ocr(request: Request, pages: Optional[str] = None, verify: int = 1, vl: int = 1):
         if not SUPERVISOR.ready:
             raise HTTPException(503, "OCR_MODELS_NOT_READY")   # loading/respawning/failed: never queue a dead worker
-        ok, _ = SUPERVISOR.vl_server_probe()
-        if not ok:
-            raise HTTPException(503, "OCR_VL_SERVER_UNREACHABLE")   # configured VL backend is down (F12)
+        if vl:                                                  # the fast reading never touches the VL backend
+            ok, _ = SUPERVISOR.vl_server_probe()
+            if not ok:
+                raise HTTPException(503, "OCR_VL_SERVER_UNREACHABLE")   # configured VL backend is down (F12)
         if not inflight.acquire(blocking=False):
             raise HTTPException(503, "OCR_BUSY")
         try:
@@ -451,7 +461,7 @@ def create_app():
             try:
                 import anyio
 
-                return await anyio.to_thread.run_sync(ocr_pdf, path, pages, bool(verify))
+                return await anyio.to_thread.run_sync(ocr_pdf, path, pages, bool(verify), bool(vl))
             finally:
                 try:
                     os.unlink(path)

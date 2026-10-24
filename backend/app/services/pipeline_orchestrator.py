@@ -681,6 +681,7 @@ def process_statement(
                 file_path,
                 bank_hint=(v2_block.get("detected_bank") and v2_block["detected_bank"].get("name")) or bank_name or "Unknown bank",
                 page_count=_o_pages,
+                reading=(user_info or {}).get("ocr_reading"),
             )
             _o_block = _oserve.block_for(_o_res, served=False, o_mode=_o_mode)
             if _o_serving:
