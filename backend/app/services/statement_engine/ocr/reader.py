@@ -63,6 +63,7 @@ class OcrResult:
     pages_ok: List[int] = field(default_factory=list)
     failed_pages: Dict[int, str] = field(default_factory=dict)    # page -> failure code
     rows_dropped: Dict[int, int] = field(default_factory=dict)    # page -> mis-shaped table rows left out
+    tables_realigned: Dict[int, int] = field(default_factory=dict)  # page -> narrower tables re-aligned to the header
     fused_amounts: int = 0            # boxes holding two amounts: their split is estimated, not measured
     layer: str = "blocks"
     reading: str = ""                 # thorough | fast, as requested for this job
@@ -103,6 +104,7 @@ class OcrResult:
             "failed_pages": {str(k): v for k, v in sorted(self.failed_pages.items())},
             "rows_dropped": {str(k): v for k, v in sorted(self.rows_dropped.items())},
             "rows_dropped_total": sum(self.rows_dropped.values()),
+            "tables_realigned": sum(self.tables_realigned.values()),
             "text_layer": self.layer,
             "reading": self.reading or None,
             "layer_note": self.layer_note or None,
@@ -177,7 +179,7 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
             if not ok_pages:
                 res.code, res.detail = OCR_NO_USABLE_PAGES, "no page carried usable markup"
                 return res
-            engine_pages = pages_from_ocr(ok_pages, res.rows_dropped)
+            engine_pages = pages_from_ocr(ok_pages, res.rows_dropped, res.tables_realigned)
         u = _u.read(pages=engine_pages, bank_hint=res.bank_hint, budget_s=budget_s)
         res.universal = u
         if not u.ok:
