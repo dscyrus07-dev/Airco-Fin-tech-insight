@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional, Sequence, Tuple
 
 from ..extraction.rows import Page
 from ..extraction.words import Word
@@ -103,7 +103,105 @@ def _well_shaped(grid: Sequence[Sequence[str]], counts: Sequence[int]):
     return keep, len(grid) - len(keep)
 
 
-def page_from_ocr(op: OcrPage, stats: Optional[Dict[str, int]] = None) -> Page:
+# ------------------------------------------------------------------ cross-page column alignment
+# The VL model drops a column that is empty on a page: on a real Axis statement the always-empty "Chq No" column is
+# present on page 1 (7 columns) and missing on every later page (6), so every later cell lands one band to the left —
+# the balance under "Credit", the branch code under "Balance". 5 of the first 12 real statements change column count
+# between pages. A narrower table is re-aligned to the document's header table by COLUMN CONTENT, and only when one
+# alignment clearly wins: if two readings fit equally (a debits-only page that lost either Debit or Credit), the table
+# is left as it is and the balance chain refuses it, rather than money being moved to a guessed side.
+
+_C_DATE = re.compile(r"^\d{1,2}[-/.](\d{1,2}|[A-Za-z]{3,9})[-/.]\d{2,4}")
+_C_AMT = re.compile(r"^[-(+]?(?:₹|rs\.?|inr)?\d[\d,]*\.\d{1,2}\)?(?:cr|dr)?\.?$", re.I)
+_C_INT = re.compile(r"^\d{1,7}$")
+_TYPES = ("E", "D", "A", "I", "T")
+ALIGN_MARGIN = 0.5            # the winning alignment must beat the runner-up by this much (in column-equivalents)
+ALIGN_MAX_MISSING = 2
+
+
+def _ctype(cell: str) -> str:
+    t = (cell or "").strip()
+    if not t:
+        return "E"
+    if _C_DATE.match(t.split()[0]):
+        return "D"
+    if _C_AMT.match(t.replace(" ", "")):
+        return "A"
+    if _C_INT.match(t):
+        return "I"
+    return "T"
+
+
+def _profile(rows: Sequence[Sequence[str]], width: int) -> List[Dict[str, float]]:
+    out = []
+    for c in range(width):
+        cnt = Counter(_ctype(r[c] if c < len(r) else "") for r in rows)
+        n = sum(cnt.values()) or 1
+        out.append({t: cnt.get(t, 0) / n for t in _TYPES})
+    return out
+
+
+def _is_header_row(row: Sequence[str]) -> bool:
+    from ..universal.lexicon import HEADER_SYNONYMS
+    from ..extraction.words import norm_token
+    vocab = {t for alts in HEADER_SYNONYMS.values() for alt in alts for t in alt}
+    words = [norm_token(w) for c in row for w in (c or "").split()]
+    return sum(1 for w in words if w in vocab) >= 3
+
+
+def column_reference(pages: Sequence[OcrPage]) -> Optional[List[Dict[str, float]]]:
+    """Column-content profile of the document's header table: the first table whose first row is a header and whose
+    columns hold dates. Profiled from its data rows plus every other table of the same width."""
+    tables = [g for p in sorted(pages, key=lambda p: p.page) for b in p.blocks if b.is_table
+              for g, _c in parse_tables_shaped(b.content) if len(g) >= 3]
+    head = next((g for g in tables if _is_header_row(g[0])), None)
+    if head is None:
+        return None
+    width = len(head[0])
+    rows = list(head[1:]) + [r for g in tables if g is not head and len(g[0]) == width
+                             and not _is_header_row(g[0]) for r in g]
+    prof = _profile(rows, width)
+    return prof if any(col["D"] > 0.5 for col in prof) else None
+
+
+def _alignments(cont: List[Dict[str, float]], ref: List[Dict[str, float]]):
+    """Every monotonic placement of the narrower table's columns into the reference's, scored by content match
+    (histogram intersection) minus the fill rate of each reference column it claims is missing."""
+    from itertools import combinations
+    n, m = len(ref), len(cont)
+    for skipped in combinations(range(n), n - m):
+        kept = [j for j in range(n) if j not in skipped]
+        score = sum(sum(min(cont[i][t], ref[j][t]) for t in _TYPES) for i, j in enumerate(kept))
+        score -= sum(1.0 - ref[j]["E"] for j in skipped)
+        yield score, kept
+
+
+def align_to_reference(grid: List[List[str]], ref: Optional[List[Dict[str, float]]]) -> Tuple[List[List[str]], bool]:
+    """Pad a table that is narrower than the header table with empty cells where its missing columns belong, when
+    exactly one placement clearly wins. Returns (grid, realigned)."""
+    if not ref or not grid:
+        return grid, False
+    m, n = max(len(r) for r in grid), len(ref)
+    if m >= n or n - m > ALIGN_MAX_MISSING or m < 3 or _is_header_row(grid[0]):
+        return grid, False
+    cont = _profile(grid, m)
+    if not any(col["D"] > 0.5 for col in cont):
+        return grid, False                       # not a transaction table
+    scored = sorted(_alignments(cont, ref), key=lambda x: -x[0])
+    if len(scored) > 1 and scored[0][0] - scored[1][0] < ALIGN_MARGIN:
+        return grid, False                       # two placements fit: never guess which column is missing
+    kept = scored[0][1]
+    out = []
+    for r in grid:
+        row = [""] * n
+        for i, j in enumerate(kept):
+            row[j] = r[i] if i < len(r) else ""
+        out.append(row)
+    return out, True
+
+
+def page_from_ocr(op: OcrPage, stats: Optional[Dict[str, int]] = None,
+                  reference: Optional[List[Dict[str, float]]] = None) -> Page:
     """One engine Page from one OCR page, blocks in the order the layout model returned (its reading order).
 
     `stats`, when given, collects "rows_dropped": rows the recogniser emitted mis-shaped (see _well_shaped)."""
@@ -120,6 +218,9 @@ def page_from_ocr(op: OcrPage, stats: Optional[Dict[str, int]] = None) -> Page:
                     stats["rows_dropped"] = stats.get("rows_dropped", 0) + dropped
                 if not grid:
                     continue
+                grid, realigned = align_to_reference(grid, reference)
+                if realigned and stats is not None:
+                    stats["tables_realigned"] = stats.get("tables_realigned", 0) + 1
                 max_cols = max(max_cols, max(len(r) for r in grid))
                 words.extend(table_words(grid, y))
                 y += len(grid) * ROW_PITCH + BLOCK_GAP
@@ -132,19 +233,22 @@ def page_from_ocr(op: OcrPage, stats: Optional[Dict[str, int]] = None) -> Page:
     return Page(words=words, width=width)
 
 
-def pages_from_ocr(pages: Sequence[OcrPage], dropped: Optional[Dict[int, int]] = None) -> List[Page]:
+def pages_from_ocr(pages: Sequence[OcrPage], dropped: Optional[Dict[int, int]] = None,
+                   realigned: Optional[Dict[int, int]] = None) -> List[Page]:
     """Engine pages for the OCR pages that succeeded, in page order. Failed pages are NOT represented here;
     the caller reports them (a failed page is never silently treated as empty).
 
     `dropped`, when given, is filled with source page number -> mis-shaped rows left out on that page."""
     out: List[Page] = []
-    for p in sorted(pages, key=lambda p: p.page):
-        if not p.ok:
-            continue
+    ok = [p for p in pages if p.ok]
+    reference = column_reference(ok)
+    for p in sorted(ok, key=lambda p: p.page):
         stats: Dict[str, int] = {}
-        out.append(page_from_ocr(p, stats))
+        out.append(page_from_ocr(p, stats, reference))
         if dropped is not None and stats.get("rows_dropped"):
             dropped[p.page] = stats["rows_dropped"]
+        if realigned is not None and stats.get("tables_realigned"):
+            realigned[p.page] = stats["tables_realigned"]
     return out
 
 

@@ -45,6 +45,7 @@ class OcrPage:
     blocks: List[OcrBlock] = field(default_factory=list)
     lines: List[OcrLine] = field(default_factory=list)   # verifier output; may be empty
     elapsed_s: float = 0.0
+    markup_error: str = ""                      # why the VL markup was dropped by a guard ("" = kept or never present)
 
     @property
     def ok(self) -> bool:
@@ -92,6 +93,7 @@ def page_from_dict(d: Dict[str, Any]) -> OcrPage:
         page=int(d.get("page") or 0), width=_f(d.get("width")), height=_f(d.get("height")),
         status=PAGE_FAILED if d.get("status") == PAGE_FAILED else PAGE_OK, error=str(d.get("error") or ""),
         blocks=blocks, lines=lines, elapsed_s=_f(d.get("elapsed_s")),
+        markup_error=str(d.get("markup_error") or ""),
     )
 
 
@@ -106,7 +108,7 @@ def document_from_dict(d: Dict[str, Any]) -> OcrDocument:
 def page_to_dict(p: OcrPage) -> Dict[str, Any]:
     return {
         "page": p.page, "width": p.width, "height": p.height, "status": p.status, "error": p.error,
-        "elapsed_s": p.elapsed_s,
+        "elapsed_s": p.elapsed_s, "markup_error": p.markup_error,
         "blocks": [{"label": b.label, "bbox": list(b.bbox), "content": b.content} for b in p.blocks],
         "lines": [{"text": ln.text, "box": list(ln.box), "score": ln.score} for ln in p.lines],
     }
