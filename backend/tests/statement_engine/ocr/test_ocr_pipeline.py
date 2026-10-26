@@ -217,3 +217,44 @@ def test_mode_defaults_off(monkeypatch):
     assert not s.wants("SCANNED")                                      # mode alone is not enough: needs a service
     monkeypatch.setenv("STATEMENT_ENGINE_OCR_URL", "http://x:1")
     assert s.wants("SCANNED") and s.wants("MIXED") and not s.wants("TEXT")
+
+
+# ---- guard calibration on real-statement shapes (2026-10-27: the old rule condemned 48% of real pages) ----------
+
+def _table_page(n_rows=30, seed=5):
+    doc, rows = make_document(n_rows=n_rows, per_page=n_rows, seed=seed)
+    return doc, rows
+
+
+def test_a_long_healthy_statement_table_is_not_a_loop():
+    """A 30-row table is repetitive markup by design; with tags it compresses past the old 4.0 threshold."""
+    doc, _ = _table_page(30)
+    raw = "\n".join(b.content for b in doc.pages[0].blocks)
+    assert compression_ratio(raw) > 3.0                     # the shape that used to be condemned
+    assert apply_guards(doc) == [] and doc.pages[0].blocks and doc.pages[0].markup_error == ""
+
+
+def test_a_table_repeating_the_same_row_is_a_loop():
+    """The real loop signature: one row emitted over and over."""
+    doc, _ = _table_page(12)
+    row = "<tr><td>01/04/2026</td><td>UPI/SWIGGY</td><td>R1</td><td>100.00</td><td></td><td>900.00</td></tr>"
+    doc.pages[0].blocks = [OcrBlock("table", [0, 0, 1, 1], "<table>" + row * 40 + "</table>")]
+    apply_guards(doc)
+    assert doc.pages[0].blocks == [] and doc.pages[0].markup_error == OCR_LOOP
+
+
+def test_a_markup_loop_does_not_discard_the_line_reading():
+    """The two readers are independent: the page survives on its lines, and the markup layer reports it unread."""
+    doc, _ = make_document(n_rows=24, per_page=12)
+    doc.pages[1].blocks = [OcrBlock("text", [0, 0, 1, 1], "TOTAL 12,345.00 " * 400)]
+    assert apply_guards(doc) == []                          # no page failed outright
+    assert doc.pages[1].ok and doc.pages[1].lines and doc.pages[1].markup_error == OCR_LOOP
+    res = read_document(doc, layer="blocks")
+    assert res.failed_pages == {2: OCR_LOOP}                # the markup layer did not read page 2, and says so
+
+
+def test_a_line_loop_does_not_discard_the_markup():
+    doc, _ = make_document(n_rows=12, per_page=12)
+    doc.pages[0].lines = [OcrLine("x" * 40, [0.0, float(i), 100.0, float(i) + 9], 0.99) for i in range(60)]
+    assert apply_guards(doc) == []
+    assert doc.pages[0].blocks and doc.pages[0].lines == []

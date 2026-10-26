@@ -25,7 +25,8 @@ page; every printed amount must appear in its output (`ocr/verify.py`). Disagree
 | `STATEMENT_ENGINE_OCR_MAX_PAGES` | 60 | refuse OCR above this page count |
 | `STATEMENT_ENGINE_OCR_PAGE_TIMEOUT_S` | 45 | sizes the request timeout (15 s + 45 s per page; measured ~17-23 s/page on an RTX 3060) |
 | `STATEMENT_ENGINE_OCR_DETECT_TIMEOUT_S` | 5 | analysis-time OCR of pages 1-2 for bank detection |
-| `STATEMENT_ENGINE_OCR_LOOP_RATIO` | 4.0 | compression-ratio threshold for repetition loops |
+| `STATEMENT_ENGINE_OCR_LOOP_RATIO` | 8.0 | compression ratio of the page TEXT (markup tags stripped) above which a reading is a repetition loop. Calibrated on real scans; see ocr/guards.py |
+| `STATEMENT_ENGINE_OCR_DUP_ROW_SHARE` | 0.5 | share of a page's rows that are exact duplicates above which a reading is a repetition loop |
 | `STATEMENT_ENGINE_OCR_MIN_SCORE` | 0.90 | PP-OCR line score needed to confirm an amount |
 
 ## Flow

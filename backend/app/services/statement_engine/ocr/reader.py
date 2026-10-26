@@ -33,6 +33,7 @@ OCR_NO_USABLE_PAGES = "OCR_NO_USABLE_PAGES"
 OCR_TABLE_ROWS_DROPPED = "OCR_TABLE_ROWS_DROPPED"
 OCR_FUSED_AMOUNTS = "OCR_FUSED_AMOUNTS"
 OCR_NO_TEXT_BOXES = "OCR_NO_TEXT_BOXES"
+OCR_NO_MARKUP = "OCR_NO_MARKUP"
 
 TEXT_LAYER_ENV = "STATEMENT_ENGINE_OCR_TEXT_LAYER"
 LAYERS = ("blocks", "lines")
@@ -144,9 +145,10 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
             return res
         res.layer = layer if layer in LAYERS else text_layer()
         if res.layer == "blocks" and not any(p.blocks for p in ok_pages) and any(p.lines for p in ok_pages):
-            # the VL model did not run (the service is in lines-only mode): there is no markup to read, but the
-            # line boxes are a text layer in their own right, so read those instead of refusing the document
-            res.layer, res.layer_note = "lines", "VL_UNAVAILABLE"
+            # no markup survived on any page: the VL model did not run (lines-only service) or every page of its
+            # output failed a guard. The line boxes are a text layer in their own right, so read those instead.
+            res.layer = "lines"
+            res.layer_note = "VL_OUTPUT_REJECTED" if any(p.markup_error for p in ok_pages) else "VL_UNAVAILABLE"
         if res.layer == "lines":
             used, engine_pages = [], []
             for p in ok_pages:
@@ -165,6 +167,16 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
                 res.code, res.detail = OCR_NO_USABLE_PAGES, "no page carried a text box"
                 return res
         else:
+            # a page whose markup is missing (dropped by a guard, or never produced) was NOT read by this layer, even
+            # if its line boxes survived: report it unread rather than let it pass as a page with no transactions
+            for p in ok_pages:
+                if not p.blocks:
+                    res.failed_pages[p.page] = p.markup_error or OCR_NO_MARKUP
+            ok_pages = [p for p in ok_pages if p.blocks]
+            res.pages_ok = [p.page for p in ok_pages]
+            if not ok_pages:
+                res.code, res.detail = OCR_NO_USABLE_PAGES, "no page carried usable markup"
+                return res
             engine_pages = pages_from_ocr(ok_pages, res.rows_dropped)
         u = _u.read(pages=engine_pages, bank_hint=res.bank_hint, budget_s=budget_s)
         res.universal = u
