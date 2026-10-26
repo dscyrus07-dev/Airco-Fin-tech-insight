@@ -139,6 +139,15 @@ on `airco_frontend`. Verified end-to-end with ~20 KB of cookies: `:3000` → rel
 dashboard. Note `proxy_buffer_size` must NOT be raised while `proxy_buffering off` is set —
 nginx 1.31.6 treats the single buffer as the whole pool and fails config validation.
 
+**Docker Desktop restarted (user-approved):** the wedged `:8080` and `:80` port-proxies
+healed — Keycloak is now reachable natively at `http://localhost:8080` (admin console
+included; its clients whitelist `:8080` redirect URIs). The `airco_kc_relay` on `:8095`
+is kept running: the frontend still targets it, so app login survives even if the
+`:8080` proxy decays again. Post-restart verified: all 11 containers healthy
+(`airco_nginx` healthy for the first time — needed the `frontend` network alias on the
+hand-run frontend container), `vl=1`/`vl=0` results identical to pre-restart
+(6 blocks/217 lines; 0 blocks/217 lines), `:3000` login → dashboard works.
+
 ## Changes made this round (all committed on `devin/r12-live`)
 
 | File | Change | Reason |
