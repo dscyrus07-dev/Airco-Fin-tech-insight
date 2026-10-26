@@ -343,7 +343,10 @@ def _extract_one(pages: Sequence[Page], spec: LayoutSpec) -> V2Outcome:
             # implies it. Independent evidence only for the first row's side derivation;
             # the totals/chain checks still verify the whole statement against print.
             opening_for_sides = s.closing + s.debits - s.credits
-    rows, errors = normalize_rows(table.rows, spec, opening=opening_for_sides)
+    _info: List[str] = []
+    rows, errors = normalize_rows(table.rows, spec, opening=opening_for_sides, info=_info)
+    if _info:
+        out.notes.append(f"zero_effect_rows={len(_info)}")
     if spec.derive_side_from_balance:
         unproven = sum(1 for r in rows if "side_unproven" in r.row_warnings)
         if unproven:
