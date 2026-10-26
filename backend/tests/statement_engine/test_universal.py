@@ -236,3 +236,42 @@ def test_multiline_rows_amounts_on_wrap_line_infer(tmp_path):
     assert res.verdict == "REVIEW", f"{res.code}: {res.detail}"
     assert len(res.outcome.rows) == 8
     assert "continuation_amounts" in res.notes
+
+
+# ---- zero-effect rows (real DCB scan: one dated notice row with no amount and an unchanged balance) -------------
+
+def _drcr_pdf(path, notice_balance_delta="0.00"):
+    from decimal import Decimal
+    head = [(40, 760, "Date"), (130, 760, "Narration"), (330, 760, "Debit"), (410, 760, "Credit"), (490, 760, "Balance")]
+    rows, y, bal = [], 740, Decimal("10000.00")
+    for i in range(12):
+        amt = Decimal(100 + i * 11) + Decimal("0.50")
+        is_dr = i % 3 != 0
+        bal = bal - amt if is_dr else bal + amt
+        rows += [(40, y, f"{i + 1:02d}/04/2026"), (130, y, f"NEFT TXN {i}"),
+                 ((380 if is_dr else 460) - len(f"{amt:,.2f}") * 6.7, y, f"{amt:,.2f}"), (490, y, f"{bal:,.2f}")]
+        y -= 16
+        if i == 5:                           # a dated notice line: no amount; its balance is the running balance
+            shown = bal + Decimal(notice_balance_delta)
+            rows += [(40, y, f"{i + 1:02d}/04/2026"), (130, y, "CHQ BOOK CHARGES WAIVED"), (490, y, f"{shown:,.2f}")]
+            y -= 16
+    return _pdf([head + rows], path)
+
+
+def test_a_notice_row_that_moved_no_money_does_not_fail_the_statement(tmp_path):
+    res = univ.read(_drcr_pdf(tmp_path / "z.pdf"), bank_hint="Unknown bank")
+    assert res.verdict == "REVIEW", f"{res.code}: {res.detail}"
+    assert len(res.outcome.rows) == 12                   # the notice is not a transaction
+    assert any(n.startswith("zero_effect_rows=") for n in res.outcome.notes)
+
+
+def test_a_row_whose_balance_moved_without_an_amount_still_fails(tmp_path):
+    """Money moved and no amount was read: that is a lost transaction, never an informational row."""
+    res = univ.read(_drcr_pdf(tmp_path / "m.pdf", notice_balance_delta="-250.00"), bank_hint="Unknown bank")
+    assert res.verdict == "FAILED"
+
+
+def test_curated_specs_keep_their_own_rules():
+    from app.services.statement_engine.extraction.layout_spec import LayoutSpec
+    import dataclasses
+    assert {f.name: f.default for f in dataclasses.fields(LayoutSpec)}["zero_effect_rows_ok"] is False

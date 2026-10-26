@@ -563,6 +563,7 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
         # was silently popped — leave it off for single-amount layouts.
         opening_row_balance_only=not single_amount,
         carry_forward_re=re.compile(r"(?i)balance(?:brought|carried)forward"),
+        zero_effect_rows_ok=True,         # inferred layouts only; curated bank specs keep their own rules
     )
     try:
         spec.validate()           # backstop: a spec that declares an unlocated column must never reach
@@ -631,6 +632,7 @@ def _infer_implicit(pages, date_re, date_fmt, tail_re, texts, furn, notes) -> In
         row_order="auto",
         ignore_line_res=tuple(re.compile(r"^" + re.escape(f)) for f in sorted(furn)[:30]),
         opening_row_balance_only=not bool(single),
+        zero_effect_rows_ok=True,
     )
     summ = infer_summary_lines([texts[0], texts[-1]])
     if summ:

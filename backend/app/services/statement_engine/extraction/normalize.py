@@ -73,15 +73,29 @@ class NormalizedRow:
     segment: int = 0             # account segment (0 when the document prints no segment headers)
 
 
-def normalize_rows(rows: List[RawRow], spec: LayoutSpec, opening: Optional[Decimal] = None) -> Tuple[List[NormalizedRow], List[str]]:
+def normalize_rows(rows: List[RawRow], spec: LayoutSpec, opening: Optional[Decimal] = None,
+                   info: Optional[List[str]] = None) -> Tuple[List[NormalizedRow], List[str]]:
     """Returns (rows, errors). Rows that cannot be normalized are reported in errors and omitted.
 
     `opening` is the document's printed opening balance; only a derive_side_from_balance layout uses it
-    (the first row's side is read from the balance move off that anchor)."""
+    (the first row's side is read from the balance move off that anchor).
+    `info`, when given, receives a note for every zero-effect row left out (spec.zero_effect_rows_ok)."""
     out: List[NormalizedRow] = []
     errors: List[str] = []
     prev_bal: Dict[int, Decimal] = {}     # segment -> last printed balance (derive_side_from_balance)
+    money_cols = tuple(c for c in (spec.debit_column, spec.credit_column, spec.single_amount_column) if c)
     for i, r in enumerate(rows):
+        if spec.zero_effect_rows_ok and out and out[-1].segment == r.segment and not any(
+                (r.amounts.get(c) or "").strip() for c in money_cols):
+            try:
+                b = parse_amount(r.amounts.get(spec.balance_column, ""), suffix_sign=True,
+                                 clipped_sign=getattr(spec, "clipped_drcr_suffix", False))
+            except NormalizeError:
+                b = None
+            if b is not None and b == out[-1].txn.balance:
+                if info is not None:
+                    info.append(f"zero_effect_row:page{r.page}")
+                continue
         try:
             date = parse_date(r.date, spec.date_format)
             value_date = parse_date(r.value_date, spec.date_format) if r.value_date.strip() else None

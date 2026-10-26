@@ -64,6 +64,9 @@ class LayoutSpec:
     closing_row_marker: str = ""               # same for a dated "closing balance" row at the end of the table
     page_break_re: Optional[Pattern[str]] = None       # whitespace-free line that opens a printed page break inside a PDF page; lines up to and including the next header row are skipped
     opening_row_balance_only: bool = False    # the first row is the opening balance when it carries a balance and no debit/credit amount (any narration)
+    zero_effect_rows_ok: bool = False         # a dated row with NO amount whose printed balance equals the previous row's moved no
+                                              # money (a waived charge, a notice): it is noted and kept out of the transactions
+                                              # instead of failing the schema. Proven by the balances, so nothing is assumed.
     totals_credit_first: bool = False          # the totals line prints credits before debits; a third group, when present, is the printed closing balance
     carry_forward_re: Optional[Pattern[str]] = None    # whitespace-free line that restates the running balance at the top of a page; dropped unless it is the table's first row
     undated_rows_inherit_date: bool = False    # a line with a balance and a debit/credit amount but no date is a new row on the previous row's date
