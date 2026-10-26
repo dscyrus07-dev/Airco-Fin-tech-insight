@@ -1,6 +1,6 @@
 'use client'
 
-import type { BankCatalogEntry } from '@/lib/statementsApi'
+import type { BankCatalogEntry, OcrCatalog } from '@/lib/statementsApi'
 import { STATE_ICON, STATE_LABEL, groupByState, isSelectable } from '@/lib/bankSupport'
 
 /**
@@ -9,7 +9,7 @@ import { STATE_ICON, STATE_LABEL, groupByState, isSelectable } from '@/lib/bankS
  * banks are greyed with their one-line reason. Colour is never the only
  * signal — every row carries an icon plus a text tag.
  */
-export default function BankSupportPanel({ catalog }: { catalog: BankCatalogEntry[] }) {
+export default function BankSupportPanel({ catalog, ocr }: { catalog: BankCatalogEntry[]; ocr?: OcrCatalog | null }) {
   const groups = groupByState(catalog)
   if (!groups.length) return null
   const servable = catalog.filter((b) => isSelectable(b.support_state))
@@ -23,7 +23,8 @@ export default function BankSupportPanel({ catalog }: { catalog: BankCatalogEntr
             <span key={g.state}> · {g.banks.length} {g.label.toLowerCase()}</span>
           )
         )}
-        . Other banks stay unprocessed — you can still pick a bank manually if one was detected incorrectly.
+        .{ocr?.enabled ? ' Scanned statements are read with the universal OCR parser.' : ''} Other banks stay
+        unprocessed — you can still pick a bank manually if one was detected incorrectly.
       </p>
       <details className="mt-1">
         <summary className="cursor-pointer select-none text-gray-600 underline decoration-dotted underline-offset-2">
@@ -48,6 +49,20 @@ export default function BankSupportPanel({ catalog }: { catalog: BankCatalogEntr
               </ul>
             </div>
           ))}
+          {ocr?.enabled && (
+            <div>
+              <p className="font-medium text-neutral-700">
+                <span aria-hidden="true" className="mr-1">◉</span>
+                Universal OCR parser (any scanned statement)
+              </p>
+              <ul className="mt-0.5 space-y-0.5 pl-5">
+                <li className="text-neutral-400">
+                  Scanned or photographed statements from any bank — figures are read from the image and every
+                  report is marked needs review{ocr.max_pages ? ` (up to ${ocr.max_pages} pages)` : ''}.
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </details>
     </div>

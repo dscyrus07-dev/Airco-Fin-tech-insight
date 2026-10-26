@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import type { BankCatalogEntry, BankOption } from '@/lib/statementsApi'
+import type { BankCatalogEntry, BankOption, OcrCatalog } from '@/lib/statementsApi'
 import { catalogFromBanks, isSelectable } from '@/lib/bankSupport'
 import BankSelect from '@/app/components/bank/BankSelect'
 import BankSupportPanel from '@/app/components/bank/BankSupportPanel'
@@ -18,6 +18,7 @@ interface UploadDropzoneProps {
   onHolderName?: (v: string) => void
   bankHint?: string
   onBankHint?: (v: string) => void
+  ocr?: OcrCatalog | null
 }
 
 export default function UploadDropzone({
@@ -32,6 +33,7 @@ export default function UploadDropzone({
   onHolderName,
   bankHint,
   onBankHint,
+  ocr,
 }: UploadDropzoneProps) {
   const [detailsOpen, setDetailsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -131,7 +133,7 @@ export default function UploadDropzone({
         {busy && <span className="text-sm text-gray-600">{busy}</span>}
       </div>
 
-      <BankSupportPanel catalog={effectiveCatalog} />
+      <BankSupportPanel catalog={effectiveCatalog} ocr={ocr} />
 
       {error && (
         <div role="alert" className="mt-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-800">

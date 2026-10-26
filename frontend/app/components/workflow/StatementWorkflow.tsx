@@ -70,6 +70,7 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
             onHolderName={setHolderName}
             bankHint={bankHint}
             onBankHint={setBankHint}
+            ocr={wf.ocr}
           />
         )}
 

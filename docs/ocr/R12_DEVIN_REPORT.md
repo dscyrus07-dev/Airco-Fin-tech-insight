@@ -42,7 +42,7 @@ Runtime configuration actually in effect:
 
 | Component | Setting |
 |---|---|
-| backend | `STATEMENT_ENGINE_OCR_MODE=serve`, `STATEMENT_ENGINE_OCR_URL=http://ocr-service:8090`, `STATEMENT_ENGINE_OCR_TEXT_LAYER` unset (default thorough) |
+| backend | `STATEMENT_ENGINE_OCR_MODE=serve`, `STATEMENT_ENGINE_OCR_URL=http://ocr-service:8090`, `STATEMENT_ENGINE_OCR_TEXT_LAYER` unset (default thorough), `STATEMENT_ENGINE_V2_MODE=serve` (allowlist already in `infra/docker/.env`: 29 keys) |
 | ocr-service | `OCR_VL_SERVER_URL=http://ocr-vllm-server:8080/v1`, `OCR_DPI=200` |
 | ocr-vllm-server | `vllm/vllm-openai:v0.32.0`, `OCR_VL_MAX_NEW_TOKENS=2048`, gpu-mem-util 0.45, max-model-len 16384; `OCR_SKIP_VL` **not set** |
 | frontend | rebuilt `airco-frontend:r12` with `NEXT_PUBLIC_UNIFIED_ENTRY=1` and `NEXT_PUBLIC_KEYCLOAK_URL=http://localhost:8095` (see Keycloak note) |
@@ -52,6 +52,14 @@ Runtime configuration actually in effect:
 ```json
 "ocr": {"enabled": true, "reading_modes": ["thorough","fast"], "default_reading": "thorough", "max_pages": 60}
 ```
+
+With `V2_MODE=serve` the same endpoint now reports the full taxonomy (was 13 legacy /
+26 coming soon under `off`): **verified 23, review_required 5, legacy 2
+(Bank of India, Union Bank of India), coming_soon 9, unsupported 5** — exactly the
+product list. `standard_chartered` is in the allowlist but has no `scb` spec key, so it
+correctly stays in coming_soon. The bank-support panel renders all five groups from the
+catalog plus a separate **"Universal OCR parser (any scanned statement)"** section
+(60-page limit, always needs review) — OCR is never counted as a bank.
 
 Time-to-ready: backend recreate ~15 s to `/health` 200; ocr-service cold start ~70 s
 (worker loads PP-OCRv5 + layout models, connects to vLLM, `warmup:"ok"`); vLLM server
@@ -94,7 +102,9 @@ support-catalog label "0 Verified engine" — a bank-support count, not a result
 **Text-PDF regression (PASS):** `demo_hdfc.pdf` (text layer) → review screen shows the
 detected bank card, **no reading choice** (zero `ocr-reading-*` radios) → Confirm →
 `Categorization Complete`, 12 txns, standard 9-sheet workbook (no Statement Check sheet —
-identical to pre-OCR behaviour for the legacy path).
+identical to pre-OCR behaviour for the legacy path). Re-verified after `V2_MODE=serve`:
+HDFC now routes through the v2 engine and still completes normally — detected "very high",
+12 txns, 100% categorized, workbook downloads.
 
 **HelpCenter (PASS):** "Good to know" now reads *"Scanned statements are read with OCR
 (up to 60 pages). Figures read from an image can be misread, so these results are always
