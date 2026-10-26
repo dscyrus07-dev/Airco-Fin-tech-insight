@@ -35,7 +35,10 @@ CHAR_W = 4.6
 BLOCK_GAP = 14.0
 TEXT_LINE_MAX_W = 900.0
 
-_AMOUNT = re.compile(r"^[-(]?(?:₹|rs\.?|inr)?\s*[\d,]+(?:\.\d{1,2})?\)?(?:\s*(?:cr|dr))?\.?$", re.I)
+_AMOUNT = re.compile(
+    r"^[-(]?(?:₹|rs\.?|inr)?\s*(?:\d{1,3}(?:,\d{2,3})+(?:\.\d{1,2})?|\d{1,12}\.\d{1,2}|\d{1,9})\)?(?:\s*(?:cr|dr))?\.?$",
+    re.I,
+)
 _WS = re.compile(r"\s+")
 _TAG = re.compile(r"<[^>]+>")
 
@@ -155,8 +158,16 @@ def page_text(op: OcrPage) -> str:
         else:
             parts.extend(_text_lines(b.content))
     if not any(x.strip() for x in parts) and op.lines:
-        # fast reading: no markup at all, so the page's text is its recognised lines in reading order
-        ordered = sorted((ln for ln in op.lines if (ln.text or "").strip()),
-                         key=lambda ln: (round(float(list(ln.box)[1]) / 10.0), float(list(ln.box)[0])))
-        parts = [ln.text.strip() for ln in ordered]
+        # fast reading: no markup at all, so group recognised line boxes into horizontal visual lines
+        # so table headers and transaction rows stay on single lines for the bank detector.
+        from ..extraction.words import group_lines
+        from .line_layer import page_from_lines
+
+        pg = page_from_lines(op)
+        if pg is not None and pg.words:
+            parts = [" ".join(w.text for w in ln if w.text.strip()) for ln in group_lines(pg.words)]
+        else:
+            ordered = sorted((ln for ln in op.lines if (ln.text or "").strip()),
+                             key=lambda ln: (round(float(list(ln.box)[1]) / 10.0), float(list(ln.box)[0])))
+            parts = [ln.text.strip() for ln in ordered]
     return "\n".join(parts)

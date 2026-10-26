@@ -172,20 +172,21 @@ async def list_banks(user: Dict[str, Any] = Depends(get_current_user)):
         _u_serve = _u_mode() == "serve"
     except Exception:
         _u_serve = False
-    if _u_serve:
-        banks.append({
-            "id": "other",
-            "name": "Other bank / not listed",
-            "pipeline_name": None,
-            "engines": ["universal"],
-            "v2_served": False,
-        })
-
     try:
         from ...services.statement_engine.ocr import serve as _ocr_serve
         ocr = _ocr_serve.catalog_info()
     except Exception:
         ocr = {"enabled": False, "reading_modes": [], "default_reading": None, "max_pages": None}
+
+    if _u_serve or ocr.get("enabled"):
+        banks.append({
+            "id": "other",
+            "name": "Other bank / Universal OCR",
+            "pipeline_name": None,
+            "engines": (["universal"] if _u_serve else []) + (["ocr"] if ocr.get("enabled") else []),
+            "v2_served": False,
+            "support_state": "review_required",
+        })
     # additive: tells the UI whether scanned statements will be read, so it never offers what will fail
     return {"banks": banks, "all_banks": _bank_status.support_states(), "ocr": ocr}
 

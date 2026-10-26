@@ -363,11 +363,14 @@ def infer(pages: Sequence[Page], budget_check=lambda: None) -> Inference:
     notes: List[str] = [f"furniture_lines:{len(furn)}"] if furn else []
 
     # --- date shape must be known before dated-row scan ---
-    p1 = pages[0]
-    lines1 = group_lines(p1.words)
-    shape = infer_date_shape(lines1)
+    shape = None
+    for p in pages[:4]:
+        shape = infer_date_shape(group_lines(p.words))
+        if shape is not None:
+            break
     if shape is None and len(pages) > 1:
-        shape = infer_date_shape(group_lines(pages[1].words))
+        combined_lines = [ln for p in pages[:4] for ln in group_lines(p.words)]
+        shape = infer_date_shape(combined_lines)
     if shape is None:
         return _fail("NO_DATES", "no repeated date shape found")
     date_re, date_fmt, tail_re = shape["re"], shape["format"], shape["tail_re"]
@@ -559,6 +562,7 @@ def _build_spec(pages, hit: HeaderHit, header_repeats: bool, date_re, date_fmt, 
         # single amount column those names are virtual, so row 0 always qualified and
         # was silently popped — leave it off for single-amount layouts.
         opening_row_balance_only=not single_amount,
+        carry_forward_re=re.compile(r"(?i)balance(?:brought|carried)forward"),
     )
     try:
         spec.validate()           # backstop: a spec that declares an unlocated column must never reach
@@ -739,6 +743,18 @@ def _check_margin(spec: LayoutSpec, pages, date_re, hit, notes, meta_extra) -> I
             retry.notes.insert(0, "left_aligned_amounts")
             return retry
         meta["left_aligned_frac"] = retry.meta.get("chain_frac")
+    if (n < 3 or frac < 0.80) and not spec.continuation_amounts:
+        # multi-line transactions (e.g. HSBC, Citibank, or OCR tables where amounts print on the final wrap line
+        # of a cell and same-day transactions omit repeated dates): test against the printed balance chain.
+        from dataclasses import replace
+        for left_al in ((False, True) if not spec.left_aligned_amounts else (spec.left_aligned_amounts,)):
+            alt = replace(spec, continuation_amounts=True, undated_rows_inherit_date=True, left_aligned_amounts=left_al)
+            retry = _check_margin(alt, pages, date_re, hit, [], meta_extra)
+            if retry.spec is not None and retry.failure is None:
+                retry.notes.insert(0, "continuation_amounts")
+                if left_al and not spec.left_aligned_amounts:
+                    retry.notes.insert(0, "left_aligned_amounts")
+                return retry
     if (n < 3 or frac < 0.80) and spec.single_amount_column and not spec.single_amount_default_side:
         # An unsigned cell in a single-amount column states no side of its own: normalize refuses it
         # ("amount cell carries no Dr/Cr marker") and the row is lost, which is why a statement printing

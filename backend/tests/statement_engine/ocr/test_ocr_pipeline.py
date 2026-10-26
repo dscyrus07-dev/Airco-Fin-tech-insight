@@ -5,7 +5,7 @@ import pytest
 
 from app.services.statement_engine.ocr import client as ocr_client
 from app.services.statement_engine.ocr.contracts import (
-    OcrBlock, OcrLine, OcrPage, document_from_dict, document_to_dict, PAGE_FAILED)
+    OcrBlock, OcrDocument, OcrLine, OcrPage, document_from_dict, document_to_dict, PAGE_FAILED)
 from app.services.statement_engine.ocr.grid import page_from_ocr, page_text, pages_from_ocr
 from app.services.statement_engine.ocr.guards import OCR_EMPTY, OCR_LOOP, apply_guards, compression_ratio
 from app.services.statement_engine.ocr.html_table import parse_tables
@@ -126,6 +126,62 @@ def test_partial_statement_never_looks_complete():
         assert len(res.universal.outcome.rows) < len(rows)          # the gap is not hidden
     else:
         assert res.verdict == "FAILED"                              # the existing checks caught the gap
+
+
+def test_checks_failed_markup_falls_back_to_the_line_layer():
+    """VL markup that reads but fails reconciliation is not the final word when the same OCR pass
+    also produced coordinate-true line boxes: the line layer is adopted only if it passes the full
+    checks, and the verifier honestly reports NOT_RUN on it (checking line rows against the same
+    lines would be circular)."""
+    from tests.statement_engine.ocr.synthetic import _fmt, make_rows
+    rows = make_rows(12, seed=5)
+    trs = []
+    for i, r in enumerate(rows):
+        dr, cr = _fmt(r["dr"]), _fmt(r["cr"])
+        if i == 5:
+            dr, cr = "100.00", "100.00"          # one markup row carrying BOTH money cells
+        trs.append("<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            r["date"].strftime("%d/%m/%Y"), r["narr"], r["ref"], dr, cr, _fmt(r["bal"])))
+    blocks = [
+        OcrBlock("header", [40, 30, 900, 60], "SAMPLE COOPERATIVE BANK LTD"),
+        OcrBlock("text", [40, 70, 900, 120],
+                 f"Statement of account from {rows[0]['date']:%d/%m/%Y} to {rows[-1]['date']:%d/%m/%Y}\nAccount No : XXXXXXXX1234"),
+        OcrBlock("table", [40, 140, 1600, 1900],
+                 "<table><tr><th>Date</th><th>Narration</th><th>Chq./Ref.No.</th><th>Withdrawal Amt.</th>"
+                 "<th>Deposit Amt.</th><th>Closing Balance</th></tr>" + "".join(trs) + "</table>"),
+    ]
+    lines = []
+    def bx(text, x0, x1, y):
+        lines.append(OcrLine(text, [float(x0), float(y), float(x1), float(y + 14)], 0.99))
+    y = 140
+    for t, x0, x1 in (("Date", 40, 80), ("Narration", 130, 200), ("Chq./Ref.No.", 250, 330),
+                      ("Withdrawal Amt.", 350, 445), ("Deposit Amt.", 460, 545), ("Closing Balance", 560, 665)):
+        bx(t, x0, x1, y)
+    y = 180
+    for r in rows:
+        bx(r["date"].strftime("%d/%m/%Y"), 40, 115, y)
+        bx(r["narr"], 130, 300, y)
+        bx(r["ref"], 250, 300, y)
+        if r["dr"] is not None:
+            bx(_fmt(r["dr"]), 385, 445, y)
+        if r["cr"] is not None:
+            bx(_fmt(r["cr"]), 485, 545, y)
+        bx(_fmt(r["bal"]), 595, 665, y)
+        y += 20
+    dr_sum = sum((r["dr"] or 0) for r in rows)
+    cr_sum = sum((r["cr"] or 0) for r in rows)
+    for label, val in (("Opening Balance", "25,000.00"), ("Debits", f"{dr_sum:,.2f}"),
+                       ("Credits", f"{cr_sum:,.2f}"), ("Closing Balance", _fmt(rows[-1]["bal"]))):
+        bx(label, 130, 220, y)
+        bx(val, 595, 665, y)
+        y += 20
+    doc = OcrDocument(pages=[OcrPage(page=1, width=1654, height=2339, blocks=blocks, lines=lines)],
+                      engine="PaddleOCR-VL-1.6", verifier="PP-OCRv5", dpi=200)
+    res = read_document(doc)
+    assert res.ok, f"{res.code}: {res.detail}"
+    assert res.layer == "lines" and res.layer_note.startswith("BLOCKS_FALLBACK")
+    assert res.verification.status == "not_run"
+    assert len(res.universal.outcome.rows) == len(rows)
 
 
 def test_all_pages_failed_is_failed_with_no_data():

@@ -192,3 +192,47 @@ def test_an_unprovable_side_is_still_refused(tmp_path):
         y -= 16
     res = univ.read(_pdf([head + rows], tmp_path / "bad.pdf"), bank_hint="Unknown bank")
     assert res.verdict == "FAILED"
+
+
+# ---- OCR-shaped date and row forms -----------------------------------------------------------------
+
+def test_fused_month_name_dates_infer(tmp_path):
+    """Scans OCR dates fused to the month name with no separator: 27Apr2022 / 03Feb2022."""
+    from decimal import Decimal
+    head = [(40, 760, "Date"), (130, 760, "Description"), (330, 760, "Debit"),
+            (410, 760, "Credit"), (490, 760, "Balance")]
+    months = ["Jan", "Feb", "Mar", "Apr"]
+    rows, y, bal = [], 740, Decimal("20000.00")
+    for i in range(12):
+        amt = Decimal(150 + i * 91) + Decimal("0.50")
+        is_dr = i % 3 == 0
+        bal += -amt if is_dr else amt
+        day = f"{(i % 28) + 1:02d}{months[i % 4]}2022"      # 27Apr2022, no separator
+        rows += [(40, y, day), (130, y, f"UPI REF {i}"),
+                 (330 if is_dr else 410, y, f"{amt:,.2f}"), (490, y, f"{bal:,.2f}")]
+        y -= 16
+    res = univ.read(_pdf([head + rows], tmp_path / "fused.pdf"), bank_hint="Unknown bank")
+    assert res.verdict == "REVIEW", f"{res.code}: {res.detail}"
+    assert len(res.outcome.rows) == 12
+
+
+def test_multiline_rows_amounts_on_wrap_line_infer(tmp_path):
+    """HSBC-style rows: the dated line carries date+description only; debit/credit/balance print
+    on the following undated line. Inference must try continuation_amounts and still reconcile."""
+    from decimal import Decimal
+    head = [(40, 760, "Date"), (130, 760, "Description"), (330, 760, "Withdrawals"),
+            (410, 760, "Deposits"), (490, 760, "Balance")]
+    rows, y, bal = [], 740, Decimal("30000.00")
+    for i in range(8):
+        amt = Decimal(200 + i * 63) + Decimal("0.25")
+        is_dr = i % 2 == 0
+        bal += -amt if is_dr else amt
+        rows += [(40, y, f"{(i % 28) + 1:02d}Mar2022"), (130, y, f"IMPS TRANSFER REF {i} LINE ONE")]
+        y -= 14
+        rows += [(130, y, f"second narration line {i}"),
+                 (330 if is_dr else 410, y, f"{amt:,.2f}"), (490, y, f"{bal:,.2f}")]
+        y -= 16
+    res = univ.read(_pdf([head + rows], tmp_path / "ml.pdf"), bank_hint="Unknown bank")
+    assert res.verdict == "REVIEW", f"{res.code}: {res.detail}"
+    assert len(res.outcome.rows) == 8
+    assert "continuation_amounts" in res.notes

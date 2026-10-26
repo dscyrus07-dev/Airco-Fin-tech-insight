@@ -634,15 +634,21 @@ class AnalysisService:
             return fail("PASSWORD_REQUIRED", "Enter the PDF password first.")
         if action == "CONFIRM":
             bank = doc.get("bank")
-            if not bank or not bank.get("supported"):
+            is_scan_ocr = _ocr_servable() and (doc.get("capability") or {}).get("capability") == "SCANNED"
+            if (not bank or not bank.get("supported")) and not is_scan_ocr:
                 return fail("BANK_REQUIRED", "The bank was not identified with enough confidence. Select the bank.")
+            if not bank:
+                sug = doc.get("suggestion")
+                bank = {"id": sug["id"], "name": sug["name"]} if sug and sug.get("id") else {"id": "other", "name": "Universal OCR"}
             doc["effective_bank"] = {"id": bank["id"], "name": bank["name"]}
             doc["selection"] = {"action": "CONFIRM", "bank_id": bank["id"], "by": actor, "at": _now()}
             doc["events"].append({"event": "USER_CONFIRM", "at": _now(), "by": actor, "bank_id": bank["id"]})
         elif action == "OVERRIDE":
-            if bank_id == "other" and (_universal_servable() or (_ocr_servable() and (doc.get("capability") or {}).get("capability") == "SCANNED")):
-                # "Other bank / not listed": auto-detect downstream, T3 reads it.
-                doc["effective_bank"] = {"id": "other", "name": "Other bank / not listed"}
+            is_scan_ocr = _ocr_servable() and (doc.get("capability") or {}).get("capability") == "SCANNED"
+            if bank_id in ("other", "universal_ocr") and (_universal_servable() or is_scan_ocr):
+                # "Other bank / Universal OCR": auto-detect downstream, T3/T4 reads it.
+                label = "Universal OCR (Any Bank)" if is_scan_ocr else "Other bank / not listed"
+                doc["effective_bank"] = {"id": "other", "name": label}
                 doc["selection"] = {"action": "OVERRIDE", "bank_id": "other", "by": actor, "at": _now()}
                 doc["events"].append({"event": "USER_OVERRIDE", "at": _now(), "by": actor,
                                       "detected_bank": (doc.get("bank") or doc.get("suggestion") or {}).get("id"),
@@ -650,7 +656,7 @@ class AnalysisService:
                 doc["workflow_status"] = "CONFIRMED"
                 return {"document_id": did, "ok": True, "workflow_status": "CONFIRMED", "bank_id": "other"}
             cfg = _registry_cfg_for(bank_id) if bank_id else None
-            if not cfg or (cfg.id not in PIPELINE_BANK_NAME and not _v2_servable(cfg.id)):
+            if not cfg or (not is_scan_ocr and cfg.id not in PIPELINE_BANK_NAME and not _v2_servable(cfg.id)):
                 return fail("BANK_NOT_SUPPORTED", "Choose one of the supported banks.")
             det_bank = doc.get("bank") or doc.get("suggestion")
             doc["effective_bank"] = {"id": cfg.id, "name": cfg.display_name}

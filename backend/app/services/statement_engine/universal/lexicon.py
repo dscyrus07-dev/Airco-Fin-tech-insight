@@ -89,24 +89,31 @@ REQUIRED_ROLES = ("date", "narration", "balance")
 # ---- date shapes (regex on one word; strptime formats may chain with |) ----
 DATE_SHAPES = [
     # (name, date_re pattern, date_format, optional date_tail pattern for wrapped year)
-    ("dmy_slash",  r"^\d{1,2}/\d{1,2}/\d{4}$",           "%d/%m/%Y",                 None),
-    ("dmy_slash2", r"^\d{1,2}/\d{1,2}/\d{2}$",           "%d/%m/%y",                 None),
-    ("dmy_dash",   r"^\d{1,2}-\d{1,2}-\d{4}$",           "%d-%m-%Y",                 None),
-    ("ymd_dash",   r"^\d{4}-\d{2}-\d{2}$",               "%Y-%m-%d",                 None),
-    ("dmy_dash2",  r"^\d{1,2}-\d{1,2}-\d{2}$",           "%d-%m-%y",                 None),
-    ("dmony_dash", r"^\d{1,2}-[A-Za-z]{3}-\d{4}$",       "%d-%b-%Y",                 None),
-    ("dmony_dash2",r"^\d{1,2}-[A-Za-z]{3}-\d{2}$",       "%d-%b-%y",                 None),
-    ("dmony_spc",  r"^\d{1,2}[ -][A-Za-z]{3}(?:[ -]\d{2,4})?$",
-                                                       "%d %b %Y|%d-%b-%Y|%d-%b-%y", r"^\d{4}$"),
-    ("dmy_dot",    r"^\d{1,2}\.\d{1,2}\.\d{4}$",         "%d.%m.%Y",                 None),
-    ("mdy_slash",  None,                                 None,                       None),  # deliberately unsupported
+    ("dmy_slash",     r"^\d{1,2}/\d{1,2}/\d{4}$",                     "%d/%m/%Y",                                     None),
+    ("dmy_slash2",    r"^\d{1,2}/\d{1,2}/\d{2}$",                     "%d/%m/%y",                                     None),
+    ("dmy_dash",      r"^\d{1,2}-\d{1,2}-\d{4}$",                     "%d-%m-%Y",                                     None),
+    ("ymd_dash",      r"^\d{4}-\d{2}-\d{2}$",                         "%Y-%m-%d",                                     None),
+    ("ymd_slash",     r"^\d{4}/\d{2}/\d{2}$",                         "%Y/%m/%d",                                     None),
+    ("dmy_dash2",     r"^\d{1,2}-\d{1,2}-\d{2}$",                     "%d-%m-%y",                                     None),
+    ("dmony_dash",    r"^\d{1,2}-[A-Za-z]{3}-\d{4}$",                 "%d-%b-%Y",                                     None),
+    ("dmony_dash2",   r"^\d{1,2}-[A-Za-z]{3}-\d{2}$",                 "%d-%b-%y",                                     None),
+    ("dmony_compact", r"^\d{1,2}[A-Za-z]{3}\d{2,4}$",                 "%d%b%Y|%d%b%y",                                None),
+    ("dmony_slash",   r"^\d{1,2}/[A-Za-z]{3}/\d{2,4}$",               "%d/%b/%Y|%d/%b/%y",                            None),
+    ("dmony_spc",     r"^\d{1,2}[ -]?[A-Za-z]{3}(?:[ -]?\d{2,4})?$",  "%d %b %Y|%d %b %y|%d-%b-%Y|%d-%b-%y|%d%b%Y|%d%b%y", r"^\d{4}$"),
+    ("dmy_dot",       r"^\d{1,2}\.\d{1,2}\.\d{4}$",                   "%d.%m.%Y",                                     None),
+    ("dmy_dot2",      r"^\d{1,2}\.\d{1,2}\.\d{2}$",                   "%d.%m.%y",                                     None),
+    ("mdy_slash",     None,                                           None,                                           None),  # deliberately unsupported
 ]
 
 # money cell forms: amount_re covers them all; `single_amount` when suffixes/signs seen
-AMOUNT_RE = re.compile(r"^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,3}(?:,\d{2,3})*(?:\.\d{1,2})?(?:\s*\(?\s*(?:cr|dr)\s*\.?\)?)?$"
-                       r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d+(?:\.\d{1,2})?(?:\s*\(?\s*(?:cr|dr)\s*\.?\)?)?$", re.I)
-PLAIN_AMOUNT_RE = re.compile(r"^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,3}(?:,\d{2,3})*(?:\.\d{1,2})?$"
-                             r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d+(?:\.\d{1,2})?$")
+# Un-comma'd bare integers without a decimal point are capped at 9 digits so 10-16 digit UPI RRNs,
+# phone numbers, and account numbers inside narrations are never mistaken for amounts.
+AMOUNT_RE = re.compile(r"^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,3}(?:,\d{2,3})+(?:\.\d{1,2})?(?:\s*\(?\s*(?:cr|dr)\s*\.?\)?)?$"
+                       r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,12}\.\d{1,2}(?:\s*\(?\s*(?:cr|dr)\s*\.?\)?)?$"
+                       r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,9}(?:\s*\(?\s*(?:cr|dr)\s*\.?\)?)?$", re.I)
+PLAIN_AMOUNT_RE = re.compile(r"^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,3}(?:,\d{2,3})+(?:\.\d{1,2})?$"
+                             r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,12}\.\d{1,2}$"
+                             r"|^[+-]?\s*(?:Rs\.?|₹)?\s*-?\d{1,9}$")
 DRCR_SUFFIX_RE = re.compile(r"(?i)\(?\s*(cr|dr)\s*\.?\)?\s*$")
 SIGNED_RE = re.compile(r"^[+-]\s*(?:Rs\.?|₹)?\s*\d")
 

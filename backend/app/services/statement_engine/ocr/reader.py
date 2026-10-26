@@ -168,6 +168,36 @@ def read_document(doc: OcrDocument, bank_hint: str = "Unknown bank", budget_s: f
             engine_pages = pages_from_ocr(ok_pages, res.rows_dropped)
         u = _u.read(pages=engine_pages, bank_hint=res.bank_hint, budget_s=budget_s)
         res.universal = u
+        if (
+            not u.ok
+            and res.layer == "blocks"
+            and not res.rows_dropped
+            and u.code in ("NO_DATES", "NO_TABLE_HEADER", "TOO_FEW_ROWS", "NO_DATED_ROWS", "CHECKS_FAILED")
+            and any(p.lines for p in ok_pages)
+        ):
+            # When VL's HTML table markup misstates columns, misses dates, or fails reconciliation on
+            # a real scan, try the coordinate-true PP-OCRv5 line boxes from the same OCR pass before
+            # refusing. Only adopt the line-layer reading if it passes full inference + reconciliation
+            # checks (u_lines.ok); the verifier honestly reports NOT_RUN on the lines path.
+            used_l, line_pages = [], []
+            fused_l = 0
+            for p in ok_pages:
+                per_l: Dict[str, int] = {}
+                pg_l = page_from_lines(p, per_l)
+                fused_l += per_l.get("fused_amounts", 0)
+                if pg_l is not None:
+                    used_l.append(p)
+                    line_pages.append(pg_l)
+            if line_pages:
+                u_lines = _u.read(pages=line_pages, bank_hint=res.bank_hint, budget_s=budget_s)
+                if u_lines.ok:
+                    res.layer_note = f"BLOCKS_FALLBACK:{u.code or 'FAILED'}"
+                    res.layer = "lines"
+                    res.fused_amounts += fused_l
+                    ok_pages = used_l
+                    res.pages_ok = [p.page for p in ok_pages]
+                    u = u_lines
+                    res.universal = u
         if not u.ok:
             res.verdict, res.code = "FAILED", u.code or "OCR_READ_FAILED"
             res.detail = u.detail

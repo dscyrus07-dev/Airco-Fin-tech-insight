@@ -218,8 +218,6 @@ To restore a previous image: `docker rm -f airco_backend` then `docker run` /
 
 ## What remains unverified
 
-- **Real scanned bank statements were NOT run** — every result above is on synthetic
-  corpus files. Nothing here establishes accuracy on real scans.
 - The 4.03 s analysis figure is for a 2-page clean synthetic; larger/real scans will differ.
 - `warmup:"ok"` reflects the synthetic probe only.
 - `airco_nginx` shows `(unhealthy)` — pre-existing state (47 h), not caused by this round,
@@ -227,3 +225,66 @@ To restore a previous image: `docker rm -f airco_backend` then `docker run` /
 - The old wizard path (without `NEXT_PUBLIC_UNIFIED_ENTRY`) still works — verified earlier
   this session before the flag flip — but the reading choice only exists on the unified flow.
 - Retention/deletion sweeps were not re-verified this round (R10/R11 evidence stands).
+
+---
+
+# R12 continuation — Universal OCR on real scanned statements
+
+The user's two real scanned PDFs exposed the actual gaps. All fixes below are
+bank-agnostic: the Universal Reader never sees bank-specific code.
+
+## What was broken (real files)
+
+| File | Symptom | Root cause |
+|---|---|---|
+| `987396_…pdf` (38-page HSBC scan) | `NO_DATES`, then `CHECKS_FAILED` (missing balances, footer text inside narrations) | Dates like `27Apr2022` (fused month name, no separator) were not a known shape; OCR also splits each transaction across 2–3 visual lines and ends pages on `Balance Carried Forward` + legal footer, which the row assembler misread as narration/rows |
+| `1855601_…pdf` | UNKNOWN bank, empty evidence, forced manual bank pick | Scanned OCR evidence is inherently weak; the workflow hard-blocked on `bank.supported` even though Universal OCR needs no bank |
+
+## Fixes (all in the generic engine/reader — no bank code)
+
+- **`universal/lexicon.py`** — new date shapes `dmony_compact` (`27Apr2022`),
+  `dmony_slash`, `dmy_dot2`, `ymd_slash`; `dmony_spc` now covers fused/spaced variants
+  incl. 2-digit years. `AMOUNT_RE`/`PLAIN_AMOUNT_RE` tightened: bare integers capped at
+  9 digits and comma groups required, so 10–16-digit UPI RRNs and account numbers in
+  narrations can no longer be misread as amounts.
+- **`universal/infer.py`** — date shape detection scans first 4 pages (individually then
+  combined) instead of page 1 only. New margin-check retry: when dated lines rarely
+  carry a balance (multi-line transactions), re-verify with
+  `continuation_amounts + undated_rows_inherit_date` against the printed balance chain.
+  `carry_forward_re` added to the inferred spec.
+- **`extraction/rows.py`** — page-boundary rules: an open row (amounts still pending)
+  survives `Balance Carried Forward` and is filled by the continuation line on the next
+  page; `Carried Forward` breaks the page's table scan (footer text below it is dropped);
+  `Brought Forward` seeds a balance checkpoint without truncating the page; an undated
+  balance-bearing line is only treated as a new inherited-date row when the open row
+  already has its balance.
+- **`ocr/grid.py`** — `page_text` for the line layer groups OCR boxes into visual lines,
+  so analysis-time bank detection sees real table rows. `_AMOUNT` tightened the same way.
+- **`ocr/reader.py`** — `BLOCKS_FALLBACK`: when thorough-mode VL markup fails inference
+  (`NO_DATES`/`NO_TABLE_HEADER`/…), retry on the coordinate-true PP-OCRv5 line boxes from
+  the same OCR pass; adopted only if full inference+reconciliation passes (audited via
+  `layer_note`).
+- **`analysis_service.py` / `statements_analyze.py` / `ReviewTable.tsx`** — scanned docs
+  may confirm with no identified bank (falls back to suggestion or `other`); the catalog
+  gains `Other bank / Universal OCR` whenever universal serve or OCR is enabled; for
+  scans the UI defaults to the `Universal OCR Parser (Any Bank / Format)` entry, demotes
+  every bank to at most `review_required`, auto-opens evidence, and never offers a
+  verified claim.
+
+## Real-file outcomes (live stack, `airco_backend`)
+
+| File | Reading | Result |
+|---|---|---|
+| `987396_…pdf` 38p | **Fast** | `success` — 255 txns, 98.8 % coverage, `REVIEW` (pre-cap `VERIFIED`), all 38 pages read, 10-sheet workbook with `Statement Check` (`Second-reader amount check: not_run`, never-verified note) |
+| `1855601_…pdf` | **Fast** | `success` — 19 txns, 100 % coverage, `REVIEW` |
+| `987396_…pdf` 38p | **Thorough** | `success` — 255 txns, 98.8 % coverage, `REVIEW`; VL markup failed reconciliation, so the reader adopted the PP-OCRv5 line layer (`layer_note: BLOCKS_FALLBACK:CHECKS_FAILED`, verifier `not_run`) — the fallback only engages after the lines pass full inference + checks |
+
+## Regression
+
+- `tests/statement_engine/` — **582 passed** incl. new tests:
+  `test_open_row_survives_carried_forward_and_fills_on_next_page`,
+  `test_brought_forward_line_does_not_truncate_the_page`,
+  `test_fused_month_name_dates_infer`,
+  `test_multiline_rows_amounts_on_wrap_line_infer`.
+- Frontend: 84/84 vitest, `tsc` clean.
+- HDFC text PDF under `V2_MODE=serve` still reads (no legacy regression).

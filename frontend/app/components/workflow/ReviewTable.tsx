@@ -156,16 +156,28 @@ export default function ReviewTable({
 
       <ul className="mt-4 space-y-3">
         {docs.map(({ document: d, override, accountType, statementLabel, ocrReading }) => {
+          const scanOcr = Boolean(ocr?.enabled && isScanned(d))
           const selectable = d.state !== 'ERROR' && d.state !== 'UNSUPPORTED' && !d.requires_password && d.workflow_status === 'AWAITING_CONFIRMATION'
           const detectedListed = Boolean(
-            d.bank && d.bank.supported && banks.some((b) => b.id === d.bank!.id)
+            d.bank && (d.bank.supported || scanOcr) && (scanOcr || banks.some((b) => b.id === d.bank!.id))
           )
-          const detectedValue = detectedListed ? d.bank!.id : ''
-          const selectedBank = override || detectedValue
+          const detectedValue = detectedListed ? d.bank!.id : (scanOcr && d.suggestion?.id ? d.suggestion.id : '')
+          const selectedBank = override || detectedValue || (scanOcr ? 'other' : '')
           const manualPick = Boolean(override && override !== detectedValue)
           const canPickBank = selectable && (d.state === 'UNKNOWN' || d.state === 'REVIEW')
           const bankEntry = findCatalogEntry(effectiveCatalog, d.bank?.id)
           const bankState = bankEntry?.support_state
+          const rowCatalog: BankCatalogEntry[] = scanOcr
+            ? [
+                { id: 'other', name: 'Universal OCR Parser (Any Bank / Format)', support_state: 'verified' },
+                ...effectiveCatalog
+                  .filter((b) => b.id !== 'other')
+                  .map((b) => ({
+                    ...b,
+                    support_state: isSelectable(b.support_state) ? b.support_state : ('review_required' as const),
+                  })),
+              ]
+            : effectiveCatalog
           return (
             <li key={d.document_id} className="rounded-xl border border-slate-200/90 bg-slate-50/40 p-4 dark:border-slate-700/80 dark:bg-[#08152B]/60">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -185,14 +197,21 @@ export default function ReviewTable({
                   {d.layout?.id && d.layout.id !== 'UNKNOWN' && <> · Layout: {d.layout.description}</>}
                 </p>
               )}
+              {!d.bank && d.suggestion?.name && (
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                  Detected hint: <b>{d.suggestion.name}</b> — or process directly with <b>Universal OCR Parser</b>.
+                </p>
+              )}
               {d.hint_conflict && (
                 <p className="mt-1 text-xs text-yellow-800">The selected hint differs from what the PDF shows.</p>
               )}
 
               {d.evidence.length > 0 && (
-                <details className="mt-2 text-sm">
-                  <summary className="cursor-pointer font-medium text-gray-700">Why we think so</summary>
-                  <ul className="mt-1 list-disc pl-5 text-gray-700">
+                <details className="mt-2 text-sm" open={scanOcr}>
+                  <summary className="cursor-pointer font-medium text-slate-700 dark:text-slate-200">
+                    Why we think so{!d.bank && d.suggestion?.name ? ` (${d.suggestion.name})` : ''}
+                  </summary>
+                  <ul className="mt-1 list-disc pl-5 text-slate-700 dark:text-slate-300">
                     {d.evidence.map((e, i) => (
                       <li key={i}>
                         {e.label || e.kind}
@@ -267,11 +286,11 @@ export default function ReviewTable({
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,10rem)_auto]">
                     {canPickBank && (
                       <BankSelect
-                        catalog={effectiveCatalog}
+                        catalog={rowCatalog}
                         value={selectedBank}
                         onChange={(id) => onOverride(d.document_id, id)}
                         ariaLabel="Bank"
-                        showPlaceholder={!detectedValue}
+                        showPlaceholder={!detectedValue && !scanOcr}
                       />
                     )}
                     <select
@@ -288,7 +307,7 @@ export default function ReviewTable({
                     </select>
                     <button
                       onClick={() => void onConfirmOne(d, accountType || undefined)}
-                      disabled={!!busy || !selectedBank || (d.bank?.supported === false && !manualPick)}
+                      disabled={!!busy || !selectedBank || (d.bank?.supported === false && !manualPick && !scanOcr)}
                       className="btn-primary min-w-0 rounded-lg px-3.5 py-1.5 text-sm font-medium text-white disabled:opacity-40"
                     >
                       {manualPick ? 'Use selected bank' : 'Confirm'}

@@ -525,6 +525,50 @@ def test_continuation_amounts_fill_a_dated_rows_empty_money_cells():
     assert out.checks.results["chain"].status == "pass", out.checks.reasons
 
 
+def test_open_row_survives_carried_forward_and_fills_on_next_page():
+    # HSBC-style: a page ends on a date+narration line whose money sits past the break, then
+    # "Balance Carried Forward" + legal footer; page 2 opens with "Balance Brought Forward" and
+    # the open row's amount/balance line. The open row must not strand (missing balance) and the
+    # footer must never land in its narration.
+    spec = replace(ALPHA, continuation_amounts=True, undated_rows_inherit_date=True,
+                   carry_forward_re=re.compile(r"(?i)balance(?:brought|carried)forward"),
+                   closing_balance_re=re.compile(r"(?i)balancecarriedforward([\d,]+\.\d{2})"))
+    p1 = [w("Period:", 30, 170), w("01-04-2022", 80, 170), w("to", 150, 170), w("30-04-2022", 165, 170)] + header(ALPHA)
+    p1 += [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
+    p1 += [w("02-04-2022", 30, 237), w("UPI-TRANSFER", 120, 237)]                              # open row: no money yet
+    p1 += [w("Balance", 120, 254), w("Carried", 170, 254), w("Forward", 225, 254), rt("1,700.00", 560, 254)]
+    p1 += [w("The", 30, 271), w("Hongkong", 60, 271), w("Banking", 130, 271), w("Corporation", 195, 271)]
+    p2 = [w("Period:", 30, 170), w("01-04-2022", 80, 170), w("to", 150, 170), w("30-04-2022", 165, 170)] + header(ALPHA)
+    p2 += [w("Balance", 120, 220), w("Brought", 170, 220), w("Forward", 220, 220), rt("1,700.00", 560, 220)]
+    p2 += [rt("800.00", 470, 237), rt("1,700.00", 560, 237)]                                   # open row's money line
+    p2 += [w("03-04-2022", 30, 254), w("RENT", 120, 254), rt("200.00", 400, 254), rt("1,500.00", 560, 254)]
+    p2 += alpha_summary(400, "300.00", "800.00", "1,500.00")
+    out = extract_pages([Page(p1, W), Page(p2, W)], spec)
+    assert len(out.rows) == 3, out.schema_errors
+    assert out.rows[1].txn.credit == Decimal("800.00") and out.rows[1].txn.balance == Decimal("1700.00")
+    assert out.rows[1].txn.date == "2022-04-02" and out.rows[1].txn.description == "UPI-TRANSFER"
+    assert all("Hongkong" not in r.txn.description for r in out.rows)
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
+def test_brought_forward_line_does_not_truncate_the_page():
+    # a page-TOP "Balance Brought Forward" that also matches closing_balance_re must seed a
+    # checkpoint and keep scanning — never break and lose the rows below it.
+    spec = replace(ALPHA, continuation_amounts=True, undated_rows_inherit_date=True,
+                   carry_forward_re=re.compile(r"(?i)balance(?:brought|carried)forward"),
+                   closing_balance_re=re.compile(r"(?i)balance(?:brought|carried)forward([\d,]+\.\d{2})"))
+    p1 = ALPHA_PERIOD + header(ALPHA)
+    p1 += [w("01-04-2022", 30, 220), w("SHOP", 120, 220), rt("100.00", 400, 220), rt("900.00", 560, 220)]
+    p2 = ALPHA_PERIOD + header(ALPHA)
+    p2 += [w("Balance", 120, 220), w("Brought", 170, 220), w("Forward", 220, 220), rt("900.00", 560, 220)]
+    p2 += [w("02-04-2022", 30, 237), w("SALARY", 120, 237), rt("1,000.00", 470, 237), rt("1,900.00", 560, 237)]
+    p2 += alpha_summary(400, "100.00", "1,000.00", "1,900.00")
+    out = extract_pages([Page(p1, W), Page(p2, W)], spec)
+    assert len(out.rows) == 2, out.schema_errors
+    assert out.rows[1].txn.credit == Decimal("1000.00") and out.rows[1].txn.balance == Decimal("1900.00")
+    assert out.checks.results["chain"].status == "pass", out.checks.reasons
+
+
 LIMA = replace(ALPHA, layout_id="lima", bank_key="lima", left_aligned_amounts=True,
                columns={"date": (("date",),), "narration": (("particulars",),),
                         "debit": (("withdrawals",),), "credit": (("deposits",),), "balance": (("balance",),)})

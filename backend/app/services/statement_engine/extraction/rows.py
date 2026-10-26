@@ -92,8 +92,15 @@ def _first_dated(lines: List[List[Word]], begin: int, anchors: ColumnAnchors, sp
     """Index of the first line at or after `begin` that starts a row; lines before it are header continuation."""
     end_markers = tuple(m for m in (spec.summary_marker, *spec.end_markers) if m)
     for i in range(begin, len(lines)):
-        if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or _ends(squash(lines[i]).upper(), end_markers):
+        flat = squash(lines[i])
+        if any(classify_word(w, anchors, spec) == "date" for w in lines[i]) or _ends(flat.upper(), end_markers):
             return i
+        if spec.carry_forward_re is not None and spec.carry_forward_re.search(flat):
+            return i
+        if spec.undated_rows_inherit_date:
+            lcols = _line_cols(lines[i], anchors, spec)
+            if spec.balance_column in lcols and any(c in lcols for c in (spec.debit_column, spec.credit_column)):
+                return i
         if spec.section_date_re is not None:
             if _is_section_date(lines[i], anchors, spec) \
                     or _grouped_row_start(_line_cols(lines[i], anchors, spec), spec):
@@ -287,6 +294,18 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     table.printed_closing = mc.group(1)
                     if spec.segment_header_re is not None:      # a segment's printed closing: asserts the
                         table.checkpoints.append((len(table.rows), mc.group(1), "post"))   # chain's exit balance
+                    is_cf = bool(spec.carry_forward_re is not None and spec.carry_forward_re.search(flat))
+                    if current is not None and spec.continuation_amounts and not current.amounts:
+                        if re.search(r"(?i)carried\s*forward", flat):
+                            break   # Carried Forward ends this page's table; open row continues on the next
+                        continue    # Brought Forward / other balance restatement: skip the line, keep the open row
+                    if is_cf and table.rows:
+                        seed_date = current.date if (current and current.date) else table.rows[-1].date
+                        current = RawRow(page=pno, top=min(w.top for w in line), date=seed_date,
+                                         amounts={spec.balance_column: mc.group(1)})
+                        if re.search(r"(?i)carried\s*forward", flat):
+                            break   # lines below Balance Carried Forward on this page are page footer
+                        continue    # Balance Brought Forward is a page-top checkpoint; rows continue below
                     current = None
                     continue
             if spec.totals_line_re:
@@ -306,14 +325,29 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     current = None
                     continue
             if spec.carry_forward_re is not None and table.rows and spec.carry_forward_re.search(flat):
-                # restated running balance, not a transaction; its dates seed rows printed without a date below it
+                # restated running balance, not a transaction; its dates seed rows printed without a date below it.
+                # If the last row from the previous page has not received its amounts yet (a transaction split across
+                # the page break), keep `current` pointing at that open row so the continuation line on this page
+                # fills its amounts instead of stranding an empty-amount row.
+                if current is not None and spec.continuation_amounts and not current.amounts:
+                    if re.search(r"(?i)carried\s*forward", flat):
+                        break
+                    continue
                 cf = {}
                 for w in line:
                     col = classify_word(w, anchors, spec)
                     if col:
                         cf.setdefault(col, []).append(w.text.strip())
-                current = RawRow(page=pno, top=min(w.top for w in line), date=(cf.get("date") or [""])[0],
-                                 value_date=" ".join(cf.get(spec.secondary_date_column, [])) if spec.secondary_date_column else "")
+                seed_date = (cf.get("date") or [current.date if (current and current.date) else table.rows[-1].date])[0]
+                seed_amounts = {spec.balance_column: cf[spec.balance_column][0]} if cf.get(spec.balance_column) else (
+                    {spec.balance_column: table.rows[-1].amounts[spec.balance_column]}
+                    if spec.balance_column in table.rows[-1].amounts else {}
+                )
+                current = RawRow(page=pno, top=min(w.top for w in line), date=seed_date,
+                                 value_date=" ".join(cf.get(spec.secondary_date_column, [])) if spec.secondary_date_column else "",
+                                 amounts=seed_amounts)
+                if re.search(r"(?i)carried\s*forward", flat):
+                    break
                 continue
             line_inline_bal = None
             cols: Dict[str, List[str]] = {}
@@ -350,7 +384,9 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                     and any(classify_word(w, anchors, spec) == "date" for w in lines[li + 1]):
                 pending_prefix.append(" ".join(cols["narration"]))
                 continue
-            inherit = (spec.undated_rows_inherit_date and "date" not in cols and current is not None and spec.balance_column in cols
+            inherit = (spec.undated_rows_inherit_date and "date" not in cols and current is not None
+                       and (not spec.continuation_amounts or spec.balance_column in current.amounts)
+                       and spec.balance_column in cols
                        and any(c in cols for c in (spec.debit_column, spec.credit_column)))
             grouped = _grouped_row_start(cols, spec)
             if "date" in cols or inherit or grouped:
