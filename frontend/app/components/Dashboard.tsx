@@ -645,15 +645,14 @@ export default function Dashboard() {
     const createdLabel = item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Unknown date'
     const retentionLabel = formatRetentionLabel(item.retention_status, item.retention_days_left, item.deleted_at)
     const retentionTone = (item.deletion_status || '').toLowerCase() === 'deleted'
-      ? 'border-red-200 bg-red-50 text-red-700'
+      ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-800/60 dark:bg-red-950/50 dark:text-red-300'
       : (item.deletion_status || '').toLowerCase() === 'queued for deletion' || (item.deletion_status || '').toLowerCase() === 'deleting' || (item.deletion_status || '').toLowerCase() === 'scheduled'
-        ? 'border-amber-200 bg-amber-50 text-amber-700'
-        : 'border-neutral-200 bg-neutral-50 text-neutral-600'
+        ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300'
+        : 'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
     const uploadStatus = isUpload
       ? normalizeUploadStatus((item as UserUploadHistoryItem).status)
       : null
     const title = item.display_name || item.name
-    const bankLabel = item.bank_name || 'Unknown'
     const itemEngine = parseStatementEngine((item as any).statement_engine)
 
     const statementMetadata = (item as any).statement_metadata
@@ -662,143 +661,168 @@ export default function Dashboard() {
       if (!statementMetadata) return null
 
       return (
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
           {statementMetadata.has_salary && (
-            <span className="rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-[10px] font-medium text-green-700">
+            <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/50 dark:text-emerald-300">
               Salary: ₹{Number(statementMetadata.salary_amount || 0).toLocaleString()}
             </span>
           )}
           {statementMetadata.has_loan_repayment && (
-            <span className="rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-[10px] font-medium text-orange-700">
+            <span className="rounded-md border border-orange-200 bg-orange-50 px-2 py-0.5 text-[11px] font-medium text-orange-700 dark:border-orange-800/60 dark:bg-orange-950/50 dark:text-orange-300">
               Loan: ₹{Number(statementMetadata.loan_repayment_amount || 0).toLocaleString()}
             </span>
           )}
-          <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+          <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 dark:border-blue-800/60 dark:bg-blue-950/50 dark:text-blue-300">
             Credits: {statementMetadata.total_credits ?? 0}
           </span>
-          <span className="rounded-full border border-purple-200 bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700">
+          <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 dark:border-indigo-800/60 dark:bg-indigo-950/50 dark:text-indigo-300">
             Debits: {statementMetadata.total_debits ?? 0}
           </span>
         </div>
       )
     }
 
+    const rawStatus = isUpload ? (item as UserUploadHistoryItem).status : null
+    const statusDotClass =
+      uploadStatus === 'Processed'
+        ? 'bg-emerald-500'
+        : uploadStatus === 'Processing'
+          ? 'bg-amber-500 animate-pulse'
+          : uploadStatus === 'Failed'
+            ? 'bg-red-500'
+            : 'bg-slate-400'
+    const statusBadgeClass =
+      uploadStatus === 'Processed'
+        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/50 dark:text-emerald-300'
+        : uploadStatus === 'Processing'
+          ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300'
+          : uploadStatus === 'Failed'
+            ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-800/60 dark:bg-red-950/50 dark:text-red-300'
+            : 'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
+
     return (
       <div
         key={itemId}
-        className="group flex items-start gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
+        className="group rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition hover:border-[#01275C]/30 dark:border-slate-700/80 dark:bg-[#0F2342] dark:hover:border-blue-400/40"
       >
-        <input
-          type="checkbox"
-          checked={selectedFiles.has(itemId)}
-          onChange={(e) => {
-            const newSelected = new Set(selectedFiles)
-            if (e.target.checked) {
-              newSelected.add(itemId)
-            } else {
-              newSelected.delete(itemId)
-            }
-            setSelectedFiles(newSelected)
-          }}
-          className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black"
-        />
-        <div className={`flex h-8 w-8 items-center justify-center rounded ${isUpload ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-600'}`}>
-          {isUpload ? <FileText className="h-4 w-4" /> : <FileSpreadsheet className="h-4 w-4" />}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div className="min-w-0 flex-1">
-              <div className="flex min-w-0 items-center gap-2">
-                <p className="truncate text-sm font-medium text-black">{item.display_name || item.name}</p>
-                {(item.source === 'api' || Boolean(item.api_key_id)) && (
-                  <span className="shrink-0 rounded-full border border-indigo-200 bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
-                    Api
-                  </span>
-                )}
-                <VerificationBadge engine={itemEngine} />
-              </div>
-              <p className="text-xs text-neutral-500">{createdLabel}</p>
-            </div>
-            <div className="flex items-center gap-2 whitespace-nowrap">
-              <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${retentionTone}`}>
-                {retentionLabel}
-              </span>
-              {item.retention_expires_at && (
-                <span className="text-[10px] text-neutral-400">
-                  Deletes on {new Date(item.retention_expires_at).toLocaleDateString()}
-                </span>
-              )}
-            </div>
-          </div>
-          {renderStatementMetadataChips()}
-        </div>
-        {isUpload ? (
-          <div className="flex items-center gap-2">
-            <div
-              className={`h-3 w-3 rounded-full ring-2 ring-offset-1 ${
-                (item as UserUploadHistoryItem).status === 'Processed' ? 'bg-green-500 ring-green-200' :
-                (item as UserUploadHistoryItem).status === 'Processing' ? 'bg-amber-500 ring-amber-200 animate-pulse' :
-                (item as UserUploadHistoryItem).status === 'Failed' ? 'bg-red-500 ring-red-200' :
-                'bg-neutral-300 ring-neutral-200'
-              }`}
-            />
-            <span className={`text-xs font-medium ${
-              (item as UserUploadHistoryItem).status === 'Processed' ? 'text-green-700' :
-              (item as UserUploadHistoryItem).status === 'Processing' ? 'text-amber-700' :
-              (item as UserUploadHistoryItem).status === 'Failed' ? 'text-red-700' :
-              'text-neutral-500'
-            }`}>
-              {(item as UserUploadHistoryItem).status}
-            </span>
-          </div>
-        ) : (
-          <button
-            type="button"
-            aria-label="Download report"
-            onClick={() => void downloadWithAuth(`/api/jobs/${itemId}/download`, 'report.xlsx')}
-            className="p-1 rounded text-neutral-400 hover:text-black transition"
-          >
-            <Download className="h-4 w-4" />
-          </button>
-        )}
-        <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-          <button
-            onClick={async () => {
-              const confirmed = window.confirm(
-                `Are you sure you want to delete "${item.display_name || item.name}"?`
-              )
-              if (!confirmed) return
-
-              try {
-                const token = await getValidSessionAccessToken()
-                const headers: Record<string, string> = token
-                  ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
-                  : {}
-
-                const response = await fetch(`${APP_API_BASE}/profile/files/${itemId}`, {
-                  method: 'DELETE',
-                  headers,
-                })
-
-                if (response.ok) {
-                  setSelectedFiles((prev) => {
-                    const next = new Set(prev)
-                    next.delete(itemId)
-                    return next
-                  })
-                  loadProfileHistory()
-                } else {
-                  alert(`Failed to delete ${isUpload ? 'file' : 'report'}. Please try again.`)
-                }
-              } catch (deleteError) {
-                console.error(`Failed to delete ${isUpload ? 'file' : 'report'}:`, deleteError)
-                alert(`Failed to delete ${isUpload ? 'file' : 'report'}. Please try again.`)
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            checked={selectedFiles.has(itemId)}
+            onChange={(e) => {
+              const newSelected = new Set(selectedFiles)
+              if (e.target.checked) {
+                newSelected.add(itemId)
+              } else {
+                newSelected.delete(itemId)
               }
+              setSelectedFiles(newSelected)
             }}
-            className="p-1 rounded text-neutral-400 hover:text-red-600 transition"
+            className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-[#01275C] focus:ring-[#01275C] dark:border-slate-600"
+          />
+          <div
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+              isUpload
+                ? 'bg-[#01275C]/10 text-[#01275C] dark:bg-blue-500/20 dark:text-blue-300'
+                : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
+            }`}
           >
-            <Trash2 className="h-4 w-4" />
-          </button>
+            {isUpload ? <FileText className="h-4 w-4" /> : <FileSpreadsheet className="h-4 w-4" />}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <p
+                  title={title}
+                  className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100"
+                >
+                  {title}
+                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                  <span>{createdLabel}</span>
+                  {(item.source === 'api' || Boolean(item.api_key_id)) && (
+                    <span className="rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
+                      API
+                    </span>
+                  )}
+                  <span className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${retentionTone}`}>
+                    {retentionLabel}
+                  </span>
+                  {item.retention_expires_at && (
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                      Deletes {new Date(item.retention_expires_at).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-1.5">
+                {isUpload ? (
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${statusBadgeClass}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${statusDotClass}`} />
+                    {rawStatus}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    aria-label="Download report"
+                    onClick={() => void downloadWithAuth(`/api/jobs/${itemId}/download`, 'report.xlsx')}
+                    className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-[#01275C]/40 hover:bg-[#01275C] hover:text-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-blue-600"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Excel</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  aria-label={`Delete ${title}`}
+                  onClick={async () => {
+                    const confirmed = window.confirm(
+                      `Are you sure you want to delete "${item.display_name || item.name}"?`
+                    )
+                    if (!confirmed) return
+
+                    try {
+                      const token = await getValidSessionAccessToken()
+                      const headers: Record<string, string> = token
+                        ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
+                        : {}
+
+                      const response = await fetch(`${APP_API_BASE}/profile/files/${itemId}`, {
+                        method: 'DELETE',
+                        headers,
+                      })
+
+                      if (response.ok) {
+                        setSelectedFiles((prev) => {
+                          const next = new Set(prev)
+                          next.delete(itemId)
+                          return next
+                        })
+                        loadProfileHistory()
+                      } else {
+                        alert(`Failed to delete ${isUpload ? 'file' : 'report'}. Please try again.`)
+                      }
+                    } catch (deleteError) {
+                      console.error(`Failed to delete ${isUpload ? 'file' : 'report'}:`, deleteError)
+                      alert(`Failed to delete ${isUpload ? 'file' : 'report'}. Please try again.`)
+                    }
+                  }}
+                  className="rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {(itemEngine || statementMetadata) && (
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2 dark:border-slate-800">
+                <VerificationBadge engine={itemEngine} />
+                {renderStatementMetadataChips()}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )
@@ -806,9 +830,9 @@ export default function Dashboard() {
 
   return (
     <main className="bg-app min-h-screen">
-      <div className="mx-auto max-w-[1440px] px-4 pb-16 sm:px-6 lg:px-8">
-        <Header onProfileClick={() => setIsProfilePanelOpen(true)} levelLabel={progress.levelLabel} />
+      <Header onProfileClick={() => setIsProfilePanelOpen(true)} levelLabel={progress.levelLabel} />
 
+      <div className="mx-auto w-full px-4 pb-16 sm:px-6 lg:px-10 xl:px-12">
         {unifiedEntry() && (
           <div className="mb-6">
             <StatsStrip
@@ -820,8 +844,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className={unifiedEntry() ? 'grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]' : ''}>
-        <div className={unifiedEntry() ? 'min-w-0' : 'max-w-3xl mx-auto'}>
+        <div className={unifiedEntry() ? 'grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:gap-8' : ''}>
+        <div className={unifiedEntry() ? 'min-w-0' : 'max-w-4xl mx-auto'}>
           {unifiedEntry() ? (
             <StatementWorkflow
               profileName={profileName}
@@ -968,12 +992,12 @@ export default function Dashboard() {
         )}
         </div>
 
-        <div className="mx-auto mt-10 max-w-4xl">
+        <div className="mt-8 w-full">
           <HelpCenter
             onGuideOpened={() => updateLocal({ guideOpened: true })}
             onLimitsOpened={() => updateLocal({ limitsOpened: true })}
           />
-          <p className="mt-8 text-center text-[11px] leading-relaxed text-slate-400">
+          <p className="mt-8 text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">
             Airco Insights organises transaction data. It does not provide financial advice. Uploaded files are deleted automatically after 7 days.
           </p>
         </div>
@@ -982,261 +1006,284 @@ export default function Dashboard() {
       {isProfilePanelOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/20 z-40 transition-opacity"
+            className="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-xs transition-opacity"
             onClick={() => setIsProfilePanelOpen(false)}
           />
 
-          <div className="fixed top-0 right-0 h-full w-[520px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out translate-x-0">
-            <div className="h-full overflow-y-auto">
-              <div className="sticky top-0 bg-white border-b border-neutral-100 p-4 z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-lg font-semibold text-black">Profile</h2>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-neutral-300 hover:bg-neutral-50 shadow-sm">
-                      <UserCircle2 className="h-4 w-4" />
-                      Profile
-                    </button>
-                    <button
-                      onClick={() => setIsProfilePanelOpen(false)}
-                      className="rounded-full p-2 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 transition"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 6-12 12"/><path d="m6 6 12 12"/></svg>
-                    </button>
-                  </div>
+          <aside
+            aria-label="Profile and file history"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-[580px] flex-col border-l border-slate-200/80 bg-white shadow-2xl transition-transform duration-300 ease-in-out dark:border-slate-800 dark:bg-[#08152B]"
+          >
+            <div className="flex items-center justify-between border-b border-slate-200/80 bg-white/95 px-6 py-4 backdrop-blur dark:border-slate-800 dark:bg-[#08152B]/95">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#01275C] text-white shadow-xs dark:bg-blue-600">
+                  <UserCircle2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">Profile</h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Account summary & statement history</p>
                 </div>
               </div>
+              <button
+                type="button"
+                aria-label="Close profile panel"
+                onClick={() => setIsProfilePanelOpen(false)}
+                className="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 6-12 12"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
 
-              <div className="p-4 space-y-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 80px)' }}>
-                <div className="rounded-2xl border border-neutral-100 bg-neutral-50/80 p-4 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-neutral-400 shadow-sm ring-1 ring-neutral-200">
-                      <UserCircle2 className="h-8 w-8" />
+            <div className="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+              <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5 shadow-xs dark:border-slate-800 dark:bg-[#0B1B36]">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3.5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#01275C] to-[#0D3B82] text-base font-bold text-white shadow-sm ring-2 ring-[#A1B2CE]/40 dark:from-blue-600 dark:to-[#0D3B82]">
+                      {(profileName || 'U').trim().charAt(0).toUpperCase()}
                     </div>
-                    <div className="flex-1">
-                      <p className="text-base font-semibold text-black">{profileName}</p>
-                      <p className="text-sm text-neutral-500">{profileEmail}</p>
+                    <div className="min-w-0">
+                      <p className="truncate text-base font-bold text-slate-900 dark:text-white">{profileName}</p>
+                      <p className="truncate text-xs text-slate-500 dark:text-slate-400">{profileEmail}</p>
                     </div>
                   </div>
-
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-neutral-100">
-                      <span className="text-sm text-neutral-600">Account Type</span>
-                      <span className="text-sm font-medium text-black">{accountTypeLabel}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      <div className="rounded-xl bg-white px-3 py-3 text-center shadow-sm ring-1 ring-neutral-100">
-                        <p className="text-lg font-semibold text-black">{historySummary.total_uploads}</p>
-                        <p className="text-[11px] text-neutral-500">Uploads</p>
-                      </div>
-                      <div className="rounded-xl bg-white px-3 py-3 text-center shadow-sm ring-1 ring-neutral-100">
-                        <p className="text-lg font-semibold text-black">{historySummary.processed_files}</p>
-                        <p className="text-[11px] text-neutral-500">Processed</p>
-                      </div>
-                      <div className="rounded-xl bg-white px-3 py-3 text-center shadow-sm ring-1 ring-neutral-100">
-                        <p className="text-lg font-semibold text-black">{historySummary.generated_reports}</p>
-                        <p className="text-[11px] text-neutral-500">Reports</p>
-                      </div>
-                      <div className="rounded-xl bg-white px-3 py-3 text-center shadow-sm ring-1 ring-neutral-100">
-                        <p className="text-lg font-semibold text-black">{profileBatchCount}</p>
-                        <p className="text-[11px] text-neutral-500">Batches</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-100"
-                    >
-                      Sign Out
-                    </button>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-2xs dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                      Account Type: <strong className="font-semibold text-[#01275C] dark:text-blue-300">{accountTypeLabel}</strong>
+                    </span>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-semibold text-black">Files</h3>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setNeedsReviewOnly((v) => !v)}
-                        aria-pressed={needsReviewOnly}
-                        className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
-                          needsReviewOnly
-                            ? 'border-amber-300 bg-amber-100 text-amber-800'
-                            : 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300'
-                        }`}
-                      >
-                        Needs review
-                      </button>
-                      <div className="inline-flex rounded-full bg-neutral-100 p-0.5 text-xs font-medium text-neutral-500">
-                        <button
-                          type="button"
-                          onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
-                          className={`rounded-full px-3 py-1 transition ${filesTab === 'uploaded' ? 'bg-white text-black shadow-sm' : ''}`}
-                        >
-                          Uploaded Statements
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
-                          className={`rounded-full px-3 py-1 transition ${filesTab === 'reports' ? 'bg-white text-black shadow-sm' : ''}`}
-                        >
-                          Generated Reports
-                        </button>
-                      </div>
-                    </div>
+                <div className="mt-4 grid grid-cols-4 gap-2.5">
+                  <div className="rounded-xl border border-slate-200/70 bg-white px-3 py-2.5 text-center shadow-2xs dark:border-slate-700/70 dark:bg-[#0F2342]">
+                    <p className="text-lg font-bold text-[#01275C] dark:text-white">{historySummary.total_uploads}</p>
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Uploads</p>
                   </div>
+                  <div className="rounded-xl border border-slate-200/70 bg-white px-3 py-2.5 text-center shadow-2xs dark:border-slate-700/70 dark:bg-[#0F2342]">
+                    <p className="text-lg font-bold text-[#01275C] dark:text-white">{historySummary.processed_files}</p>
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Processed</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200/70 bg-white px-3 py-2.5 text-center shadow-2xs dark:border-slate-700/70 dark:bg-[#0F2342]">
+                    <p className="text-lg font-bold text-[#01275C] dark:text-white">{historySummary.generated_reports}</p>
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Reports</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200/70 bg-white px-3 py-2.5 text-center shadow-2xs dark:border-slate-700/70 dark:bg-[#0F2342]">
+                    <p className="text-lg font-bold text-[#01275C] dark:text-white">{profileBatchCount}</p>
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Batches</p>
+                  </div>
+                </div>
 
-                  {selectedFiles.size > 0 && (
-                    <div className="flex items-center justify-between rounded-lg bg-neutral-50 px-3 py-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-neutral-600">{selectedFiles.size} selected</span>
-                        <button
-                          onClick={() => {
-                            setSelectedFiles(new Set(getVisibleHistoryIds(filesTab)))
-                          }}
-                          className="text-sm text-black hover:text-neutral-700 transition"
-                        >
-                          Select All
-                        </button>
-                        <button
-                          onClick={() => setSelectedFiles(new Set())}
-                          className="text-sm text-black hover:text-neutral-700 transition"
-                        >
-                          Clear Selection
-                        </button>
-                      </div>
+                <button
+                  onClick={handleLogout}
+                  className="mt-4 w-full rounded-xl border border-red-200/80 bg-red-50/90 px-4 py-2.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-300 dark:hover:bg-red-950/80"
+                >
+                  Sign Out
+                </button>
+              </div>
+
+              <div className="space-y-3.5">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Files</h3>
+                  <button
+                    type="button"
+                    onClick={() => setNeedsReviewOnly((v) => !v)}
+                    aria-pressed={needsReviewOnly}
+                    className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                      needsReviewOnly
+                        ? 'border-amber-300 bg-amber-100 text-amber-900 dark:border-amber-600 dark:bg-amber-950/70 dark:text-amber-200'
+                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-[#0B1B36] dark:text-slate-300'
+                    }`}
+                  >
+                    Needs review
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 rounded-xl border border-slate-200/80 bg-slate-100/90 p-1 text-xs font-semibold text-slate-600 dark:border-slate-800 dark:bg-[#0B1B36] dark:text-slate-400">
+                  <button
+                    type="button"
+                    onClick={() => { setFilesTab('uploaded'); setSelectedFiles(new Set()) }}
+                    className={`rounded-lg py-2 transition ${
+                      filesTab === 'uploaded'
+                        ? 'bg-[#01275C] text-white shadow-xs dark:bg-blue-600 dark:text-white'
+                        : 'hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Uploaded Statements
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setFilesTab('reports'); setSelectedFiles(new Set()) }}
+                    className={`rounded-lg py-2 transition ${
+                      filesTab === 'reports'
+                        ? 'bg-[#01275C] text-white shadow-xs dark:bg-blue-600 dark:text-white'
+                        : 'hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Generated Reports
+                  </button>
+                </div>
+
+                {selectedFiles.size > 0 && (
+                  <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 dark:border-slate-700 dark:bg-[#0B1B36]">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{selectedFiles.size} selected</span>
                       <button
-                        onClick={async () => {
-                          const confirmed = window.confirm(
-                            `Are you sure you want to delete ${selectedFiles.size} selected ${filesTab === 'uploaded' ? 'file(s)' : 'report(s)'}?`
-                          )
-                          if (!confirmed) return
-
-                          try {
-                            const token = await getValidSessionAccessToken()
-                            const headers: Record<string, string> = token
-                              ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
-                              : {}
-
-                            // Delete selected items from backend
-                            const deletePromises = Array.from(selectedFiles).map(async (id) => {
-                              const response = await fetch(`${APP_API_BASE}/profile/files/${id}`, {
-                                method: 'DELETE',
-                                headers,
-                              })
-                              if (!response.ok) {
-                                console.warn(`Failed to delete item ${id}`)
-                              }
-                              return response
-                            })
-
-                            await Promise.all(deletePromises)
-
-                            // Update local state
-                            if (filesTab === 'uploaded') {
-                              setUploadedStatements(prev => prev.filter(f => !selectedFiles.has(f.id)))
-                            } else {
-                              setGeneratedReports(prev => prev.filter(f => !selectedFiles.has(f.id)))
-                            }
-                            setSelectedFiles(new Set())
-                            
-                            // Reload history to sync with backend
-                            loadProfileHistory()
-                          } catch (error) {
-                            console.error('Failed to delete items:', error)
-                            alert('Failed to delete some items. Please try again.')
-                          }
+                        onClick={() => {
+                          setSelectedFiles(new Set(getVisibleHistoryIds(filesTab)))
                         }}
-                        className="text-sm text-red-600 hover:text-red-700 transition"
+                        className="text-xs font-medium text-[#01275C] hover:underline dark:text-blue-400"
                       >
-                        Delete
+                        Select All
+                      </button>
+                      <button
+                        onClick={() => setSelectedFiles(new Set())}
+                        className="text-xs font-medium text-slate-500 hover:underline dark:text-slate-400"
+                      >
+                        Clear Selection
                       </button>
                     </div>
-                  )}
+                    <button
+                      onClick={async () => {
+                        const confirmed = window.confirm(
+                          `Are you sure you want to delete ${selectedFiles.size} selected ${filesTab === 'uploaded' ? 'file(s)' : 'report(s)'}?`
+                        )
+                        if (!confirmed) return
 
-                  <div className="space-y-1">
-                    {historyBatches.length > 0 ? (
-                      <div className="space-y-3">
-                        {historyBatches.map((batch, batchIndex) => {
-                          return (
-                            <details
-                              key={batch.batch_id}
-                              open={batchIndex === 0}
-                              className="rounded-xl border border-neutral-200 bg-white shadow-sm"
-                            >
-                              <summary className="cursor-pointer list-none px-4 py-3">
-                                <div className="flex items-start justify-between gap-3">
-                                  <div>
-                                    <p className="text-sm font-semibold text-black">
-                                      {batch.display_name
-                                        || (batch.uploads?.[0]?.display_name || batch.uploads?.[0]?.name)
-                                        || (batch.bank_names?.length ? batch.bank_names.join(', ') : formatBatchLabel(batch.batch_id))}
-                                    </p>
-                                    <p className="mt-1 text-xs text-neutral-500">
-                                      {(batch.bank_names || []).join(', ') || 'Unknown bank'}
-                                      {' • '}
-                                      {batch.statement_count} statement(s) • {batch.processed_count} processed • {batch.failed_count} failed
-                                    </p>
-                                  </div>
-                                  <div className="flex flex-wrap justify-end gap-1.5">
-                                    {batch.bank_names.map((bankName) => (
-                                      <span key={bankName} className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[10px] text-neutral-500">
-                                        {bankName}
-                                      </span>
-                                    ))}
-                                  </div>
+                        try {
+                          const token = await getValidSessionAccessToken()
+                          const headers: Record<string, string> = token
+                            ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
+                            : {}
+
+                          const deletePromises = Array.from(selectedFiles).map(async (id) => {
+                            const response = await fetch(`${APP_API_BASE}/profile/files/${id}`, {
+                              method: 'DELETE',
+                              headers,
+                            })
+                            if (!response.ok) {
+                              console.warn(`Failed to delete item ${id}`)
+                            }
+                            return response
+                          })
+
+                          await Promise.all(deletePromises)
+
+                          if (filesTab === 'uploaded') {
+                            setUploadedStatements(prev => prev.filter(f => !selectedFiles.has(f.id)))
+                          } else {
+                            setGeneratedReports(prev => prev.filter(f => !selectedFiles.has(f.id)))
+                          }
+                          setSelectedFiles(new Set())
+                          loadProfileHistory()
+                        } catch (error) {
+                          console.error('Failed to delete items:', error)
+                          alert('Failed to delete some items. Please try again.')
+                        }
+                      }}
+                      className="text-xs font-semibold text-red-600 hover:text-red-700 dark:text-red-400"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+
+                <div className="space-y-2.5">
+                  {historyBatches.length > 0 ? (
+                    <div className="space-y-3">
+                      {historyBatches.map((batch, batchIndex) => {
+                        const batchTitle =
+                          batch.display_name
+                          || (batch.uploads?.[0]?.display_name || batch.uploads?.[0]?.name)
+                          || (batch.bank_names?.length ? batch.bank_names.join(', ') : formatBatchLabel(batch.batch_id))
+                        return (
+                          <details
+                            key={batch.batch_id}
+                            open={batchIndex === 0}
+                            className="group/batch overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs dark:border-slate-800 dark:bg-[#0B1B36]"
+                          >
+                            <summary className="cursor-pointer list-none px-4 py-3.5 transition hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0 flex-1">
+                                  <p
+                                    title={batchTitle}
+                                    className="truncate text-sm font-bold text-slate-900 dark:text-white"
+                                  >
+                                    {batchTitle}
+                                  </p>
+                                  <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                                    {(batch.bank_names || []).join(', ') || 'Unknown bank'}
+                                    {' • '}
+                                    {batch.statement_count} statement(s) • {batch.processed_count} processed • {batch.failed_count} failed
+                                  </p>
                                 </div>
-                              </summary>
-                              <div className="border-t border-neutral-100 p-3 space-y-3">
-                                {(batch.bank_groups || []).map((bankGroup, bankIndex) => {
-                                  const allBankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
-                                  const bankItems = needsReviewOnly ? allBankItems.filter(itemNeedsReview) : allBankItems
-                                  return (
-                                    <details
-                                      key={bankGroup.bank_name}
-                                      open={batchIndex === 0 && bankIndex === 0}
-                                      className="rounded-lg border border-neutral-100 bg-neutral-50"
+                                <div className="flex shrink-0 flex-wrap justify-end gap-1">
+                                  {batch.bank_names.slice(0, 2).map((bankName) => (
+                                    <span
+                                      key={bankName}
+                                      className="max-w-[140px] truncate rounded-full border border-[#01275C]/20 bg-[#01275C]/5 px-2.5 py-0.5 text-[10px] font-semibold text-[#01275C] dark:border-blue-400/30 dark:bg-blue-950/60 dark:text-blue-300"
                                     >
-                                      <summary className="cursor-pointer list-none px-3 py-2">
-                                        <div className="flex items-center justify-between gap-3">
-                                          <div>
-                                            <p className="text-sm font-medium text-black">{bankGroup.bank_name}</p>
-                                            <p className="text-[11px] text-neutral-500">
-                                              {bankGroup.statement_count} statement(s) • {bankGroup.processed_count} processed
-                                            </p>
-                                          </div>
-                                          <span className="text-[10px] uppercase tracking-wide text-neutral-400">
-                                            {bankItems.length} visible
+                                      {bankName}
+                                    </span>
+                                  ))}
+                                  {batch.bank_names.length > 2 && (
+                                    <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
+                                      +{batch.bank_names.length - 2}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </summary>
+                            <div className="space-y-3 border-t border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-[#08152B]/60">
+                              {(batch.bank_groups || []).map((bankGroup, bankIndex) => {
+                                const allBankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
+                                const bankItems = needsReviewOnly ? allBankItems.filter(itemNeedsReview) : allBankItems
+                                return (
+                                  <details
+                                    key={bankGroup.bank_name}
+                                    open={batchIndex === 0 && bankIndex === 0}
+                                    className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/90 dark:border-slate-800 dark:bg-[#0B1B36]/80"
+                                  >
+                                    <summary className="cursor-pointer list-none px-3.5 py-2.5">
+                                      <div className="flex items-center justify-between gap-3">
+                                        <div className="min-w-0 flex-1">
+                                          <p className="truncate text-xs font-bold uppercase tracking-wide text-[#01275C] dark:text-blue-300">
+                                            {bankGroup.bank_name}
+                                          </p>
+                                          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                                            {bankGroup.statement_count} statement(s) • {bankGroup.processed_count} processed
+                                          </p>
+                                        </div>
+                                        <span className="shrink-0 rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500 ring-1 ring-slate-200/80 dark:bg-slate-800 dark:text-slate-400 dark:ring-slate-700">
+                                          {bankItems.length} visible
+                                        </span>
+                                      </div>
+                                    </summary>
+                                    <div className="space-y-2 border-t border-slate-200/70 p-2.5 dark:border-slate-800">
+                                      {bankItems.length > 0 ? (
+                                        bankItems.map((item) => renderHistoryRow(item, filesTab))
+                                      ) : (
+                                        <div className="flex items-center justify-center py-6 text-center">
+                                          <span className="text-xs text-slate-400">
+                                            No {filesTab === 'uploaded' ? 'uploads' : 'reports'} in this bank section
                                           </span>
                                         </div>
-                                      </summary>
-                                      <div className="border-t border-neutral-200 px-2 py-2 space-y-1">
-                                        {bankItems.length > 0 ? (
-                                          bankItems.map((item) => renderHistoryRow(item, filesTab))
-                                        ) : (
-                                          <div className="flex items-center justify-center py-6 text-center">
-                                            <span className="text-sm text-neutral-400">
-                                              No {filesTab === 'uploaded' ? 'uploads' : 'reports'} in this bank section
-                                            </span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </details>
-                                  )
-                                })}
-                              </div>
-                            </details>
-                          )
-                        })}
-                      </div>
-                    ) : filesTab === 'uploaded' ? (
-                      uploadedStatements.length > 0 ? (
-                        uploadedStatements.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
-                          <div
-                            key={item.id}
-                            className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
-                          >
+                                      )}
+                                    </div>
+                                  </details>
+                                )
+                              })}
+                            </div>
+                          </details>
+                        )
+                      })}
+                    </div>
+                  ) : filesTab === 'uploaded' ? (
+                    uploadedStatements.length > 0 ? (
+                      uploadedStatements.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
+                        <div
+                          key={item.id}
+                          className="group rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition hover:border-[#01275C]/30 dark:border-slate-700/80 dark:bg-[#0F2342]"
+                        >
+                          <div className="flex items-start gap-3">
                             <input
                               type="checkbox"
                               checked={selectedFiles.has(item.id)}
@@ -1249,85 +1296,89 @@ export default function Dashboard() {
                                 }
                                 setSelectedFiles(newSelected)
                               }}
-                              className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black"
+                              className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-[#01275C] focus:ring-[#01275C]"
                             />
-                            <div className="flex h-8 w-8 items-center justify-center rounded bg-red-50 text-red-500">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#01275C]/10 text-[#01275C] dark:bg-blue-500/20 dark:text-blue-300">
                               <FileText className="h-4 w-4" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <div className="flex flex-wrap items-start justify-between gap-2">
+                              <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <div className="flex min-w-0 items-center gap-2">
-                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
-                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
-                                  </div>
-                                  <p className="text-xs text-neutral-500">{item.date}</p>
+                                  <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
+                                    {item.displayName || item.name}
+                                  </p>
+                                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{item.date}</p>
                                 </div>
-                                <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.status === 'Processed' ? 'border-green-200 bg-green-50 text-green-700' : item.status === 'Processing' ? 'border-amber-200 bg-amber-50 text-amber-700' : item.status === 'Failed' ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>
-                                  {item.status}
-                                </span>
+                                <div className="flex shrink-0 items-center gap-1.5">
+                                  <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${item.status === 'Processed' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : item.status === 'Processing' ? 'border-amber-200 bg-amber-50 text-amber-700' : item.status === 'Failed' ? 'border-red-200 bg-red-50 text-red-700' : 'border-slate-200 bg-slate-50 text-slate-600'}`}>
+                                    {item.status}
+                                  </span>
+                                  <button
+                                    onClick={async () => {
+                                      const confirmed = window.confirm(
+                                        `Are you sure you want to delete "${item.displayName || item.name}"?`
+                                      )
+                                      if (!confirmed) return
+
+                                      try {
+                                        const token = await getValidSessionAccessToken()
+                                        const headers: Record<string, string> = token
+                                          ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
+                                          : {}
+
+                                        const response = await fetch(`${APP_API_BASE}/profile/files/${item.id}`, {
+                                          method: 'DELETE',
+                                          headers,
+                                        })
+
+                                        if (response.ok) {
+                                          setUploadedStatements(prev => prev.filter((f) => f.id !== item.id))
+                                          loadProfileHistory()
+                                        } else {
+                                          alert('Failed to delete file. Please try again.')
+                                        }
+                                      } catch (error) {
+                                        console.error('Failed to delete file:', error)
+                                        alert('Failed to delete file. Please try again.')
+                                      }
+                                    }}
+                                    className="rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </div>
                               </div>
-                              {(item as any).statement_metadata && (
-                                <div className="mt-2 flex flex-wrap gap-2">
-                                  <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
-                                    Credits: {(item as any).statement_metadata.total_credits}
-                                  </span>
-                                  <span className="rounded-full border border-purple-200 bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700">
-                                    Debits: {(item as any).statement_metadata.total_debits}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                              <button
-                                onClick={async () => {
-                                  const confirmed = window.confirm(
-                                    `Are you sure you want to delete "${item.displayName || item.name}"?`
-                                  )
-                                  if (!confirmed) return
-
-                                  try {
-                                    const token = await getValidSessionAccessToken()
-                                    const headers: Record<string, string> = token
-                                      ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
-                                      : {}
-
-                                    const response = await fetch(`${APP_API_BASE}/profile/files/${item.id}`, {
-                                      method: 'DELETE',
-                                      headers,
-                                    })
-
-                                    if (response.ok) {
-                                      setUploadedStatements(prev => prev.filter((f) => f.id !== item.id))
-                                      loadProfileHistory()
-                                    } else {
-                                      alert('Failed to delete file. Please try again.')
-                                    }
-                                  } catch (error) {
-                                    console.error('Failed to delete file:', error)
-                                    alert('Failed to delete file. Please try again.')
-                                  }
-                                }}
-                                className="p-1 rounded text-neutral-400 hover:text-red-600 transition"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
+                              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                                <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                {(item as any).statement_metadata && (
+                                  <>
+                                    <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                                      Credits: {(item as any).statement_metadata.total_credits}
+                                    </span>
+                                    <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-medium text-indigo-700">
+                                      Debits: {(item as any).statement_metadata.total_debits}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        ))
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-8 text-center">
-                          <FileText className="h-8 w-8 text-neutral-300" />
-                          <p className="mt-2 text-sm text-neutral-500">No files yet</p>
                         </div>
-                      )
+                      ))
                     ) : (
-                      generatedReports.length > 0 ? (
-                        generatedReports.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
-                          <div
-                            key={item.id}
-                            className="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-neutral-50"
-                          >
+                      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 py-10 text-center dark:border-slate-800">
+                        <FileText className="h-8 w-8 text-slate-300 dark:text-slate-600" />
+                        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">No files yet</p>
+                      </div>
+                    )
+                  ) : (
+                    generatedReports.length > 0 ? (
+                      generatedReports.filter((item) => !needsReviewOnly || itemNeedsReview(item)).map((item) => (
+                        <div
+                          key={item.id}
+                          className="group rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition hover:border-[#01275C]/30 dark:border-slate-700/80 dark:bg-[#0F2342]"
+                        >
+                          <div className="flex items-start gap-3">
                             <input
                               type="checkbox"
                               checked={selectedFiles.has(item.id)}
@@ -1340,92 +1391,94 @@ export default function Dashboard() {
                                 }
                                 setSelectedFiles(newSelected)
                               }}
-                              className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black"
+                              className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-[#01275C] focus:ring-[#01275C]"
                             />
-                            <div className="flex h-8 w-8 items-center justify-center rounded bg-green-50 text-green-600">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
                               <FileSpreadsheet className="h-4 w-4" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <div className="flex flex-wrap items-start justify-between gap-2">
+                              <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0 flex-1">
-                                  <div className="flex min-w-0 items-center gap-2">
-                                    <p className="truncate text-sm font-medium text-black">{item.displayName || item.name}</p>
-                                    <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
-                                  </div>
-                                  <p className="text-xs text-neutral-500">{item.date}</p>
+                                  <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
+                                    {item.displayName || item.name}
+                                  </p>
+                                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{item.date}</p>
                                 </div>
-                                <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.retentionStatus === 'Deleted' || item.deletedAt ? 'border-red-200 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-600'}`}>
-                                  {formatRetentionLabel(item.retentionStatus, item.retentionDaysLeft, item.deletedAt)}
-                                </span>
+                                <div className="flex shrink-0 items-center gap-1.5">
+                                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${item.retentionStatus === 'Deleted' || item.deletedAt ? 'border-red-200 bg-red-50 text-red-700' : 'border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'}`}>
+                                    {formatRetentionLabel(item.retentionStatus, item.retentionDaysLeft, item.deletedAt)}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    aria-label="Download report"
+                                    onClick={() => void downloadWithAuth(item.downloadUrl, 'report.xlsx')}
+                                    className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-[#01275C] dark:text-slate-300 dark:hover:bg-slate-800"
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      const confirmed = window.confirm(
+                                        `Are you sure you want to delete "${item.displayName || item.name}"?`
+                                      )
+                                      if (!confirmed) return
+
+                                      try {
+                                        const token = await getValidSessionAccessToken()
+                                        const headers: Record<string, string> = token
+                                          ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
+                                          : {}
+
+                                        const response = await fetch(`${APP_API_BASE}/profile/files/${item.id}`, {
+                                          method: 'DELETE',
+                                          headers,
+                                        })
+
+                                        if (response.ok) {
+                                          setGeneratedReports(prev => prev.filter((r) => r.id !== item.id))
+                                          loadProfileHistory()
+                                        } else {
+                                          alert('Failed to delete report. Please try again.')
+                                        }
+                                      } catch (error) {
+                                        console.error('Failed to delete report:', error)
+                                        alert('Failed to delete report. Please try again.')
+                                      }
+                                    }}
+                                    className="rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </div>
                               </div>
-                              {(item as any).statement_metadata && (
-                                <div className="mt-2 flex flex-wrap gap-2">
-                                  <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
-                                    Credits: {(item as any).statement_metadata.total_credits}
-                                  </span>
-                                  <span className="rounded-full border border-purple-200 bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-700">
-                                    Debits: {(item as any).statement_metadata.total_debits}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                              <button
-                                type="button"
-                                aria-label="Download report"
-                                onClick={() => void downloadWithAuth(item.downloadUrl, 'report.xlsx')}
-                                className="p-1 rounded text-neutral-400 hover:text-black transition"
-                              >
-                                <Download className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={async () => {
-                                  const confirmed = window.confirm(
-                                    `Are you sure you want to delete "${item.displayName || item.name}"?`
-                                  )
-                                  if (!confirmed) return
-
-                                  try {
-                                    const token = await getValidSessionAccessToken()
-                                    const headers: Record<string, string> = token
-                                      ? { Authorization: `Bearer ${token}`, ...buildUserHeadersFromToken(token) }
-                                      : {}
-
-                                    const response = await fetch(`${APP_API_BASE}/profile/files/${item.id}`, {
-                                      method: 'DELETE',
-                                      headers,
-                                    })
-
-                                    if (response.ok) {
-                                      setGeneratedReports(prev => prev.filter((r) => r.id !== item.id))
-                                      loadProfileHistory()
-                                    } else {
-                                      alert('Failed to delete report. Please try again.')
-                                    }
-                                  } catch (error) {
-                                    console.error('Failed to delete report:', error)
-                                    alert('Failed to delete report. Please try again.')
-                                  }
-                                }}
-                                className="p-1 rounded text-neutral-400 hover:text-red-600 transition"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
+                              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                                <VerificationBadge engine={parseStatementEngine(item.statement_engine)} />
+                                {(item as any).statement_metadata && (
+                                  <>
+                                    <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                                      Credits: {(item as any).statement_metadata.total_credits}
+                                    </span>
+                                    <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-medium text-indigo-700">
+                                      Debits: {(item as any).statement_metadata.total_debits}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        ))
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-8 text-center">
-                          <FileSpreadsheet className="h-8 w-8 text-neutral-300" />
-                          <p className="mt-2 text-sm text-neutral-500">No files yet</p>
                         </div>
-                      )
-                    )}
-                  </div>
+                      ))
+                    ) : (
+                      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 py-10 text-center dark:border-slate-800">
+                        <FileSpreadsheet className="h-8 w-8 text-slate-300 dark:text-slate-600" />
+                        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">No files yet</p>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
-          </div>
+          </aside>
         </>
       )}
     </main>

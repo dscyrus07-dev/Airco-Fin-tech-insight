@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -12,16 +13,24 @@ const config: Config = {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
-        primary: '#000000',
+        primary: '#01275C',
         background: '#FFFFFF',
-        border: '#E5E5E5',
-        muted: '#F5F5F5',
-        'muted-foreground': '#737373',
+        border: '#E2E8F0',
+        muted: '#F1F5F9',
+        'muted-foreground': '#64748B',
+        airco: {
+          navy: '#01275C',
+          deep: '#011B40',
+          royal: '#0D3B82',
+          blue: '#1D4ED8',
+          sky: '#38BDF8',
+          ring: '#A1B2CE',
+        },
       },
       boxShadow: {
-        card: '0 1px 2px rgba(15,23,42,0.04), 0 12px 32px -12px rgba(15,23,42,0.10)',
-        'card-hover': '0 2px 4px rgba(15,23,42,0.05), 0 18px 40px -12px rgba(79,70,229,0.20)',
-        glow: '0 0 0 4px rgba(99,102,241,0.12)',
+        card: '0 1px 2px rgba(1,39,92,0.04), 0 12px 32px -12px rgba(1,39,92,0.10)',
+        'card-hover': '0 2px 6px rgba(1,39,92,0.06), 0 18px 40px -12px rgba(1,39,92,0.18)',
+        glow: '0 0 0 4px rgba(1,39,92,0.14)',
       },
       keyframes: {
         'fade-up': {

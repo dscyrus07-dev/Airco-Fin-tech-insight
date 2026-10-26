@@ -36,23 +36,23 @@ export default function HelpCenter({ onGuideOpened, onLimitsOpened }: HelpCenter
         icon="book"
         onFirstOpen={onGuideOpened}
       >
-        <ol className="grid gap-4 sm:grid-cols-2">
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((s, i) => (
-            <li key={s.title} className="flex gap-3 rounded-xl bg-slate-50/70 p-4 ring-1 ring-slate-100">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+            <li key={s.title} className="flex gap-3 rounded-xl bg-slate-50/80 p-4 ring-1 ring-slate-200/70 dark:bg-[#08152B] dark:ring-slate-800">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#01275C] text-sm font-semibold text-white dark:bg-blue-600">
                 {i + 1}
               </span>
               <div>
-                <p className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Icon name={s.icon} size={16} className="text-indigo-500" />
+                <p className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  <Icon name={s.icon} size={16} className="text-[#01275C] dark:text-blue-400" />
                   {s.title}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-600">{s.body}</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{s.body}</p>
               </div>
             </li>
           ))}
         </ol>
-        <p className="mt-4 flex items-start gap-2 rounded-xl bg-indigo-50 p-3 text-sm text-indigo-900">
+        <p className="mt-4 flex items-start gap-2 rounded-xl bg-[#01275C]/5 p-3.5 text-sm text-[#01275C] ring-1 ring-[#A1B2CE]/40 dark:bg-blue-950/50 dark:text-blue-200 dark:ring-blue-500/30">
           <Icon name="lightbulb" size={18} className="mt-0.5 shrink-0" />
           {catalog.ocr?.enabled
             ? 'Tip: the original PDF downloaded from your bank gives the best result. Scanned statements can be read too: they take longer and are always marked for review.'
@@ -75,15 +75,15 @@ export default function HelpCenter({ onGuideOpened, onLimitsOpened }: HelpCenter
               ['Always needs review', count('review_required')],
               ['Coming soon', count('coming_soon')],
             ].map(([label, n]) => (
-              <div key={label as string} className="rounded-xl bg-slate-50 p-3 text-center ring-1 ring-slate-100">
-                <p className="text-2xl font-bold text-slate-900">{n as number}</p>
-                <p className="text-xs text-slate-500">{label as string}</p>
+              <div key={label as string} className="rounded-xl bg-slate-50 p-3.5 text-center ring-1 ring-slate-200/70 dark:bg-[#08152B] dark:ring-slate-800">
+                <p className="text-2xl font-bold text-[#01275C] dark:text-white">{n as number}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{label as string}</p>
               </div>
             ))}
           </div>
         )}
-        <h4 className="mb-2 text-sm font-semibold text-slate-900">Good to know</h4>
-        <ul className="space-y-2 text-sm text-slate-600">
+        <h4 className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Good to know</h4>
+        <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
           {[
             catalog.ocr?.enabled
               ? `Scanned statements are read with OCR${catalog.ocr.max_pages ? ` (up to ${catalog.ocr.max_pages} pages)` : ''}. Figures read from an image can be misread, so these results are always marked “needs review”; check them against the statement.`
@@ -100,7 +100,7 @@ export default function HelpCenter({ onGuideOpened, onLimitsOpened }: HelpCenter
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-slate-500">
+        <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
           Open <span className="font-medium">Supported banks</span> in the upload step for the full, searchable list.
         </p>
       </Accordion>

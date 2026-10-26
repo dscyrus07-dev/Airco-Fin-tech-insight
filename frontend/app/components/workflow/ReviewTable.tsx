@@ -131,7 +131,7 @@ export default function ReviewTable({
     <div className="w-full min-w-0">
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {summaryGroups(docs).map((g) => (
-          <span key={g.key} className="rounded-full bg-gray-100 px-3 py-1">
+          <span key={g.key} className="rounded-full border border-[#A1B2CE]/40 bg-[#01275C]/5 px-3.5 py-1 text-xs font-semibold text-[#01275C] dark:border-blue-400/30 dark:bg-blue-950/60 dark:text-blue-200">
             {g.name}: {g.count}
           </span>
         ))}
@@ -141,14 +141,14 @@ export default function ReviewTable({
         <button
           onClick={() => void onConfirmAll()}
           disabled={!detectedPending || !!busy}
-          className="rounded border border-black px-4 py-2 text-sm disabled:opacity-40"
+          className="rounded-xl border border-[#01275C] px-4 py-2 text-sm font-semibold text-[#01275C] transition hover:bg-[#01275C]/5 disabled:opacity-40 dark:border-blue-400 dark:text-blue-300"
         >
           Confirm all detected ({detectedPending})
         </button>
         <button
           onClick={() => void onProcess()}
           disabled={!confirmedCount || !!busy}
-          className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-40"
+          className="btn-primary rounded-xl px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
         >
           Process confirmed ({confirmedCount})
         </button>
@@ -167,7 +167,7 @@ export default function ReviewTable({
           const bankEntry = findCatalogEntry(effectiveCatalog, d.bank?.id)
           const bankState = bankEntry?.support_state
           return (
-            <li key={d.document_id} className="rounded border p-4">
+            <li key={d.document_id} className="rounded-xl border border-slate-200/90 bg-slate-50/40 p-4 dark:border-slate-700/80 dark:bg-[#08152B]/60">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="min-w-0">
                   <div className="truncate font-medium">{d.filename}</div>
@@ -289,7 +289,7 @@ export default function ReviewTable({
                     <button
                       onClick={() => void onConfirmOne(d, accountType || undefined)}
                       disabled={!!busy || !selectedBank || (d.bank?.supported === false && !manualPick)}
-                      className="min-w-0 rounded bg-black px-3 py-1 text-sm text-white disabled:opacity-40"
+                      className="btn-primary min-w-0 rounded-lg px-3.5 py-1.5 text-sm font-medium text-white disabled:opacity-40"
                     >
                       {manualPick ? 'Use selected bank' : 'Confirm'}
                     </button>

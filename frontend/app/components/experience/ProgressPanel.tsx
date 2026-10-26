@@ -60,7 +60,7 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
       <div className="flex items-center gap-4">
         <div className="relative h-20 w-20 shrink-0">
           <svg viewBox="0 0 80 80" className="h-20 w-20 -rotate-90" aria-hidden="true">
-            <circle cx="40" cy="40" r={R} fill="none" stroke="#e2e8f0" strokeWidth="7" />
+            <circle cx="40" cy="40" r={R} fill="none" className="stroke-slate-200 dark:stroke-slate-800" strokeWidth="7" />
             <circle
               cx="40" cy="40" r={R} fill="none" stroke="url(#lvl)" strokeWidth="7" strokeLinecap="round"
               strokeDasharray={C} strokeDashoffset={C * (1 - lv.pct / 100)}
@@ -68,22 +68,22 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
             />
             <defs>
               <linearGradient id="lvl" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="#4f46e5" />
-                <stop offset="1" stopColor="#db2777" />
+                <stop offset="0" stopColor="#01275C" />
+                <stop offset="1" stopColor="#2563EB" />
               </linearGradient>
             </defs>
           </svg>
           <span className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Level</span>
-            <span className="text-xl font-bold text-slate-900">{lv.level.index}</span>
+            <span className="text-xl font-bold text-[#01275C] dark:text-white">{lv.level.index}</span>
           </span>
         </div>
         <div className="min-w-0">
-          <p className="text-lg font-bold text-gradient text-slate-900">{lv.level.name}</p>
-          <p className="text-sm text-slate-600">
+          <p className="text-lg font-bold text-gradient text-[#01275C] dark:text-white">{lv.level.name}</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
             <AnimatedNumber value={xp} /> XP
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {lv.next ? `${lv.xpToNext} XP to ${lv.next.name}` : 'Top level reached'}
           </p>
         </div>
@@ -91,8 +91,8 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
 
       <div className="mt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-900">Quests</h3>
-          <span className="text-xs text-slate-500">{doneQuests}/{quests.length} done</span>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Quests</h3>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{doneQuests}/{quests.length} done</span>
         </div>
         <ul className="space-y-2">
           {quests.map((q) => (
@@ -102,17 +102,19 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
                 disabled={q.done}
                 onClick={() => onQuestClick?.(q.target)}
                 className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition ${
-                  q.done ? 'bg-emerald-50 ring-emerald-100' : 'bg-white ring-slate-200 hover:-translate-y-px hover:ring-indigo-300'
+                  q.done
+                    ? 'bg-emerald-50 ring-emerald-100 dark:bg-emerald-950/40 dark:ring-emerald-800/50'
+                    : 'bg-white ring-slate-200 hover:-translate-y-px hover:ring-[#01275C]/40 dark:bg-[#08152B] dark:ring-slate-700/80 dark:hover:ring-blue-400/50'
                 }`}
               >
-                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${q.done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}`}>
+                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${q.done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400'}`}>
                   <Icon name={q.done ? 'check' : 'target'} size={14} strokeWidth={2.4} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className={`block text-sm font-medium ${q.done ? 'text-emerald-800 line-through decoration-emerald-300' : 'text-slate-800'}`}>{q.title}</span>
-                  <span className="block text-xs text-slate-500">{q.hint}</span>
+                  <span className={`block text-sm font-medium ${q.done ? 'text-emerald-800 line-through decoration-emerald-300 dark:text-emerald-300 dark:decoration-emerald-700' : 'text-slate-800 dark:text-slate-100'}`}>{q.title}</span>
+                  <span className="block text-xs text-slate-500 dark:text-slate-400">{q.hint}</span>
                 </span>
-                <span className="text-xs font-semibold text-indigo-600">+{q.xp}</span>
+                <span className="text-xs font-semibold text-[#01275C] dark:text-blue-300">+{q.xp}</span>
               </button>
             </li>
           ))}
@@ -121,8 +123,8 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
 
       <div className="mt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-900">Badges</h3>
-          <span className="text-xs text-slate-500">{unlockedIds.length}/{badges.length}</span>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Badges</h3>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{unlockedIds.length}/{badges.length}</span>
         </div>
         <ul className="grid grid-cols-5 gap-2">
           {badges.map((b) => (
@@ -130,7 +132,9 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
               key={b.id}
               title={`${b.title}: ${b.description}${b.unlocked ? '' : ` (${b.current}/${b.target})`}`}
               className={`flex aspect-square items-center justify-center rounded-xl ring-1 ${
-                b.unlocked ? 'bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white ring-transparent shadow-md' : 'bg-slate-50 text-slate-300 ring-slate-200'
+                b.unlocked
+                  ? 'bg-gradient-to-br from-[#01275C] to-[#1D4ED8] text-white ring-transparent shadow-md'
+                  : 'bg-slate-50 text-slate-300 ring-slate-200 dark:bg-[#08152B] dark:text-slate-600 dark:ring-slate-800'
               }`}
             >
               <Icon name={b.unlocked ? b.icon : 'lock'} size={20} />
@@ -139,7 +143,7 @@ export default function ProgressPanel({ input, seenBadges, baselined, onSeen, on
           ))}
         </ul>
       </div>
-      <p className="mt-4 text-[11px] text-slate-400">Progress is just for fun and stored in this browser. It never affects your reports.</p>
+      <p className="mt-4 text-[11px] text-slate-400 dark:text-slate-500">Progress is just for fun and stored in this browser. It never affects your reports.</p>
     </aside>
   )
 }

@@ -17,8 +17,8 @@ interface AccordionProps {
 }
 
 const ACCENT = {
-  indigo: 'bg-indigo-50 text-indigo-600 ring-indigo-100',
-  amber: 'bg-amber-50 text-amber-600 ring-amber-100',
+  indigo: 'bg-[#01275C]/10 text-[#01275C] ring-[#A1B2CE]/40 dark:bg-blue-500/20 dark:text-blue-300 dark:ring-blue-400/30',
+  amber: 'bg-amber-50 text-amber-600 ring-amber-100 dark:bg-amber-500/20 dark:text-amber-300 dark:ring-amber-500/30',
 } as const
 
 /** Animated drop-down panel. Content stays mounted so height can transition; hidden content is not focusable. */
@@ -44,14 +44,14 @@ export default function Accordion({ title, subtitle, icon, children, defaultOpen
           onClick={toggle}
           aria-expanded={open}
           aria-controls={`${id}-body`}
-          className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50/80 sm:px-6"
+          className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40 sm:px-6"
         >
           <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ${ACCENT[accent]}`}>
             <Icon name={icon} size={20} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-sm font-semibold text-slate-900 sm:text-base">{title}</span>
-            {subtitle && <span className="mt-0.5 block text-xs text-slate-500 sm:text-sm">{subtitle}</span>}
+            <span className="block text-sm font-semibold text-slate-900 dark:text-slate-100 sm:text-base">{title}</span>
+            {subtitle && <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400 sm:text-sm">{subtitle}</span>}
           </span>
           <Icon
             name="chevron"
@@ -62,7 +62,7 @@ export default function Accordion({ title, subtitle, icon, children, defaultOpen
       </h3>
       <div id={`${id}-body`} role="region" aria-label={title} className="accordion-body" data-open={open} {...(open ? {} : { inert: true as unknown as undefined })}>
         <div>
-          <div className="border-t border-slate-100 px-5 py-5 sm:px-6">{children}</div>
+          <div className="border-t border-slate-100 px-5 py-5 dark:border-slate-800 sm:px-6">{children}</div>
         </div>
       </div>
     </section>

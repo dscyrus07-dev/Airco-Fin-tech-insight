@@ -35,8 +35,8 @@ function ApiKeysGuard() {
 
   if (isChecking) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-black border-t-transparent" />
+      <div className="bg-app flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#01275C] border-t-transparent dark:border-blue-400 dark:border-t-transparent" />
       </div>
     )
   }
@@ -44,11 +44,11 @@ function ApiKeysGuard() {
   if (!isAuthorized) return null
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-5xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+    <main className="bg-app min-h-screen">
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-10">
         <Link
           href="/dashboard"
-          className="mb-6 inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-black"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-[#01275C] dark:text-slate-300 dark:hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to dashboard

@@ -33,27 +33,27 @@ export default function StatementWorkflow({ profileName, onJobsSettled }: Statem
                   i < stepIdx
                     ? 'bg-emerald-500 text-white'
                     : i === stepIdx
-                      ? 'bg-indigo-600 text-white ring-4 ring-indigo-100'
-                      : 'bg-slate-100 text-slate-400'
+                      ? 'bg-[#01275C] text-white ring-4 ring-[#A1B2CE]/40 dark:bg-blue-600 dark:ring-blue-500/30'
+                      : 'bg-slate-200/80 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                 }`}
               >
                 {i < stepIdx ? '\u2713' : i + 1}
               </span>
-              <span className={`mt-1.5 text-[11px] font-medium ${i <= stepIdx ? 'text-slate-700' : 'text-slate-400'}`}>{label}</span>
+              <span className={`mt-1.5 text-xs font-semibold ${i <= stepIdx ? 'text-[#01275C] dark:text-slate-100' : 'text-slate-400 dark:text-slate-500'}`}>{label}</span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className="mx-2 mb-5 h-0.5 flex-1 rounded-full bg-slate-100">
-                <div className={`h-full rounded-full bg-emerald-400 transition-all duration-500 ${i < stepIdx ? 'w-full' : 'w-0'}`} />
+              <div className="mx-3 mb-5 h-0.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-800">
+                <div className={`h-full rounded-full bg-emerald-500 transition-all duration-500 ${i < stepIdx ? 'w-full' : 'w-0'}`} />
               </div>
             )}
           </li>
         ))}
       </ol>
 
-      <div className="card-surface animate-fade-up p-5 sm:p-7 lg:p-9">
+      <div className="card-surface animate-fade-up p-6 sm:p-8 lg:p-10">
         {wf.error && wf.step !== 'upload' && (
-          <div role="alert" className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-sm text-red-700">{wf.error}</p>
+          <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800/60 dark:bg-red-950/50">
+            <p className="text-sm text-red-700 dark:text-red-300">{wf.error}</p>
           </div>
         )}
 
