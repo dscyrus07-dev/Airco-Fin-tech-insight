@@ -29,6 +29,8 @@
       STATEMENT_ENGINE_V2_MODE: ${STATEMENT_ENGINE_V2_MODE:-off}
       STATEMENT_ENGINE_V2_SERVE_BANKS: ${STATEMENT_ENGINE_V2_SERVE_BANKS:-}
       STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S: ${STATEMENT_ENGINE_V2_SERVE_TIMEOUT_S:-30}
+      # persist signed download tokens across restarts; unset => per-process secret, links die on recreate
+      DOWNLOAD_TOKEN_SECRET: ${DOWNLOAD_TOKEN_SECRET:-}
       TEMP_DIR: /app/tmp
       PYTHONUNBUFFERED: "1"
     volumes:
