@@ -1,32 +1,32 @@
 # OCR on REAL scanned statements (no answer key)
 
-Documents evaluated: **170**. Every figure below is a count, a code or a check status — no statement content.
+Documents evaluated: **197**. Every figure below is a count, a code or a check status — no statement content.
 
 | tier | meaning | documents |
 |---|---|---|
-| A+ | chain + printed totals reconcile, and both readers agree on every row | 15 (8.8%) |
-| A | chain + printed totals reconcile | 1 (0.6%) |
-| B | chain reconciles, no printed totals to check | 9 (5.3%) |
+| A+ | chain + printed totals reconcile, and both readers agree on every row | 20 (10.2%) |
+| A | chain + printed totals reconcile | 2 (1.0%) |
+| B | chain reconciles, no printed totals to check | 11 (5.6%) |
 | C | read, but the chain does not fully reconcile | 0 (0.0%) |
-| R | refused by both readers | 145 (85.3%) |
+| R | refused by both readers | 164 (83.2%) |
 
 | reader | served | rows | top refusals | chain-break classes |
 |---|---|---|---|---|
-| blocks | 20/170 | 1706 | LOW_CONFIDENCE_COLUMNS 47, NO_DATES 41, CHECKS_FAILED 28, TOO_FEW_ROWS 15 | amount_other 469, side_flip 272, amount_digit_misread 26, balance_misread 13 |
-| lines | 23/170 | 2173 | NO_DATES 41, LOW_CONFIDENCE_COLUMNS 36, CHECKS_FAILED 35, NO_MONEY_COLUMNS 13 | amount_other 319, amount_digit_misread 70, amount_decimal_shift 26, amount_digit_dropped_or_extra 24 |
+| blocks | 26/197 | 2068 | LOW_CONFIDENCE_COLUMNS 52, NO_DATES 48, CHECKS_FAILED 30, TOO_FEW_ROWS 19 | amount_other 502, side_flip 272, amount_digit_misread 36, balance_misread 13 |
+| lines | 31/197 | 2869 | NO_DATES 46, LOW_CONFIDENCE_COLUMNS 40, CHECKS_FAILED 38, NO_MONEY_COLUMNS 16 | amount_other 332, amount_digit_misread 74, amount_digit_dropped_or_extra 26, amount_decimal_shift 26 |
 
-Read by both readers: 40; fully agreeing: 20; rows agreeing 4222, amount disagreements 28, side disagreements 176.
-OCR seconds/page p50 10.666666666666666, p95 16.16.
+Read by both readers: 48; fully agreeing: 25; rows agreeing 4740, amount disagreements 28, side disagreements 176.
+OCR seconds/page p50 10.542857142857143, p95 16.775.
 
 | bank | A+ | A | B | C | R |
 |---|---|---|---|---|---|
-| HSBC | 12 | 0 | 0 | 0 | 0 |
-| ICICI Bank | 1 | 0 | 1 | 0 | 10 |
-| Kotak Mahindra Bank | 0 | 0 | 0 | 0 | 12 |
-| Other_Unknown | 0 | 0 | 1 | 0 | 11 |
-| SBI | 0 | 0 | 0 | 0 | 11 |
-| Union Bank of India | 0 | 0 | 0 | 0 | 11 |
-| HDFC Bank | 1 | 0 | 4 | 0 | 5 |
+| HSBC | 17 | 0 | 0 | 0 | 0 |
+| ICICI Bank | 1 | 1 | 1 | 0 | 14 |
+| Kotak Mahindra Bank | 0 | 0 | 0 | 0 | 16 |
+| Other_Unknown | 0 | 0 | 1 | 0 | 15 |
+| SBI | 0 | 0 | 0 | 0 | 16 |
+| HDFC Bank | 1 | 0 | 6 | 0 | 6 |
+| Union Bank of India | 0 | 0 | 0 | 0 | 12 |
 | Axis Bank | 0 | 0 | 0 | 0 | 9 |
 | Bank of Baroda | 0 | 0 | 0 | 0 | 9 |
 | Yes Bank | 0 | 0 | 0 | 0 | 9 |

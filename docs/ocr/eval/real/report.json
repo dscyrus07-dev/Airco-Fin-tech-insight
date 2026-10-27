@@ -1,10 +1,10 @@
 {
- "documents": 170,
+ "documents": 197,
  "tiers": {
-  "R": 145,
-  "B": 9,
-  "A+": 15,
-  "A": 1
+  "R": 164,
+  "B": 11,
+  "A+": 20,
+  "A": 2
  },
  "per_bank": {
   "Axis Bank": {
@@ -39,17 +39,18 @@
    "R": 1
   },
   "HDFC Bank": {
-   "B": 4,
-   "R": 5,
+   "B": 6,
+   "R": 6,
    "A+": 1
   },
   "HSBC": {
-   "A+": 12
+   "A+": 17
   },
   "ICICI Bank": {
-   "R": 10,
+   "R": 14,
    "B": 1,
-   "A+": 1
+   "A+": 1,
+   "A": 1
   },
   "IDBI Bank": {
    "R": 6
@@ -76,10 +77,10 @@
    "R": 5
   },
   "Kotak Mahindra Bank": {
-   "R": 12
+   "R": 16
   },
   "Other_Unknown": {
-   "R": 11,
+   "R": 15,
    "B": 1
   },
   "Paytm Payments Bank": {
@@ -89,7 +90,7 @@
    "R": 1
   },
   "SBI": {
-   "R": 11
+   "R": 16
   },
   "South Indian Bank": {
    "R": 1
@@ -98,7 +99,7 @@
    "R": 1
   },
   "Union Bank of India": {
-   "R": 11
+   "R": 12
   },
   "Unknown": {
    "R": 1
@@ -109,69 +110,69 @@
  },
  "layers": {
   "blocks": {
-   "served": 20,
+   "served": 26,
    "refusal_codes": {
-    "LOW_CONFIDENCE_COLUMNS": 47,
-    "NO_DATES": 41,
-    "CHECKS_FAILED": 28,
-    "TOO_FEW_ROWS": 15,
-    "NO_DATED_ROWS": 7,
-    "NO_TABLE_HEADER": 7,
-    "NO_MONEY_COLUMNS": 3,
+    "LOW_CONFIDENCE_COLUMNS": 52,
+    "NO_DATES": 48,
+    "CHECKS_FAILED": 30,
+    "TOO_FEW_ROWS": 19,
+    "NO_DATED_ROWS": 8,
+    "NO_TABLE_HEADER": 8,
+    "NO_MONEY_COLUMNS": 4,
     "MULTI_STATEMENT": 2
    },
    "break_classes": {
-    "amount_other": 469,
+    "amount_other": 502,
     "side_flip": 272,
-    "amount_digit_misread": 26,
+    "amount_digit_misread": 36,
     "balance_misread": 13,
-    "amount_digit_dropped_or_extra": 5,
+    "amount_digit_dropped_or_extra": 9,
     "amount_missing": 1
    },
    "refused_header_roles": {
-    "(no header)": 74,
-    "balance credit date debit narration ref": 31,
-    "balance credit date debit narration": 10,
-    "balance credit date debit narration ref value_date": 9,
+    "(no header)": 87,
+    "balance credit date debit narration ref": 32,
+    "balance credit date debit narration": 11,
+    "balance credit date debit narration ref value_date": 10,
+    "balance credit date debit narration type": 7,
     "balance credit date debit narration ref serial value_date": 6,
-    "balance credit date debit narration type": 5,
-    "balance credit date debit narration ref serial": 3,
+    "balance credit date debit narration ref serial": 4,
     "amount balance date narration serial": 2,
     "amount balance date narration": 2,
+    "balance credit date debit narration serial": 2,
     "balance branch category credit date debit narration value_date": 1,
-    "amount balance credit date debit narration ref serial": 1,
-    "balance credit date debit narration value_date": 1
+    "amount balance credit date debit narration ref serial": 1
    },
-   "rows_served": 1706
+   "rows_served": 2068
   },
   "lines": {
-   "served": 23,
+   "served": 31,
    "refusal_codes": {
-    "NO_DATES": 41,
-    "LOW_CONFIDENCE_COLUMNS": 36,
-    "CHECKS_FAILED": 35,
-    "NO_MONEY_COLUMNS": 13,
-    "NO_DATED_ROWS": 11,
-    "TOO_FEW_ROWS": 5,
-    "NO_TABLE_HEADER": 3,
+    "NO_DATES": 46,
+    "LOW_CONFIDENCE_COLUMNS": 40,
+    "CHECKS_FAILED": 38,
+    "NO_MONEY_COLUMNS": 16,
+    "NO_DATED_ROWS": 13,
+    "TOO_FEW_ROWS": 6,
+    "NO_TABLE_HEADER": 4,
     "OCR_NO_USABLE_PAGES": 1,
     "NO_ROWS": 1,
     "MULTI_STATEMENT": 1
    },
    "break_classes": {
-    "amount_other": 319,
-    "amount_digit_misread": 70,
+    "amount_other": 332,
+    "amount_digit_misread": 74,
+    "amount_digit_dropped_or_extra": 26,
     "amount_decimal_shift": 26,
-    "amount_digit_dropped_or_extra": 24,
     "balance_misread": 6,
-    "side_flip": 1
+    "side_flip": 2
    },
    "refused_header_roles": {
-    "(no header)": 93,
-    "balance credit date debit narration ref": 24,
+    "(no header)": 108,
+    "balance credit date debit narration ref": 25,
     "balance credit date debit narration": 8,
+    "balance credit date debit narration type": 7,
     "balance credit date debit narration ref value_date": 6,
-    "balance credit date debit narration type": 5,
     "balance credit date debit narration ref serial value_date": 4,
     "balance credit date debit narration ref serial": 2,
     "amount balance date narration serial": 1,
@@ -180,31 +181,31 @@
     "amount balance credit date debit narration ref": 1,
     "amount balance date narration": 1
    },
-   "rows_served": 2173
+   "rows_served": 2869
   }
  },
  "cross_validation": {
-  "documents_read_by_both": 40,
-  "fully_agreeing_documents": 20,
-  "rows_a": 5248,
-  "rows_b": 5595,
-  "only_a": 822,
-  "matched": 4426,
-  "agree": 4222,
+  "documents_read_by_both": 48,
+  "fully_agreeing_documents": 25,
+  "rows_a": 5775,
+  "rows_b": 6404,
+  "only_a": 831,
+  "matched": 4944,
+  "agree": 4740,
   "side_disagree": 176,
   "amount_disagree": 28,
-  "only_b": 1169
+  "only_b": 1460
  },
  "second_reader_amounts": {
-  "confirmed": 938,
+  "confirmed": 964,
   "unconfirmed": 2,
   "low_confidence": 0
  },
  "ocr_seconds_per_page": {
-  "p50": 10.666666666666666,
-  "p95": 16.16
+  "p50": 10.542857142857143,
+  "p95": 16.775
  },
  "index": {
-  "cached": 170
+  "cached": 197
  }
 }
