@@ -1,23 +1,23 @@
 {
- "documents": 111,
+ "documents": 170,
  "tiers": {
-  "R": 97,
-  "B": 6,
-  "A+": 7,
+  "R": 145,
+  "B": 9,
+  "A+": 15,
   "A": 1
  },
  "per_bank": {
   "Axis Bank": {
-   "R": 6
+   "R": 9
   },
   "Bank of Baroda": {
-   "R": 6
+   "R": 9
   },
   "Bank of India": {
    "R": 4
   },
   "Canara Bank": {
-   "R": 6
+   "R": 8
   },
   "Central Bank of India": {
    "R": 2
@@ -39,23 +39,27 @@
    "R": 1
   },
   "HDFC Bank": {
-   "B": 3,
-   "R": 3
+   "B": 4,
+   "R": 5,
+   "A+": 1
   },
   "HSBC": {
-   "A+": 6
+   "A+": 12
   },
   "ICICI Bank": {
-   "R": 6
+   "R": 10,
+   "B": 1,
+   "A+": 1
   },
   "IDBI Bank": {
    "R": 6
   },
   "IDFC First Bank": {
-   "R": 4
+   "R": 5
   },
   "Indian Bank": {
-   "R": 5
+   "R": 5,
+   "B": 1
   },
   "Indian Overseas Bank": {
    "R": 3
@@ -65,17 +69,17 @@
   },
   "Karnataka Bank": {
    "A": 1,
-   "R": 4
+   "R": 5
   },
   "Karur Vysya Bank": {
    "A+": 1,
-   "R": 3
-  },
-  "Kotak Mahindra Bank": {
    "R": 5
   },
+  "Kotak Mahindra Bank": {
+   "R": 12
+  },
   "Other_Unknown": {
-   "R": 4,
+   "R": 11,
    "B": 1
   },
   "Paytm Payments Bank": {
@@ -85,7 +89,7 @@
    "R": 1
   },
   "SBI": {
-   "R": 5
+   "R": 11
   },
   "South Indian Bank": {
    "R": 1
@@ -94,110 +98,113 @@
    "R": 1
   },
   "Union Bank of India": {
-   "R": 5
+   "R": 11
   },
   "Unknown": {
    "R": 1
   },
   "Yes Bank": {
-   "R": 5
+   "R": 9
   }
  },
  "layers": {
   "blocks": {
-   "served": 11,
+   "served": 20,
    "refusal_codes": {
-    "LOW_CONFIDENCE_COLUMNS": 31,
-    "NO_DATES": 24,
-    "CHECKS_FAILED": 21,
-    "TOO_FEW_ROWS": 9,
-    "NO_DATED_ROWS": 5,
-    "NO_TABLE_HEADER": 5,
+    "LOW_CONFIDENCE_COLUMNS": 47,
+    "NO_DATES": 41,
+    "CHECKS_FAILED": 28,
+    "TOO_FEW_ROWS": 15,
+    "NO_DATED_ROWS": 7,
+    "NO_TABLE_HEADER": 7,
     "NO_MONEY_COLUMNS": 3,
     "MULTI_STATEMENT": 2
    },
    "break_classes": {
-    "amount_other": 445,
-    "side_flip": 232,
-    "amount_digit_misread": 22,
-    "balance_misread": 6,
-    "amount_digit_dropped_or_extra": 4,
+    "amount_other": 469,
+    "side_flip": 272,
+    "amount_digit_misread": 26,
+    "balance_misread": 13,
+    "amount_digit_dropped_or_extra": 5,
     "amount_missing": 1
    },
    "refused_header_roles": {
-    "(no header)": 45,
-    "balance credit date debit narration ref": 24,
-    "balance credit date debit narration": 7,
-    "balance credit date debit narration ref value_date": 6,
-    "balance credit date debit narration type": 4,
+    "(no header)": 74,
+    "balance credit date debit narration ref": 31,
+    "balance credit date debit narration": 10,
+    "balance credit date debit narration ref value_date": 9,
+    "balance credit date debit narration ref serial value_date": 6,
+    "balance credit date debit narration type": 5,
     "balance credit date debit narration ref serial": 3,
-    "balance credit date debit narration ref serial value_date": 3,
     "amount balance date narration serial": 2,
+    "amount balance date narration": 2,
     "balance branch category credit date debit narration value_date": 1,
     "amount balance credit date debit narration ref serial": 1,
-    "balance credit date debit narration value_date": 1,
-    "balance credit date debit narration ref type value_date": 1
+    "balance credit date debit narration value_date": 1
    },
-   "rows_served": 853
+   "rows_served": 1706
   },
   "lines": {
-   "served": 12,
+   "served": 23,
    "refusal_codes": {
-    "CHECKS_FAILED": 29,
-    "LOW_CONFIDENCE_COLUMNS": 25,
-    "NO_DATES": 25,
-    "NO_MONEY_COLUMNS": 8,
-    "NO_DATED_ROWS": 6,
-    "TOO_FEW_ROWS": 3,
+    "NO_DATES": 41,
+    "LOW_CONFIDENCE_COLUMNS": 36,
+    "CHECKS_FAILED": 35,
+    "NO_MONEY_COLUMNS": 13,
+    "NO_DATED_ROWS": 11,
+    "TOO_FEW_ROWS": 5,
+    "NO_TABLE_HEADER": 3,
     "OCR_NO_USABLE_PAGES": 1,
-    "NO_TABLE_HEADER": 1,
-    "NO_ROWS": 1
+    "NO_ROWS": 1,
+    "MULTI_STATEMENT": 1
    },
    "break_classes": {
-    "amount_other": 272,
-    "amount_digit_misread": 58,
-    "amount_decimal_shift": 22,
-    "amount_digit_dropped_or_extra": 17,
+    "amount_other": 319,
+    "amount_digit_misread": 70,
+    "amount_decimal_shift": 26,
+    "amount_digit_dropped_or_extra": 24,
     "balance_misread": 6,
     "side_flip": 1
    },
    "refused_header_roles": {
-    "(no header)": 58,
-    "balance credit date debit narration ref": 19,
-    "balance credit date debit narration": 7,
-    "balance credit date debit narration ref value_date": 4,
-    "balance credit date debit narration type": 4,
-    "balance credit date debit narration ref serial value_date": 2,
+    "(no header)": 93,
+    "balance credit date debit narration ref": 24,
+    "balance credit date debit narration": 8,
+    "balance credit date debit narration ref value_date": 6,
+    "balance credit date debit narration type": 5,
+    "balance credit date debit narration ref serial value_date": 4,
     "balance credit date debit narration ref serial": 2,
     "amount balance date narration serial": 1,
     "amount balance credit date debit narration serial": 1,
-    "balance credit date debit narration serial": 1
+    "balance credit date debit narration serial": 1,
+    "amount balance credit date debit narration ref": 1,
+    "amount balance date narration": 1
    },
-   "rows_served": 1044
+   "rows_served": 2173
   }
  },
  "cross_validation": {
-  "documents_read_by_both": 26,
-  "fully_agreeing_documents": 10,
-  "rows_a": 3922,
-  "rows_b": 4055,
-  "only_a": 707,
-  "matched": 3215,
-  "agree": 3041,
-  "side_disagree": 154,
-  "amount_disagree": 20,
-  "only_b": 840
+  "documents_read_by_both": 40,
+  "fully_agreeing_documents": 20,
+  "rows_a": 5248,
+  "rows_b": 5595,
+  "only_a": 822,
+  "matched": 4426,
+  "agree": 4222,
+  "side_disagree": 176,
+  "amount_disagree": 28,
+  "only_b": 1169
  },
  "second_reader_amounts": {
-  "confirmed": 918,
+  "confirmed": 938,
   "unconfirmed": 2,
   "low_confidence": 0
  },
  "ocr_seconds_per_page": {
-  "p50": 11.399999999999999,
-  "p95": 16.775
+  "p50": 10.666666666666666,
+  "p95": 16.16
  },
  "index": {
-  "cached": 111
+  "cached": 170
  }
 }
