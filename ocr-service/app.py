@@ -43,6 +43,7 @@ MAX_RESPAWNS = int(os.environ.get("OCR_MAX_RESPAWNS", "6"))              # flapp
 VL_MAX_NEW_TOKENS = int(os.environ.get("OCR_VL_MAX_NEW_TOKENS", "2048"))  # bounds one generation; 0 = paddlex default
 SKIP_VL = os.environ.get("OCR_SKIP_VL", "") == "1"                        # opt-in: lines-only mode, no VLM at all
 PROBE_TTL_S = float(os.environ.get("OCR_VL_PROBE_TTL_S", "5"))           # health probe cache for the VL server
+LINES_ORIENTATION = os.environ.get("OCR_LINES_ORIENTATION", "") == "1"   # opt-in: PP-OCRv5 orientation classify
 
 
 # ---------------------------------------------------------------- pure helpers (unit-tested) ----------
@@ -106,8 +107,8 @@ def _worker_main(job_conn, evt_conn) -> None:
         if VL_SERVER_URL:
             kwargs.update(vl_rec_backend="vllm-server", vl_rec_server_url=VL_SERVER_URL)
         vl = None if SKIP_VL else PaddleOCRVL(**kwargs)
-        ocr = PaddleOCR(use_doc_orientation_classify=False, use_doc_unwarping=False,
-                        use_textline_orientation=False)
+        ocr = PaddleOCR(use_doc_orientation_classify=LINES_ORIENTATION, use_doc_unwarping=False,
+                        use_textline_orientation=LINES_ORIENTATION)
     except Exception as exc:
         evt_conn.send({"event": "load_error", "error": type(exc).__name__})
         evt_conn.close()

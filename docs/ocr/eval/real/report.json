@@ -1,0 +1,196 @@
+{
+ "documents": 57,
+ "tiers": {
+  "R": 50,
+  "B": 3,
+  "A+": 3,
+  "A": 1
+ },
+ "per_bank": {
+  "Axis Bank": {
+   "R": 3
+  },
+  "Bank of Baroda": {
+   "R": 3
+  },
+  "Bank of India": {
+   "R": 3
+  },
+  "Canara Bank": {
+   "R": 3
+  },
+  "Central Bank of India": {
+   "R": 2
+  },
+  "Citibank": {
+   "R": 2
+  },
+  "DBS Bank": {
+   "R": 2,
+   "B": 1
+  },
+  "DCB Bank": {
+   "B": 1
+  },
+  "Equitas Small Finance Bank": {
+   "R": 1
+  },
+  "Federal Bank": {
+   "R": 1
+  },
+  "HDFC Bank": {
+   "B": 1,
+   "R": 1
+  },
+  "HSBC": {
+   "A+": 2
+  },
+  "ICICI Bank": {
+   "R": 2
+  },
+  "IDBI Bank": {
+   "R": 2
+  },
+  "IDFC First Bank": {
+   "R": 2
+  },
+  "Indian Bank": {
+   "R": 2
+  },
+  "Indian Overseas Bank": {
+   "R": 2
+  },
+  "IndusInd Bank": {
+   "R": 2
+  },
+  "Karnataka Bank": {
+   "A": 1,
+   "R": 1
+  },
+  "Karur Vysya Bank": {
+   "A+": 1,
+   "R": 1
+  },
+  "Kotak Mahindra Bank": {
+   "R": 2
+  },
+  "Other_Unknown": {
+   "R": 2
+  },
+  "Paytm Payments Bank": {
+   "R": 1
+  },
+  "Punjab National Bank": {
+   "R": 1
+  },
+  "SBI": {
+   "R": 2
+  },
+  "South Indian Bank": {
+   "R": 1
+  },
+  "Standard Chartered Bank": {
+   "R": 1
+  },
+  "Union Bank of India": {
+   "R": 2
+  },
+  "Unknown": {
+   "R": 1
+  },
+  "Yes Bank": {
+   "R": 2
+  }
+ },
+ "layers": {
+  "blocks": {
+   "served": 6,
+   "refusal_codes": {
+    "LOW_CONFIDENCE_COLUMNS": 14,
+    "NO_DATES": 12,
+    "CHECKS_FAILED": 9,
+    "NO_DATED_ROWS": 5,
+    "TOO_FEW_ROWS": 4,
+    "NO_TABLE_HEADER": 3,
+    "NO_MONEY_COLUMNS": 2,
+    "MULTI_STATEMENT": 2
+   },
+   "break_classes": {
+    "amount_other": 345,
+    "side_flip": 86,
+    "amount_digit_misread": 9,
+    "amount_digit_dropped_or_extra": 4,
+    "amount_missing": 1,
+    "balance_misread": 1
+   },
+   "refused_header_roles": {
+    "(no header)": 27,
+    "balance credit date debit narration ref": 11,
+    "balance credit date debit narration": 3,
+    "balance credit date debit narration ref serial": 2,
+    "balance branch category credit date debit narration value_date": 1,
+    "balance credit date debit narration type": 1,
+    "balance credit date debit narration ref serial value_date": 1,
+    "amount balance credit date debit narration ref serial": 1,
+    "balance credit date debit narration value_date": 1,
+    "balance credit date debit narration ref value_date": 1,
+    "balance credit date debit narration ref type value_date": 1,
+    "balance branch category credit date debit narration": 1
+   },
+   "rows_served": 642
+  },
+  "lines": {
+   "served": 5,
+   "refusal_codes": {
+    "LOW_CONFIDENCE_COLUMNS": 16,
+    "CHECKS_FAILED": 12,
+    "NO_DATES": 12,
+    "NO_DATED_ROWS": 6,
+    "NO_MONEY_COLUMNS": 4,
+    "OCR_NO_USABLE_PAGES": 1,
+    "TOO_FEW_ROWS": 1
+   },
+   "break_classes": {
+    "amount_other": 150,
+    "amount_digit_misread": 29,
+    "amount_decimal_shift": 20,
+    "amount_digit_dropped_or_extra": 4,
+    "balance_misread": 1
+   },
+   "refused_header_roles": {
+    "(no header)": 37,
+    "balance credit date debit narration ref": 8,
+    "balance credit date debit narration": 3,
+    "balance credit date debit narration ref value_date": 1,
+    "balance credit date debit narration type": 1,
+    "balance credit date debit narration ref serial value_date": 1,
+    "balance credit date debit narration ref serial": 1
+   },
+   "rows_served": 585
+  }
+ },
+ "cross_validation": {
+  "documents_read_by_both": 12,
+  "fully_agreeing_documents": 4,
+  "rows_a": 2510,
+  "rows_b": 2560,
+  "only_a": 591,
+  "matched": 1919,
+  "agree": 1825,
+  "side_disagree": 74,
+  "amount_disagree": 20,
+  "only_b": 641
+ },
+ "second_reader_amounts": {
+  "confirmed": 918,
+  "unconfirmed": 2,
+  "low_confidence": 0
+ },
+ "ocr_seconds_per_page": {
+  "p50": 12.65,
+  "p95": 17.18125
+ },
+ "index": {
+  "cached": 57
+ }
+}

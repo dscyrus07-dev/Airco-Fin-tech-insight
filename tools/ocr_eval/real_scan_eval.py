@@ -99,6 +99,8 @@ def cmd_ocr(a) -> None:
                 break
             raw = open(path, "rb").read()
             sha = hashlib.sha256(raw).hexdigest()
+            if a.sha and not any(sha.startswith(s) for s in a.sha):
+                continue                                   # subset re-OCR: only requested sha prefixes
             if sha in seen:                                  # duplicate content, or already cached
                 continue
             pages = _page_count(path)
@@ -376,6 +378,7 @@ def main() -> None:
     o.add_argument("--url", required=True)
     o.add_argument("--banks", nargs="*")
     o.add_argument("--per-bank", type=int, default=0, help="stratified sample: at most N new documents per bank")
+    o.add_argument("--sha", nargs="*", help="only OCR documents whose sha256 starts with one of these prefixes")
     o.add_argument("--budget-hours", type=float, default=0.0)
     e = sub.add_parser("eval")
     e.add_argument("--cache", required=True)
