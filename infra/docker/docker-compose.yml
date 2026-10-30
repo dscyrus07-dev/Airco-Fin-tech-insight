@@ -94,6 +94,7 @@
         NEXT_PUBLIC_KEYCLOAK_URL: ${NEXT_PUBLIC_KEYCLOAK_URL:-http://localhost:8080}
         NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
         NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+        NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
     container_name: airco_frontend
     restart: always
     networks:
@@ -107,6 +108,7 @@
       NEXT_PUBLIC_KEYCLOAK_URL: ${NEXT_PUBLIC_KEYCLOAK_URL:-http://localhost:8080}
       NEXT_PUBLIC_KEYCLOAK_REALM: ${NEXT_PUBLIC_KEYCLOAK_REALM:-airco-insights}
       NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:-frontend-app}
+      NEXT_PUBLIC_UNIFIED_ENTRY: ${NEXT_PUBLIC_UNIFIED_ENTRY:-1}
     depends_on:
       backend:
         condition: service_started

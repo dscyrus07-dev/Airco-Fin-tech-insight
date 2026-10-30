@@ -30,6 +30,7 @@ import json
 import os
 import sys
 import time
+import urllib.request
 from collections import Counter, defaultdict
 from decimal import Decimal
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -80,16 +81,35 @@ def _read_index(cache: str) -> List[Dict[str, Any]]:
 
 
 # ------------------------------------------------------------------ 1. OCR into the cache (GPU)
+def _wait_service(url: str, timeout_s: float = 900.0) -> bool:
+    """Block until the OCR service answers /health. Prevents burning the corpus when a fill is launched
+    while models are still loading or the stack is bouncing."""
+    t0 = time.monotonic()
+    while time.monotonic() - t0 < timeout_s:
+        try:
+            with urllib.request.urlopen(url.rstrip("/") + "/health", timeout=5) as r:
+                if r.status == 200:
+                    return True
+        except Exception:
+            pass
+        time.sleep(5)
+    return False
+
+
 def cmd_ocr(a) -> None:
     os.environ["STATEMENT_ENGINE_OCR_URL"] = a.url
     from app.services.statement_engine.ocr import client
     from app.services.statement_engine.ocr.contracts import document_to_dict
 
+    if not _wait_service(a.url):
+        print("ocr service not ready; aborting - no docs touched, re-run to resume")
+        return
+
     os.makedirs(a.cache, exist_ok=True)
     index = _read_index(a.cache)
     seen = {r["sha256"] for r in index}
     per_bank = Counter(r["bank"] for r in index)
-    t0, n = time.monotonic(), 0
+    t0, n, consec_err = time.monotonic(), 0, 0
     with open(os.path.join(a.cache, "index.jsonl"), "a") as idx:
         for bank, path in iter_scans(a.root, a.banks):
             if a.per_bank and per_bank[bank] >= a.per_bank:
@@ -122,7 +142,11 @@ def cmd_ocr(a) -> None:
             seen.add(sha)
             per_bank[bank] += 1
             n += 1
+            consec_err = consec_err + 1 if rec["status"] == "ocr_error" else 0
             print(f"{rec['sha8']} {bank:28s} pages={pages} {rec['status']:9s} {rec.get('ocr_s', '')}")
+            if consec_err >= 8:
+                print("8 consecutive ocr_error - service looks down; stopping (re-run to resume)")
+                break
     print(f"done: {n} documents this run")
 
 
