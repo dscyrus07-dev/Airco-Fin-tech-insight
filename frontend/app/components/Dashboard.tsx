@@ -1233,7 +1233,21 @@ export default function Dashboard() {
                               </div>
                             </summary>
                             <div className="space-y-3 border-t border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-[#08152B]/60">
-                              {(batch.bank_groups || []).map((bankGroup, bankIndex) => {
+                              {(() => {
+                                const visibleBankGroups = (batch.bank_groups || []).filter((g) => {
+                                  const items = filesTab === 'uploaded' ? g.uploads : g.reports
+                                  return !needsReviewOnly || (items || []).some(itemNeedsReview)
+                                })
+                                if (visibleBankGroups.length === 0) {
+                                  return (
+                                    <div className="flex items-center justify-center py-5 text-center">
+                                      <span className="text-xs text-slate-400">
+                                        {needsReviewOnly ? 'Nothing needs review in this batch' : 'No bank sections'}
+                                      </span>
+                                    </div>
+                                  )
+                                }
+                                return visibleBankGroups.map((bankGroup, bankIndex) => {
                                 const allBankItems = filesTab === 'uploaded' ? bankGroup.uploads : bankGroup.reports
                                 const bankItems = needsReviewOnly ? allBankItems.filter(itemNeedsReview) : allBankItems
                                 return (
@@ -1270,7 +1284,8 @@ export default function Dashboard() {
                                     </div>
                                   </details>
                                 )
-                              })}
+                              })
+                              })()}
                             </div>
                           </details>
                         )
