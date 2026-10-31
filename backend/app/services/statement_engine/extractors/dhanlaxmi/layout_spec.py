@@ -57,12 +57,15 @@ DHANLAXMI_LAYOUT_2 = LayoutSpec(
     },
     text_columns=("date", "value_date", "narration", "ref"),
     secondary_date_column="value_date",
+    band_left_pad={"narration": 85.0},   # narration data starts right after the txn date, far left of the centred "Description" title
     debit_column="debit",
     credit_column="credit",
     single_amount_column="txn_amount",
     balance_column="balance",
     balance_inline_re=re.compile(r"(?i)^balance\s*:?\s*(-?[\d,]+\.\d{2})$"),
     leading_amounts=True,
+    leading_narration=True,              # "UPI TXN: ..." type line prints above the dated line
+    date_left_pad=15.0,
     chain_reorder_same_date=True,
     date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
     date_format="%d/%m/%Y",
@@ -72,7 +75,7 @@ DHANLAXMI_LAYOUT_2 = LayoutSpec(
     summary_marker="",
     summary_label_text="",
     summary_expected=False,
-    header_lines=2,
+    header_lines=3,                      # 3 visual lines: "Txn Date Value Date" + "Description Cheque/RefNo Txn Amount" + "(DD/MM/YYYY) (DD/MM/YYYY)"
     header_repeats=True,
     page_footer_markers=("*CLOSINGBALANCE", "*THISISACOMPUTER"),
     end_markers=("^OPENINGBALANCEDEBITCOUNT",),
@@ -98,6 +101,7 @@ DHANLAXMI_LAYOUT_3 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "ref", "narration"),
+    band_left_pad={"narration": 98.0},   # narration data starts right after the cheque cell (~x154) while the "Description" title sits at ~251
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

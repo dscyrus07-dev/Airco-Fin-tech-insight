@@ -31,6 +31,8 @@ CBI_LAYOUT_1 = LayoutSpec(
     },
     text_columns=("date", "valuedate", "branch", "cheque", "narration"),
     secondary_date_column="valuedate",
+    band_left_pad={"narration": 76.0},   # narration data starts left of the centred "Account Description" title, inside the cheque band
+    digits_only_columns=("branch", "cheque"),   # rows without ref codes start narration inside the ref bands
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -69,6 +71,8 @@ CBI_LAYOUT_2 = LayoutSpec(
     },
     text_columns=("date", "valuedate", "branch", "cheque", "narration"),
     secondary_date_column="valuedate",
+    band_left_pad={"narration": 68.0},   # narration data starts left of the centred "Transaction Description" title, inside the cheque band
+    digits_only_columns=("branch", "cheque"),   # rows without ref codes start narration inside the ref bands
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -109,6 +113,7 @@ CBI_LAYOUT_3 = LayoutSpec(
     },
     text_columns=("date", "valuedate", "narration", "cheque"),
     secondary_date_column="valuedate",
+    band_left_pad={"narration": 95.0},   # "Details" title is centred; narration data starts right after the post date
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

@@ -55,6 +55,7 @@ ICICI_LAYOUT_2 = LayoutSpec(     # older ICICI layout (previously mis-filed unde
         "balance": (("balance",),),
     },
     text_columns=("date", "mode", "narration"),
+    band_left_pad={"narration": 12.0},   # narration data starts ~x144 vs the "Particulars" title at ~149
     debit_column="withdrawals",
     credit_column="deposits",
     balance_column="balance",
@@ -172,6 +173,7 @@ ICICI_LAYOUT_5 = LayoutSpec(
         "balance": (("balance", "inr"), ("balanceinr",), ("balance",)),
     },
     text_columns=("date", "ref", "narration"),
+    band_left_pad={"narration": 60.0},   # remarks data starts ~x192 while the "Transaction Remarks" title sits at ~247
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

@@ -24,6 +24,7 @@ YES_LAYOUT_1 = LayoutSpec(
         "balance": (("running", "balance"), ("runningbalance",), ("balance",)),
     },
     text_columns=("date", "value_date", "ref", "narration"),
+    band_left_pad={"narration": 50.0},   # description data starts ~x147 while the "Description" title sits at ~193
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

@@ -20,12 +20,14 @@ INDIAN_BANK_LAYOUT_1 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "narration"),
+    band_left_pad={"narration": 96.0},   # "Particulars" title is centred; narration data starts ~x108 vs title ~203
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
     date_re=re.compile(r"^\d{2}/\d{2}/\d{4}$"),
     date_format="%d/%m/%Y",
-    amount_re=re.compile(r"^-?[\d,]+\.\d{2}(?:[Cc][Rr]|[Dd][Rr])?$"),
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}\s*(?:[Cc][Rr]|[Dd][Rr])?$"),   # balance prints "5224.11 CR" fused
+    merge_drcr_suffix=True,
     empty_amount_marker="-",
     period_re=re.compile(r"StatementPeriod:From(\d{2}/\d{2}/\d{4})To(\d{2}/\d{2}/\d{4})"),
     period_date_format="%d/%m/%Y",
@@ -65,6 +67,7 @@ INDIAN_BANK_LAYOUT_2 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "remitter", "narration", "ref"),
+    band_left_pad={"narration": 35.0},   # description data starts ~x404 while the "Description" title sits at ~435
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

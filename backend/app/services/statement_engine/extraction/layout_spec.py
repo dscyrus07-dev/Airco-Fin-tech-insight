@@ -121,6 +121,14 @@ class LayoutSpec:
     leading_narration: bool = False        # narration-band lines print immediately ABOVE the dated line of their
                                            # own row (and below it): bind them to the dated row they precede
                                            # (the pending-prefix rule). Independent of implicit_header.
+    full_width_narration: bool = False     # narration lines span the full page width starting left of the date
+                                           # column (no column zone): a wholly unclassified letter line is read
+                                           # as narration. Opt-in: only layouts whose narrations live outside
+                                           # every declared column may set it.
+    digits_only_columns: Tuple[str, ...] = ()   # text columns whose values are always numeric refs (branch codes,
+                                           # cheque numbers): an alphabetic token landing in such a column's band
+                                           # is narration that began left of its own title (blank ref cells shift
+                                           # the narration start left).
     balance_optional: bool = False         # the balance column exists but prints only on some rows
                                            # (carried-forward-style sparse prints): a missing balance cell is
                                            # allowed; the chain verifies long-range deltas between the

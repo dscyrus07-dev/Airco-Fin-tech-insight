@@ -105,6 +105,13 @@ PNB_LAYOUT_3 = LayoutSpec(
     balance_column="balance",
     header_lines=3,
     band_left_pad={"narration": 512.0},   # see L2: narration band must start left of the money cells
+    full_width_narration=True,            # narration lines span the full width, starting left of the date column
+    leading_narration=True,               # the "UPI/..." line sits above its dated line; the name tail sits below
+    ignore_line_res=(
+        re.compile(r"(?i)unlessconstituent"),          # page-bottom disclaimer boilerplate
+        re.compile(r"(?i)^accountstatementforaccount"),# running page header
+        re.compile(r"(?i)^page\d+of\d+"),
+    ),
     merge_drcr_suffix=True,
     date_re=PNB_LAYOUT_2.date_re,
     date_format=PNB_LAYOUT_2.date_format,

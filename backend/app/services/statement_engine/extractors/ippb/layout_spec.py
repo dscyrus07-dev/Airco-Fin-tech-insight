@@ -22,6 +22,7 @@ IPPB_LAYOUT_1 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "ref", "narration"),
+    band_left_pad={"narration": 45.0},   # particulars data starts ~x149 while the "TRANSACTION PARTICULAR" title sits at ~191
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

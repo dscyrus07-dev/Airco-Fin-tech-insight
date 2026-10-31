@@ -360,6 +360,10 @@ def assemble(pages: Sequence[Page], anchors: ColumnAnchors, spec: LayoutSpec) ->
                 col = classify_word(w, anchors, spec)
                 if col:
                     cols.setdefault(col, []).append(w.text.strip())
+            if not cols and spec.full_width_narration:
+                texts = [w.text.strip() for w in line if w.text.strip()]
+                if any(re.search(r"[A-Za-z]", t) for t in texts):
+                    cols["narration"] = texts
             if not cols:
                 continue
             if spec.leading_amounts and "date" not in cols:

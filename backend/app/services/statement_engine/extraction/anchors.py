@@ -326,10 +326,15 @@ def derive_anchors(page_words: Sequence[Word], spec: LayoutSpec, page_width: Opt
     )
 
 
+_TIME_TOKEN = re.compile(r"^\d{1,2}:\d{2}(?::\d{2})?(?:\s?(?i:am|pm))?$")
+
+
 def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optional[str]:
     """Column role of a data word, or None when the word is page furniture / unclassifiable. A wrapped date cell's
     continuation is reported as "date_tail" / "<secondary>_tail"."""
     text = word.text.strip()
+    if _TIME_TOKEN.match(text):
+        return None   # a bare clock-time cell (date+time printed in one column) is never a column value
     if word.x0 < anchors.date_left:
         return None
     if word.x0 < anchors.date_right:
@@ -350,6 +355,8 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
             band = col
     last_band = band == spec.text_columns[-1]
     secondary = spec.secondary_date_column
+    if secondary and band != secondary and spec.date_re.match(text):
+        return secondary   # a floating secondary-date cell: prints wherever the narration text ends on the dated line
     if secondary and band == secondary:
         if spec.date_re.match(text):
             return secondary
@@ -358,6 +365,8 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
         if not last_band:
             return None
     elif not last_band:
+        if band in getattr(spec, "digits_only_columns", ()) and re.search(r"[A-Za-z]", text):
+            return "narration"   # lettered text inside a digits-only ref column = narration starting early
         # a money-shaped word inside a middle text band still belongs to its money column when its right edge
         # aligns (single-amount exports print the amount under a header flanked by text columns)
         if (spec.amount_re.match(text) or (spec.empty_amount_marker and text == spec.empty_amount_marker)
@@ -365,6 +374,11 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
             edges = anchors.amount_edges
             nearest = min(edges, key=lambda c: abs(word.x1 - edges[c]))
             if not spec.left_aligned_amounts and abs(word.x1 - edges[nearest]) <= _amount_tolerance(edges, nearest):
+                return nearest
+            # a fused "amount CR/DR" token or a cell wider than its title overshoots the right edge: the left edge of a
+            # right-aligned amount still lands near its column edge, so retry against x0
+            nearest = min(edges, key=lambda c: abs(word.x0 - edges[c]))
+            if not spec.left_aligned_amounts and abs(word.x0 - edges[nearest]) <= _amount_tolerance(edges, nearest):
                 return nearest
             if spec.left_aligned_amounts:
                 lefts = anchors.amount_lefts or {c: edges[c] for c in edges}
@@ -384,6 +398,9 @@ def classify_word(word: Word, anchors: ColumnAnchors, spec: LayoutSpec) -> Optio
                     return col
             return None
         if abs(word.x1 - edges[nearest]) <= _amount_tolerance(edges, nearest):
+            return nearest
+        nearest = min(edges, key=lambda c: abs(word.x0 - edges[c]))
+        if abs(word.x0 - edges[nearest]) <= _amount_tolerance(edges, nearest):
             return nearest
     return None if band == secondary else band
 

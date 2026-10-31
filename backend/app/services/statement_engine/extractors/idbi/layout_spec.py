@@ -59,6 +59,7 @@ IDBI_LAYOUT_2 = LayoutSpec(
         "balance": (("balance",), ("balanceinr",), ("balance", "inr")),
     },
     text_columns=("date", "value_date", "narration", "ref"),
+    band_left_pad={"narration": 35.0},   # narration data starts ~30pt left of the "Description" title
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -106,7 +107,7 @@ IDBI_LAYOUT_3 = LayoutSpec(
     side_marker_column="drcr",
     balance_column="balance",
     secondary_date_column="value_date",
-    band_left_pad={"drcr": 60.0},
+    band_left_pad={"drcr": 60.0, "narration": 82.0},   # narration starts ~x210 while the "Description" title sits at ~285, inside the value-date band
     continuation_amounts=True,
     header_lines=3,               # "Cheque"/"CC" title halves print one line above the main line, "No"/"Y" one below
     header_wraps=True,

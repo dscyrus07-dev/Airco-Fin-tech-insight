@@ -46,6 +46,8 @@ def parse_amount(text: str, suffix_sign: bool = False, clipped_sign: bool = Fals
     negative = t.startswith("(") and t.endswith(")")     # accounting style: (1234.50) is -1234.50
     if negative:
         t = t[1:-1]
+    if len(t) > 1 and t.endswith("-") and t[:-1].replace(".", "", 1).lstrip("-").isdigit():
+        t = "-" + t[:-1].lstrip("-")                    # trailing-minus style: 1234.50- is -1234.50
     try:
         return -Decimal(t) if negative else Decimal(t)
     except InvalidOperation as exc:

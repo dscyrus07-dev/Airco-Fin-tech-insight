@@ -65,6 +65,7 @@ CANARA_LAYOUT_2 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "value_date", "ref", "narration", "branch"),
+    band_left_pad={"narration": 54.0},   # description data starts ~x256 while the "Description" title sits at ~306
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -142,6 +143,7 @@ CANARA_LAYOUT_4 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "value_date", "ref", "narration", "branch"),
+    band_left_pad={"narration": 62.0},   # "Description" title is centred; narration data starts ~x193 vs title ~252
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",

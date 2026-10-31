@@ -27,6 +27,7 @@ AXIS_LAYOUT_1 = LayoutSpec(
         "init": (("init",),),
     },
     text_columns=("date", "narration"),
+    band_left_pad={"narration": 75.0},   # narration data starts ~x132 while the "Particulars" title sits at ~203
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -75,7 +76,7 @@ AXIS_LAYOUT_2 = LayoutSpec(
     side_marker_column="drcr",
     balance_column="balance",
     secondary_date_column="value_date",
-    band_left_pad={"drcr": 70.0},
+    band_left_pad={"drcr": 70.0, "narration": 55.0},   # narration data starts ~x121 while the "Transaction Particulars" title sits at ~172
     continuation_amounts=True,
     date_re=re.compile(r"^\d{2}-\d{2}-\d{4}$"),
     date_format="%d-%m-%Y",

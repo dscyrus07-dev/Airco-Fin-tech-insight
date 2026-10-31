@@ -42,6 +42,7 @@ SBI_LAYOUT_1 = LayoutSpec(
     opening_balance_re=re.compile(r"Balanceason\d{1,2}[A-Za-z]{3}\d{4}:(?:\(cid:\d+\))?(-?[\d,]+\.\d{2})"),
     account_label="accountnumber",
     zero_amount_is_empty=True,
+    band_left_pad={"narration": 55.0},   # "Description" title is centred; narration data starts ~45pt left of it
 )
 SBI_LAYOUT_1.validate()
 
@@ -66,13 +67,14 @@ SBI_LAYOUT_2 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "narration"),
+    band_left_pad={"narration": 72.0},   # "Details" title is centred; narration data starts ~x127 vs title ~193
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
     date_re=re.compile(r"^\d{1,2}[ -][A-Za-z]{3}(?:[ -]\d{2,4})?$"),
     date_tail_re=re.compile(r"^\d{4}$"),
     date_format="%d %b %Y|%d-%b-%Y|%d-%b-%y",
-    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}-?$"),   # overdrawn balances print a trailing minus ("109962.66-")
     # "Search for <later> to <earlier>" prints a reversed range in this variant: deliberately never match
     # (the period check then SKIPs instead of trusting a backwards window); "Balance as on" likewise prints the
     # post-first-row balance, so opening_balance_re is left unset and the reference check SKIPs.
@@ -105,13 +107,14 @@ SBI_LAYOUT_3 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "narration", "ref"),
+    band_left_pad={"narration": 72.0},   # "Details" title is centred; narration data starts ~x127 vs title ~193
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
     date_re=re.compile(r"^\d{1,2}[ -][A-Za-z]{3}(?:[ -]\d{2,4})?$"),
     date_tail_re=re.compile(r"^\d{4}$"),
     date_format="%d %b %Y|%d-%b-%Y|%d-%b-%y",
-    amount_re=re.compile(r"^-?[\d,]+\.\d{2}$"),
+    amount_re=re.compile(r"^-?[\d,]+\.\d{2}-?$"),   # overdrawn balances print a trailing minus ("109962.66-")
     # "Search for <later> to <earlier>" prints a reversed range in this variant: deliberately never match
     # (the period check then SKIPs instead of trusting a backwards window); "Balance as on" likewise prints the
     # post-first-row balance, so opening_balance_re is left unset and the reference check SKIPs.
@@ -144,6 +147,7 @@ SBI_LAYOUT_4 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "value_date", "narration"),
+    band_left_pad={"narration": 75.0},   # narration data starts ~x169 while the "Description" title sits at ~240
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -187,6 +191,7 @@ SBI_LAYOUT_9 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "value_date", "narration", "cheque"),
+    band_left_pad={"narration": 52.0},   # "Description" title is centred; narration data starts ~45pt left of it
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -228,6 +233,7 @@ SBI_LAYOUT_5 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "value_date", "narration", "cheque"),
+    band_left_pad={"narration": 45.0},   # narration data starts ~x143 while the "Description" title sits at ~182
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -366,6 +372,7 @@ SBI_LAYOUT_8 = LayoutSpec(
     secondary_date_column="value_date",
     header_repeats=True,
     account_label="accountnumber",
+    band_left_pad={"narration": 55.0},   # narration data starts ~x156 while the centred "Description" title sits at ~205
 )
 SBI_LAYOUT_8.validate()
 

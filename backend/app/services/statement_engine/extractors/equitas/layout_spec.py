@@ -23,6 +23,7 @@ EQUITAS_LAYOUT_1 = LayoutSpec(
         "balance": (("closingbalance",),),
     },
     text_columns=("date", "ref", "narration"),
+    band_left_pad={"narration": 20.0},   # narration data starts ~x210, left of the "Narration" title's left edge
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
@@ -102,6 +103,7 @@ EQUITAS_LAYOUT_3 = LayoutSpec(
         "balance": (("balance",),),
     },
     text_columns=("date", "valuedate", "ref", "narration"),
+    band_left_pad={"narration": 46.0},   # narration data starts ~x247 vs centred "Narration" title ~288
     secondary_date_column="valuedate",
     debit_column="debit",
     credit_column="credit",

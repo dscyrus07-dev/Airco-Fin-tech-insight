@@ -21,7 +21,8 @@ IDFC_LAYOUT_1 = LayoutSpec(
         "credit": (("credit",),),
         "balance": (("balance",),),
     },
-    text_columns=("date", "narration", "ref", "value_date"),
+    text_columns=("date", "value_date", "narration", "ref"),
+    band_left_pad={"narration": 72.0},   # particulars data starts ~x141 while the "Particulars" title sits at ~211
     debit_column="debit",
     credit_column="credit",
     balance_column="balance",
