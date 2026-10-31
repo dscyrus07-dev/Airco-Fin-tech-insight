@@ -159,7 +159,7 @@
       ]
     },
     "pattern_detection_wiring": {
-      "implemented": false,
+      "implemented": true,
       "regex_keys": [
         "ach_mandate_patterns",
         "charge_patterns",
@@ -225,7 +225,8 @@
         "card_patterns",
         "credit_card_patterns",
         "salary_patterns"
-      ]
+      ],
+      "engine": "GenericClassifier._classify_single (generic_bank.py)"
     },
     "unimplemented_sections": [
       "entity_registry",
@@ -235,7 +236,8 @@
       "collision_resolution",
       "behavior_context",
       "feedback_learning"
-    ]
+    ],
+    "v5_1_engine_wiring": "generic_bank.py: _build_pattern_sets compiles 6 regex families; _classify_single evaluates reversal>charge>interest>ach>dd>cheque before entity lookup, payment_rail after; PAYMENT_AGGREGATORS in rails tier; upi.id/txn id strip patterns bounded"
   },
   "category_normalization": {
     "description": "Maps all internal words.json category codes to canonical display names",
