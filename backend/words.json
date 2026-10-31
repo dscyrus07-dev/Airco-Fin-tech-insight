@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "version": "5.0",
-    "description": "Banking-grade transaction intelligence configuration with entity normalization, fuzzy matching, and confidence scoring. v5.0 adds CURATED_* Indian merchant/utility/tax/insurance/charge groups and extended UPI handles.",
-    "last_updated": "2026-10-17",
+    "version": "5.1",
+    "description": "Banking-grade transaction intelligence configuration with entity normalization, fuzzy matching, and confidence scoring. v5.0 adds CURATED_* Indian merchant/utility/tax/insurance/charge groups and extended UPI handles. v5.1 adds direction-correct CASH_OPERATIONS, PAYMENT_AGGREGATORS, CURATED_GAMING and CHEQUE_OPERATIONS groups, fused Bajaj Finance aliases, six regex pattern_detection families (not yet wired), and marks configuration sections no engine reads with implemented=false.",
+    "last_updated": "2026-10-31",
     "total_keywords": 4262,
     "total_categories": 145,
     "total_entities": 512,
@@ -57,7 +57,13 @@
       "Others Credit",
       "Inward Bounce",
       "Outward Bounce",
-      "Bounce"
+      "Bounce",
+      "Cash Deposit",
+      "Cheque Issued",
+      "Cheque Deposit",
+      "Demand Draft",
+      "Gaming",
+      "Gaming Winnings"
     ],
     "features": [
       "direction_awareness",
@@ -83,6 +89,152 @@
       "behavior_context",
       "confidence_scoring",
       "collision_resolution"
+    ],
+    "v5_1_changes": {
+      "new_entity_groups": [
+        "CASH_OPERATIONS",
+        "PAYMENT_AGGREGATORS",
+        "CURATED_GAMING",
+        "CHEQUE_OPERATIONS"
+      ],
+      "aliases_added_to_existing_groups": {
+        "NBFC_LENDERS": [
+          "bajajfin",
+          "bajajfinser",
+          "bfl",
+          "bfsl",
+          "by cashe"
+        ],
+        "CURATED_MEDICAL": [
+          "hosp",
+          "diagnostics"
+        ]
+      },
+      "superseded_flat_aliases": {
+        "_note": "Same alias re-declared in a v5.1 group at higher priority; the original entry is kept but no longer wins. Old category shown.",
+        "CURATED_FIXED": {
+          "cash deposit": "Business Income",
+          "cash-deposit": "Business Income",
+          "cash dep": "Business Income",
+          "cash-dep": "Business Income",
+          "csh deposit": "Business Income",
+          "csh dep": "Business Income",
+          "cdm deposit": "Business Income",
+          "cdm dep": "Business Income",
+          "cdm/": "Business Income",
+          "by cash": "Business Income",
+          "cash withdrawal": "ATM Withdrawal",
+          "csh withdrawal": "ATM Withdrawal",
+          "self withdrawal": "ATM Withdrawal",
+          "self cash": "ATM Withdrawal",
+          "self csh": "ATM Withdrawal",
+          "cheque deposit": "Transfer",
+          "cheque dep": "Transfer",
+          "cheque paid": "Transfer"
+        },
+        "CURATED_ENTERTAINMENT": {
+          "dream11": "Entertainment",
+          "my11circle": "Entertainment"
+        }
+      },
+      "new_category_codes": [
+        "BANK_CHARGES",
+        "CASH_DEPOSIT",
+        "CHEQUE_DEPOSIT",
+        "CHEQUE_ISSUED",
+        "DEMAND_DRAFT",
+        "FEE_REVERSAL",
+        "GAMING",
+        "GAMING_WINNINGS",
+        "INTEREST_CHARGES",
+        "MANDATE_DEBIT"
+      ],
+      "new_display_categories": [
+        "Cash Deposit",
+        "Cheque Issued",
+        "Cheque Deposit",
+        "Demand Draft",
+        "Gaming",
+        "Gaming Winnings"
+      ]
+    },
+    "pattern_detection_wiring": {
+      "implemented": false,
+      "regex_keys": [
+        "ach_mandate_patterns",
+        "charge_patterns",
+        "reversal_patterns",
+        "payment_rail_patterns",
+        "cheque_patterns",
+        "interest_patterns"
+      ],
+      "syntax": "Python re, lowercase, matched with re.search (NOT the substring 'p in text' used for the legacy keys). Boundaries use (?<![a-z0-9]) / (?![a-z0-9]) so '_' and punctuation count as separators.",
+      "match_against": "both the normalised description and the raw lowercase description - text_normalization.strip_patterns 'upi.*id.*' erases whole UPI narrations that contain 'id' anywhere after 'upi'.",
+      "evaluation_order": [
+        "reversal_patterns",
+        "charge_patterns",
+        "interest_patterns",
+        "ach_mandate_patterns",
+        "cheque_patterns",
+        "payment_rail_patterns"
+      ],
+      "direction_map": {
+        "reversal_patterns": {
+          "credit": "REFUND",
+          "debit": "REFUND"
+        },
+        "charge_patterns": {
+          "credit": "FEE_REVERSAL",
+          "debit": "BANK_CHARGES"
+        },
+        "interest_patterns": {
+          "credit": "INTEREST_CREDIT",
+          "debit": "INTEREST_CHARGES"
+        },
+        "ach_mandate_patterns": {
+          "credit": "TRANSFER",
+          "debit": "MANDATE_DEBIT"
+        },
+        "cheque_patterns": {
+          "credit": "CHEQUE_DEPOSIT",
+          "debit": "CHEQUE_ISSUED",
+          "_dd_override": "demand-draft matches: debit DEMAND_DRAFT, credit REFUND"
+        },
+        "payment_rail_patterns": {
+          "credit": "TRANSFER",
+          "debit": "TRANSFER"
+        }
+      },
+      "legacy_keys_read_by_GenericRuleEngine": [
+        "upi_handle",
+        "loan_patterns",
+        "refund_patterns",
+        "bill_payment_patterns",
+        "insurance_patterns",
+        "transfer_patterns",
+        "settlement_patterns",
+        "fuel_travel_patterns"
+      ],
+      "legacy_keys_read_only_by_finbit_analytics": [
+        "outward_bounce_patterns",
+        "inward_bounce_patterns",
+        "bounce_penalty_patterns",
+        "business_vendor_patterns"
+      ],
+      "legacy_keys_read_by_nothing": [
+        "card_patterns",
+        "credit_card_patterns",
+        "salary_patterns"
+      ]
+    },
+    "unimplemented_sections": [
+      "entity_registry",
+      "fuzzy_matching",
+      "direction_rules",
+      "confidence_scoring",
+      "collision_resolution",
+      "behavior_context",
+      "feedback_learning"
     ]
   },
   "category_normalization": {
@@ -137,7 +289,22 @@
       "Uncategorized": "Others Debit",
       "Food & Dining": "Food",
       "Dining": "Food",
-      "Restaurant": "Food"
+      "Restaurant": "Food",
+      "CASH_DEPOSIT": "Cash Deposit",
+      "BANK_CHARGES": "Bank Charges",
+      "CHEQUE_ISSUED": "Cheque Issued",
+      "CHEQUE_DEPOSIT": "Cheque Deposit",
+      "DEMAND_DRAFT": "Demand Draft",
+      "GAMING": "Gaming",
+      "GAMING_WINNINGS": "Gaming Winnings",
+      "FEE_REVERSAL": "Refund",
+      "MANDATE_DEBIT": "Loan Payment",
+      "INTEREST_CHARGES": "Bank Charges",
+      "Fee Reversal": "Refund",
+      "Mandate Debit": "Loan Payment",
+      "Interest Charges": "Bank Charges",
+      "Cheque Payment": "Cheque Issued",
+      "DD Issuance": "Demand Draft"
     }
   },
   "text_normalization": {
@@ -168,9 +335,9 @@
       "stlmnt": "settlement"
     },
     "strip_patterns": [
-      "txn id.*",
+      "txn[\\s._-]*id[:/\\s]?\\S*",
       "ref no.*",
-      "upi.*id.*",
+      "upi[\\s._-]*id[:/\\s]?\\S*",
       "reference.*\\d+",
       "rrn.*\\d+",
       "utr.*\\d+",
@@ -186,6 +353,7 @@
     ]
   },
   "entity_registry": {
+    "implemented": false,
     "bajaj_finance": {
       "aliases": [
         "bajaj finance",
@@ -878,6 +1046,7 @@
     }
   },
   "fuzzy_matching": {
+    "implemented": false,
     "enabled": true,
     "min_similarity_score": 0.85,
     "ignore_word_order": true,
@@ -1228,9 +1397,74 @@
       "compensation",
       "honorarium",
       "remuneration"
+    ],
+    "ach_mandate_patterns": [
+      "(?<![a-z0-9])ach(?:d|dr|db|debit|c|cr|credit)?(?![a-z0-9])",
+      "(?<![a-z0-9])nach(?:d|dr|db|debit)?(?![a-z0-9])",
+      "(?<![a-z0-9])ecs(?:d|dr|db|debit)?(?![a-z0-9])",
+      "(?<![a-z0-9])ecs[\\s/_-]*mandate(?![a-z0-9])",
+      "(?<![a-z0-9])e-?mandate(?![a-z0-9])",
+      "(?<![a-z0-9])auto[\\s_-]?debit(?![a-z0-9])",
+      "(?<![a-z0-9])auto[\\s_-]?pay(?![a-z0-9])",
+      "(?<![a-z0-9])standing[\\s_-]+instruction",
+      "(?<![a-z0-9])si[\\s/_-]+(?:debit|dr)(?![a-z0-9])",
+      "(?<![a-z0-9])apyn?(?![a-z0-9]).{0,40}?instal"
+    ],
+    "charge_patterns": [
+      "(?<![a-z0-9])chgs?(?![a-z0-9])",
+      "(?<![a-z0-9])charges?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:insta|sms)[\\s_-]?alert(?:[\\s_-]?(?:chgs?|charges?))?",
+      "(?<![a-z0-9])sms[\\s_-]?(?:otp|chgs?|charges?)",
+      "(?<![a-z0-9])mandate[\\s_-]*reg(?:istration|n)?(?![a-z0-9])",
+      "(?<![a-z0-9])cheque[\\s_-]*(?:bk|book)(?![a-z0-9])",
+      "(?<![a-z0-9])chq[\\s_-]*(?:bk|book)(?![a-z0-9])",
+      "(?<![a-z0-9])maint(?:enance)?[\\s_-]*(?:chgs?|charges?|fee)(?![a-z0-9])",
+      "(?<![a-z0-9])min(?:imum)?[\\s_-]*bal(?:ance)?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:annual|processing|joining|renewal|service|convenience|late|card|atm|amc|folio|handling|ledger|maintenance|account|cheque|chq|issuance)[\\s_-]*fees?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:dd|demand[\\s_-]+draft)[\\s_-]*comm(?:ission)?(?![a-z0-9])"
+    ],
+    "reversal_patterns": [
+      "(?<![a-z0-9])revers(?:al|ed|e)(?![a-z0-9])",
+      "(?<![a-z0-9])(?:rvsl|rvrsl|revrsl)(?![a-z0-9])",
+      "(?:debit|dr|credit|cr)[\\s_-]?rev(?:ersal)?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:upi|imps|neft|rtgs|atm|pos|ecom|nach|ach)[\\s/_-]*(?:rev|reversal|ret|return)(?![a-z0-9])"
+    ],
+    "payment_rail_patterns": [
+      "(?<![a-z0-9])fn/shp(?![a-z0-9])",
+      "(?<![a-z0-9])ifn/epay(?![a-z0-9])",
+      "(?<![a-z0-9])ban/payment(?![a-z0-9])",
+      "(?<![a-z0-9])fba/payment(?![a-z0-9])",
+      "(?<![a-z0-9])pbn/one97(?![a-z0-9])",
+      "(?<![a-z0-9])ybs[\\s/_-]*ift(?![a-z0-9])",
+      "(?<![a-z0-9])mb[\\s/_-]*ft[bdort](?![a-z0-9])",
+      "(?<![a-z0-9])(?:rdp|rde|nda)[\\s/_-]",
+      "(?<![a-z0-9])(?:nft|rtg|ecm)/",
+      "(?<![a-z0-9])to[\\s/_-]*ecm(?![a-z0-9])"
+    ],
+    "cheque_patterns": [
+      "(?<![a-z0-9])thru[\\s_-]+(?:chq|cheque)(?![a-z0-9])",
+      "(?<![a-z0-9])(?:chq|cheque)[\\s_-]*dep(?:osit)?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:chq|cheque)[\\s_-]*paid(?![a-z0-9])",
+      "(?<![a-z0-9])by[\\s_-]+(?:chq|cheque)(?![a-z0-9])",
+      "(?<![a-z0-9])(?:clg|clearing)[\\s_-]*(?:chq|cheque)(?![a-z0-9])",
+      "(?<![a-z0-9])dd[\\s_-]*iss(?:ue|ued|uance)?(?![a-z0-9])",
+      "(?<![a-z0-9])demand[\\s_-]+draft(?![a-z0-9])",
+      "(?<![a-z0-9])(?:chq|cheque)\\s*:",
+      "(?<![a-z0-9])(?:chq|cheque)[\\s_-]*dt(?![a-z0-9])",
+      "(?<![a-z0-9])reject\\s*:\\s*\\d+"
+    ],
+    "interest_patterns": [
+      "(?<![a-z0-9])int[\\s._-]*coll(?:ected|ection)?(?![a-z0-9])",
+      "(?<![a-z0-9])int[\\s._-]*(?:paid|pd)(?![a-z0-9])",
+      "(?<![a-z0-9])(?:cr|credit)[\\s._-]*int(?![a-z0-9])",
+      "(?<![a-z0-9])int[\\s._-]*(?:db|dr|debit|cr|credit)(?![a-z0-9])",
+      "(?<![a-z0-9])(?:sb|sav|savings?)[\\s._-]*int(?:erest)?(?![a-z0-9])",
+      "(?<![a-z0-9])(?:od|cc)[\\s._-]*int(?:erest)?(?![a-z0-9])",
+      "(?<![a-z0-9])interest(?![a-z0-9])(?![\\s_-]*free)"
     ]
   },
   "confidence_scoring": {
+    "implemented": false,
     "enabled": true,
     "weights": {
       "entity_match": 0.5,
@@ -1255,6 +1489,7 @@
     }
   },
   "collision_resolution": {
+    "implemented": false,
     "resolution_order": [
       "entity_interpretation",
       "direction_rule",
@@ -1304,6 +1539,7 @@
     }
   },
   "behavior_context": {
+    "implemented": false,
     "enabled": false,
     "track_recurring_transactions": true,
     "detect_subscription_pattern": true,
@@ -1316,6 +1552,7 @@
     "description": "Behavioral pattern detection for ML integration - configuration only, no implementation"
   },
   "feedback_learning": {
+    "implemented": false,
     "enabled": false,
     "allow_manual_reclassification": true,
     "store_user_overrides": true,
@@ -1328,6 +1565,7 @@
     "description": "User feedback and learning system - configuration only, no implementation"
   },
   "direction_rules": {
+    "implemented": false,
     "credit_means": "money received",
     "debit_means": "money spent",
     "direction_overrides_keywords": true,
@@ -2024,6 +2262,76 @@
           "priority": 90,
           "confidence": "high"
         }
+      },
+      "bajajfin": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "bajajfinser": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "bfl": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "medium"
+        }
+      },
+      "bfsl": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 85,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 85,
+          "confidence": "medium"
+        }
+      },
+      "by cashe": {
+        "credit": {
+          "category": "LOAN_DISBURSED",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "EMI_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
       }
     },
     "GENERIC_LENDER_TOKENS": {
@@ -2396,6 +2704,76 @@
         }
       },
       "creditcard payment": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "crd dues": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "card dues": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "cc dues": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "crd dues recovery": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CREDIT_CARD_PAYMENT",
+          "group": "FINANCIAL_INSTRUMENT",
+          "priority": 95,
+          "confidence": "high"
+        }
+      },
+      "card dues recovery": {
         "credit": {
           "category": "REFUND",
           "group": "REFUND_TYPE",
@@ -6169,6 +6547,20 @@
           "priority": 87,
           "confidence": "high"
         }
+      },
+      "terminal id": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 90,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 90,
+          "confidence": "high"
+        }
       }
     },
     "classification": {
@@ -9522,6 +9914,34 @@
           "priority": 60,
           "confidence": "medium"
         }
+      },
+      "hosp": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
+      },
+      "diagnostics": {
+        "credit": {
+          "category": "Refund",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "Medical",
+          "group": "CURATED",
+          "priority": 60,
+          "confidence": "medium"
+        }
       }
     },
     "CURATED_EDUCATION": {
@@ -11904,6 +12324,886 @@
         "group": "CURATED",
         "priority": 60,
         "confidence": "medium"
+      }
+    },
+    "CASH_OPERATIONS": {
+      "_description": "v5.1 Cash deposits/withdrawals, direction-correct. Priority 75 deliberately supersedes the flat (same category both directions) CURATED_FIXED cash aliases re-declared here. Deposit phrases: credit=Cash Deposit, debit=Bank Charges. Withdrawal phrases: debit=ATM Withdrawal (platform convention for all cash withdrawals), credit=Refund. Self-cash phrases: credit=Cash Deposit, debit=ATM Withdrawal. Never add bare 'cash' or 'self' (cashback, cashfree, cashe, self transfer).",
+      "cash:self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cash self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cd self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cd-self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "deposit,cash": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "deposit cash": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cashdeposit": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "to cash:": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cash deposit": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cash-deposit": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cash dep": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cash-dep": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "csh deposit": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "csh dep": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cdm deposit": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cdm dep": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cdm/": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "by cash": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cash withdrawal": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "csh withdrawal": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "self withdrawal": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "self cash": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "self csh": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      ":self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "self": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cash": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      }
+    },
+    "PAYMENT_AGGREGATORS": {
+      "_description": "v5.1 Payment aggregators / BC rails seen fused into narrations (FN/SHP/N/ <MERCHANT>_BHARTIPAY SERV, BAN/PAYMENT/ IFT/PBN/ONE97). credit=merchant settlement (Business Income), debit=Transfer; one97 (Paytm) mirrors PAYMENT_PLATFORMS.paytm. 'by cashfree' is a guard so the CASH_OPERATIONS 'by cash' alias cannot capture Cashfree payouts; it mirrors PAYMENT_GATEWAYS.cashfree. NOTE: GenericRuleEngine tiers groups by hard-coded name, so this group is tier 0 (merchant tier) until '_rails' includes it.",
+      "bhartipay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "TRANSFER",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "bharatpay": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "TRANSFER",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "one97": {
+        "credit": {
+          "category": "UPI_TRANSFER",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "UPI_TRANSFER",
+          "group": "CHANNEL",
+          "priority": 80,
+          "confidence": "high"
+        }
+      },
+      "by cashfree": {
+        "credit": {
+          "category": "MERCHANT_PAYOUT",
+          "group": "INCOME_TYPE",
+          "priority": 95,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "PG_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 85,
+          "confidence": "high"
+        }
+      }
+    },
+    "CURATED_GAMING": {
+      "_description": "v5.1 Real-money gaming, fantasy and betting operators (underwriting risk signal). credit=Gaming Winnings, debit=Gaming. Priority 70 supersedes CURATED_ENTERTAINMENT for dream11/my11circle. Deliberately excluded: bare 'fantasy', 'howzat', 'stake' (shop/business-name collisions) and bare 'mpl' (stays Entertainment; 3-letter acronym too ambiguous to label as gaming).",
+      "rummycircle": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "rummycu": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "rummy": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "dream11": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "dream 11": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "sporta technologies": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "my11circle": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "games24x7": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "junglee games": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "mobile premier league": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "galactus funware": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "winzo": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "zupee": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "pokerbaazi": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "baazi games": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "adda52": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "ballebaazi": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "1xbet": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "parimatch": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "betway": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "dafabet": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "bet365": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "fun88": {
+        "credit": {
+          "category": "GAMING_WINNINGS",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "GAMING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      }
+    },
+    "CHEQUE_OPERATIONS": {
+      "_description": "v5.1 Cheque / demand-draft instruments, direction-correct: credit=Cheque Deposit, debit=Cheque Issued (labels consumed by finbit_analytics chqDeposit/chqIssues). Demand drafts: debit=Demand Draft, credit=Refund (cancelled DD). 'cheque bk' is the cheque-book charge. Priority 75 supersedes the flat CURATED_FIXED Transfer entries re-declared here. Bare 'cheque:'/'chq:' deliberately NOT an alias (Canara prints CHQ: fragments on non-cheque rows - see pattern_detection.cheque_patterns note).",
+      "thru cheque": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "through cheque": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "by cheque": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "medium"
+        }
+      },
+      "cheque deposit": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cheque dep": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cheque paid": {
+        "credit": {
+          "category": "CHEQUE_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        },
+        "debit": {
+          "category": "CHEQUE_ISSUED",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "cheque bk": {
+        "credit": {
+          "category": "FEE_REVERSAL",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "demand draft": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "DEMAND_DRAFT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
+      },
+      "dd issue": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 75,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "DEMAND_DRAFT",
+          "group": "CHANNEL",
+          "priority": 75,
+          "confidence": "high"
+        }
       }
     }
   }

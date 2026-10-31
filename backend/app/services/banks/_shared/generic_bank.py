@@ -333,7 +333,7 @@ class GenericClassifier:
                     }
         # Specific merchants first; then banks / payment rails (they only say HOW money moved);
         # generic business-suffix tokens ("limited", "enterprises") last. Longest alias first inside a tier.
-        _rails = {"BANKS", "PAYMENT_PLATFORMS", "UPI_HANDLES", "PAYMENT_GATEWAYS"}
+        _rails = {"BANKS", "PAYMENT_PLATFORMS", "UPI_HANDLES", "PAYMENT_GATEWAYS", "PAYMENT_AGGREGATORS"}
         _generic = {"BUSINESS_ENTITIES", "GENERIC_LENDER_TOKENS", "BUSINESS_VENDORS"}
 
         def _tier(alias: str) -> int:
@@ -362,6 +362,21 @@ class GenericClassifier:
         self._transfer_patterns: List[str] = ll("transfer_patterns")
         self._settlement_patterns: List[str] = ll("settlement_patterns")
         self._fuel_patterns: List[str] = ll("fuel_travel_patterns")
+        # v5.1 regex families (see metadata.pattern_detection_wiring): compiled once,
+        # evaluated against BOTH the normalised text and the raw lowercase narration,
+        # because strip_patterns ("upi.*id.*") can erase the whole UPI fragment.
+        def rx(key: str) -> List["re.Pattern"]:
+            return [re.compile(p) for p in pd_cfg.get(key, [])]
+
+        self._rx_reversal = rx("reversal_patterns")
+        self._rx_charge = rx("charge_patterns")
+        self._rx_interest = rx("interest_patterns")
+        self._rx_ach = rx("ach_mandate_patterns")
+        self._rx_cheque = rx("cheque_patterns")
+        self._rx_payment_rail = rx("payment_rail_patterns")
+        # demand-draft members of cheque_patterns get their own categories
+        self._rx_cheque_dd = [p for p in self._rx_cheque if "dd[" in p.pattern or "demand" in p.pattern]
+        self._rx_cheque_std = [p for p in self._rx_cheque if p not in self._rx_cheque_dd]
         self._interest_tokens: List[str] = [
             "interest credit", "interest debit", "int credit", "int debit",
             "int cr", "int dr", "interest earned", "interest charged",
@@ -484,6 +499,28 @@ class GenericClassifier:
         if any(token in description for token in self._charge_tokens):
             return ("Bank Charges", 0.88, "rule_engine", "charges_token", "charges")
 
+        # ── v5.1 regex families (metadata.pattern_detection_wiring) ──────────
+        # Direction-aware semantic families; matched on normalised AND raw text.
+        def _fam(patterns) -> Optional[str]:
+            for p in patterns:
+                m = p.search(description) or p.search(raw_lower)
+                if m:
+                    return p.pattern
+            return None
+
+        if _fam(self._rx_reversal):
+            return ("Refund", 0.88, "pattern_set", "reversal_pattern", None)
+        if _fam(self._rx_charge):
+            return ("Refund" if not is_debit else "Bank Charges", 0.86, "pattern_set", "charge_pattern", None)
+        if _fam(self._rx_interest):
+            return ("Interest Income" if not is_debit else "Bank Charges", 0.85, "pattern_set", "interest_pattern", None)
+        if _fam(self._rx_ach):
+            return ("Transfer" if not is_debit else "Loan Payment", 0.84, "pattern_set", "ach_mandate_pattern", None)
+        if _fam(self._rx_cheque_dd):
+            return ("Refund" if not is_debit else "Demand Draft", 0.84, "pattern_set", "dd_pattern", None)
+        if _fam(self._rx_cheque_std):
+            return ("Cheque Deposit" if not is_debit else "Cheque Issued", 0.84, "pattern_set", "cheque_pattern", None)
+
         # ── Entity lookup from words.json ─────────────────────────────────────
         # Walk longest-first aliases so "bajaj finance" beats "bajaj"
         hit = self._entity_hit(description, is_debit, generic_tokens=False)
@@ -503,6 +540,10 @@ class GenericClassifier:
             return ("Transfer", 0.80, "pattern_set", "transfer_pattern", None)
         if any(p in description for p in self._settlement_patterns):
             return ("Transfer", 0.80, "pattern_set", "settlement_pattern", None)
+        # Rail prefixes (FN/SHP, IFN/EPAY, BAN/PAYMENT …) only say HOW money moved - after
+        # merchants/entities so "IFN/EPAY/…/BAJAJFIN" still resolves to Loan Payment.
+        if _fam(self._rx_payment_rail):
+            return ("Transfer", 0.82, "pattern_set", "payment_rail_pattern", None)
         if transfer_rule is not None:
             for keyword in transfer_rule["exact"]:
                 if self._kw_in(keyword, description):
