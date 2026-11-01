@@ -319,7 +319,8 @@
       "INVESTMENT_RETURNS": "Investment Returns",
       "OUTWARD_BOUNCE": "Outward Bounce",
       "SHOPPING": "Shopping",
-      "TRANSFER_IN": "Transfer"
+      "TRANSFER_IN": "Transfer",
+      "BILL_PAYMENT": "Bill Payment"
     }
   },
   "text_normalization": {
@@ -1423,7 +1424,8 @@
       "(?<![a-z0-9])auto[\\s_-]?pay(?![a-z0-9])",
       "(?<![a-z0-9])standing[\\s_-]+instruction",
       "(?<![a-z0-9])si[\\s/_-]+(?:debit|dr)(?![a-z0-9])",
-      "(?<![a-z0-9])apyn?(?![a-z0-9]).{0,40}?instal"
+      "(?<![a-z0-9])apyn?(?![a-z0-9]).{0,40}?instal",
+      "(?<![a-z])ach[\\s._-]*d[re]\\b"
     ],
     "charge_patterns": [
       "(?<![a-z0-9])chgs?(?![a-z0-9])",
@@ -1436,13 +1438,17 @@
       "(?<![a-z0-9])maint(?:enance)?[\\s_-]*(?:chgs?|charges?|fee)(?![a-z0-9])",
       "(?<![a-z0-9])min(?:imum)?[\\s_-]*bal(?:ance)?(?![a-z0-9])",
       "(?<![a-z0-9])(?:annual|processing|joining|renewal|service|convenience|late|card|atm|amc|folio|handling|ledger|maintenance|account|cheque|chq|issuance)[\\s_-]*fees?(?![a-z0-9])",
-      "(?<![a-z0-9])(?:dd|demand[\\s_-]+draft)[\\s_-]*comm(?:ission)?(?![a-z0-9])"
+      "(?<![a-z0-9])(?:dd|demand[\\s_-]+draft)[\\s_-]*comm(?:ission)?(?![a-z0-9])",
+      "instaalert",
+      "sms[\\s._-]*alert",
+      "surcharge"
     ],
     "reversal_patterns": [
       "(?<![a-z0-9])revers(?:al|ed|e)(?![a-z0-9])",
       "(?<![a-z0-9])(?:rvsl|rvrsl|revrsl)(?![a-z0-9])",
       "(?:debit|dr|credit|cr)[\\s_-]?rev(?:ersal)?(?![a-z0-9])",
-      "(?<![a-z0-9])(?:upi|imps|neft|rtgs|atm|pos|ecom|nach|ach)[\\s/_-]*(?:rev|reversal|ret|return)(?![a-z0-9])"
+      "(?<![a-z0-9])(?:upi|imps|neft|rtgs|atm|pos|ecom|nach|ach)[\\s/_-]*(?:rev|reversal|ret|return)(?![a-z0-9])",
+      "(?<![a-z])rev[\\s._-]*of"
     ],
     "payment_rail_patterns": [
       "(?<![a-z0-9])fn/shp(?![a-z0-9])",
@@ -1458,7 +1464,14 @@
       "(?<![a-z0-9])ft-",
       "(?<![a-z0-9])tp-",
       "(?<![a-z0-9])netpito",
-      "(?<![a-z0-9])inf/"
+      "(?<![a-z0-9])inf/",
+      "/(?:ybl|ici|axl|ptm|ok(?:sbi|icici|hdfcb|axis|icic)|ubin|cnrb|fdrl|kkbk|utib|sbib)[0-9a-f]{6,}",
+      "(?<![a-z0-9])naysl-",
+      "(?<![a-z0-9])ysl-",
+      "(?<![a-z0-9])scref",
+      "(?<![a-z0-9])lpbng",
+      "/(?:[a-z]{2,8})[0-9a-f]{8,}",
+      "(?<![a-z0-9])(?:slk|tejas|epsb|yesi|ybs|ybp|yesap|irm|scref)\\d{5,}"
     ],
     "cheque_patterns": [
       "(?<![a-z0-9])thru[\\s_-]+(?:chq|cheque)(?![a-z0-9])",
@@ -1484,7 +1497,8 @@
     "pos_purchase_patterns": [
       "(?<![a-z0-9])pos[\\s/_-]*(?:\\d|xx)",
       "(?<![a-z0-9])ecom[\\s/_-]*\\d",
-      "(?<![a-z0-9])pos[\\s/_-]*debit"
+      "(?<![a-z0-9])pos[\\s/_-]*debit",
+      "(?<![a-z0-9])(?:vps|ips|epos)/"
     ]
   },
   "confidence_scoring": {
@@ -3080,7 +3094,7 @@
           "confidence": "high"
         }
       },
-      "private limit": {
+      "private lim": {
         "credit": {
           "category": "BUSINESS_INCOME",
           "group": "INCOME_TYPE",
@@ -4831,6 +4845,20 @@
           "group": "REFUND_TYPE",
           "priority": 78,
           "confidence": "medium"
+        }
+      },
+      "pca:": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 76,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 76,
+          "confidence": "low"
         }
       }
     },
@@ -10859,6 +10887,20 @@
           "priority": 80,
           "confidence": "medium"
         }
+      },
+      "payout from": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
       }
     },
     "CURATED_TAX": {
@@ -12546,6 +12588,34 @@
           "priority": 70,
           "confidence": "medium"
         }
+      },
+      "nagst": {
+        "credit": {
+          "category": "REFUND",
+          "group": "FEES_AND_TAXES",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "bil/onl": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "BILL_PAYMENT",
+          "group": "BILLS",
+          "priority": 70,
+          "confidence": "medium"
+        }
       }
     },
     "CASH_OPERATIONS": {
@@ -12939,6 +13009,48 @@
           "category": "CASH_WITHDRAWAL",
           "group": "CHANNEL",
           "priority": 72,
+          "confidence": "medium"
+        }
+      },
+      "atd:": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        }
+      },
+      "wdl/": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        }
+      },
+      "withdrawal": {
+        "credit": {
+          "category": "REFUND",
+          "group": "CHANNEL",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 70,
           "confidence": "medium"
         }
       }
