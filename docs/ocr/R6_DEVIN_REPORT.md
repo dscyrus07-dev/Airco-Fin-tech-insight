@@ -83,3 +83,4 @@ Opt-in override committed: `infra/docker/docker-compose.ocr-vllm.yml` (default s
 ## Verdict
 
 Service fixes (7aa1c45) verified working. The tier is **blocked from any accuracy measurement by F11** (engine crash on real VLM output) and the service needs **F9** (subprocess isolation) before it can survive real traffic. vLLM mode is a real, fast, stable improvement and is committed as an opt-in override with the exact launch flags this GPU needed.
+![alt text](image.png)

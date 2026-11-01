@@ -166,7 +166,8 @@
         "reversal_patterns",
         "payment_rail_patterns",
         "cheque_patterns",
-        "interest_patterns"
+        "interest_patterns",
+        "pos_purchase_patterns"
       ],
       "syntax": "Python re, lowercase, matched with re.search (NOT the substring 'p in text' used for the legacy keys). Boundaries use (?<![a-z0-9]) / (?![a-z0-9]) so '_' and punctuation count as separators.",
       "match_against": "both the normalised description and the raw lowercase description - text_normalization.strip_patterns 'upi.*id.*' erases whole UPI narrations that contain 'id' anywhere after 'upi'.",
@@ -176,7 +177,8 @@
         "interest_patterns",
         "ach_mandate_patterns",
         "cheque_patterns",
-        "payment_rail_patterns"
+        "payment_rail_patterns",
+        "pos_purchase_patterns"
       ],
       "direction_map": {
         "reversal_patterns": {
@@ -203,6 +205,10 @@
         "payment_rail_patterns": {
           "credit": "TRANSFER",
           "debit": "TRANSFER"
+        },
+        "pos_purchase_patterns": {
+          "credit": "REFUND",
+          "debit": "SHOPPING"
         }
       },
       "legacy_keys_read_by_GenericRuleEngine": [
@@ -306,7 +312,14 @@
       "Mandate Debit": "Loan Payment",
       "Interest Charges": "Bank Charges",
       "Cheque Payment": "Cheque Issued",
-      "DD Issuance": "Demand Draft"
+      "DD Issuance": "Demand Draft",
+      "CREDIT_CARD_PAYMENT": "Credit Card Payment",
+      "FUEL_EXPENSE": "Fuel",
+      "INVESTMENT": "Investment",
+      "INVESTMENT_RETURNS": "Investment Returns",
+      "OUTWARD_BOUNCE": "Outward Bounce",
+      "SHOPPING": "Shopping",
+      "TRANSFER_IN": "Transfer"
     }
   },
   "text_normalization": {
@@ -1441,7 +1454,11 @@
       "(?<![a-z0-9])mb[\\s/_-]*ft[bdort](?![a-z0-9])",
       "(?<![a-z0-9])(?:rdp|rde|nda)[\\s/_-]",
       "(?<![a-z0-9])(?:nft|rtg|ecm)/",
-      "(?<![a-z0-9])to[\\s/_-]*ecm(?![a-z0-9])"
+      "(?<![a-z0-9])to[\\s/_-]*ecm(?![a-z0-9])",
+      "(?<![a-z0-9])ft-",
+      "(?<![a-z0-9])tp-",
+      "(?<![a-z0-9])netpito",
+      "(?<![a-z0-9])inf/"
     ],
     "cheque_patterns": [
       "(?<![a-z0-9])thru[\\s_-]+(?:chq|cheque)(?![a-z0-9])",
@@ -1463,6 +1480,11 @@
       "(?<![a-z0-9])(?:sb|sav|savings?)[\\s._-]*int(?:erest)?(?![a-z0-9])",
       "(?<![a-z0-9])(?:od|cc)[\\s._-]*int(?:erest)?(?![a-z0-9])",
       "(?<![a-z0-9])interest(?![a-z0-9])(?![\\s_-]*free)"
+    ],
+    "pos_purchase_patterns": [
+      "(?<![a-z0-9])pos[\\s/_-]*(?:\\d|xx)",
+      "(?<![a-z0-9])ecom[\\s/_-]*\\d",
+      "(?<![a-z0-9])pos[\\s/_-]*debit"
     ]
   },
   "confidence_scoring": {
@@ -3056,6 +3078,20 @@
           "group": "LIFESTYLE",
           "priority": 85,
           "confidence": "high"
+        }
+      },
+      "private limit": {
+        "credit": {
+          "category": "BUSINESS_INCOME",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BUSINESS_EXPENSE",
+          "group": "LIFESTYLE",
+          "priority": 80,
+          "confidence": "medium"
         }
       }
     },
@@ -4724,6 +4760,78 @@
         "group": "CHANNEL",
         "priority": 80,
         "confidence": "high"
+      },
+      "paid using your bank account": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high",
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 78,
+          "confidence": "medium"
+        },
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 78,
+          "confidence": "medium"
+        }
+      },
+      "paid successfully at": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high",
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 78,
+          "confidence": "medium"
+        },
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 78,
+          "confidence": "medium"
+        }
+      },
+      "paid online using debit card": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high",
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 78,
+          "confidence": "medium"
+        },
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 78,
+          "confidence": "medium"
+        }
+      },
+      "add money to wallet": {
+        "category": "UPI_TRANSFER",
+        "group": "CHANNEL",
+        "priority": 80,
+        "confidence": "high",
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 78,
+          "confidence": "medium"
+        },
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 78,
+          "confidence": "medium"
+        }
       }
     },
     "UPI_HANDLES": {
@@ -10681,6 +10789,76 @@
           "priority": 60,
           "confidence": "medium"
         }
+      },
+      "fixed deposit redeemed": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "fd redeemed": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "iwish": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "inf/iwish": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "income distribution": {
+        "credit": {
+          "category": "INVESTMENT_RETURNS",
+          "group": "INCOME_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "INVESTMENT",
+          "group": "PRODUCT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
       }
     },
     "CURATED_TAX": {
@@ -12326,6 +12504,48 @@
         "group": "CURATED",
         "priority": 60,
         "confidence": "medium"
+      },
+      "visa ref": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 70,
+          "confidence": "low"
+        },
+        "debit": {
+          "category": "SHOPPING",
+          "group": "LIFESTYLE",
+          "priority": 70,
+          "confidence": "low"
+        }
+      },
+      "depository": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "depository charges": {
+        "credit": {
+          "category": "REFUND",
+          "group": "REFUND_TYPE",
+          "priority": 70,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "BANK_CHARGES",
+          "group": "FEES_AND_TAXES",
+          "priority": 70,
+          "confidence": "medium"
+        }
       }
     },
     "CASH_OPERATIONS": {
@@ -12691,6 +12911,34 @@
           "category": "CASH_WITHDRAWAL",
           "group": "CHANNEL",
           "priority": 70,
+          "confidence": "medium"
+        }
+      },
+      "cashdep": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        }
+      },
+      "eaw-": {
+        "credit": {
+          "category": "CASH_DEPOSIT",
+          "group": "CHANNEL",
+          "priority": 72,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "CASH_WITHDRAWAL",
+          "group": "CHANNEL",
+          "priority": 72,
           "confidence": "medium"
         }
       }
@@ -13205,6 +13453,107 @@
           "group": "CHANNEL",
           "priority": 75,
           "confidence": "high"
+        }
+      }
+    },
+    "BOUNCE_EVENTS": {
+      "_description": "Return/bounce event codes: debit -> Outward Bounce",
+      "ecsrtn": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "ecs rtn": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "nach rtn": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "ach rtn": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "cheque return": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "chq rtn": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        }
+      },
+      "dd cancelled": {
+        "credit": {
+          "category": "REFUND",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
+        },
+        "debit": {
+          "category": "OUTWARD_BOUNCE",
+          "group": "EVENT_TYPE",
+          "priority": 80,
+          "confidence": "medium"
         }
       }
     }

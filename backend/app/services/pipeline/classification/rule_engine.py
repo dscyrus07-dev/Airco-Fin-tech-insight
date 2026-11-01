@@ -247,7 +247,7 @@ class JsonRuleEngine:
     def _match_exact(self, description: str, rules: Dict[str, Dict[str, Any]]) -> Optional[ClassificationResult]:
         for category, compiled in rules.items():
             for keyword in compiled["exact"]:
-                if keyword and keyword in description:
+                if keyword and self._keyword_hit(keyword, description):
                     return ClassificationResult(
                         category=category,
                         confidence=self.CONF_EXACT,
@@ -256,6 +256,15 @@ class JsonRuleEngine:
                         matched_keyword=keyword,
                     )
         return None
+
+    @staticmethod
+    def _keyword_hit(keyword: str, description: str) -> bool:
+        # Short aliases (<=4 chars, alnum-bounded) match on word boundaries only -
+        # "VI" must not fire inside "SERVICE"/"SAVINGS", "RD" inside "CARD",
+        # "EMI" inside "PREMIUM". Longer keywords stay substring.
+        if len(keyword) > 4 or not (keyword[:1].isalnum() and keyword[-1:].isalnum()):
+            return keyword in description
+        return re.search(rf"(?<![a-z0-9]){re.escape(keyword)}(?![a-z0-9])", description, re.IGNORECASE) is not None
 
     def _match_pattern(self, description: str, rules: Dict[str, Dict[str, Any]]) -> Optional[ClassificationResult]:
         for category, compiled in rules.items():

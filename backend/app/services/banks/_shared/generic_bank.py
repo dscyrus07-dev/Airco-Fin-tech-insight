@@ -374,6 +374,7 @@ class GenericClassifier:
         self._rx_ach = rx("ach_mandate_patterns")
         self._rx_cheque = rx("cheque_patterns")
         self._rx_payment_rail = rx("payment_rail_patterns")
+        self._rx_pos_purchase = rx("pos_purchase_patterns")
         # demand-draft members of cheque_patterns get their own categories
         self._rx_cheque_dd = [p for p in self._rx_cheque if "dd[" in p.pattern or "demand" in p.pattern]
         self._rx_cheque_std = [p for p in self._rx_cheque if p not in self._rx_cheque_dd]
@@ -542,6 +543,8 @@ class GenericClassifier:
             return ("Transfer", 0.80, "pattern_set", "settlement_pattern", None)
         # Rail prefixes (FN/SHP, IFN/EPAY, BAN/PAYMENT …) only say HOW money moved - after
         # merchants/entities so "IFN/EPAY/…/BAJAJFIN" still resolves to Loan Payment.
+        if _fam(self._rx_pos_purchase):
+            return ("Refund" if not is_debit else "Shopping", 0.82, "pattern_set", "pos_purchase_pattern", None)
         if _fam(self._rx_payment_rail):
             return ("Transfer", 0.82, "pattern_set", "payment_rail_pattern", None)
         if transfer_rule is not None:
